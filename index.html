@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --ink: #0f1115;
@@ -25,6 +26,10 @@
             scroll-behavior: smooth;
         }
         .serif { font-family: 'Gowun Batang', 'IBM Plex Sans KR', serif; }
+
+        /* 다국어 제어 CSS (선택된 언어에 따라 표시/숨김 처리) */
+        html[lang="ko"] [data-lang="en"] { display: none !important; }
+        html[lang="en"] [data-lang="ko"] { display: none !important; }
 
         /* 히어로 */
         .hero {
@@ -71,6 +76,14 @@
 
     <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
 
+        <!-- ===== 언어 전환 토글 ===== -->
+        <div class="flex justify-end mb-6">
+            <div class="bg-gray-200/60 p-1 rounded-full flex gap-1 items-center border border-[var(--line)] shadow-inner">
+                <button class="lang-btn px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 bg-white shadow-sm text-gray-900" data-target-lang="ko">KOR</button>
+                <button class="lang-btn px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-800" data-target-lang="en">ENG</button>
+            </div>
+        </div>
+
         <!-- ===== 히어로 ===== -->
         <section class="hero rounded-3xl text-white p-8 sm:p-14 mb-10 shadow-xl">
             <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
@@ -84,25 +97,39 @@
 
                 <div class="text-center md:text-left">
                     <span class="reveal d1 inline-block text-amber-400 tracking-[0.35em] text-xs font-semibold uppercase mb-3">Startup &amp; Investment Educator</span>
-                    <h1 class="reveal d2 serif text-5xl sm:text-6xl font-bold leading-none mb-4">김장길</h1>
+                    
+                    <h1 class="reveal d2 serif text-5xl sm:text-6xl font-bold leading-none mb-4">
+                        <span data-lang="ko">김장길</span>
+                        <span data-lang="en">Janggil Kim</span>
+                    </h1>
 
                     <p class="reveal d2 text-lg text-amber-300 font-semibold">
-                        창업·투자 교육 전문가
+                        <span data-lang="ko">창업·투자 교육 전문가</span>
+                        <span data-lang="en">Startup & Investment Education Expert</span>
                     </p>
                     <p class="reveal d3 mt-1 text-gray-300 text-[15px] leading-relaxed">
-                        스타트업 유튜브 채널 <span class="text-white font-semibold">‘엠엔엘(MNL)’</span> 운영자<br>
-                        공학박사 · 서울대학교 연구교수
+                        <span data-lang="ko">스타트업 유튜브 채널 <span class="text-white font-semibold">‘엠엔엘(MNL)’</span> 운영자<br>공학박사 · 서울대학교 연구교수</span>
+                        <span data-lang="en">Operator of Startup YouTube Channel <span class="text-white font-semibold">'MNL'</span><br>Ph.D. in Engineering · Research Professor at Seoul National University</span>
                     </p>
 
                     <p class="reveal d4 serif italic text-2xl text-white/90 mt-6">
-                        “당신의 꿈은 곧 현실이 됩니다.”
+                        <span data-lang="ko">“당신의 꿈은 곧 현실이 됩니다.”</span>
+                        <span data-lang="en">"Your dreams will soon become reality."</span>
                     </p>
 
                     <div class="reveal d4 flex flex-wrap justify-center md:justify-start gap-2 mt-6">
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">창업 교육</span>
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">투자 유치 멘토링</span>
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">사업화 컨설팅</span>
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">콘텐츠 크리에이터</span>
+                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
+                            <span data-lang="ko">창업 교육</span><span data-lang="en">Startup Education</span>
+                        </span>
+                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
+                            <span data-lang="ko">투자 유치 멘토링</span><span data-lang="en">Investment Mentoring</span>
+                        </span>
+                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
+                            <span data-lang="ko">사업화 컨설팅</span><span data-lang="en">Business Consulting</span>
+                        </span>
+                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
+                            <span data-lang="ko">콘텐츠 크리에이터</span><span data-lang="en">Content Creator</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -110,16 +137,24 @@
 
         <!-- ===== 채널 엠엔엘 강조 배너 ===== -->
         <section class="card rounded-2xl p-7 sm:p-9 mb-12 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-            <a href="https://youtube.com/@mnl"> <div class="flex items-center gap-5">
-                <div class="w-14 h-14 rounded-xl bg-[#0f1115] flex items-center justify-center shrink-0">
-                    <svg class="w-8 h-8 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
-                </div></a>
-                <div>
-                    <a href="https://youtube.com/@mnl"><p class="text-xs tracking-widest text-gray-400 font-semibold uppercase">YouTube Channel</p></a>
-                    <a href="https://youtube.com/@mnl"><p class="text-xl font-bold text-gray-900">스타트업 채널 ‘엠엔엘(MNL)’</p></a>
-                    <a href="https://youtube.com/@mnl"><p class="text-gray-500 text-sm mt-0.5">창업가의 시선으로 풀어내는 창업·투자 인사이트</p></a>
+            <a href="https://youtube.com/@mnl" class="group block"> 
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-xl bg-[#0f1115] flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+                        <svg class="w-8 h-8 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs tracking-widest text-gray-400 font-semibold uppercase">YouTube Channel</p>
+                        <p class="text-xl font-bold text-gray-900 mt-0.5 group-hover:text-amber-600 transition-colors">
+                            <span data-lang="ko">스타트업 채널 ‘엠엔엘(MNL)’</span>
+                            <span data-lang="en">Startup Channel 'MNL'</span>
+                        </p>
+                        <p class="text-gray-500 text-sm mt-1">
+                            <span data-lang="ko">창업가의 시선으로 풀어내는 창업·투자 인사이트</span>
+                            <span data-lang="en">Startup & Investment Insights from an Entrepreneur's Perspective</span>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </a>
             <span class="text-gray-300 hidden sm:block text-sm">@MNL</span>
         </section>
 
@@ -131,30 +166,46 @@
             </div>
 
             <div class="card rounded-2xl p-8 sm:p-10 shadow-sm">
-                <p class="text-gray-700 leading-loose text-[17px] mb-7">
+                <p class="text-gray-700 leading-loose text-[17px] mb-7" data-lang="ko">
                     지난 수년간, 창업의 길목에서 수많은 창업가들과 함께 고민하고, 실험하고, 부딪혀 왔습니다.
                     뛰어난 기술을 가진 분도, 날카로운 시장 감각으로 승부하는 분도 계셨습니다.
                     하지만 한 가지는 늘 같았습니다.
                 </p>
-
-                <p class="serif text-xl text-gray-900 font-bold text-center py-6 border-y border-dashed border-gray-200 mb-7">
-                    좋은 아이디어와 강한 의지만으로는, 성공에 도달하기 어렵다는 것.
+                <p class="text-gray-700 leading-loose text-[17px] mb-7" data-lang="en">
+                    Over the past few years, I have deliberated, experimented, and faced challenges alongside countless entrepreneurs at the crossroads of starting a business.
+                    There were those with outstanding technology and those competing with sharp market intuition.
+                    However, one thing always remained the same.
                 </p>
 
-                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7">
+                <p class="serif text-xl text-gray-900 font-bold text-center py-6 border-y border-dashed border-gray-200 mb-7">
+                    <span data-lang="ko">좋은 아이디어와 강한 의지만으로는, 성공에 도달하기 어렵다는 것.</span>
+                    <span data-lang="en">Good ideas and strong willpower alone are not enough to reach success.</span>
+                </p>
+
+                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7" data-lang="ko">
                     ‘비전’과 ‘현실’, ‘기술’과 ‘시장’ —<br>이 둘 사이의 간극은 언제나 창업가를 시험에 들게 합니다.
                 </blockquote>
+                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7" data-lang="en">
+                    'Vision' and 'Reality', 'Technology' and 'Market' —<br>The gap between these always puts entrepreneurs to the test.
+                </blockquote>
 
-                <p class="text-gray-700 leading-loose text-[17px] mb-8">
+                <p class="text-gray-700 leading-loose text-[17px] mb-8" data-lang="ko">
                     그 간극을 메우는 것, 바로 그것이 제가 하는 일입니다.
                     저는 강의실과 멘토링 현장, 그리고 채널 ‘엠엔엘’을 통해
                     창업가의 생각이 사업이 되고, 그 사업이 시장에서 살아남으며,
                     나아가 투자를 이끌어낼 수 있도록 길을 함께 설계합니다.
                 </p>
+                <p class="text-gray-700 leading-loose text-[17px] mb-8" data-lang="en">
+                    Bridging that gap is exactly what I do.
+                    Through classrooms, mentoring sessions, and the channel 'MNL',
+                    I help design a path so that an entrepreneur's idea becomes a business, survives in the market,
+                    and ultimately attracts investment.
+                </p>
 
                 <div class="bg-[#0f1115] rounded-xl p-7 text-center">
                     <p class="serif text-xl text-amber-300 font-bold">
-                        당신의 도전이 끝까지 갈 수 있도록, 제가 곁에서 함께하겠습니다.
+                        <span data-lang="ko">당신의 도전이 끝까지 갈 수 있도록, 제가 곁에서 함께하겠습니다.</span>
+                        <span data-lang="en">I will be by your side so that your challenge can go all the way to the end.</span>
                     </p>
                 </div>
             </div>
@@ -168,27 +219,49 @@
             </div>
 
             <div class="flex flex-wrap gap-2 mb-7">
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-active" onclick="openTab(event, 'education')">학력</button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'career')">경력</button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'skills')">전문 분야</button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'projects')">과제 수행</button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'awards')">수상</button>
+                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-active" onclick="openTab(event, 'education')">
+                    <span data-lang="ko">학력</span><span data-lang="en">Education</span>
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'career')">
+                    <span data-lang="ko">경력</span><span data-lang="en">Experience</span>
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'skills')">
+                    <span data-lang="ko">전문 분야</span><span data-lang="en">Expertise</span>
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'projects')">
+                    <span data-lang="ko">과제 수행</span><span data-lang="en">Projects</span>
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'awards')">
+                    <span data-lang="ko">수상</span><span data-lang="en">Awards</span>
+                </button>
             </div>
 
             <!-- 학력 -->
             <div id="education" class="content active">
                 <ul class="space-y-3">
                     <li class="card rounded-xl p-5">
-                        <p class="font-bold text-lg text-gray-900">일본 도쿄대학교 · 공학박사</p>
-                        <p class="text-gray-500 text-sm mt-1">정밀공학 (반도체 공정 연구개발)</p>
+                        <p class="font-bold text-lg text-gray-900">
+                            <span data-lang="ko">일본 도쿄대학교 · 공학박사</span><span data-lang="en">The University of Tokyo, Japan · Ph.D. in Engineering</span>
+                        </p>
+                        <p class="text-gray-500 text-sm mt-1">
+                            <span data-lang="ko">정밀공학 (반도체 공정 연구개발)</span><span data-lang="en">Precision Engineering (Semiconductor Process R&D)</span>
+                        </p>
                     </li>
                     <li class="card rounded-xl p-5">
-                        <p class="font-bold text-lg text-gray-900">서울대학교 · 공학석사</p>
-                        <p class="text-gray-500 text-sm mt-1">기계항공우주공학부</p>
+                        <p class="font-bold text-lg text-gray-900">
+                            <span data-lang="ko">서울대학교 · 공학석사</span><span data-lang="en">Seoul National University · M.S. in Engineering</span>
+                        </p>
+                        <p class="text-gray-500 text-sm mt-1">
+                            <span data-lang="ko">기계항공우주공학부</span><span data-lang="en">School of Mechanical and Aerospace Engineering</span>
+                        </p>
                     </li>
                     <li class="card rounded-xl p-5">
-                        <p class="font-bold text-lg text-gray-900">서울대학교 · 공학사</p>
-                        <p class="text-gray-500 text-sm mt-1">기계항공우주공학부</p>
+                        <p class="font-bold text-lg text-gray-900">
+                            <span data-lang="ko">서울대학교 · 공학사</span><span data-lang="en">Seoul National University · B.S. in Engineering</span>
+                        </p>
+                        <p class="text-gray-500 text-sm mt-1">
+                            <span data-lang="ko">기계항공우주공학부</span><span data-lang="en">School of Mechanical and Aerospace Engineering</span>
+                        </p>
                     </li>
                 </ul>
             </div>
@@ -196,13 +269,34 @@
             <!-- 경력 -->
             <div id="career" class="content">
                 <ul class="space-y-2.5">
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-amber-500 font-bold shrink-0">現</span><span class="text-gray-700">스타트업 유튜브 채널 ‘엠엔엘(MNL)’ 운영자 · 크리에이터</span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-amber-500 font-bold shrink-0">現</span><span class="text-gray-700">서울대학교 공과대학 / SNU공학컨설팅센터, 연구교수</span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-amber-500 font-bold shrink-0">現</span><span class="text-gray-700">기술보증기금 · 이크레더블 · 농업기술실용화재단 · 이노비즈협회, 외부자문위원</span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-gray-300 font-bold shrink-0">前</span><span class="text-gray-700">서울대학교 기계항공공학부 BK21+사업단, BK조교수</span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-gray-300 font-bold shrink-0">前</span><span class="text-gray-700">서울대학교 정밀기계설계공동연구소, 선임연구원 (정밀특수가공 / 생산공학)</span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-gray-300 font-bold shrink-0">前</span><span class="text-gray-700">IEMN CNRS UMR 8520 (France), 박사연구원 (RF MEMS 소자 및 MCP 공정개발)</span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="text-gray-300 font-bold shrink-0">前</span><span class="text-gray-700">동경대학교 생산기술연구소 (일본), 박사연구원 (소프트리소그래피 개발)</span></li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-amber-500 font-bold shrink-0"><span data-lang="ko">現</span><span data-lang="en">Current</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">스타트업 유튜브 채널 ‘엠엔엘(MNL)’ 운영자 · 크리에이터</span><span data-lang="en">Operator & Creator of Startup YouTube Channel 'MNL'</span></span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-amber-500 font-bold shrink-0"><span data-lang="ko">現</span><span data-lang="en">Current</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">서울대학교 공과대학 / SNU공학컨설팅센터, 연구교수</span><span data-lang="en">Research Professor, College of Engineering / SNU Engineering Consulting Center, Seoul National University</span></span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-amber-500 font-bold shrink-0"><span data-lang="ko">現</span><span data-lang="en">Current</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">기술보증기금 · 이크레더블 · 농업기술실용화재단 · 이노비즈협회, 외부자문위원</span><span data-lang="en">External Advisory Committee Member for KIBO, eCredible, FACT, and INNOBIZ</span></span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-gray-300 font-bold shrink-0"><span data-lang="ko">前</span><span data-lang="en">Former</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">서울대학교 기계항공공학부 BK21+사업단, BK조교수</span><span data-lang="en">BK Assistant Professor, BK21+ Program, School of Mechanical & Aerospace Engineering, SNU</span></span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-gray-300 font-bold shrink-0"><span data-lang="ko">前</span><span data-lang="en">Former</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">서울대학교 정밀기계설계공동연구소, 선임연구원 (정밀특수가공 / 생산공학)</span><span data-lang="en">Senior Researcher, Institute of Advanced Machinery and Design, SNU (Precision Machining / Production Eng.)</span></span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-gray-300 font-bold shrink-0"><span data-lang="ko">前</span><span data-lang="en">Former</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">IEMN CNRS UMR 8520 (France), 박사연구원 (RF MEMS 소자 및 MCP 공정개발)</span><span data-lang="en">Postdoctoral Researcher, IEMN CNRS UMR 8520 (France) (RF MEMS & MCP Process Development)</span></span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="text-gray-300 font-bold shrink-0"><span data-lang="ko">前</span><span data-lang="en">Former</span></span>
+                        <span class="text-gray-700"><span data-lang="ko">동경대학교 생산기술연구소 (일본), 박사연구원 (소프트리소그래피 개발)</span><span data-lang="en">Postdoctoral Researcher, Institute of Industrial Science, The University of Tokyo (Soft Lithography Development)</span></span>
+                    </li>
                 </ul>
             </div>
 
@@ -210,26 +304,38 @@
             <div id="skills" class="content">
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div class="card rounded-xl p-6">
-                        <h3 class="font-bold text-lg mb-3 text-gray-900">창업·투자 교육</h3>
+                        <h3 class="font-bold text-lg mb-3 text-gray-900">
+                            <span data-lang="ko">창업·투자 교육</span><span data-lang="en">Startup & Investment Education</span>
+                        </h3>
                         <ul class="space-y-2 text-gray-600 text-[15px] list-disc list-inside">
-                            <li>제품 기획 · 시제품 제작 실무 교육</li>
-                            <li>비즈니스 모델(BM) 수립 및 고도화</li>
-                            <li>시장조사 · 분석, IR / 투자 유치 멘토링</li>
+                            <li><span data-lang="ko">제품 기획 · 시제품 제작 실무 교육</span><span data-lang="en">Product Planning & Prototyping Practical Training</span></li>
+                            <li><span data-lang="ko">비즈니스 모델(BM) 수립 및 고도화</span><span data-lang="en">Business Model (BM) Establishment & Advancement</span></li>
+                            <li><span data-lang="ko">시장조사 · 분석, IR / 투자 유치 멘토링</span><span data-lang="en">Market Research & Analysis, IR / Investment Attraction Mentoring</span></li>
                         </ul>
                     </div>
                     <div class="card rounded-xl p-6">
-                        <h3 class="font-bold text-lg mb-3 text-gray-900">공학·기술</h3>
+                        <h3 class="font-bold text-lg mb-3 text-gray-900">
+                            <span data-lang="ko">공학·기술</span><span data-lang="en">Engineering & Technology</span>
+                        </h3>
                         <ul class="space-y-2 text-gray-600 text-[15px] list-disc list-inside">
-                            <li>정밀가공 (방전·레이저·전해가공, CNC, 반도체 공정)</li>
-                            <li>무선통신 (RF-MEMS, 초소형 수동소자)</li>
+                            <li><span data-lang="ko">정밀가공 (방전·레이저·전해가공, CNC, 반도체 공정)</span><span data-lang="en">Precision Machining (EDM, Laser, ECM, CNC, Semiconductor Process)</span></li>
+                            <li><span data-lang="ko">무선통신 (RF-MEMS, 초소형 수동소자)</span><span data-lang="en">Wireless Communication (RF-MEMS, Micro Passive Components)</span></li>
                         </ul>
                     </div>
                     <div class="card rounded-xl p-6 sm:col-span-2">
-                        <h3 class="font-bold text-lg mb-3 text-gray-900">어학</h3>
+                        <h3 class="font-bold text-lg mb-3 text-gray-900">
+                            <span data-lang="ko">어학</span><span data-lang="en">Languages</span>
+                        </h3>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">영어 — Business</span>
-                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">일본어 — Native</span>
-                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">프랑스어 — Conversational</span>
+                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
+                                <span data-lang="ko">영어 — Business</span><span data-lang="en">English — Business Level</span>
+                            </span>
+                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
+                                <span data-lang="ko">일본어 — Native</span><span data-lang="en">Japanese — Native Level</span>
+                            </span>
+                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
+                                <span data-lang="ko">프랑스어 — Conversational</span><span data-lang="en">French — Conversational</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -238,20 +344,48 @@
             <!-- 과제 수행 -->
             <div id="projects" class="content">
                 <ul class="space-y-2.5">
-                    <li class="card rounded-xl p-4 text-gray-700">SNU아산 유니버시티 창업지원사업 (기후기술 창업 특화 지원) — 아산나눔재단 <span class="text-gray-400">(2023)</span></li>
-                    <li class="card rounded-xl p-4 text-gray-700">국방특화연구실사업, 이중모드 스크램제트 탄화수소 연소성능 증진 연구 — 국방과학연구소 <span class="text-gray-400">(2019)</span></li>
-                    <li class="card rounded-xl p-4 text-gray-700">창의융합형 공학인재양성 지원사업 — 현대NGV <span class="text-gray-400">(2019)</span></li>
-                    <li class="card rounded-xl p-4 text-gray-700">아이디어팩토리 지원사업 — 중소벤처기업부 <span class="text-gray-400">(2017)</span></li>
-                    <li class="card rounded-xl p-4 text-gray-400 italic">외 다수</li>
+                    <li class="card rounded-xl p-4 text-gray-700">
+                        <span data-lang="ko">SNU아산 유니버시티 창업지원사업 (기후기술 창업 특화 지원) — 아산나눔재단</span><span data-lang="en">SNU Asan University Startup Support Program (Climate Tech) — Asan Nanum Foundation</span> <span class="text-gray-400">(2023)</span>
+                    </li>
+                    <li class="card rounded-xl p-4 text-gray-700">
+                        <span data-lang="ko">국방특화연구실사업, 이중모드 스크램제트 탄화수소 연소성능 증진 연구 — 국방과학연구소</span><span data-lang="en">Defense Specialized Lab Project, Dual-mode Scramjet Hydrocarbon Combustion Enhancement — Agency for Defense Development</span> <span class="text-gray-400">(2019)</span>
+                    </li>
+                    <li class="card rounded-xl p-4 text-gray-700">
+                        <span data-lang="ko">창의융합형 공학인재양성 지원사업 — 현대NGV</span><span data-lang="en">Creative Convergence Engineering Talent Fostering Project — Hyundai NGV</span> <span class="text-gray-400">(2019)</span>
+                    </li>
+                    <li class="card rounded-xl p-4 text-gray-700">
+                        <span data-lang="ko">아이디어팩토리 지원사업 — 중소벤처기업부</span><span data-lang="en">Idea Factory Support Project — Ministry of SMEs and Startups</span> <span class="text-gray-400">(2017)</span>
+                    </li>
+                    <li class="card rounded-xl p-4 text-gray-400 italic">
+                        <span data-lang="ko">외 다수</span><span data-lang="en">And many others...</span>
+                    </li>
                 </ul>
             </div>
 
             <!-- 수상 -->
             <div id="awards" class="content">
                 <ul class="space-y-2.5">
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="shrink-0">🏆</span><span class="text-gray-700">경기도지사 표창장 — 창업활성화 유공자 <span class="text-gray-400">(2020)</span></span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="shrink-0">🥇</span><span class="text-gray-700">공학교육학술대회 최우수논문 (기업가정신 분야) <span class="text-gray-400">(2019)</span></span></li>
-                    <li class="card rounded-xl p-4 flex gap-3"><span class="shrink-0">🥇</span><span class="text-gray-700">한국정밀공학회 춘계학술대회 최우수논문 (생산시스템 분야) <span class="text-gray-400">(2014)</span></span></li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="shrink-0">🏆</span>
+                        <span class="text-gray-700">
+                            <span data-lang="ko">경기도지사 표창장 — 창업활성화 유공자</span><span data-lang="en">Gyeonggi Province Governor's Commendation — Person of Merit for Startup Activation</span>
+                            <span class="text-gray-400">(2020)</span>
+                        </span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="shrink-0">🥇</span>
+                        <span class="text-gray-700">
+                            <span data-lang="ko">공학교육학술대회 최우수논문 (기업가정신 분야)</span><span data-lang="en">Best Paper Award, Engineering Education Conference (Entrepreneurship)</span>
+                            <span class="text-gray-400">(2019)</span>
+                        </span>
+                    </li>
+                    <li class="card rounded-xl p-4 flex gap-3">
+                        <span class="shrink-0">🥇</span>
+                        <span class="text-gray-700">
+                            <span data-lang="ko">한국정밀공학회 춘계학술대회 최우수논문 (생산시스템 분야)</span><span data-lang="en">Best Paper Award, KSPE Spring Conference (Production Systems)</span>
+                            <span class="text-gray-400">(2014)</span>
+                        </span>
+                    </li>
                 </ul>
             </div>
         </section>
@@ -259,6 +393,7 @@
     </main>
 
     <script>
+        // 탭 메뉴 로직
         function openTab(event, tabName) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => {
@@ -269,6 +404,42 @@
             event.currentTarget.classList.remove('tab-inactive');
             event.currentTarget.classList.add('tab-active');
         }
+
+        // 다국어 제어 로직
+        const html = document.documentElement;
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        function setLanguage(lang) {
+            // HTML lang 속성 변경 (CSS 트리거)
+            html.setAttribute('lang', lang);
+            
+            // 사용자가 선택한 언어 브라우저에 저장
+            localStorage.setItem('preferred-lang', lang);
+
+            // 버튼 스타일 업데이트
+            langBtns.forEach(btn => {
+                if (btn.dataset.targetLang === lang) {
+                    // 활성화된 버튼 스타일
+                    btn.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+                    btn.classList.remove('text-gray-500', 'hover:text-gray-800');
+                } else {
+                    // 비활성화된 버튼 스타일
+                    btn.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+                    btn.classList.add('text-gray-500', 'hover:text-gray-800');
+                }
+            });
+        }
+
+        // 버튼 클릭 이벤트 리스너 등록
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.dataset.targetLang));
+        });
+
+        // 초기 언어 설정 (이전에 선택한 언어가 있으면 유지, 없으면 한국어 기본)
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferred-lang') || 'ko';
+            setLanguage(savedLang);
+        });
     </script>
 </body>
 </html>
