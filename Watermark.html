@@ -3,118 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini ✦ 워터마크 제거기</title>
+<title>Gemini Watermark Remover</title>
 <style>
-:root{--bg:#0d0d12;--surface:#16161f;--surface2:#1e1e2b;--border:#2b2b3d;
---accent:#8b7cff;--accent2:#b4a4ff;--green:#34d399;--red:#f87171;--text:#e6e6f2;--muted:#7b7b9e;--r:12px}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Pretendard','Segoe UI',system-ui,sans-serif;min-height:100vh}
-header{display:flex;align-items:center;gap:12px;padding:15px 26px;background:var(--surface);border-bottom:1px solid var(--border)}
-.logo{width:33px;height:33px;border-radius:9px;background:linear-gradient(135deg,#4285f4,#9b72cb,#d96570);display:flex;align-items:center;justify-content:center;font-size:16px}
-header h1{font-size:16.5px;font-weight:700;letter-spacing:-.3px}
-header .tag{margin-left:auto;font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:4px 10px;border-radius:20px}
-.wrap{max-width:1560px;margin:0 auto;padding:22px 18px;display:flex;flex-direction:column;gap:16px}
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface2: #171717;
+  --border: #262626;
+  --border-hover: #404040;
+  --accent: #ffffff;
+  --accent-fg: #000000;
+  --accent2: #a3a3a3;
+  --green: #22c55e;
+  --red: #ef4444;
+  --text: #fafafa;
+  --muted: #737373;
+  --r: 8px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
 
-#drop{border:2px dashed var(--border);border-radius:var(--r);background:var(--surface);padding:58px 20px;text-align:center;cursor:pointer;transition:.2s}
-#drop:hover,#drop.over{border-color:var(--accent);background:rgba(139,124,255,.07);box-shadow:0 0 0 4px rgba(139,124,255,.1)}
-#drop .ico{font-size:48px;display:block;margin-bottom:12px}
-#drop h2{font-size:19px;margin-bottom:6px}#drop p{color:var(--muted);font-size:13.5px}#drop b{color:var(--accent2)}
-.cta{margin-top:16px;padding:10px 22px;border:0;border-radius:8px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;background:linear-gradient(135deg,#4285f4,#9b72cb)}
-#file{display:none}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; min-height: 100vh; font-size: 13px; line-height: 1.5; }
 
-#ws{display:none;flex-direction:column;gap:16px}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.ph{display:flex;align-items:center;gap:8px;padding:11px 17px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:12.5px;font-weight:600;color:var(--muted)}
-.ph .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.pill{margin-left:auto;font-size:11.5px;color:var(--accent2);background:rgba(139,124,255,.12);border:1px solid rgba(139,124,255,.28);padding:3px 9px;border-radius:5px;display:none}
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
-.split{display:flex;align-items:stretch}
-.workarea{flex:1;min-width:0;display:flex;flex-direction:column;background:#0a0a0e}
-.worktool{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface2);flex-wrap:wrap}
-.worktool .zb{padding:4px 9px;font-size:11.5px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
-.worktool .zb.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
-.worktool .cellname{font-size:11.5px;color:var(--accent2);font-weight:700;margin-left:auto}
-.workscroll{flex:1;overflow:auto;min-height:min(1024px,72vh);max-height:min(1044px,82vh);
- background-color:#0a0a0e;
- background-image:linear-gradient(45deg,#15151c 25%,transparent 25%),linear-gradient(-45deg,#15151c 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#15151c 75%),linear-gradient(-45deg,transparent 75%,#15151c 75%);
- background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;
- display:flex;align-items:center;justify-content:center;padding:10px}
-#view{display:block;flex:none;max-width:none;image-rendering:pixelated;touch-action:none;box-shadow:0 6px 26px rgba(0,0,0,.6)}
-.gridpick{position:relative;line-height:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:crosshair}
-.gridpick canvas{display:block;width:100%}
-.reswrap{overflow:auto;max-height:260px;border:1px solid var(--border);border-radius:6px;background:#0a0a0e;padding:4px}
-.reswrap canvas{display:block;image-rendering:pixelated}
-.sideh{display:flex;align-items:center;gap:6px}
-.sideh h4{margin:0}
-.mini{font-size:10px;color:var(--muted);margin-left:auto}
-.stage{position:relative;flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-height:300px;background-color:#0a0a0e;
- background-image:linear-gradient(45deg,#15151c 25%,transparent 25%),linear-gradient(-45deg,#15151c 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#15151c 75%),linear-gradient(-45deg,transparent 75%,#15151c 75%);
- background-size:22px 22px;background-position:0 0,0 11px,11px -11px,-11px 0}
-#view.brush{cursor:none}#view.sel{cursor:crosshair}
-.side{width:240px;flex:none;border-left:1px solid var(--border);background:var(--surface2);padding:13px;display:flex;flex-direction:column;gap:8px}
-.side h4{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-.zoombox{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#0a0a0e}
-.zoombox canvas{display:block;width:100%;image-rendering:pixelated}
-.zcap{font-size:10.5px;color:var(--muted)}
+/* Header */
+header { display: flex; align-items: center; gap: 14px; padding: 16px 28px; background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+.logo { width: 32px; height: 32px; border-radius: 8px; background: var(--text); color: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; }
+header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+header .tag { margin-left: auto; font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 17px;border-top:1px solid var(--border)}
-.grp{display:flex;gap:6px;align-items:center;padding-right:12px;border-right:1px solid var(--border)}
-.grp:last-child{border:0}
-.lbl{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
-.btn{padding:7px 13px;font-size:13px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:.15s;white-space:nowrap}
-.btn:hover:not(:disabled){border-color:var(--accent);background:#26263a}
-.btn.on{background:rgba(139,124,255,.22);border-color:var(--accent);color:#fff}
-.btn.pri{background:linear-gradient(135deg,#4285f4,#9b72cb);border-color:transparent;color:#fff;font-weight:600}
-.btn.mag{background:linear-gradient(135deg,#f59e0b,#ef4444);border-color:transparent;color:#fff;font-weight:600}
-.btn.ok{border-color:var(--green);color:var(--green)}.btn.dg{border-color:var(--red);color:var(--red)}
-.btn:disabled{opacity:.35;cursor:not-allowed}
+.wrap { max-width: 1560px; margin: 0 auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
 
-.sbar{display:flex;align-items:center;gap:10px;padding:9px 17px;background:var(--surface2);border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
-.sd{width:6px;height:6px;border-radius:50%;background:var(--muted)}
-.sd.go{background:var(--green);animation:pl 1.4s infinite}
-@keyframes pl{0%,100%{opacity:1}50%{opacity:.35}}
+/* Drop Zone */
+#drop { border: 1px dashed var(--border); border-radius: var(--r); background: var(--surface); padding: 72px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#drop:hover, #drop.over { border-color: var(--muted); background: var(--surface2); }
+#drop .ico { font-size: 40px; display: block; margin-bottom: 16px; color: var(--muted); transition: 0.2s; }
+#drop:hover .ico { color: var(--text); transform: scale(1.05); }
+#drop h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+#drop p { color: var(--muted); font-size: 13px; }
+#drop b { color: var(--text); font-weight: 500; }
+.cta { margin-top: 24px; padding: 10px 24px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; background: var(--surface2); transition: 0.2s; }
+.cta:hover { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+#file { display: none; }
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;padding:16px}
-.it label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-select{width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:8px 30px 8px 12px;font-size:13px;cursor:pointer;appearance:none;
- background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237b7b9e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-.rw{display:flex;align-items:center;gap:9px}
-input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:var(--surface2);outline:0;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);border:2px solid #fff}
-.val{font-size:12.5px;font-weight:700;color:var(--accent2);min-width:52px;text-align:right}
-.sect{padding:10px 17px;background:rgba(139,124,255,.06);border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.5px;text-transform:uppercase}
-.tips{padding:13px 17px;background:rgba(139,124,255,.05);border-top:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.75}
-.tips b{color:var(--accent2)}
-.warn{padding:11px 17px;background:rgba(251,191,36,.07);border-top:1px solid rgba(251,191,36,.2);font-size:11.5px;color:#d3b76b;line-height:1.7}
-#cmp{display:none;position:relative;padding:16px;justify-content:center;background-color:#0a0a0e}
-#cmpc{display:block;max-width:100%;border-radius:4px;cursor:ew-resize;touch-action:none}
-#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
-#ov.on{display:flex}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:28px 42px;text-align:center;min-width:320px}
-.card h3{font-size:17px;margin-bottom:6px}.card p{color:var(--muted);font-size:12.5px;margin-bottom:18px}
-.pbw{height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
-.pbf{height:100%;width:0;background:linear-gradient(90deg,#4285f4,#9b72cb);transition:width .12s}
-.pct{margin-top:9px;font-size:22px;font-weight:800;color:var(--accent2)}
-#toast{position:fixed;bottom:22px;right:22px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,.5);transform:translateY(80px);opacity:0;transition:.3s;z-index:200;max-width:340px;display:flex;gap:8px}
-#toast.show{transform:translateY(0);opacity:1}
-@media(max-width:760px){.split{flex-direction:column}.side{width:auto;border-left:0;border-top:1px solid var(--border);flex-direction:row}.zoombox{flex:1}}
+/* Workspace */
+#ws { display: none; flex-direction: column; gap: 20px; }
+.panel { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.ph { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 500; color: var(--muted); }
+.ph .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text); }
+.pill { margin-left: auto; font-size: 11px; color: var(--text); background: var(--surface2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; display: none; }
+
+.split { display: flex; align-items: stretch; }
+.workarea { flex: 1; min-width: 0; display: flex; flex-direction: column; background: #050505; }
+.worktool { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface); flex-wrap: wrap; }
+.worktool .zb { padding: 5px 12px; font-size: 11px; border-radius: 5px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: 0.15s; font-weight: 500; }
+.worktool .zb:hover { background: var(--surface2); color: var(--text); }
+.worktool .zb.on { background: var(--text); border-color: var(--text); color: var(--bg); }
+.worktool .cellname { font-size: 11px; color: var(--muted); font-weight: 500; margin-left: auto; font-variant-numeric: tabular-nums; }
+
+/* Checkerboard BG - Subtler */
+.workscroll { flex: 1; overflow: auto; min-height: min(1024px, 72vh); max-height: min(1044px, 82vh); background-color: #050505; background-image: linear-gradient(45deg, #0a0a0a 25%, transparent 25%), linear-gradient(-45deg, #0a0a0a 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #0a0a0a 75%), linear-gradient(-45deg, transparent 75%, #0a0a0a 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0; display: flex; align-items: center; justify-content: center; padding: 16px; }
+#view { display: block; flex: none; max-width: none; image-rendering: pixelated; touch-action: none; box-shadow: 0 8px 32px rgba(0,0,0,0.8); border: 1px solid var(--border); }
+#view.brush { cursor: none; } #view.sel { cursor: crosshair; }
+
+.side { width: 260px; flex: none; border-left: 1px solid var(--border); background: var(--surface); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.sideh { display: flex; align-items: center; gap: 6px; }
+.sideh h4 { margin: 0; font-size: 11px; color: var(--text); font-weight: 500; }
+.mini { font-size: 10px; color: var(--muted); margin-left: auto; }
+.gridpick { position: relative; line-height: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: crosshair; background: #000; }
+.gridpick canvas { display: block; width: 100%; opacity: 0.9; transition: 0.2s; }
+.gridpick:hover canvas { opacity: 1; }
+.reswrap { overflow: auto; max-height: 260px; border: 1px solid var(--border); border-radius: 6px; background: #000; padding: 4px; display: flex; align-items: center; justify-content: center; }
+.reswrap canvas { display: block; image-rendering: pixelated; }
+.zcap { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
+/* Control Bar */
+.bar { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; border-top: 1px solid var(--border); background: var(--surface); }
+.grp { display: flex; gap: 8px; align-items: center; padding: 14px 20px; border-right: 1px solid var(--border); flex: 1; }
+.grp:last-child { border-right: 0; }
+.lbl { font-size: 10.5px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; margin-right: 4px; }
+
+/* Sleek Buttons */
+.btn { padding: 8px 14px; font-size: 12.5px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; transition: all 0.15s ease; white-space: nowrap; font-family: inherit; font-weight: 500; }
+.btn:hover:not(:disabled) { background: var(--surface2); border-color: var(--border-hover); }
+.btn.on { background: var(--surface2); border-color: var(--text); color: var(--text); }
+.btn.pri { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+.btn.pri:hover:not(:disabled) { background: #e5e5e5; }
+.btn.ok { color: var(--green); } .btn.ok:hover:not(:disabled) { border-color: var(--green); background: rgba(34, 197, 94, 0.1); }
+.btn.dg { color: var(--red); } .btn.dg:hover:not(:disabled) { border-color: var(--red); background: rgba(239, 68, 68, 0.1); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.sbar { display: flex; align-items: center; gap: 10px; padding: 10px 20px; background: var(--surface); border-top: 1px solid var(--border); font-size: 11.5px; color: var(--muted); }
+.sd { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+.sd.go { background: var(--text); animation: pl 1.5s infinite ease-in-out; }
+@keyframes pl { 0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(255,255,255,0.8); } 50% { opacity: 0.3; box-shadow: none; } }
+
+/* Grid Settings */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; padding: 20px; background: var(--bg); }
+.it label { display: block; font-size: 11px; font-weight: 500; color: var(--muted); margin-bottom: 8px; }
+
+/* Inputs */
+select { width: 100%; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px 30px 8px 12px; font-size: 12.5px; cursor: pointer; appearance: none; font-family: inherit; transition: 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+select:hover { border-color: var(--border-hover); }
+select:focus { outline: none; border-color: var(--text); }
+optgroup { color: var(--muted); font-weight: normal; font-style: normal; }
+option { color: var(--text); background: var(--surface); }
+
+.rw { display: flex; align-items: center; gap: 12px; }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--surface2); outline: 0; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--text); transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.val { font-size: 11.5px; font-weight: 500; color: var(--muted); min-width: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+
+.sect { padding: 12px 20px; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+.tips { padding: 16px 20px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.6; }
+.tips b { color: var(--text); font-weight: 500; }
+.warn { padding: 14px 20px; background: rgba(239, 68, 68, 0.05); border-top: 1px solid rgba(239, 68, 68, 0.1); font-size: 11.5px; color: var(--red); line-height: 1.6; }
+
+/* Compare Modal */
+#cmp { display: none; position: relative; padding: 20px; justify-content: center; background-color: #050505; min-height: 500px; align-items: center; }
+#cmpc { display: block; max-width: 100%; border-radius: 6px; cursor: ew-resize; touch-action: none; box-shadow: var(--shadow); border: 1px solid var(--border); }
+
+/* Overlay Progress */
+#ov { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 100; align-items: center; justify-content: center; }
+#ov.on { display: flex; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px 48px; text-align: center; min-width: 360px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+.card h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; color: var(--text); }
+.card p { color: var(--muted); font-size: 12px; margin-bottom: 24px; }
+.pbw { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.pbf { height: 100%; width: 0; background: var(--text); transition: width 0.15s ease-out; }
+.pct { margin-top: 12px; font-size: 20px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* Toast */
+#toast { position: fixed; bottom: 32px; right: 32px; background: var(--text); color: var(--bg); border-radius: 8px; padding: 14px 20px; font-size: 13px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(80px); opacity: 0; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 200; max-width: 340px; display: flex; align-items: center; gap: 10px; }
+#toast.show { transform: translateY(0); opacity: 1; }
+#tIco { font-size: 16px; }
+
+@media(max-width: 900px) { .bar { flex-direction: column; align-items: stretch; } .grp { border-right: 0; border-bottom: 1px solid var(--border); } .grp:last-child { border-bottom: 0; } }
+@media(max-width: 760px) { .split { flex-direction: column; } .side { width: auto; border-left: 0; border-top: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; } .zoombox, .gridpick, .reswrap { flex: 1; min-width: 150px; } }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">✦</div>
-  <h1>Gemini ✦ 워터마크 제거기</h1>
-  <div class="tag">고정 위치 방식 · 100% 브라우저 처리</div>
+  <h1>Gemini Watermark Remover</h1>
+  <div class="tag">Browser Native</div>
 </header>
 
 <div class="wrap">
   <div id="drop">
     <input type="file" id="file" accept="image/*">
     <span class="ico">✦</span>
-    <h2>Gemini 이미지를 드래그하세요</h2>
+    <h2>이미지를 드래그하여 놓으세요</h2>
     <p>PNG · JPG · WEBP &nbsp;|&nbsp; <b>클릭</b>해서 선택 · <b>Ctrl+V</b> 붙여넣기</p>
-    <button class="cta">📂 파일 선택</button>
+    <button class="cta">파일 선택</button>
   </div>
 
   <div id="ws">
@@ -125,7 +173,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
         <div class="workarea" id="stage">
           <div class="worktool">
             <span class="lbl">분할</span>
-            <select id="gridN" style="width:auto;padding:4px 24px 4px 8px;font-size:11.5px">
+            <select id="gridN" style="width:auto;padding:4px 24px 4px 10px;font-size:11.5px">
               <option value="2">2×2 (4칸)</option>
               <option value="3">3×3 (9칸)</option>
               <option value="4" selected>4×4 (16칸)</option>
@@ -136,7 +184,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
               <option value="9">9×9 (81칸)</option>
               <option value="10">10×10 (100칸)</option>
             </select>
-            <span class="lbl" style="margin-left:10px">보기</span>
+            <span class="lbl" style="margin-left:12px">보기</span>
             <button class="zb on" id="vwOrig">원본+선택</button>
             <button class="zb" id="vwRes">결과</button>
             <span class="cellname" id="cellName">칸 —</span>
@@ -146,8 +194,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
         <div class="side" id="side">
           <div class="sideh"><h4>전체 사진</h4><span class="mini">칸을 클릭</span></div>
           <div class="gridpick" id="gridPick"><canvas id="ovw" width="260" height="260"></canvas></div>
-          <div class="zcap">▲ 보라 = 선택 영역 · 노랑 테두리 = 작업 중인 칸</div>
-          <div class="sideh" style="margin-top:6px"><h4>제거 결과</h4><span class="mini">같은 칸</span></div>
+          <div class="zcap">▲ 노랑 테두리 = 작업 중인 칸</div>
+          <div class="sideh" style="margin-top:12px"><h4>제거 결과</h4><span class="mini">같은 칸</span></div>
           <div class="reswrap"><canvas id="res"></canvas></div>
         </div>
       </div>
@@ -156,29 +204,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 
       <div class="bar">
         <div class="grp">
-          <span class="lbl">로고 지정</span>
-          <button class="btn mag on" id="bPick">🎯 로고 클릭</button>
-          <button class="btn" id="bSel">🔲 창 드래그</button>
-          <button class="btn" id="bBrush">🖌️ 브러시</button>
-          <button class="btn" id="bUndoSel" disabled>↶ 선택취소</button>
-          <button class="btn" id="bClr">⬜ 해제</button>
+          <span class="lbl">선택 도구</span>
+          <button class="btn on" id="bPick">로고 클릭</button>
+          <button class="btn" id="bSel">창 드래그</button>
+          <button class="btn" id="bBrush">브러시</button>
+          <button class="btn" id="bUndoSel" disabled>되돌리기</button>
+          <button class="btn" id="bClr">해제</button>
         </div>
         <div class="grp">
           <span class="lbl">규격 박스</span>
-          <button class="btn" id="bBox">📐 적용</button>
-          <button class="btn" id="bSnap">🔧 미세조정</button>
+          <button class="btn" id="bBox">적용</button>
+          <button class="btn" id="bSnap">미세조정</button>
           <button class="btn" id="bAuto" style="display:none"></button>
         </div>
         <div class="grp">
           <span class="lbl">실행</span>
-          <button class="btn pri" id="bRun" disabled>🚀 제거</button>
-          <button class="btn" id="bUndo" disabled>↩ 원본</button>
+          <button class="btn pri" id="bRun" disabled>제거 실행</button>
+          <button class="btn" id="bUndo" disabled>원본 복원</button>
         </div>
         <div class="grp">
-          <span class="lbl">저장</span>
-          <button class="btn" id="bCmp" disabled>👁 비교</button>
-          <button class="btn ok" id="bDl" disabled>⬇ 다운로드</button>
-          <button class="btn dg" id="bReset">🔄 초기화</button>
+          <span class="lbl">내보내기</span>
+          <button class="btn" id="bCmp" disabled>비교 모드</button>
+          <button class="btn ok" id="bDl" disabled>다운로드</button>
+          <button class="btn dg" id="bReset">초기화</button>
         </div>
       </div>
 
@@ -189,26 +237,23 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 
       <div class="tips">
         <b>①</b> 오른쪽 <b>전체 사진</b>에서 작업할 칸을 클릭합니다 (워터마크가 있는 우하단 칸은 자동으로 열립니다).<br>
-        <b>②</b> 선택한 칸이 왼쪽 작업창(최대 1024×1024)에 <b>꽉 차게</b> 확대됩니다.
-        <b>분할</b>을 잘게 할수록 자동으로 더 크게 보입니다 — 10×10이면 약 10배입니다.<br>
-        <b>③</b> 확대된 창에서 로고를 <b>클릭</b>하면 그 픽셀의 색과 비슷하면서 이어진 부분만 선택됩니다.
-        덜 잡히면 <b>허용 색상 오차</b>를 올리고, 잘못 잡았으면 <b>↶ 선택취소</b> 또는 <b>Ctrl+Z</b>로 한 단계씩 되돌립니다.<br>
-        <b>④</b> <b>🚀 제거</b> 후 오른쪽 <b>제거 결과</b>에서 확인합니다. 큰 창에서 보려면 위의 <b>결과</b> 버튼을 누르세요.
+        <b>②</b> 선택한 칸이 왼쪽 작업창에 확대됩니다. 분할을 잘게 할수록 크게 보입니다.<br>
+        <b>③</b> 확대된 창에서 로고를 <b>클릭</b>하면 자동 선택됩니다. 잘못 잡았으면 <b>되돌리기</b>(Ctrl+Z)를 누르세요.<br>
+        <b>④</b> <b>제거 실행</b> 후 결과를 확인하세요.
       </div>
       <div class="warn">
-        ⚠️ 눈에 보이는 ✦ 로고만 지웁니다. 픽셀에 심긴 <b>SynthID 비가시성 워터마크</b>는 제거되지 않으며,
-        이미지 이용에 대한 책임은 사용자에게 있습니다.
+        눈에 보이는 ✦ 로고만 지웁니다. 픽셀에 삽입된 비가시성 워터마크(SynthID)는 제거되지 않습니다.
       </div>
     </div>
 
     <div class="panel">
-      <div class="sect">① 로고 위치 · 크기 (Gemini 규격 · 절대 픽셀)</div>
+      <div class="sect">① 로고 위치 및 크기</div>
       <div class="grid">
         <div class="it"><label>규격 프리셋</label>
           <select id="spec">
             <option value="auto" selected>자동 판정 (이미지 크기 기준)</option>
             <option value="48">48×48 로고 · 여백 32px (≤1024px)</option>
-            <option value="96">96×96 로고 · 여백 64px (&gt;1024px)</option>
+            <option value="96">96×96 로고 · 여백 64px (>1024px)</option>
             <option value="manual">직접 지정</option>
           </select></div>
         <div class="it"><label>오른쪽 여백</label>
@@ -223,42 +268,34 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
           <select id="corner"><option value="br">우하단 (기본)</option><option value="bl">좌하단</option>
             <option value="tr">우상단</option><option value="tl">좌상단</option></select></div>
         <div class="it"><label>마스크 방식</label>
-          <select id="mmode">
-            <option value="glyph">글리프만 (박스 안 로고 획만)</option>
-            <option value="box">박스 전체</option>
-          </select></div>
+          <select id="mmode"><option value="glyph">글리프만 (획만)</option><option value="box">박스 전체</option></select></div>
       </div>
 
       <div class="sect">② 제거 품질</div>
       <div class="tips" style="border-top:0">
-        <b>어떤 걸 고를지:</b> 대부분은 <b>역알파 블렌딩</b>이 가장 정확합니다(측정 시 평균 오차 0.03).
-        배경이 <b>매끄러운 그라데이션·보케</b>면 그대로 두시고,
-        <b>선·모서리</b>가 로고를 가로지르면 <b>구조 전파</b>나 <b>패치+포아송</b>,
-        <b>거친 질감</b>이면 <b>구조 전파</b>나 <b>PatchMatch</b>가 낫습니다.
-        역알파 결과에 이음매가 보이면 <b>역알파 + 포아송</b>을 쓰세요.
-        판단이 어려우면 <b>앙상블</b>이 크게 실패하지 않습니다. 바꿀 때마다 <b>↻ 다시 적용</b>으로 즉시 비교됩니다.
+        배경이 <b>매끄러운 곳</b>은 '역알파 블렌딩'이 무손실에 가깝습니다. <b>선이나 모서리</b>가 가로지르면 '패치 + 포아송' 또는 '구조 전파'를 사용하세요. 바꿀 때마다 <b>다시 적용</b>으로 즉시 비교됩니다.
       </div>
       <div class="grid">
         <div class="it"><label>알고리즘</label>
           <select id="algo">
+            <optgroup label="인페인팅 (내용 재구성)">
+              <option value="poisson" selected>패치 + 포아송 (이음매 없음 · 기본)</option>
+              <option value="patchmatch">PatchMatch (질감 재현 최상)</option>
+              <option value="coherence">구조 전파 (선·경계에 강함)</option>
+              <option value="exemplar">Exemplar 패치 복사</option>
+            </optgroup>
             <optgroup label="수학적 복원 (원본 역산)">
-              <option value="hybrid" selected>역알파 블렌딩 (기본 · 무손실)</option>
+              <option value="hybrid">역알파 블렌딩 (무손실)</option>
               <option value="hybridPM">역알파 + PatchMatch 마감</option>
               <option value="hybridPois">역알파 + 포아송 이음매 제거</option>
             </optgroup>
-            <optgroup label="인페인팅 (내용 재구성)">
-              <option value="patchmatch">PatchMatch (질감 재현 최상)</option>
-              <option value="coherence">구조 전파 (선·경계에 강함)</option>
-              <option value="poisson">패치 + 포아송 (이음매 없음)</option>
-              <option value="exemplar">Exemplar 패치 복사</option>
-            </optgroup>
             <optgroup label="단순 · 빠름">
-              <option value="onion">확산 (빠르지만 뭉개짐)</option>
+              <option value="onion">확산 (뭉개짐)</option>
               <option value="median">미디언 필터</option>
               <option value="patch">랜덤 패치</option>
             </optgroup>
             <optgroup label="조합">
-              <option value="ensemble">앙상블 (3종 중앙값 · 가장 안전)</option>
+              <option value="ensemble">앙상블 (3종 중앙값 · 안전)</option>
             </optgroup>
           </select></div>
         <div class="it"><label>로고 색상</label>
@@ -277,33 +314,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
           <select id="fmt"><option value="png">PNG (무손실)</option><option value="jpg">JPEG (95%)</option><option value="webp">WEBP</option></select></div>
       </div>
 
-      <div class="sect">③ 후처리 · 에지 다듬기 <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">— 결과를 보고 조절한 뒤 <b style="color:var(--accent2)">↻ 다시 적용</b></span></div>
+      <div class="sect">③ 후처리 및 에지 다듬기</div>
       <div class="grid">
         <div class="it"><label>추가 인페인트</label>
           <select id="post">
             <option value="core" selected>중심부만 (기본)</option>
-            <option value="none">없음 (역산 결과 그대로)</option>
-            <option value="full">마스크 전체 다시 인페인트</option>
+            <option value="none">없음 (결과 그대로)</option>
+            <option value="full">마스크 전체 다시 적용</option>
             <option value="residual">잔여물 자동 재처리</option>
           </select></div>
-        <div class="it"><label>페더 반경 (안쪽)</label>
+        <div class="it"><label>페더 안쪽 반경</label>
           <div class="rw"><input type="range" id="fr" min="0" max="14" value="0"><span class="val" id="vFr">0px</span></div></div>
-        <div class="it"><label>페더 바깥쪽</label>
+        <div class="it"><label>페더 바깥쪽 반경</label>
           <div class="rw"><input type="range" id="fo" min="0" max="14" value="0"><span class="val" id="vFo">0px</span></div></div>
         <div class="it"><label>페더 강도</label>
           <div class="rw"><input type="range" id="fs" min="0" max="100" value="55"><span class="val" id="vFs">55%</span></div></div>
-        <div class="it"><label>질감(노이즈) 맞추기</label>
+        <div class="it"><label>질감 (노이즈) 매칭</label>
           <div class="rw"><input type="range" id="gr" min="0" max="20" value="0"><span class="val" id="vGr">0</span></div></div>
         <div class="it"><label style="visibility:hidden">재적용</label>
-          <button class="btn pri" id="bRedo" style="width:100%" disabled>↻ 다시 적용</button></div>
+          <button class="btn pri" id="bRedo" style="width:100%" disabled>설정 변경 후 다시 적용</button></div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="ov"><div class="card"><h3>🔄 처리 중</h3><p id="ovMsg">준비 중…</p>
+<div id="ov"><div class="card"><h3>처리 중</h3><p id="ovMsg">준비 중…</p>
   <div class="pbw"><div class="pbf" id="ovFill"></div></div><div class="pct" id="ovPct">0%</div></div></div>
-<div id="toast"><span id="tIco">✅</span><span id="tMsg"></span></div>
+<div id="toast"><span id="tIco"></span><span id="tMsg"></span></div>
 
 <script>
 'use strict';
@@ -312,7 +349,7 @@ const view=$('view'),vctx=view.getContext('2d');
 let src=null,sctx=null,orig=null,cur=null,mask=null;
 let W=0,H=0,vw=0,vh=0,scale=1,hasResult=false;
 let mode='pick',dragging=false,selA=null,selB=null,fname='gemini',zoomBox=null,pickedOnce=false;
-let gridN=4, cellR=0, cellC=0, workShow='orig';   // 16분할 · 선택 칸 · 배율
+let gridN=4, cellR=0, cellC=0, workShow='orig';
 
 /* ── 로드 ── */
 $('drop').onclick=e=>{if(e.target.id!=='file')$('file').click()};
@@ -350,7 +387,6 @@ function init(img){
   lastSel=null;
   $('spec').value='auto'; applySpec();
   $('mrad').value=Math.round(specFor().size*0.9); syncVals();
-  // 워터마크가 있는 우하단 칸을 자동으로 열어준다
   const lb=logoBox();
   cellC=Math.max(0,Math.min(gridN-1,Math.floor((lb.x0+lb.x1)/2/(W/gridN))));
   cellR=Math.max(0,Math.min(gridN-1,Math.floor((lb.y0+lb.y1)/2/(H/gridN))));
@@ -362,12 +398,10 @@ function cellRect(){
   const x0=cellC*cw, y0=cellR*ch;
   return {x0,y0,x1:Math.min(W,x0+cw),y1:Math.min(H,y0+ch)};
 }
-/* 작업창은 최대 1024×1024. 칸을 여기에 꽉 채우도록 확대한다.
-   → 분할을 잘게 할수록 자동으로 더 크게 확대된다 (10×10이면 약 10배). */
 function workViewport(){
   const el=$('wscroll');
-  const w=Math.max(240, el.clientWidth-20);
-  const h=Math.max(240, el.clientHeight-20);
+  const w=Math.max(240, el.clientWidth-32);
+  const h=Math.max(240, el.clientHeight-32);
   return Math.min(1024, w, h);
 }
 function zoomFactor(){
@@ -379,13 +413,12 @@ function fit(){
   const r=cellRect(), cw=r.x1-r.x0, ch=r.y1-r.y0;
   const z=zoomFactor();
   vw=Math.max(1,Math.round(cw*z)); vh=Math.max(1,Math.round(ch*z));
-  scale=1/z;                                  // 캔버스 1px = 이미지 scale px
+  scale=1/z;
   view.width=vw; view.height=vh;
   view.style.width=vw+'px'; view.style.height=vh+'px';
   $('cellName').textContent=`칸 ${cellR+1}-${cellC+1} · ${cw}×${ch}px · ${z.toFixed(1)}배`;
   render(); zoom(); centerWork();
 }
-/* 현재 칸 안에서 '관심 지점' (선택 영역 → 규격 로고 위치 → 칸 중앙) */
 function focusPoint(){
   const r=cellRect();
   const inCell=(x,y)=>x>=r.x0&&x<r.x1&&y>=r.y0&&y<r.y1;
@@ -404,13 +437,6 @@ function centerWork(){
 }
 window.addEventListener('resize',()=>{if(src)fit()});
 
-/* ── 고정 위치 박스 (핵심) ──
-   Gemini 로고는 항상 같은 모서리에, 이미지 크기 비례 위치·크기로 찍힙니다.
-   슬라이더 값은 짧은 변(min(W,H)) 대비 % 입니다. */
-/* Gemini 워터마크 규격 (절대 픽셀)
-     · 1024px 이하 : 48×48 로고, 우하단에서 32px 여백
-     · 1024px 초과 : 96×96 로고, 우하단에서 64px 여백
-   비율 추정이 아니라 고정 규격이므로 이미지만 넣으면 바로 정확히 맞는다. */
 function specFor(){
   const big=Math.max(W,H)>1024;
   return big?{size:96,margin:64}:{size:48,margin:32};
@@ -440,14 +466,12 @@ function applyBox(silent){
   zoomBox=b;
   mask.fill(0);
   if($('mmode').value==='box') fillBox(b);
-  else if(!glyphMask(b)) fillBox(b);      // 글리프를 못 찾으면 박스 전체
+  else if(!glyphMask(b)) fillBox(b);
   markMask();render();zoom();
   if(!silent) status(`박스 적용: ${b.x1-b.x0}×${b.y1-b.y0}px @ (${b.x0},${b.y0})`,false);
 }
 function fillBox(b){ for(let y=b.y0;y<b.y1;y++){const row=y*W;for(let x=b.x0;x<b.x1;x++)mask[row+x]=1} }
 
-/* 박스 경계에서 배경을 보간해 추정 → 로고 전체(가운데 채워진 부분까지) 검출.
-   블러 기반 배경 추정은 로고 안쪽이 배경으로 섞여 들어가 가운데가 남는 문제가 있음. */
 function boxDiff(b){
   const {x0,y0,x1,y1}=b, bw=x1-x0, bh=y1-y0;
   const d=orig.data;
@@ -458,8 +482,8 @@ function boxDiff(b){
     const tY=(y-y0+.5)/bh;
     for(let x=x0;x<x1;x++){
       const tX=(x-x0+.5)/bw;
-      const h=gy(lx,y)*(1-tX)+gy(rx,y)*tX;      // 좌↔우 보간
-      const v=gy(x,ty)*(1-tY)+gy(x,by)*tY;      // 상↔하 보간
+      const h=gy(lx,y)*(1-tX)+gy(rx,y)*tX;
+      const v=gy(x,ty)*(1-tY)+gy(x,by)*tY;
       diff[(y-y0)*bw+(x-x0)]=gy(x,y)-(h+v)/2;
     }
   }
@@ -468,15 +492,11 @@ function boxDiff(b){
 function threshOf(diff,sens){
   const a=Float32Array.from(diff,v=>Math.abs(v));
   a.sort();
-  const med=a[a.length>>1] || 1;                 // 배경 잡음 수준 (로고가 절반 미만이면 유효)
-  const k=6.2-sens*0.45;                         // 민감도 1~10 → k 5.75~1.7
+  const med=a[a.length>>1] || 1;
+  const k=6.2-sens*0.45;
   return Math.max(5, med*k);
 }
 
-/* ══ 핵심: 지정한 창 안에서 "주변보다 밝은 영역" 찾기 ══
-   기준 밝기는 창 바깥 테두리(annulus)에서 가져온다. 창 안쪽 값을 기준으로 쓰면
-   로고 자신이 기준에 섞여 들어가 로고가 안 잡힌다.
-   반환: 찾은 픽셀 수 (0이면 실패) */
 function findBrightIn(b,opts){
   const x0=Math.max(0,b.x0), y0=Math.max(0,b.y0);
   const x1=Math.min(W,b.x1), y1=Math.min(H,b.y1);
@@ -485,25 +505,23 @@ function findBrightIn(b,opts){
   const d=orig.data;
   const lum=(x,y)=>{const p=((y*W)+x)*4;return d[p]*.299+d[p+1]*.587+d[p+2]*.114};
 
-  // ── 기준: 창 바깥 테두리 픽셀들 ──
   const pad=Math.max(3,Math.round(Math.max(bw,bh)*0.35));
   const ox0=Math.max(0,x0-pad),oy0=Math.max(0,y0-pad);
   const ox1=Math.min(W,x1+pad),oy1=Math.min(H,y1+pad);
   const ring=[];
   for(let y=oy0;y<oy1;y++)for(let x=ox0;x<ox1;x++){
-    if(x>=x0&&x<x1&&y>=y0&&y<y1) continue;     // 창 안쪽은 제외
+    if(x>=x0&&x<x1&&y>=y0&&y<y1) continue;
     ring.push(lum(x,y));
   }
   if(ring.length<8) return 0;
   ring.sort((p,q)=>p-q);
-  const base=ring[ring.length>>1];                        // 주변 밝기 중앙값
+  const base=ring[ring.length>>1];
   const hi=ring[Math.min(ring.length-1,Math.floor(ring.length*0.97))];
   const dev=ring.map(v=>Math.abs(v-base)).sort((p,q)=>p-q);
   const mad=dev[dev.length>>1]||1;
 
-  const sens=+$('sens').value;                            // 1(둔감) ~ 10(민감)
-  const k=(11-sens)*0.55;                                 // 6.05 ~ 0.55
-  // 주변 잡음 수준과 주변 최댓값을 함께 고려해 문턱을 정한다
+  const sens=+$('sens').value;
+  const k=(11-sens)*0.55;
   let thr=Math.max(base+Math.max(4,mad*k), base+(hi-base)*0.45);
 
   const area=bw*bh;
@@ -513,17 +531,14 @@ function findBrightIn(b,opts){
     return out;
   };
   let hits=collect(thr);
-  // 너무 적게 잡히면 문턱을 단계적으로 낮춘다 (옅은 로고 대응)
   for(let s=0;s<6&&hits.length<area*0.012;s++){
     thr=base+Math.max(3,(thr-base)*0.62);
     hits=collect(thr);
   }
-  // 너무 많이 잡히면 올린다 (창 안에 밝은 배경이 많이 들어온 경우).
-  // 로고는 창 안에서 소수 영역이어야 정상이므로 40%를 넘으면 문턱을 올린다.
   for(let s=0;s<8&&hits.length>area*0.40;s++){
     const t2=base+(thr-base)*1.35+2;
     const h2=collect(t2);
-    if(h2.length<area*0.012) break;      // 너무 줄어들면 직전 값 유지
+    if(h2.length<area*0.012) break;
     thr=t2; hits=h2;
   }
   if(hits.length<3||hits.length>area*0.92) return 0;
@@ -541,7 +556,6 @@ function findBrightIn(b,opts){
   return hits.length;
 }
 
-/* 지정한 창에 대해 마스크를 다시 계산 (민감도 슬라이더에서 재호출) */
 let lastSel=null;
 function applyWindow(b,announce){
   pushUndo();
@@ -552,19 +566,17 @@ function applyWindow(b,announce){
   else {
     n=findBrightIn(b);
     if(!n){ fillBox(b); markMask();render();zoom();
-      status('창 안에서 밝은 영역을 못 찾아 창 전체를 선택했습니다 — 민감도를 올려보세요',false);
+      status('창 안에서 밝은 영역을 못 찾아 전체를 선택했습니다. 민감도를 조절하세요.',false);
       return 0; }
   }
   markMask();render();zoom();
   if(announce!==false)
-    status(`창 ${b.x1-b.x0}×${b.y1-b.y0}px 안에서 밝은 영역 ${n.toLocaleString()}픽셀 선택 — 민감도로 조절 가능`,true);
+    status(`영역 ${b.x1-b.x0}×${b.y1-b.y0}px 안에서 ${n.toLocaleString()}픽셀 선택`,true);
   return n;
 }
 
-/* 고정 규격 박스에도 같은 로직을 쓴다 */
 function glyphMask(b){ return findBrightIn(b)>0; }
 
-/* 박스를 실제 로고 위치로 살짝 스냅 */
 function snap(){
   const lb=logoBox();
   const pad=Math.round(Math.max(lb.x1-lb.x0,lb.y1-lb.y0)*0.75);
@@ -575,7 +587,7 @@ function snap(){
   let mnx=1e9,mxx=-1,mny=1e9,mxy=-1,c=0;
   for(let j=0;j<bh;j++)for(let i=0;i<bw;i++)
     if(Math.abs(diff[j*bw+i])>thr){c++;if(i<mnx)mnx=i;if(i>mxx)mxx=i;if(j<mny)mny=j;if(j>mxy)mxy=j}
-  if(c<10||mxx<0){toast('스냅할 대상을 찾지 못했습니다','err');return}
+  if(c<10||mxx<0){toast('스냅 대상을 찾지 못했습니다','err');return}
   const rx=b.x0, ry=b.y0;
   const nx0=rx+mnx,ny0=ry+mny,nx1=rx+mxx+1,ny1=ry+mxy+1;
   const corner=$('corner').value;
@@ -586,29 +598,15 @@ function snap(){
   $('lh').value=cl(ny1-ny0,8,400);
   $('spec').value='manual';
   syncVals();applyBox(true);
-  status(`스냅 완료: ${nx1-nx0}×${ny1-ny0}px @ (${nx0},${ny0})`,true);
-  toast('로고 위치에 맞춰 박스를 조정했습니다','ok');
+  status(`스냅 완료: ${nx1-nx0}×${ny1-ny0}px`,true);
 }
 
-function boxBlur(a,w,h,r){
-  const t=new Float32Array(a.length),o=new Float32Array(a.length),k=2*r+1;
-  const cl=(v,m)=>v<0?0:(v>m?m:v);
-  for(let y=0;y<h;y++){const row=y*w;let s=0;
-    for(let x=-r;x<=r;x++)s+=a[row+cl(x,w-1)];
-    for(let x=0;x<w;x++){t[row+x]=s/k;s-=a[row+cl(x-r,w-1)];s+=a[row+cl(x+r+1,w-1)]}}
-  for(let x=0;x<w;x++){let s=0;
-    for(let y=-r;y<=r;y++)s+=t[cl(y,h-1)*w+x];
-    for(let y=0;y<h;y++){o[y*w+x]=s/k;s-=t[cl(y-r,h-1)*w+x];s+=t[cl(y+r+1,h-1)*w+x]}}
-  return o;
-}
-
-/* ── 렌더 ── */
 let maskDirty=true,maskCv=null;
 function buildMaskCv(){
   if(!maskCv)maskCv=document.createElement('canvas');
   maskCv.width=W;maskCv.height=H;
   const mc=maskCv.getContext('2d'),id=mc.createImageData(W,H),d=id.data;
-  for(let i=0;i<mask.length;i++)if(mask[i]){const j=i*4;d[j]=175;d[j+1]=110;d[j+2]=255;d[j+3]=200}
+  for(let i=0;i<mask.length;i++)if(mask[i]){const j=i*4;d[j]=255;d[j+1]=255;d[j+2]=255;d[j+3]=100} /* Sleek white overlay */
   mc.putImageData(id,0,0);maskDirty=false;
 }
 function render(cursor){
@@ -625,31 +623,30 @@ function render(cursor){
   if(selA&&selB){
     const [ax,ay]=toC(Math.min(selA.x,selB.x),Math.min(selA.y,selB.y));
     const [bx,by]=toC(Math.max(selA.x,selB.x),Math.max(selA.y,selB.y));
-    vctx.save();vctx.fillStyle='rgba(139,124,255,.18)';vctx.fillRect(ax,ay,bx-ax,by-ay);
-    vctx.strokeStyle='#b4a4ff';vctx.lineWidth=1.5;vctx.setLineDash([5,3]);
+    vctx.save();vctx.fillStyle='rgba(255,255,255,.1)';vctx.fillRect(ax,ay,bx-ax,by-ay);
+    vctx.strokeStyle='#ffffff';vctx.lineWidth=1;vctx.setLineDash([4,4]);
     vctx.strokeRect(ax,ay,bx-ax,by-ay);vctx.restore();
   }
   if(cursor){
     const [cx,cy]=toC(cursor.x,cursor.y);
     vctx.save();
     if(mode==='brush'){
-      vctx.strokeStyle='rgba(255,255,255,.85)';vctx.lineWidth=1.2;vctx.setLineDash([4,3]);
+      vctx.strokeStyle='rgba(255,255,255,.8)';vctx.lineWidth=1;vctx.setLineDash([3,3]);
       vctx.beginPath();vctx.arc(cx,cy,Math.max(2,(+$('bs').value/2)/scale),0,7);vctx.stroke();
     } else if(mode==='pick'){
-      vctx.strokeStyle='rgba(255,80,80,.95)';vctx.lineWidth=1;
-      vctx.beginPath();vctx.moveTo(cx,cy-9);vctx.lineTo(cx,cy+9);
-      vctx.moveTo(cx-9,cy);vctx.lineTo(cx+9,cy);vctx.stroke();
+      vctx.strokeStyle='rgba(255,255,255,.9)';vctx.lineWidth=1;
+      vctx.beginPath();vctx.moveTo(cx,cy-8);vctx.lineTo(cx,cy+8);
+      vctx.moveTo(cx-8,cy);vctx.lineTo(cx+8,cy);vctx.stroke();
     }
     vctx.restore();
   }
 }
 function markMask(){maskDirty=true;const n=count();const p=$('pill');
-  if(n){p.style.display='block';p.textContent=`${n.toLocaleString()} px 선택됨`}else p.style.display='none'}
+  if(n){p.style.display='block';p.textContent=`${n.toLocaleString()}px`}else p.style.display='none'}
 function count(){let c=0;for(let i=0;i<mask.length;i++)c+=mask[i];return c}
 
 function zoom(){ drawOverview(); drawResult(); }
 
-/* 전체 사진 + 분할 격자 + 선택 영역 표시 */
 function drawOverview(){
   if(!src) return;
   const c=$('ovw'), SZ=260;
@@ -662,22 +659,21 @@ function drawOverview(){
   g.drawImage(src,0,0,ow,oh);
   if(maskDirty) buildMaskCv();
   g.drawImage(maskCv,0,0,ow,oh);
-  g.strokeStyle='rgba(255,255,255,.28)';g.lineWidth=1;
+  g.strokeStyle='rgba(255,255,255,.15)';g.lineWidth=1;
   for(let i=1;i<gridN;i++){
     const x=Math.round(ow*i/gridN)+.5, y=Math.round(oh*i/gridN)+.5;
     g.beginPath();g.moveTo(x,0);g.lineTo(x,oh);g.stroke();
     g.beginPath();g.moveTo(0,y);g.lineTo(ow,y);g.stroke();
   }
-  g.strokeStyle='#fbbf24';g.lineWidth=2;
+  g.strokeStyle='#ffffff';g.lineWidth=1.5;
   g.strokeRect(ow*cellC/gridN+1, oh*cellR/gridN+1, ow/gridN-2, oh/gridN-2);
 }
 
-/* 같은 칸의 제거 결과 */
 function drawResult(){
   if(!src) return;
   const r=cellRect(), cw=r.x1-r.x0, ch=r.y1-r.y0;
   const el=$('res');
-  const avail=Math.max(160,$('side').clientWidth-34);
+  const avail=Math.max(160,$('side').clientWidth-32);
   const z=Math.min(6, Math.max(1, avail/cw));
   el.width=Math.round(cw*z); el.height=Math.round(ch*z);
   const g=el.getContext('2d');
@@ -687,7 +683,6 @@ function drawResult(){
   g.drawImage(src, r.x0,r.y0,cw,ch, 0,0,el.width,el.height);
 }
 
-/* 전체 사진에서 칸 고르기 */
 $('gridPick').addEventListener('click',e=>{
   if(!src) return;
   const c=$('ovw'), b=c.getBoundingClientRect();
@@ -695,12 +690,12 @@ $('gridPick').addEventListener('click',e=>{
   cellC=Math.max(0,Math.min(gridN-1,Math.floor(fx*gridN)));
   cellR=Math.max(0,Math.min(gridN-1,Math.floor(fy*gridN)));
   fit();
-  status(`칸 ${cellR+1}-${cellC+1} 선택 — 이 창에서 로고를 클릭하세요`,false);
+  status(`칸 ${cellR+1}-${cellC+1} 선택`,false);
 });
 $('vwOrig').onclick=()=>{workShow='orig';$('vwOrig').classList.add('on');$('vwRes').classList.remove('on');render()};
 $('vwRes').onclick=()=>{workShow='res';$('vwRes').classList.add('on');$('vwOrig').classList.remove('on');render()};
 $('gridN').addEventListener('change',function(){
-  const [px,py]=src?focusPoint():[0,0];   // 보던 관심 지점(로고/선택)을 그대로 따라간다
+  const [px,py]=src?focusPoint():[0,0];
   gridN=+this.value;
   if(src){
     cellC=Math.max(0,Math.min(gridN-1,Math.floor(px/(W/gridN))));
@@ -709,7 +704,6 @@ $('gridN').addEventListener('change',function(){
   }
 });
 
-/* ── 입력 ── */
 function pos(e){const r=view.getBoundingClientRect();
   const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
   const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
@@ -738,7 +732,7 @@ function commitSel(){
   const x1=Math.min(W,Math.max(selA.x,selB.x)),y1=Math.min(H,Math.max(selA.y,selB.y));
   selA=selB=null;
   if(x1-x0<2||y1-y0<2){render();return}
-  applyWindow({x0,y0,x1,y1});      // 창 안에서 밝은 영역만 골라낸다
+  applyWindow({x0,y0,x1,y1});
 }
 function brush(p){
   const R=Math.max(1,Math.round(+$('bs').value/2*scale)),R2=R*R;
@@ -747,8 +741,6 @@ function brush(p){
   markMask();
 }
 
-/* ══ 선택 실행취소 ══
-   마스크를 바꾸는 동작 직전에 상태를 통째로 저장해 두고 되돌린다. */
 let undoStack=[];
 function pushUndo(){
   if(!mask) return;
@@ -759,19 +751,14 @@ function pushUndo(){
 }
 function undoSel(){
   const st=undoStack.pop();
-  if(!st){toast('되돌릴 선택이 없습니다','err');return}
+  if(!st){toast('되돌릴 항목이 없습니다','err');return}
   mask.set(st.m); seeds=st.sd; lastSel=st.ls; zoomBox=st.zb; pickedOnce=st.po;
   $('bUndoSel').disabled=undoStack.length===0;
   markMask();render();zoom();
-  status(`선택을 되돌렸습니다 (남은 단계 ${undoStack.length})`,false);
+  status(`실행 취소 (남은 단계 ${undoStack.length})`,false);
 }
 
-/* ══ 매직완드: 클릭한 픽셀의 "색"을 기준으로 선택 ══
-   "주변보다 밝은 곳"을 찾으면 배경의 밝은 부분을 골라버린다.
-   그래서 기준을 주변이 아니라 사용자가 클릭한 색 자체로 삼는다.
-   클릭 지점에서 시작해, 그 색과 비슷하면서 서로 이어진 픽셀만 번져나간다. */
 let seeds=[];
-
 function colorAt(x,y){
   const d=orig.data;
   let r=0,g=0,b=0,c=0;
@@ -783,12 +770,10 @@ function colorAt(x,y){
   return c?[r/c,g/c,b/c]:[0,0,0];
 }
 
-/* 씨앗 하나에서 색 유사 영역을 flood fill. 마스크에 직접 기록하고 픽셀 수를 돌려준다. */
 function wandFlood(seed,acc,tolOverride,countOnly){
   const d=orig.data;
-  const tol=tolOverride!=null?tolOverride:+$('sens').value;  // 허용 색상 오차
-  const R=+$('mrad').value;                // 클릭 지점 기준 최대 반경
-  // 클릭이 살짝 빗나가도 되도록, 클릭 근처에서 가장 밝은 점을 실제 씨앗으로 삼는다
+  const tol=tolOverride!=null?tolOverride:+$('sens').value;
+  const R=+$('mrad').value;
   const LU=(x,y)=>{const p=(y*W+x)*4;return d[p]*.299+d[p+1]*.587+d[p+2]*.114};
   let ax=seed.x,ay=seed.y,best=-1;
   for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){
@@ -798,9 +783,6 @@ function wandFlood(seed,acc,tolOverride,countOnly){
   }
   const [sr,sg,sb]=colorAt(ax,ay);
   const seedLum=sr*.299+sg*.587+sb*.114;
-  /* 반투명 흰 로고는 배경과 섞인 결과물이라 순수한 흰 하이라이트보다 밝을 수 없다.
-     따라서 씨앗보다 뚜렷하게 "더 밝은" 픽셀은 로고가 아니라 배경으로 보고 막는다.
-     이게 없으면 로고에 닿아 있는 밝은 배경으로 flood가 새어나간다. */
   const BRIGHT_MARGIN=10;
   const x0=Math.max(0,ax-R),x1=Math.min(W-1,ax+R);
   const y0=Math.max(0,ay-R),y1=Math.min(H-1,ay+R);
@@ -811,7 +793,6 @@ function wandFlood(seed,acc,tolOverride,countOnly){
     if(LU(x,y)>seedLum+BRIGHT_MARGIN) return false;
     const p=(y*W+x)*4;
     const dr=d[p]-sr,dg=d[p+1]-sg,db=d[p+2]-sb;
-    // 사람 눈 민감도 가중 색거리
     return (0.30*dr*dr+0.59*dg*dg+0.11*db*db)<=tol2;
   };
   seed={x:ax,y:ay};
@@ -852,12 +833,8 @@ function wandFlood(seed,acc,tolOverride,countOnly){
   return hits.length;
 }
 
-/* 등록된 모든 씨앗으로 마스크를 다시 만든다 (허용 오차/반경 슬라이더에서 재호출) */
 function rebuildWand(){
   if(!src||!seeds.length) return;
-  /* 로고와 배경의 밝은 부분이 색까지 비슷하면 flood가 배경으로 새어나간다.
-     Gemini 로고 크기(48 또는 96px)를 알고 있으므로, 결과가 그보다 훨씬 크면
-     허용 오차를 자동으로 낮춰 다시 시도한다. */
   const sp=specFor();
   const limit=sp.size*sp.size*1.35*Math.max(1,seeds.length*0.7);
   const userTol=+$('sens').value;
@@ -875,15 +852,15 @@ function rebuildWand(){
   for(const s of seeds) total+=wandFlood(s,acc,tol);
   if(acc.x1<0){
     markMask();render();
-    status('그 색으로는 아무것도 안 잡힙니다 — 허용 오차를 올려보세요',false);
+    status('선택된 영역이 없습니다.',false);
     return;
   }
-  const auto = tol<userTol ? ` · 배경 번짐 방지로 오차 ${Math.round(tol)}까지 자동 축소` : '';
+  const auto = tol<userTol ? ` (자동 오차 보정)` : '';
   const pad=+$('dil').value+4;
   zoomBox={x0:Math.max(0,acc.x0-pad),y0:Math.max(0,acc.y0-pad),
            x1:Math.min(W,acc.x1+pad+1),y1:Math.min(H,acc.y1+pad+1)};
   markMask();render();zoom();
-  status(`클릭 ${seeds.length}곳 · ${total.toLocaleString()}픽셀 (${acc.x1-acc.x0+1}×${acc.y1-acc.y0+1}px)${auto} — 허용 오차로 조절`,true);
+  status(`자동 선택: ${total.toLocaleString()}px${auto}`,true);
 }
 
 function growFromSeed(p){
@@ -894,14 +871,12 @@ function growFromSeed(p){
   rebuildWand();
 }
 
-
-/* ── 버튼 / 슬라이더 ── */
 $('bPick').onclick=()=>setMode('pick');
 $('bAuto').onclick=()=>{applyBox(false)};
 $('bSel').onclick=()=>setMode('sel');
 $('bBrush').onclick=()=>setMode('brush');
 $('bClr').onclick=()=>{pushUndo();mask.fill(0);selA=selB=null;pickedOnce=false;lastSel=null;seeds=[];
-  markMask();render();zoom();status('선택 해제됨 — 로고를 다시 클릭하세요',false)};
+  markMask();render();zoom();status('선택 해제 완료',false)};
 $('bBox').onclick=()=>applyBox(false);
 $('bSnap').onclick=snap;
 $('bRun').onclick=run;
@@ -912,7 +887,7 @@ window.addEventListener('keydown',e=>{
 });
 $('bUndo').onclick=()=>{cur=new ImageData(new Uint8ClampedArray(orig.data),W,H);hasResult=false;
   $('bCmp').disabled=$('bDl').disabled=$('bUndo').disabled=true;
-  if(cmpOn)toggleCmp();render();zoom();status('원본으로 되돌렸습니다',false)};
+  if(cmpOn)toggleCmp();render();zoom();status('원본이 복원되었습니다',false)};
 $('bCmp').onclick=toggleCmp;$('bDl').onclick=download;$('bReset').onclick=reset;
 
 function syncVals(){
@@ -935,7 +910,7 @@ function syncVals(){
 ['sens','mrad','dil'].forEach(id=>$(id).addEventListener('input',()=>{
   syncVals();
   if(!src) return;
-  if(seeds.length) rebuildWand();      // 클릭한 씨앗들로 재계산 (최우선)
+  if(seeds.length) rebuildWand();
   else if(lastSel) applyWindow(lastSel);
   else applyBox(true);
 }));
@@ -949,24 +924,22 @@ function setMode(m){mode=m;selA=selB=null;
   $('bSel').classList.toggle('on',m==='sel');
   $('bBrush').classList.toggle('on',m==='brush');
   view.className=m==='brush'?'brush':'sel';
-  $('mode').textContent='모드: '+(m==='pick'?'로고 클릭':m==='sel'?'영역 선택':'브러시');
+  $('mode').textContent='도구: '+(m==='pick'?'로고 클릭':m==='sel'?'영역 선택':'브러시');
   render()}
 
-/* ── 제거 ──
-   마스크를 지우지 않고 lastJob에 보관해서, 후처리 옵션만 바꿔 다시 적용할 수 있게 한다. */
 let lastJob=null;
 async function run(){
   const total=count();
-  if(!total){toast('제거할 영역이 없습니다','err');return}
+  if(!total){toast('선택된 영역이 없습니다','err');return}
   lastJob={mask:Uint8Array.from(mask), base:new Uint8ClampedArray((hasResult?cur:orig).data), total};
   await execJob();
 }
 async function redo(){
-  if(!lastJob){toast('먼저 제거를 한 번 실행하세요','err');return}
+  if(!lastJob){toast('먼저 제거를 실행하세요','err');return}
   await execJob();
 }
 async function execJob(){
-  prog('영역 분석 중…',3);await tick(30);
+  prog('분석 중…',3);await tick(30);
   const out=new ImageData(new Uint8ClampedArray(lastJob.base),W,H);
   const mk=lastJob.mask, total=lastJob.total;
   const bb=bboxOf(mk), algo=$('algo').value;
@@ -990,19 +963,19 @@ async function execJob(){
 
     const post=$('post').value;
     if(post==='full'){
-      prog('마스크 전체 재인페인트…',80);await tick(15);
+      prog('전체 재적용…',80);await tick(15);
       await exemplar(out,Uint8Array.from(mk),bb,total);
     } else if(post==='residual'){
-      prog('잔여물 검사…',80);await tick(15);
+      prog('잔여물 분석…',80);await tick(15);
       const res=residualPixels(out,mk,bb);
       if(res.length){
         const rm=new Uint8Array(W*H); for(const i of res) rm[i]=1;
         await exemplar(out,rm,bboxOf(rm),res.length);
-        toast(`잔여물 ${res.length.toLocaleString()}픽셀 재처리`,'ok');
+        toast(`잔여물 처리가 완료되었습니다.`,'ok');
       }
     }
 
-    prog('에지 다듬기…',94);await tick(15);
+    prog('결과 다듬기…',94);await tick(15);
     edgeFeather(out,mk,bb,+$('fr').value,+$('fo').value,+$('fs').value);
     const gr=+$('gr').value;
     if(gr>0) addGrain(out,mk,bb,gr);
@@ -1010,8 +983,8 @@ async function execJob(){
     cur=out;hasResult=true;mask.fill(0);markMask();render();zoom();unprog();
     $('bCmp').disabled=$('bDl').disabled=$('bUndo').disabled=false;
     $('bRedo').disabled=false;
-    status('✅ 완료 — 에지가 보이면 ③ 후처리를 조절하고 ↻ 다시 적용',true);
-    toast('로고를 제거했습니다','ok');
+    status('완료. 설정을 변경하고 [다시 적용]을 눌러 비교해보세요.',true);
+    toast('로고가 제거되었습니다','ok');
   }catch(e){unprog();console.error(e);toast('오류: '+e.message,'err')}
 }
 function bboxOf(mk){
@@ -1023,7 +996,6 @@ function bboxOf(mk){
   return{x0:Math.max(0,x0-pad),y0:Math.max(0,y0-pad),x1:Math.min(W-1,x1+pad),y1:Math.min(H-1,y1+pad)};
 }
 
-/* 제거 후에도 주변과 밝기가 튀는 픽셀 = 잔여물 */
 function residualPixels(img,mk,bb){
   const d=img.data,out=[];
   const F=bgFill(mk,bb); if(!F) return out;
@@ -1038,9 +1010,6 @@ function residualPixels(img,mk,bb){
   return out;
 }
 
-/* ── 페더: 마스크 경계로부터의 실제 거리로 감쇠 ──
-   경계 안쪽 fr px, 바깥쪽 fo px 범위를 블러본과 섞는다.
-   경계에서 가장 강하게, 멀어질수록 0으로 줄어들어 이음매가 사라진다. */
 function edgeFeather(img,mk,bb,fr,fo,fs){
   if(fs<=0||(fr<=0&&fo<=0)) return;
   const ox=bb.x0,oy=bb.y0,bw=bb.x1-bb.x0+1,bh=bb.y1-bb.y0+1,n=bw*bh;
@@ -1051,7 +1020,6 @@ function edgeFeather(img,mk,bb,fr,fo,fs){
 
   const dist=new Float32Array(n).fill(1e9);
   const q=new Int32Array(n); let qh=0,qt=0;
-  // 경계(마스크 안쪽 가장자리 + 바로 바깥) 픽셀을 거리 0으로 시드
   for(let gy=0;gy<bh;gy++)for(let gx=0;gx<bw;gx++){
     const gi=gy*bw+gx;
     let edge=false;
@@ -1075,7 +1043,6 @@ function edgeFeather(img,mk,bb,fr,fo,fs){
     }
   }
 
-  // 블러본
   const rad=Math.max(1,Math.round(Math.max(fr,fo)*0.75));
   const d=img.data;
   const src=new Float32Array(n*3);
@@ -1109,7 +1076,6 @@ function edgeFeather(img,mk,bb,fr,fo,fs){
   }
 }
 
-/* 복원 영역이 주변보다 매끈해 보일 때 주변과 같은 정도의 미세 노이즈를 얹는다 */
 function addGrain(img,mk,bb,amt){
   const d=img.data;
   let seed=12345;
@@ -1122,15 +1088,7 @@ function addGrain(img,mk,bb,amt){
     d[p+2]=Math.max(0,Math.min(255,d[p+2]+v));
   }
 }
-/* ── 알파 언블렌드 + 에지 다듬기 (기본) ──
-   Gemini 로고는 반투명 흰색(또는 검정)을 원본 위에 알파 합성한 것.
-   observed = α·logoColor + (1-α)·original 이므로
-   박스 테두리에서 보간한 배경(원래 있었을 값)을 기준으로 α를 역산해
-   original = (observed - α·logoColor)/(1-α) 로 대부분을 대수적으로 정확히 복원한다.
-   가장자리는 α가 자연스럽게 0으로 줄어들어 별도 페더링 없이도 이어지고,
-   α가 아주 높아 역산이 불안정한 core 픽셀만 골라 정밀 복원(패치 복사)으로 다듬는다. */
-/* 배경 추정: 마스크 픽셀을 주변 실제 픽셀로부터 라플라스 확산으로 메운다.
-   (사각형 경계 보간은 로고 모양을 무시해서 유리·반사 같은 곳에서 크게 빗나감) */
+
 function bgFill(m,bb){
   const ox=bb.x0,oy=bb.y0,bw=bb.x1-bb.x0+1,bh=bb.y1-bb.y0+1,n=bw*bh;
   if(n<=0) return null;
@@ -1172,10 +1130,6 @@ function bboxOfIndices(list,pad){
   return{x0:Math.max(0,x0-p),y0:Math.max(0,y0-p),x1:Math.min(W-1,x1+p),y1:Math.min(H-1,y1+p)};
 }
 
-/* α는 채널별로 따로 구하지 않고 휘도 하나로만 구해 모든 채널에 동일 적용한다.
-   채널마다 α가 달라지면 그 차이가 1/(1-α)로 증폭돼 파랑·빨강 얼룩이 생긴다. */
-/* 마스크 바깥에는 안티에일리어싱된 옅은 로고 잔여물이 남는다.
-   이 halo까지 미지 영역에 포함해야 α가 0으로 수렴하며 경계가 깨끗이 이어진다. */
 function dilateMask(m,bb,R){
   if(R<=0) return m;
   const out=new Uint8Array(m),R2=R*R;
@@ -1194,40 +1148,32 @@ async function hybrid(img,mIn,bbIn){
             x1:Math.min(W-1,bbIn.x1+halo),y1:Math.min(H-1,bbIn.y1+halo)};
   const m=dilateMask(mIn,bbIn,halo);
 
-  /* ── 1단계: 배경 추정 (라플라스 확산) ── */
-  prog('배경 추정 중…',12);await tick(15);
+  prog('배경 계산 중…',12);await tick(15);
   const F=bgFill(m,bb);
   if(!F){ let c=0;for(let y=bb.y0;y<=bb.y1;y++)for(let x=bb.x0;x<=bb.x1;x++)if(m[y*W+x])c++;
           await exemplar(img,m,bb,c); return; }
   const {bg,bw,ox,oy}=F;
 
-  prog('알파 언블렌드 중…',40);await tick(10);
+  prog('알파 보정…',40);await tick(10);
   const d=img.data,LOGO=+$('logoColor').value;
-  const A_MAX=0.72;      // 이 이상은 원본 신호가 거의 안 남아 역산이 불안정
+  const A_MAX=0.72;
   const core=[];
   let done=0,unb=0;
 
-  /* ── 2단계: α 역산 ──
-     α가 안정적으로 구해지는 픽셀은 observed에서 로고 성분만 빼서 원본을
-     대수적으로 복원한다 (질감·노이즈가 그대로 살아남아 뭉개지지 않는다).
-
-     α를 못 구하는 픽셀은 건드리지 않는 편이 정확하다. 그런 픽셀은 대부분
-     배경이 밝아 분모가 작은 곳인데, 거기서는 흰 로고가 원래 거의 영향을 주지 못한다.
-     (실측 결과 이런 픽셀을 패치 복원으로 덮으면 평균 오차가 5배 이상 나빠졌다) */
   for(let y=bb.y0;y<=bb.y1;y++){
     for(let x=bb.x0;x<=bb.x1;x++){
       const i=y*W+x;
-      if(!m[i]) continue;                       // 마스크 픽셀만 건드린다
+      if(!m[i]) continue;
       const o=((y-oy)*bw+(x-ox))*3, p=i*4;
       const Lo=d[p]*.299+d[p+1]*.587+d[p+2]*.114;
       const Lg=bg[o]*.299+bg[o+1]*.587+bg[o+2]*.114;
       const denom=LOGO-Lg;
       done++;
-      if(Math.abs(denom)<12) continue;   // 배경색이 로고색과 같음
+      if(Math.abs(denom)<12) continue;
       const a=(Lo-Lg)/denom;
-      if(a<-0.05) continue;              // 배경 추정 실패
-      if(a<=0.015) continue;                          // 워터마크 영향 없음 → 원본 유지
-      if(a>=A_MAX){ core.push(i); continue }          // 원본 신호가 거의 안 남음
+      if(a<-0.05) continue;
+      if(a<=0.015) continue;
+      if(a>=A_MAX){ core.push(i); continue }
       const inv=1/(1-a),aL=a*LOGO;
       const r=(d[p]-aL)*inv,g=(d[p+1]-aL)*inv,b=(d[p+2]-aL)*inv;
       if(r<-28||r>283||g<-28||g>283||b<-28||b>283) continue;
@@ -1238,10 +1184,8 @@ async function hybrid(img,mIn,bbIn){
     }
   }
 
-  /* ── 3단계: 남은 픽셀만 패치 복원 ──
-     이미 복원된 이웃을 원본 소스로 쓸 수 있어서 정확도가 올라간다. */
   if(core.length && $('post').value!=='none'){
-    prog(`중심부 정밀 복원 중 (${core.length}px)…`,65);await tick(10);
+    prog(`세부 복원 중…`,65);await tick(10);
     const coreMask=new Uint8Array(W*H);
     for(const i of core) coreMask[i]=1;
     const cbb=bboxOfIndices(core,Math.max(8,+$('rad').value*2));
@@ -1257,12 +1201,6 @@ function bbox(){
   return{x0:Math.max(0,x0-pad),y0:Math.max(0,y0-pad),x1:Math.min(W-1,x1+pad),y1:Math.min(H-1,y1+pad)};
 }
 
-/* ── 정밀 복원: exemplar 기반 인페인팅 (Criminisi 알고리즘 계열) ──
-   diffusion(onion)은 픽셀을 평균내서 뭉개진 얼룩을 만듦.
-   여기서는 주변에서 가장 비슷한 패치를 통째로 복사해와서
-   결·반사선·질감이 안 끊기게 이어 붙인다. 우선순위는
-   "이미지 경계선(isophote)이 강하게 지나가는 지점"을 먼저 채워
-   선이 어긋나지 않게 한다. */
 async function exemplar(img,m,bb,total){
   const d=img.data;
   const half=Math.max(3,Math.min(6,Math.round(+$('rad').value/2)));
@@ -1369,16 +1307,12 @@ async function exemplar(img,m,bb,total){
     left-=filled;
 
     if(guard%4===0){
-      prog(`정밀 복원 중 (${Math.max(0,total-left)}/${total}px)`,5+Math.min(85,Math.round((total-left)/total*85)));
+      prog(`정밀 복원 중`, 5+Math.min(85,Math.round((total-left)/total*85)));
       await tick(0);
     }
   }
 }
 
-/* ══ 구조 전파 (coherence transport) ══
-   경계 픽셀마다 주변 밝기의 기울기로 등위선(isophote) 방향을 추정하고,
-   그 방향에 놓인 픽셀에만 가중치를 몰아 값을 끌어온다.
-   선·모서리가 로고를 가로지를 때 끊기지 않고 이어진다. */
 async function coherence(img,m,bb,total){
   const d=img.data,R=+$('rad').value,R2=R*R;
   const SHARP=6;
@@ -1392,7 +1326,6 @@ async function coherence(img,m,bb,total){
     const buf=new Float32Array(bnd.length*3);
     for(let k=0;k<bnd.length;k++){
       const i=bnd[k],cx=i%W,cy=(i/W)|0;
-      // 알려진 이웃만으로 기울기 추정
       let gx=0,gy=0,gc=0;
       for(let dy=-2;dy<=2;dy++){const yy=cy+dy;if(yy<1||yy>=H-1)continue;
         for(let dx=-2;dx<=2;dx++){const xx=cx+dx;if(xx<1||xx>=W-1)continue;
@@ -1404,7 +1337,7 @@ async function coherence(img,m,bb,total){
       let ix=0,iy=0,strength=0;
       if(gc){ gx/=gc; gy/=gc;
         const gm=Math.hypot(gx,gy);
-        if(gm>1.2){ ix=-gy/gm; iy=gx/gm; strength=Math.min(1,gm/12); }  // 등위선 = 기울기의 수직
+        if(gm>1.2){ ix=-gy/gm; iy=gx/gm; strength=Math.min(1,gm/12); }
       }
       let r=0,g=0,b=0,ws=0;
       for(let y=Math.max(0,cy-R);y<=Math.min(H-1,cy+R);y++){const dy=y-cy,row=y*W;
@@ -1413,7 +1346,7 @@ async function coherence(img,m,bb,total){
           const dist=Math.sqrt(dd);
           let wt=1/(dd*dist);
           if(strength>0){
-            const align=Math.abs((dx*ix+dy*iy)/dist);      // 등위선 방향과 얼마나 나란한가
+            const align=Math.abs((dx*ix+dy*iy)/dist);
             wt*=(1-strength)+strength*Math.pow(align,SHARP)*6;
           }
           const p=j*4;r+=d[p]*wt;g+=d[p+1]*wt;b+=d[p+2]*wt;ws+=wt;
@@ -1424,27 +1357,22 @@ async function coherence(img,m,bb,total){
     for(let k=0;k<bnd.length;k++){const p=bnd[k]*4;
       d[p]=buf[k*3];d[p+1]=buf[k*3+1];d[p+2]=buf[k*3+2];m[bnd[k]]=0}
     left-=bnd.length;layer++;
-    prog(`구조 전파 · 레이어 ${layer} (${total-left}/${total}px)`,5+Math.round((total-left)/total*85));
+    prog(`구조 분석 중…`,5+Math.round((total-left)/total*85));
     await tick(0);
   }
 }
 
-/* ══ PatchMatch ══
-   무작위 대응 → 이웃 전파 → 무작위 재탐색을 반복해 각 구멍 픽셀에 가장 잘 맞는
-   소스 패치를 찾고, 겹치는 패치들을 평균내어 채운다.
-   랜덤 탐색만 하는 기존 방식보다 훨씬 일관된 질감이 나온다. */
 async function patchMatchFill(img,m,bb,total){
   const d=img.data;
   const P=3, ITER=+$('rad').value>=14?6:4;
   const hole=Uint8Array.from(m);
-  await onion(img,Uint8Array.from(m),bb,total);      // 초기값
+  await onion(img,Uint8Array.from(m),bb,total);
   const ox=Math.max(0,bb.x0-P),oy=Math.max(0,bb.y0-P);
   const ex=Math.min(W-1,bb.x1+P),ey=Math.min(H-1,bb.y1+P);
   const bw=ex-ox+1,bh=ey-oy+1;
   const tgts=[];
   for(let y=bb.y0;y<=bb.y1;y++)for(let x=bb.x0;x<=bb.x1;x++) if(hole[y*W+x]) tgts.push(y*W+x);
   if(!tgts.length) return;
-  // 소스 후보: 패치가 구멍에 전혀 걸치지 않는 중심점
   const srcOK=(sx,sy)=>{
     if(sx-P<ox||sx+P>ex||sy-P<oy||sy+P>ey) return false;
     for(let dy=-P;dy<=P;dy++){const row=(sy+dy)*W;
@@ -1481,17 +1409,15 @@ async function patchMatchFill(img,m,bb,total){
       const idx=fwd?k:tgts.length-1-k;
       const t=tgts[idx];
       let best=nn[idx],bc=cost(t,best);
-      // 이웃 전파
       for(const off of [ -1, -W ]){
         const nb=idxOf.get(t+(fwd?off:-off));
         if(nb===undefined) continue;
         const cand=nn[nb]+(fwd?-off:off)*-1 + (fwd?off:-off);
         const c2=nn[nb]-(fwd?off:-off)+(fwd?off:-off);
-        const s=nn[nb]; // 같은 상대 위치 유지
+        const s=nn[nb];
         const sc=cost(t,s);
         if(sc<bc){bc=sc;best=s}
       }
-      // 무작위 재탐색 (반경을 절반씩 줄여가며)
       let rad=Math.max(bw,bh);
       const bx=best%W,by=(best/W)|0;
       while(rad>1){
@@ -1504,7 +1430,6 @@ async function patchMatchFill(img,m,bb,total){
       }
       nn[idx]=best;
     }
-    // 투표: 겹치는 패치들의 평균으로 재구성
     const accR=new Float64Array(tgts.length),accG=new Float64Array(tgts.length),
           accB=new Float64Array(tgts.length),accC=new Float64Array(tgts.length);
     for(let k=0;k<tgts.length;k++){
@@ -1524,14 +1449,11 @@ async function patchMatchFill(img,m,bb,total){
       const p=tgts[k]*4;
       d[p]=accR[k]/accC[k];d[p+1]=accG[k]/accC[k];d[p+2]=accB[k]/accC[k];
     }
-    prog(`PatchMatch ${it+1}/${ITER}회 (${tgts.length.toLocaleString()}px)`,10+Math.round((it+1)/ITER*80));
+    prog(`질감 재현 중…`,10+Math.round((it+1)/ITER*80));
     await tick(0);
   }
 }
 
-/* ══ 포아송 이음매 제거 ══
-   먼저 채운 결과(v)의 그라디언트는 살리되, 경계 값은 실제 원본과 일치하도록
-   Δu = Δv 를 풀어준다. 내용은 유지한 채 이음매만 사라진다. */
 function poissonSeam(img,m,bb,guide){
   const d=img.data,g=guide;
   const ox=bb.x0,oy=bb.y0,bw=bb.x1-bb.x0+1,bh=bb.y1-bb.y0+1,n=bw*bh;
@@ -1542,7 +1464,6 @@ function poissonSeam(img,m,bb,guide){
     known[gi]=m[i]?0:1;
     u[gi*3]=d[p];u[gi*3+1]=d[p+1];u[gi*3+2]=d[p+2];
   }
-  // 안내 영상의 라플라시안
   for(let gy=1;gy<bh-1;gy++)for(let gx=1;gx<bw-1;gx++){
     const gi=gy*bw+gx,i=(oy+gy)*W+(ox+gx);
     for(let c=0;c<3;c++){
@@ -1574,15 +1495,13 @@ function poissonSeam(img,m,bb,guide){
 
 async function poissonFill(img,m,bb,total){
   const before=new Uint8ClampedArray(img.data);
-  await exemplar(img,Uint8Array.from(m),bb,total);   // 질감 채우기
-  const guide=new Uint8ClampedArray(img.data);       // 그 결과를 안내로 삼아
+  await exemplar(img,Uint8Array.from(m),bb,total);
+  const guide=new Uint8ClampedArray(img.data);
   img.data.set(before);
-  prog('포아송 이음매 제거…',88);await tick(15);
-  poissonSeam(img,m,bb,guide);                       // 경계는 원본에 맞추고 내용은 유지
+  prog('이음매 블렌딩 중…',88);await tick(15);
+  poissonSeam(img,m,bb,guide);
 }
 
-/* ══ 앙상블: 서로 다른 3가지 결과의 픽셀별 중앙값 ══
-   한 방법이 특정 픽셀에서 크게 틀려도 나머지 둘이 잡아준다. */
 async function ensemble(img,m,bb,total){
   const base=new Uint8ClampedArray(img.data);
   const runs=[];
@@ -1597,7 +1516,7 @@ async function ensemble(img,m,bb,total){
     const p=i*4;
     for(let c=0;c<3;c++){
       const a=runs[0][p+c],b2=runs[1][p+c],c3=runs[2][p+c];
-      d[p+c]=Math.max(Math.min(a,b2),Math.min(Math.max(a,b2),c3));  // 중앙값
+      d[p+c]=Math.max(Math.min(a,b2),Math.min(Math.max(a,b2),c3));
     }
   }
 }
@@ -1624,7 +1543,7 @@ async function onion(img,m,bb,total){
     for(let k=0;k<bnd.length;k++){const p=bnd[k]*4;
       d[p]=buf[k*3];d[p+1]=buf[k*3+1];d[p+2]=buf[k*3+2];m[bnd[k]]=0}
     left-=bnd.length;layer++;
-    prog(`인페인팅 · 레이어 ${layer} (${total-left}/${total}px)`,5+Math.round((total-left)/total*85));
+    prog(`인페인팅 처리 중…`,5+Math.round((total-left)/total*85));
     await tick(0);
   }
 }
@@ -1639,7 +1558,7 @@ async function median(img,m,bb,total){
         const p=j*4;rr.push(d[p]);gg.push(d[p+1]);b2.push(d[p+2])}}
     if(rr.length){rr.sort((a,b)=>a-b);gg.sort((a,b)=>a-b);b2.sort((a,b)=>a-b);
       const k=rr.length>>1,p=i*4;out[p]=rr[k];out[p+1]=gg[k];out[p+2]=b2[k]}
-    if(++done%400===0){prog(`미디언 필터 (${done}/${total})`,5+Math.round(done/total*85));await tick(0)}
+    if(++done%400===0){prog(`필터링 중…`,5+Math.round(done/total*85));await tick(0)}
   }
   d.set(out);
 }
@@ -1664,7 +1583,7 @@ async function patch(img,m,bb,total){
         const r=d[p]-d[q],g=d[p+1]-d[q+1],b=d[p+2]-d[q+2];e+=r*r+g*g+b*b;c++}
       const sc=c?e/c:Infinity;if(sc<bs){bs=sc;best=s}}
     if(best>=0){const p=i*4,q=best*4;d[p]=d[q];d[p+1]=d[q+1];d[p+2]=d[q+2]}
-    if(++done%300===0){prog(`패치 복원 (${done}/${total})`,5+Math.round(done/total*85));await tick(0)}
+    if(++done%300===0){prog(`패치 복원 중…`,5+Math.round(done/total*85));await tick(0)}
   }
 }
 
@@ -1672,14 +1591,14 @@ async function patch(img,m,bb,total){
 let cmpOn=false,cmpX=.5;
 function toggleCmp(){
   if(!hasResult)return;
-  cmpOn=!cmpOn;$('bCmp').textContent=cmpOn?'🖼 결과':'👁 비교';
+  cmpOn=!cmpOn;$('bCmp').textContent=cmpOn?'결과 화면':'비교 모드';
   $('cmp').style.display=cmpOn?'flex':'none';
   document.querySelector('.split').style.display=cmpOn?'none':'flex';
   if(cmpOn)drawCmp();else render();
 }
 function drawCmp(){
   const c=$('cmpc');
-  const maxW=Math.max(240,$('cmp').clientWidth-32), maxH=Math.min(560,Math.round(window.innerHeight*0.6));
+  const maxW=Math.max(240,$('cmp').clientWidth-32), maxH=Math.min(600,Math.round(window.innerHeight*0.65));
   const rr=Math.min(1,maxW/W,maxH/H);
   const vwF=Math.max(1,Math.round(W*rr)), vhF=Math.max(1,Math.round(H*rr));
   c.width=vwF;c.height=vhF;c.style.width=vwF+'px';c.style.height=vhF+'px';
@@ -1689,11 +1608,11 @@ function drawCmp(){
   const lx=Math.round(vw*cmpX);
   x.save();x.beginPath();x.rect(lx,0,vw-lx,vh);x.clip();
   sctx.putImageData(cur,0,0);x.drawImage(src,0,0,vw,vh);x.restore();
-  x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.moveTo(lx,0);x.lineTo(lx,vh);x.stroke();
-  x.fillStyle='#fff';x.beginPath();x.arc(lx,vh/2,13,0,7);x.fill();
-  x.fillStyle='#111';x.font='bold 13px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('↔',lx,vh/2);
-  x.fillStyle='rgba(0,0,0,.6)';x.fillRect(8,8,46,20);x.fillRect(vw-62,8,54,20);
-  x.fillStyle='#fff';x.font='bold 11px sans-serif';x.fillText('원본',31,19);x.fillText('제거됨',vw-35,19);
+  x.strokeStyle='#ffffff';x.lineWidth=1.5;x.beginPath();x.moveTo(lx,0);x.lineTo(lx,vh);x.stroke();
+  x.fillStyle='#ffffff';x.beginPath();x.arc(lx,vh/2,14,0,7);x.fill();
+  x.fillStyle='#000';x.font='bold 14px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('↔',lx,vh/2);
+  x.fillStyle='rgba(0,0,0,0.7)';x.fillRect(10,10,50,24);x.fillRect(vw-70,10,60,24);
+  x.fillStyle='#fff';x.font='500 12px sans-serif';x.fillText('원본',35,22);x.fillText('제거됨',vw-40,22);
 }
 (function(){const c=$('cmpc');let dg=false;
   const set=e=>{const r=c.getBoundingClientRect();
@@ -1713,23 +1632,22 @@ function download(){
   o.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);
     a.download=`${fname}_no_watermark.${f}`;a.click();
     setTimeout(()=>URL.revokeObjectURL(a.href),2000);
-    toast(`원본 해상도(${W}×${H})로 저장했습니다`,'ok')},mime,.95);
+    toast(`다운로드가 완료되었습니다.`,'ok')},mime,.95);
 }
 function reset(){
   src=orig=cur=mask=null;hasResult=false;cmpOn=false;zoomBox=null;lastJob=null;seeds=[];lastSel=null;undoStack=[];$('bUndoSel').disabled=true;
-  $('ws').style.display='none';$('drop').style.display='block';
+  $('ws').style.display='none';$('drop').style.display='flex';
   $('cmp').style.display='none';document.querySelector('.split').style.display='flex';
-  $('bCmp').textContent='👁 비교';$('file').value='';$('pill').style.display='none';$('bRedo').disabled=true;
+  $('bCmp').textContent='비교 모드';$('file').value='';$('pill').style.display='none';$('bRedo').disabled=true;
 }
 
-/* ── UI ── */
 function prog(m,p){$('ov').classList.add('on');$('ovMsg').textContent=m;
   $('ovFill').style.width=p+'%';$('ovPct').textContent=p+'%'}
 function unprog(){$('ov').classList.remove('on')}
 function status(t,go){$('stat').textContent=t;$('sd').className='sd'+(go?' go':'')}
 let tt;function toast(m,t){clearTimeout(tt);$('tMsg').textContent=m;
-  $('tIco').textContent=t==='ok'?'✅':'⚠️';$('toast').classList.add('show');
-  tt=setTimeout(()=>$('toast').classList.remove('show'),3200)}
+  $('toast').classList.add('show');
+  tt=setTimeout(()=>$('toast').classList.remove('show'),3000)}
 const tick=ms=>new Promise(r=>setTimeout(r,ms));
 </script>
 </body>
