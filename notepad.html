@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나만의 웹 메모장</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Gothic:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F6F8',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'Noto Sans KR', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F6F8; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard','Noto Sans KR',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  /* 편집 영역 : 내용에 따라 자동으로 늘고, 하단 테두리를 끌어 직접 조절도 가능 */
+  #editor{
+    min-height:clamp(200px, 36vh, 320px);
+    height:clamp(200px, 52vh, 560px);
+    overflow-y:auto;
+    resize:vertical;
+    outline:none;
+    word-break:break-word;
+    white-space:pre-wrap;
+  }
+  #editor:empty::before{
+    content:attr(data-placeholder);
+    color:#9AA7B4;
+    pointer-events:none;
+  }
+  #editor ul{ list-style:disc; padding-left:1.5em; margin:.4em 0; }
+  #editor ol{ list-style:decimal; padding-left:1.6em; margin:.4em 0; }
+  #editor:focus-visible{ outline:none; }
+
+  #codeView{
+    min-height:clamp(200px, 36vh, 320px);
+    max-height:72vh;
+    white-space:pre-wrap;
+    word-break:break-word;
+    background:#FBFCFD;
+  }
+  .view-btn{ color:var(--muted); cursor:pointer; transition:background .12s, color .12s; }
+  .view-btn:hover{ color:var(--ink); background:#F4F6F8; }
+  .view-btn.on{ background:var(--ink); color:#fff; }
+  .view-btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .toolbar-off{ opacity:.4; pointer-events:none; }
+
+  /* 툴바 컨트롤 */
+  .ctl{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:7px 10px; cursor:pointer;
+    transition:border-color .12s, background .12s, color .12s;
+  }
+  .ctl:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .ctl:active{ background:#F1F4F7; }
+  .ctl:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .ctl.on{ border-color:var(--steel); color:var(--steel); background:#F2F7FB; }
+  select.ctl{ padding-right:24px; cursor:pointer; }
+
+  .sym{
+    min-width:34px; height:32px;
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:15px; line-height:1; cursor:pointer;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .sym:hover{ border-color:var(--steel); color:var(--steel); background:#F2F7FB; }
+  .sym:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  .divider{ width:1px; height:20px; background:var(--hair); }
+
+  /* 분량 게이지 */
+  #gaugeFill{ transition:width .18s ease, background-color .18s ease; }
+
+  /* 토스트 */
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <!-- 머리말 -->
+  <header class="flex items-end justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">나만의 웹 메모장</h1>
+      <p class="mt-1 text-[13px] text-muted">작성하고 복사하는 임시 작업대 · 저장되지 않음</p>
+    </div>
+    <div class="flex shrink-0 items-center gap-2">
+      <div id="viewSwitch" class="flex rounded-md border border-hair bg-white p-0.5" role="group" aria-label="보기 모드">
+        <button class="view-btn rounded px-2.5 py-1.5 text-[12px]" data-view="rich">서식</button>
+        <button class="view-btn rounded px-2.5 py-1.5 text-[12px]" data-view="html">HTML</button>
+        <button class="view-btn rounded px-2.5 py-1.5 text-[12px]" data-view="md">Markdown</button>
+      </div>
+      <button id="copyBtn" class="rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white hover:bg-[#1D2C3B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-steel">
+        전체 복사
+      </button>
+    </div>
+  </header>
+
+  <!-- 작업 시트 -->
+  <div class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.05)]">
+
+    <!-- 1행 : 서식 -->
+    <div class="toolbar flex flex-wrap items-center gap-2 border-b border-hair px-4 py-3">
+      <select id="fontFamily" class="ctl" aria-label="폰트">
+        <option value="Pretendard">Pretendard</option>
+        <option value="'Noto Sans KR'">Noto Sans KR</option>
+        <option value="'Nanum Gothic'">나눔고딕</option>
+        <option value="'Malgun Gothic'">맑은 고딕</option>
+        <option value="'JetBrains Mono'">Monospace</option>
+      </select>
+
+      <select id="fontSize" class="ctl" aria-label="폰트 크기">
+        <option value="12px">12</option>
+        <option value="13px">13</option>
+        <option value="14px">14</option>
+        <option value="15px">15</option>
+        <option value="16px" selected>16</option>
+        <option value="18px">18</option>
+        <option value="20px">20</option>
+        <option value="24px">24</option>
+      </select>
+
+      <select id="lineHeight" class="ctl" aria-label="줄 간격">
+        <option value="1.2">줄 간격 1.2</option>
+        <option value="1.5">줄 간격 1.5</option>
+        <option value="1.8" selected>줄 간격 1.8</option>
+        <option value="2.0">줄 간격 2.0</option>
+      </select>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <button class="ctl font-bold w-9" data-cmd="bold" title="굵게 (Ctrl+B)">B</button>
+      <button class="ctl italic font-serif w-9" data-cmd="italic" title="기울임 (Ctrl+I)">I</button>
+      <button class="ctl" data-cmd="insertUnorderedList" title="문단 기호">• 목록</button>
+      <button class="ctl" data-cmd="insertOrderedList" title="문단 번호">1. 번호</button>
+      <button class="ctl" id="lineBreak" title="줄바꿈 삽입 (Shift+Enter)">↵ 줄바꿈</button>
+      <button class="ctl" id="clearFormat" title="서식만 지우기">서식 지우기</button>
+    </div>
+
+    <!-- 2행 : 특수기호 -->
+    <div class="toolbar flex flex-wrap items-center gap-1.5 border-b border-hair px-4 py-3">
+      <span class="mr-1 text-[11px] font-medium tracking-wide text-muted">기호</span>
+      <button class="sym" data-sym="·">·</button>
+      <button class="sym" data-sym="〈">〈</button>
+      <button class="sym" data-sym="〉">〉</button>
+      <button class="sym" data-sym="《">《</button>
+      <button class="sym" data-sym="》">》</button>
+      <button class="sym" data-sym="←">←</button>
+      <button class="sym" data-sym="→">→</button>
+      <button class="sym" data-sym="※">※</button>
+      <button class="sym" data-sym="○">○</button>
+      <button class="sym" data-sym="□">□</button>
+      <button class="sym" data-sym="─">─</button>
+      <button class="sym" data-sym="①">①</button>
+      <button class="sym" data-sym="②">②</button>
+      <button class="sym" data-sym="③">③</button>
+      <button class="sym" data-sym="④">④</button>
+      <button class="sym" data-sym="⑤">⑤</button>
+    </div>
+
+    <!-- 편집창 -->
+    <div
+      id="editor"
+      contenteditable="true"
+      spellcheck="false"
+      role="textbox"
+      aria-multiline="true"
+      aria-label="메모 편집 영역"
+      data-placeholder="여기에 작성하세요. 아래쪽 테두리를 끌어 높이를 조절할 수 있습니다."
+      class="px-5 py-5 sm:px-7 sm:py-6 text-[16px] leading-[1.8]"
+    ></div>
+
+    <!-- 코드 보기 (읽기 전용) -->
+    <pre id="codeView" hidden class="num m-0 overflow-auto px-5 py-5 text-[13px] leading-[1.7] text-ink sm:px-7 sm:py-6"></pre>
+
+    <!-- 계수기 -->
+    <div class="border-t border-hair px-4 py-3">
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+
+        <div class="flex flex-wrap items-baseline gap-x-5 gap-y-1 text-[12px] text-muted">
+          <span>공백 포함 <b id="cAll" class="num ml-0.5 text-[14px] font-medium text-ink">0</b></span>
+          <span>공백 제외 <b id="cNoSp" class="num ml-0.5 text-[14px] font-medium text-ink">0</b></span>
+          <span>바이트 <b id="cByte" class="num ml-0.5 text-[14px] font-medium text-ink">0</b></span>
+        </div>
+
+        <div class="flex items-center gap-2 text-[12px] text-muted">
+          <label for="target">분량 기준</label>
+          <input id="target" type="number" min="0" step="100" value="1000"
+                 class="num w-20 rounded-md border border-hair px-2 py-1 text-right text-[12px] text-ink focus:border-steel focus:outline-none">
+          <span>자</span>
+          <button id="clearAll" class="ctl ml-2">전체 지우기</button>
+        </div>
+      </div>
+
+      <div class="mt-3 h-[3px] w-full overflow-hidden rounded-full bg-hair">
+        <div id="gaugeFill" class="h-full w-0 bg-steel"></div>
+      </div>
+      <p class="mt-1.5 text-[11px] text-muted">글자 수는 줄바꿈을 제외하고 셉니다 · 바이트는 UTF-8 기준(한글 3, 영문·숫자·공백 1)</p>
+    </div>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const editor = document.getElementById('editor');
+  const encoder = new TextEncoder();
+  let lastRange = null;
+
+  /* ---------- 선택 영역 기억 ---------- */
+  function saveRange() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+      lastRange = sel.getRangeAt(0).cloneRange();
+    }
+  }
+  document.addEventListener('selectionchange', saveRange);
+  editor.addEventListener('keyup', saveRange);
+  editor.addEventListener('mouseup', saveRange);
+
+  function activeRange() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount) {
+      const r = sel.getRangeAt(0);
+      if (editor.contains(r.commonAncestorContainer)) return r;
+    }
+    return lastRange;
+  }
+
+  function restore(range) {
+    editor.focus();
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  /* ---------- 선택 영역에 인라인 스타일 적용 ---------- */
+  function firstText(node) {
+    if (node.nodeType === 3) return node;
+    const w = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    return w.nextNode();
+  }
+  function lastText(node) {
+    if (node.nodeType === 3) return node;
+    const w = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    let n = null, c;
+    while ((c = w.nextNode())) n = c;
+    return n;
+  }
+
+  function collectTextNodes(range) {
+    let s = range.startContainer, so = range.startOffset;
+    let e = range.endContainer, eo = range.endOffset;
+
+    // 경계가 텍스트 중간이면 잘라서 정확한 구간만 감싼다
+    if (e.nodeType === 3 && eo > 0 && eo < e.nodeValue.length) e.splitText(eo);
+    if (s.nodeType === 3 && so > 0 && so < s.nodeValue.length) {
+      const tail = s.splitText(so);
+      if (s === e) e = tail;
+      s = tail;
+    }
+
+    const startNode = s.nodeType === 3 ? s : firstText(s.childNodes[so] || s);
+    const endNode   = e.nodeType === 3 ? e : lastText(e.childNodes[eo - 1] || e);
+    if (!startNode || !endNode) return [];
+
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+    const out = [];
+    let inside = false, node;
+    while ((node = walker.nextNode())) {
+      if (node === startNode) inside = true;
+      if (inside && node.nodeValue.length) out.push(node);
+      if (node === endNode) break;
+    }
+    return out;
+  }
+
+  function applyStyle(styles) {
+    const range = activeRange();
+
+    // 선택이 없으면 문서 전체에 적용
+    if (!range || range.collapsed) {
+      Object.assign(editor.style, styles);
+      update();
+      return;
+    }
+
+    const nodes = collectTextNodes(range);
+    if (!nodes.length) {
+      Object.assign(editor.style, styles);
+      update();
+      return;
+    }
+
+    const spans = nodes.map(function (n) {
+      const span = document.createElement('span');
+      Object.assign(span.style, styles);
+      n.parentNode.insertBefore(span, n);
+      span.appendChild(n);
+      return span;
+    });
+
+    const nr = document.createRange();
+    nr.setStartBefore(spans[0]);
+    nr.setEndAfter(spans[spans.length - 1]);
+    restore(nr);
+    saveRange();
+    update();
+  }
+
+  /* ---------- 툴바 : 서식 ---------- */
+  document.getElementById('fontFamily').addEventListener('change', function (ev) {
+    applyStyle({ fontFamily: ev.target.value });
+  });
+  document.getElementById('fontSize').addEventListener('change', function (ev) {
+    applyStyle({ fontSize: ev.target.value });
+  });
+  document.getElementById('lineHeight').addEventListener('change', function (ev) {
+    editor.style.lineHeight = ev.target.value; // 줄 간격은 문서 전체 기준
+  });
+
+  document.querySelectorAll('[data-cmd]').forEach(function (btn) {
+    btn.addEventListener('mousedown', function (ev) { ev.preventDefault(); }); // 선택 유지
+    btn.addEventListener('click', function () {
+      const range = activeRange();
+      if (range) restore(range);
+      document.execCommand('styleWithCSS', false, true);
+      document.execCommand(btn.dataset.cmd, false, null);
+      saveRange();
+      syncButtons();
+      update();
+    });
+  });
+
+  function syncButtons() {
+    document.querySelectorAll('[data-cmd]').forEach(function (btn) {
+      let on = false;
+      try { on = document.queryCommandState(btn.dataset.cmd); } catch (e) {}
+      btn.classList.toggle('on', on);
+    });
+  }
+  editor.addEventListener('keyup', syncButtons);
+  editor.addEventListener('mouseup', syncButtons);
+
+  // 줄바꿈 삽입 : 문단을 나누지 않고 같은 문단 안에서 줄만 바꾼다
+  const brBtn = document.getElementById('lineBreak');
+  brBtn.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+  brBtn.addEventListener('click', function () {
+    const range = activeRange();
+    if (range) restore(range);
+    let ok = false;
+    try { ok = document.execCommand('insertLineBreak', false, null); } catch (e) { ok = false; }
+    if (!ok) document.execCommand('insertHTML', false, '<br>');
+    saveRange();
+    update();
+  });
+
+  // 서식 지우기 : 선택 구간은 removeFormat, 선택이 없으면 문서 전체를 평문으로
+  document.getElementById('clearFormat').addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+  document.getElementById('clearFormat').addEventListener('click', function () {
+    const range = activeRange();
+    if (range && !range.collapsed) {
+      restore(range);
+      document.execCommand('removeFormat', false, null);
+    } else {
+      const lines = editor.innerText.replace(/\r/g, '').split('\n');
+      editor.innerHTML = '';
+      lines.forEach(function (line) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(line));
+        editor.appendChild(div);
+      });
+    }
+    update();
+  });
+
+  /* ---------- 특수기호 입력 ---------- */
+  function insertText(text) {
+    editor.focus();
+    let range = activeRange();
+    if (!range) {
+      editor.appendChild(document.createTextNode(text));
+      update();
+      return;
+    }
+    restore(range);
+    range = window.getSelection().getRangeAt(0);
+    range.deleteContents();
+    const node = document.createTextNode(text);
+    range.insertNode(node);
+    const nr = document.createRange();
+    nr.setStartAfter(node);
+    nr.collapse(true);
+    restore(nr);
+    saveRange();
+    update();
+  }
+
+  document.querySelectorAll('[data-sym]').forEach(function (btn) {
+    btn.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+    btn.addEventListener('click', function () { insertText(btn.dataset.sym); });
+  });
+
+  /* ---------- 계수기 ---------- */
+  const cAll = document.getElementById('cAll');
+  const cNoSp = document.getElementById('cNoSp');
+  const cByte = document.getElementById('cByte');
+  const target = document.getElementById('target');
+  const gauge = document.getElementById('gaugeFill');
+
+  function update() {
+    const raw = editor.innerText.replace(/\u00a0/g, ' ').replace(/\r/g, '');
+    const flat = raw.replace(/\n/g, '');           // 줄바꿈 제외
+    const withSpaces = Array.from(flat).length;
+    const noSpaces = Array.from(flat.replace(/\s/g, '')).length;
+    const bytes = encoder.encode(flat).length;
+
+    cAll.textContent = withSpaces.toLocaleString('ko-KR');
+    cNoSp.textContent = noSpaces.toLocaleString('ko-KR');
+    cByte.textContent = bytes.toLocaleString('ko-KR');
+
+    const limit = parseInt(target.value, 10);
+    if (typeof autoGrow === 'function') autoGrow();
+    if (!limit || limit <= 0) {
+      gauge.style.width = '0%';
+      return;
+    }
+    const ratio = withSpaces / limit;
+    gauge.style.width = Math.min(ratio, 1) * 100 + '%';
+    gauge.style.backgroundColor = ratio > 1 ? 'var(--alert)' : (ratio > 0.9 ? 'var(--muted)' : 'var(--steel)');
+  }
+
+  editor.addEventListener('input', update);
+  target.addEventListener('input', update);
+
+  /* ---------- 전체 복사 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+
+  function toast(message) {
+    toastEl.textContent = message;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    // 코드 보기 상태에서는 화면에 보이는 코드를 그대로 복사한다
+    if (viewMode !== 'rich') {
+      const code = codeView.textContent;
+      if (!code.trim()) { toast('복사할 내용이 없습니다'); return; }
+      try {
+        if (navigator.clipboard) await navigator.clipboard.writeText(code);
+        else throw new Error('no clipboard api');
+        toast('복사되었습니다!');
+      } catch (e) {
+        if (legacyCopy(code)) toast('복사되었습니다!');
+        else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+      }
+      return;
+    }
+
+    const text = editor.innerText.replace(/\u00a0/g, ' ');
+    if (!text.trim()) { toast('복사할 내용이 없습니다'); return; }
+
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+          'text/html': new Blob([editor.innerHTML], { type: 'text/html' })
+        })]);
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        throw new Error('no clipboard api');
+      }
+      toast('복사되었습니다!');
+    } catch (e) {
+      if (legacyCopy(text)) toast('복사되었습니다!');
+      else toast('브라우저가 막았습니다. Ctrl+A → Ctrl+C를 사용하세요');
+    }
+  });
+
+  /* ---------- 전체 지우기 ---------- */
+  document.getElementById('clearAll').addEventListener('click', function () {
+    if (!editor.innerText.trim() || confirm('작성한 내용을 모두 지웁니다. 계속할까요?')) {
+      editor.innerHTML = '';
+      lastRange = null;
+      editor.focus();
+      update();
+    }
+  });
+
+  /* ---------- 붙여넣기는 평문으로 ---------- */
+  editor.addEventListener('paste', function (ev) {
+    ev.preventDefault();
+    const text = (ev.clipboardData || window.clipboardData).getData('text/plain');
+    insertText(text);
+  });
+
+  /* ---------- HTML / Markdown 보기 ---------- */
+  const codeView = document.getElementById('codeView');
+  const viewBtns = document.querySelectorAll('.view-btn');
+  let viewMode = 'rich';
+
+  const BLOCK_TAGS = ['DIV', 'P', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'H1', 'H2', 'H3'];
+
+  // --- HTML 소스 : 블록 요소마다 줄을 나눠 들여쓰기 ---
+  function toHtmlSource(root) {
+    let out = '';
+    function hasBlockChild(el) {
+      return Array.from(el.children).some(function (c) { return BLOCK_TAGS.indexOf(c.nodeName) !== -1; });
+    }
+    function ser(node, depth) {
+      Array.from(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) { out += n.nodeValue; return; }
+        if (n.nodeType !== 1) return;
+        const tag = n.nodeName.toLowerCase();
+        const attrs = Array.from(n.attributes).map(function (a) {
+          return ' ' + a.name + '="' + a.value + '"';
+        }).join('');
+        if (tag === 'br') { out += '<br>\n' + '  '.repeat(depth); return; }
+        if (BLOCK_TAGS.indexOf(n.nodeName) !== -1) {
+          out += '\n' + '  '.repeat(depth) + '<' + tag + attrs + '>';
+          ser(n, depth + 1);
+          if (hasBlockChild(n)) out += '\n' + '  '.repeat(depth);
+          out += '</' + tag + '>';
+        } else {
+          out += '<' + tag + attrs + '>';
+          ser(n, depth);
+          out += '</' + tag + '>';
+        }
+      });
+    }
+    ser(root, 0);
+    return out.replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  // --- Markdown : 굵게 **, 기울임 *, 목록 - / 1. ---
+  function isBold(el) {
+    const n = el.nodeName;
+    const w = el.style && el.style.fontWeight;
+    return n === 'B' || n === 'STRONG' || w === 'bold' || parseInt(w, 10) >= 600;
+  }
+  function isItalic(el) {
+    const n = el.nodeName;
+    return n === 'I' || n === 'EM' || (el.style && el.style.fontStyle === 'italic');
+  }
+  function mdInline(node) {
+    if (node.nodeType === 3) return node.nodeValue.replace(/([*\\])/g, '\\$1');
+    if (node.nodeType !== 1) return '';
+    if (node.nodeName === 'BR') return '\n';
+    let inner = Array.from(node.childNodes).map(mdInline).join('');
+    if (!inner.trim()) return inner;
+    if (isBold(node)) inner = '**' + inner + '**';
+    if (isItalic(node)) inner = '*' + inner + '*';
+    return inner;
+  }
+
+  function toMarkdown(root) {
+    const lines = [];
+    let buf = '';
+    function flush() { lines.push(buf); buf = ''; }
+
+    function block(container) {
+      Array.from(container.childNodes).forEach(function (node) {
+        const name = node.nodeName;
+
+        if (node.nodeType === 1 && (name === 'UL' || name === 'OL')) {
+          if (buf) flush();
+          let i = 1;
+          Array.from(node.children).forEach(function (li) {
+            const marker = name === 'UL' ? '- ' : (i++) + '. ';
+            lines.push(marker + mdInline(li).replace(/\n+/g, ' ').trim());
+          });
+          return;
+        }
+
+        if (node.nodeType === 1 && BLOCK_TAGS.indexOf(name) !== -1) {
+          if (buf) flush();
+          const hasBlocks = Array.from(node.children).some(function (c) {
+            return BLOCK_TAGS.indexOf(c.nodeName) !== -1;
+          });
+          if (hasBlocks) {
+            block(node);
+            if (buf) flush();
+          } else {
+            const parts = mdInline(node).split('\n');
+            parts.forEach(function (seg, idx) {
+              lines.push(idx < parts.length - 1 ? seg + '  ' : seg); // 줄바꿈은 공백 2칸
+            });
+          }
+          return;
+        }
+
+        const parts = mdInline(node).split('\n');
+        buf += parts[0];
+        for (let k = 1; k < parts.length; k++) { lines.push(buf + '  '); buf = parts[k]; }
+      });
+    }
+
+    block(root);
+    if (buf) flush();
+    return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  function setView(mode) {
+    viewMode = mode;
+    viewBtns.forEach(function (b) { b.classList.toggle('on', b.dataset.view === mode); });
+    document.querySelectorAll('.toolbar').forEach(function (t) {
+      t.classList.toggle('toolbar-off', mode !== 'rich');
+    });
+
+    if (mode === 'rich') {
+      codeView.hidden = true;
+      editor.hidden = false;
+      editor.focus();
+      if (lastRange) restore(lastRange);
+      return;
+    }
+
+    editor.hidden = true;
+    codeView.hidden = false;
+    codeView.textContent = mode === 'html' ? toHtmlSource(editor) : toMarkdown(editor);
+    if (!codeView.textContent) codeView.textContent = '';
+  }
+
+  viewBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () { setView(btn.dataset.view); });
+  });
+
+  /* ---------- 편집창 반응형 높이 ---------- */
+  // 내용이 길어지면 화면 높이 한도까지 자동으로 늘어난다.
+  // 사용자가 하단 테두리를 끌어 직접 조절하면 그 높이를 존중하고 자동 조절을 멈춘다.
+  let userResized = false;
+  let adjusting = false;
+  let appliedHeight = 0;
+
+  function bounds() {
+    const vh = window.innerHeight;
+    return {
+      min: Math.min(Math.max(vh * 0.36, 200), 320),
+      max: Math.max(vh * 0.72, 260)
+    };
+  }
+
+  function autoGrow() {
+    if (userResized || editor.hidden) return;
+    const { min, max } = bounds();
+    adjusting = true;
+    editor.style.height = 'auto';
+    const h = Math.min(Math.max(editor.scrollHeight, min), max);
+    editor.style.height = h + 'px';
+    appliedHeight = editor.offsetHeight;
+    requestAnimationFrame(function () { adjusting = false; });
+  }
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(function () {
+      if (adjusting) return;
+      if (Math.abs(editor.offsetHeight - appliedHeight) > 2) userResized = true;
+    });
+    ro.observe(editor);
+  }
+
+  window.addEventListener('resize', autoGrow);
+  editor.addEventListener('input', autoGrow);
+
+  update();
+  setView('rich');
+  autoGrow();
+  editor.focus();
+})();
+</script>
+</body>
+</html>
