@@ -744,15 +744,40 @@
     };
   }
 
+  // height:'auto'로 재측정하면 스크롤 위치가 초기화되어 커서가 튀므로,
+  // 이미 최대 높이에 도달했거나 스크롤 중일 때는 측정 자체를 하지 않는다.
   function autoGrow() {
     if (userResized || editor.hidden) return;
+
     const { min, max } = bounds();
-    adjusting = true;
-    editor.style.height = 'auto';
-    const h = Math.min(Math.max(editor.scrollHeight, min), max);
-    editor.style.height = h + 'px';
-    appliedHeight = editor.offsetHeight;
-    requestAnimationFrame(function () { adjusting = false; });
+    const cur = editor.clientHeight;
+    const scrolled = editor.scrollTop;
+
+    // 1) 최대 높이에 도달한 뒤에는 손대지 않는다 (스크롤로 읽고 쓰는 구간)
+    if (cur >= max - 1) return;
+
+    // 2) 늘어나야 하는 경우 : scrollHeight가 이미 전체 내용 높이이므로 재측정이 필요 없다
+    if (editor.scrollHeight > cur + 1) {
+      const h = Math.min(Math.max(editor.scrollHeight, min), max);
+      if (Math.abs(h - cur) < 2) return;
+      adjusting = true;
+      editor.style.height = h + 'px';
+      editor.scrollTop = scrolled;
+      appliedHeight = editor.offsetHeight;
+      requestAnimationFrame(function () { adjusting = false; });
+      return;
+    }
+
+    // 3) 줄어드는 경우 : 맨 위를 보고 있을 때만 재측정한다
+    if (scrolled === 0 && cur > min + 1) {
+      adjusting = true;
+      editor.style.height = 'auto';
+      const h = Math.min(Math.max(editor.scrollHeight, min), max);
+      editor.style.height = h + 'px';
+      editor.scrollTop = 0;
+      appliedHeight = editor.offsetHeight;
+      requestAnimationFrame(function () { adjusting = false; });
+    }
   }
 
   if (window.ResizeObserver) {
@@ -763,7 +788,19 @@
     ro.observe(editor);
   }
 
-  window.addEventListener('resize', autoGrow);
+  window.addEventListener('resize', function () {
+    if (userResized) return;
+    const { max } = bounds();
+    if (editor.clientHeight > max) {   // 창이 작아지면 한도까지만 줄인다
+      const scrolled = editor.scrollTop;
+      adjusting = true;
+      editor.style.height = max + 'px';
+      editor.scrollTop = scrolled;
+      appliedHeight = editor.offsetHeight;
+      requestAnimationFrame(function () { adjusting = false; });
+    }
+    autoGrow();
+  });
   editor.addEventListener('input', autoGrow);
 
   update();
