@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F7">
+<title>퍼센트 · 마진 계산기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#FAF9F7; --panel:#FFFFFF; --line:#E8E5E0; --ink:#26384B; --dim:#5F7488;
+    --accent:#2C6BA0; --up:#2E7D5B; --down:#C0563F; --soft:#F1F4F7;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px 20px 16px; box-shadow:0 1px 2px rgba(38,56,75,.04);
+  }
+  .tag{
+    display:inline-block; font-size:10.5px; letter-spacing:.08em; color:var(--accent);
+    background:#EEF4F9; border-radius:5px; padding:3px 8px; margin-bottom:11px;
+  }
+  .sentence{ font-size:16px; line-height:2.4; }
+  .blank{
+    display:inline-block; width:118px; margin:0 3px;
+    border:0; border-bottom:2px solid var(--line); background:transparent;
+    color:var(--accent); font-family:'JetBrains Mono',monospace;
+    font-size:17px; font-weight:700; text-align:center; outline:none;
+    font-variant-numeric:tabular-nums; padding:2px 4px;
+    transition:border-color .14s;
+  }
+  .blank:focus{ border-bottom-color:var(--accent); }
+  .blank::placeholder{ color:#C3CCD6; font-weight:400; }
+  .blank.wide{ width:150px; }
+
+  .out{
+    margin-top:15px; padding:14px 16px; border-radius:11px;
+    background:var(--soft); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .out .v{ font-family:'JetBrains Mono',monospace; font-size:23px; font-weight:700; letter-spacing:-.01em; }
+  .out .s{ font-size:12px; color:var(--dim); margin-top:3px; }
+  .out.empty .v{ color:#B6C0CA; font-weight:400; font-size:17px; }
+
+  .copyBtn{
+    border:1px solid var(--line); background:#fff; color:var(--dim);
+    border-radius:8px; font-size:12px; padding:8px 12px; cursor:pointer; flex:none;
+    transition:all .12s;
+  }
+  .copyBtn:hover{ border-color:var(--accent); color:var(--accent); }
+  .copyBtn:active{ transform:scale(.96); }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-3xl px-4 py-7 sm:py-10">
+
+  <header class="mb-6">
+    <h1 class="text-[19px] font-semibold tracking-tight">퍼센트 · 마진 계산기</h1>
+    <p class="mt-1 text-[13px]" style="color:var(--dim)">공식을 몰라도 빈칸만 채우면 됩니다</p>
+  </header>
+
+  <div class="grid gap-4">
+
+    <!-- 1. 비율 -->
+    <div class="card">
+      <span class="tag">비율 계산</span>
+      <p class="sentence" style="margin:0">
+        <input class="blank" id="p1a" inputmode="decimal" placeholder="50,000"> 의
+        <input class="blank" id="p1b" inputmode="decimal" placeholder="15" style="width:78px"> %는 얼마일까?
+      </p>
+      <div class="out empty" id="out1">
+        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub1"></div></div>
+        <button class="copyBtn" data-copy="1">결과 복사</button>
+      </div>
+    </div>
+
+    <!-- 2. 증감률 -->
+    <div class="card">
+      <span class="tag">증감률 계산</span>
+      <p class="sentence" style="margin:0">
+        <input class="blank" id="p2a" inputmode="decimal" placeholder="120,000"> 에서
+        <input class="blank" id="p2b" inputmode="decimal" placeholder="150,000"> 로 변하면 몇 % 증감한 것일까?
+      </p>
+      <div class="out empty" id="out2">
+        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub2"></div></div>
+        <button class="copyBtn" data-copy="2">결과 복사</button>
+      </div>
+    </div>
+
+    <!-- 3. 할인 -->
+    <div class="card">
+      <span class="tag">할인율 계산</span>
+      <p class="sentence" style="margin:0">
+        원가 <input class="blank wide" id="p3a" inputmode="decimal" placeholder="89,000"> 원을
+        <input class="blank" id="p3b" inputmode="decimal" placeholder="30" style="width:78px"> % 할인하면 얼마일까?
+      </p>
+      <div class="out empty" id="out3">
+        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub3"></div></div>
+        <button class="copyBtn" data-copy="3">결과 복사</button>
+      </div>
+    </div>
+
+    <!-- 4. 마진 -->
+    <div class="card">
+      <span class="tag">마진율 계산</span>
+      <p class="sentence" style="margin:0">
+        원가 <input class="blank wide" id="p4a" inputmode="decimal" placeholder="12,000"> 원짜리를
+        <input class="blank wide" id="p4b" inputmode="decimal" placeholder="20,000"> 원에 팔면 마진율은?
+      </p>
+      <div class="out empty" id="out4">
+        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub4"></div></div>
+        <button class="copyBtn" data-copy="4">결과 복사</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-5 text-[11.5px] leading-relaxed" style="color:var(--dim)">
+    마진율은 판매가 대비 이익 비율입니다. 원가 대비로 보는 이익률(마크업)도 함께 표시합니다.
+  </p>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const toastEl = document.getElementById('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  // 쉼표가 섞여 들어와도 읽고, 비어 있으면 null을 돌려준다
+  function num(id) {
+    const el = document.getElementById(id);
+    const t = el.value.replace(/[,\s]/g, '');
+    if (t === '' || t === '-' || isNaN(Number(t))) return null;
+    return Number(t);
+  }
+  function money(v) {
+    const r = Math.round(v * 100) / 100;
+    return r.toLocaleString('ko-KR', { maximumFractionDigits: 2 });
+  }
+  function pct(v) {
+    const r = Math.round(v * 100) / 100;
+    return r.toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '%';
+  }
+
+  // 입력하는 동안 천 단위 쉼표를 붙이되 커서 위치를 지켜준다
+  function comma(el) {
+    const raw = el.value;
+    const pos = el.selectionStart;
+    const digitsBefore = raw.slice(0, pos).replace(/[^0-9]/g, '').length;
+
+    const neg = raw.trim().charAt(0) === '-';
+    const parts = raw.replace(/[^0-9.]/g, '').split('.');
+    let ip = parts[0].replace(/^0+(?=\d)/, '');
+    const fp = parts.length > 1 ? '.' + parts.slice(1).join('').slice(0, 4) : '';
+    if (ip === '' && fp === '') { el.value = neg ? '-' : ''; return; }
+
+    const withComma = ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    el.value = (neg ? '-' : '') + withComma + fp;
+
+    // 숫자 개수를 기준으로 커서를 원래 자리에 돌려놓는다
+    let seen = 0, newPos = el.value.length;
+    for (let i = 0; i < el.value.length; i++) {
+      if (/[0-9]/.test(el.value[i])) seen++;
+      if (seen === digitsBefore) { newPos = i + 1; break; }
+    }
+    if (digitsBefore === 0) newPos = neg ? 1 : 0;
+    try { el.setSelectionRange(newPos, newPos); } catch (e) {}
+  }
+
+  const results = { 1: '', 2: '', 3: '', 4: '' };
+
+  function setOut(i, main, sub, color) {
+    const box = document.getElementById('out' + i);
+    const v = box.querySelector('.v');
+    const s = document.getElementById('sub' + i);
+    if (main === null) {
+      box.classList.add('empty');
+      v.textContent = '= 숫자를 입력해 주세요';
+      v.style.color = '';
+      s.textContent = '';
+      results[i] = '';
+      return;
+    }
+    box.classList.remove('empty');
+    v.textContent = main;
+    v.style.color = color || 'var(--ink)';
+    s.textContent = sub || '';
+    results[i] = main.replace(/^=\s*/, '') + (sub ? ' (' + sub + ')' : '');
+  }
+
+  function calc1() {
+    const a = num('p1a'), b = num('p1b');
+    if (a === null || b === null) return setOut(1, null);
+    const v = a * b / 100;
+    setOut(1, '= ' + money(v), a.toLocaleString('ko-KR') + ' 의 ' + b + '% · 나머지 ' + money(a - v));
+  }
+
+  function calc2() {
+    const a = num('p2a'), b = num('p2b');
+    if (a === null || b === null) return setOut(2, null);
+    if (a === 0) return setOut(2, '= 계산할 수 없음', '이전 값이 0이면 증감률을 낼 수 없습니다', 'var(--dim)');
+    const r = (b - a) / a * 100;
+    const up = r > 0, same = Math.abs(r) < 1e-9;
+    setOut(2,
+      (same ? '=  ' : (up ? '= ▲ ' : '= ▼ ')) + pct(Math.abs(r)) + (same ? ' 변화 없음' : (up ? ' 증가' : ' 감소')),
+      '차이 ' + money(b - a) + ' · ' + (b / a).toFixed(3) + '배',
+      same ? 'var(--dim)' : (up ? 'var(--up)' : 'var(--down)'));
+  }
+
+  function calc3() {
+    const a = num('p3a'), b = num('p3b');
+    if (a === null || b === null) return setOut(3, null);
+    const off = a * b / 100;
+    setOut(3, '= 할인가 ' + money(a - off) + '원',
+      '할인된 금액 ' + money(off) + '원 · 정가의 ' + pct(100 - b));
+  }
+
+  function calc4() {
+    const c = num('p4a'), s = num('p4b');
+    if (c === null || s === null) return setOut(4, null);
+    if (s === 0) return setOut(4, '= 계산할 수 없음', '판매가가 0이면 마진율을 낼 수 없습니다', 'var(--dim)');
+    const profit = s - c;
+    const margin = profit / s * 100;          // 판매가 대비
+    const markup = c === 0 ? null : profit / c * 100;   // 원가 대비
+    setOut(4, '= 마진율 ' + pct(margin),
+      '순수익 ' + money(profit) + '원' + (markup === null ? '' : ' · 원가 대비 ' + pct(markup)),
+      profit >= 0 ? 'var(--up)' : 'var(--down)');
+  }
+
+  function all() { calc1(); calc2(); calc3(); calc4(); }
+
+  ['p1a','p1b','p2a','p2b','p3a','p3b','p4a','p4b'].forEach(function (id) {
+    const el = document.getElementById(id);
+    el.addEventListener('input', function () { comma(el); all(); });
+  });
+
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', async function () {
+      const i = b.dataset.copy;
+      if (!results[i]) { toast('먼저 숫자를 입력해 주세요'); return; }
+      const text = results[i];
+      try {
+        if (navigator.clipboard) await navigator.clipboard.writeText(text);
+        else throw new Error('no clipboard');
+        toast('복사되었습니다!');
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+        document.body.appendChild(ta); ta.select();
+        let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+        document.body.removeChild(ta);
+        toast(ok ? '복사되었습니다!' : '복사가 막혔습니다');
+      }
+    });
+  });
+
+  all();
+})();
+</script>
+</body>
+</html>
