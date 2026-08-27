@@ -331,6 +331,36 @@ const TOOLS_DATA = [
     icon: 'sparkles',
     badge: 'NEW',
     tags: ['#운세', '#타로', '#쉬는시간']
+  },
+  {
+    id: 'neon-ladder',
+    title: '네온 사다리 타기',
+    category: 'ENTERTAINMENT',
+    desc: '참가자를 넣으면 모두 동시에 출발하는 사다리를 그립니다. 벌칙이나 순서를 정할 때 씁니다.',
+    url: 'https://mnledu.com/entertainment/neon-ladder.html',
+    icon: 'waypoints',
+    badge: 'NEW',
+    tags: ['#게임', '#모임', '#랜덤', '#사다리']
+  },
+  {
+    id: 'horse-race',
+    title: '행운의 번호 경마',
+    category: 'ENTERTAINMENT',
+    desc: '각자 말 한 마리를 골라 순위로 배당을 나눕니다. 회식 자리나 팀 모임에서 순서를 정할 때.',
+    url: 'https://mnledu.com/entertainment/horse-race.html',
+    icon: 'trophy',
+    badge: 'NEW',
+    tags: ['#게임', '#모임', '#랜덤', '#내기']
+  },
+  {
+    id: 'lotto',
+    title: '럭키 클로버 로또 추첨기',
+    category: 'ENTERTAINMENT',
+    desc: '행운의 번호와 지금 이 순간을 섞어 다섯 세트를 뽑습니다. 뺄 번호를 지정할 수 있습니다.',
+    url: 'https://mnledu.com/entertainment/lotto.html',
+    icon: 'clover',
+    badge: 'NEW',
+    tags: ['#랜덤', '#로또', '#쉬는시간']
   }
 ];
 
