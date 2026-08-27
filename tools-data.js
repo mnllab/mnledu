@@ -145,7 +145,7 @@ const TOOLS_DATA = [
     url: 'https://mnledu.com/data-analytics/cagrcal.html',
     icon: 'trending-up',
     badge: 'HOT',
-    tags: ['#계산', '#시장분석', '#엑셀', '#사업계획서']
+    tags: ['#창업', '#스타트업', '#사업계획서', '#시장분석', '#엑셀']
   },
   {
     id: 'ocrextract',
@@ -156,6 +156,27 @@ const TOOLS_DATA = [
     icon: 'scan-text',
     badge: null,
     tags: ['#OCR', '#이미지', '#텍스트', '#오프라인']
+  },
+
+  {
+    id: 'gov-fund-calc',
+    title: '자부담금 최적화 계산기',
+    category: 'DATA & ANALYTICS',
+    desc: '정부지원금 비율에 맞춰 자부담 현금·현물을 역산합니다. 총사업비 예산안을 잡아 엑셀·한글용 표로 내보냅니다.',
+    url: 'https://mnledu.com/data-analytics/gov-fund-calc.html',
+    icon: 'calculator',
+    badge: 'HOT',
+    tags: ['#창업', '#스타트업', '#사업계획서', '#정부지원', '#계산']
+  },
+  {
+    id: 'percent-calc',
+    title: '퍼센트 · 마진 계산기',
+    category: 'DATA & ANALYTICS',
+    desc: '비율·증감률·할인가·마진율을 빈칸만 채우면 계산합니다. 공식을 외울 필요가 없습니다.',
+    url: 'https://mnledu.com/data-analytics/percent-calc.html',
+    icon: 'percent',
+    badge: null,
+    tags: ['#계산', '#마진', '#할인']
   },
 
   // ---------------------------------------------------------
@@ -170,6 +191,47 @@ const TOOLS_DATA = [
     icon: 'clapperboard',
     badge: 'NEW',
     tags: ['#영상', '#학습', '#메모', '#자동저장']
+  },
+
+  {
+    id: 'date-calc',
+    title: '만능 날짜 계산기',
+    category: 'LIFESTYLE',
+    desc: '날짜를 더하고 빼고 사이를 셉니다. 주말을 뺀 영업일과 만 나이·연차까지 한곳에서 봅니다.',
+    url: 'https://mnledu.com/lifestyle/date-calc.html',
+    icon: 'calendar-days',
+    badge: 'NEW',
+    tags: ['#날짜', '#계산', '#일정관리']
+  },
+  {
+    id: 'unit-converter',
+    title: '유니버설 단위 변환기',
+    category: 'LIFESTYLE',
+    desc: '길이·무게·넓이·부피·데이터를 한 번에 변환합니다. 평, 근, 되처럼 우리 단위도 함께 다룹니다.',
+    url: 'https://mnledu.com/lifestyle/unit-converter.html',
+    icon: 'ruler',
+    badge: null,
+    tags: ['#단위변환', '#계산', '#부동산']
+  },
+  {
+    id: 'calculator',
+    title: '스마트 수식 계산기',
+    category: 'LIFESTYLE',
+    desc: '괄호와 거듭제곱이 섞인 식을 그대로 계산합니다. 계산 기록을 눌러 다시 불러올 수 있습니다.',
+    url: 'https://mnledu.com/lifestyle/calculator.html',
+    icon: 'square-equal',
+    badge: null,
+    tags: ['#계산', '#수식', '#오프라인']
+  },
+  {
+    id: 'timezone-dial',
+    title: '글로벌 시차 다이얼',
+    category: 'LIFESTYLE',
+    desc: '슬라이더를 밀면 여러 도시의 시계가 함께 움직입니다. 해외 미팅 시간을 잡을 때 씁니다.',
+    url: 'https://mnledu.com/lifestyle/timezone-dial.html',
+    icon: 'globe',
+    badge: 'NEW',
+    tags: ['#시차', '#일정관리', '#해외']
   },
 
   // ---------------------------------------------------------
@@ -238,6 +300,26 @@ const TOOLS_DATA = [
     icon: 'worm',
     badge: 'NEW',
     tags: ['#게임', '#쉬는시간', '#오프라인', '#모바일']
+  },
+  {
+    id: 'minesweeper',
+    title: '지뢰찾기',
+    category: 'ENTERTAINMENT',
+    desc: '초급·중급·고급 난이도의 지뢰찾기. 깃발을 꽂아 표시하고 기록에 도전합니다.',
+    url: 'https://mnledu.com/entertainment/minesweeper.html',
+    icon: 'bomb',
+    badge: 'NEW',
+    tags: ['#게임', '#퍼즐', '#쉬는시간', '#오프라인']
+  },
+  {
+    id: 'tarot',
+    title: '타로 카드 리딩',
+    category: 'ENTERTAINMENT',
+    desc: '과거·현재·미래 세 장을 뽑아 카드의 뜻을 읽어 줍니다. 잠깐 쉬어 가며 생각을 정리할 때.',
+    url: 'https://mnledu.com/entertainment/tarot.html',
+    icon: 'sparkles',
+    badge: 'NEW',
+    tags: ['#운세', '#타로', '#쉬는시간']
   }
 ];
 
