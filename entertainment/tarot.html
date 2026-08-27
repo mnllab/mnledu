@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0B0616">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>타로 카드 리딩</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --void:#0B0616; --deep:#150A2B; --plum:#241145; --mist:#3B2065;
+    --gold:#E8C572; --gold2:#F6E3AE; --goldDim:#A98B45;
+    --fg:#F2EEFA; --dim:#C3B8DE; --body:#E9E3F5;
+    --serif:'Noto Serif KR','Cormorant Garamond',serif;
+    --sans:'Pretendard',system-ui,-apple-system,sans-serif;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; height:100%; overflow:hidden;
+    overscroll-behavior:none; touch-action:manipulation;
+    color:var(--fg);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    user-select:none; -webkit-user-select:none;
+  }
+  body{
+    background:
+      radial-gradient(900px 500px at 15% -5%, rgba(90,45,150,.55), transparent 60%),
+      radial-gradient(700px 480px at 90% 8%, rgba(40,80,160,.35), transparent 62%),
+      radial-gradient(800px 600px at 50% 110%, rgba(120,60,170,.32), transparent 60%),
+      linear-gradient(180deg, #0B0616 0%, #120A22 45%, #0A0514 100%);
+  }
+
+  /* 별 */
+  #sky{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+  .star{
+    position:absolute; border-radius:50%; background:#fff;
+    animation:twinkle linear infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:.15; transform:scale(.8); }
+    50%{ opacity:.9; transform:scale(1.15); }
+  }
+
+  #app{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; height:100dvh; max-height:100dvh;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
+
+  /* 상단 */
+  header{ flex:none; text-align:center; padding:14px 16px 6px; }
+  h1{
+    margin:0; font-family:var(--serif); font-size:21px; font-weight:700; letter-spacing:.24em;
+    background:linear-gradient(180deg, var(--gold2), var(--gold) 60%, var(--goldDim));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .rule{
+    width:120px; height:1px; margin:9px auto 0;
+    background:linear-gradient(90deg, transparent, var(--goldDim), transparent);
+  }
+  .hint{ margin:9px 0 0; font-size:13.5px; color:var(--dim); letter-spacing:0; line-height:1.6; }
+
+  .seg{ display:flex; gap:7px; justify-content:center; margin-top:11px; }
+  .seg button{
+    padding:8px 15px; border-radius:999px; cursor:pointer;
+    border:1px solid rgba(232,197,114,.32); background:rgba(255,255,255,.03);
+    color:var(--dim); font-family:var(--sans); font-size:13px; font-weight:500; letter-spacing:0;
+    transition:all .18s;
+  }
+  .seg button.on{
+    border-color:var(--gold); color:#1A0E2E;
+    background:linear-gradient(180deg, var(--gold2), var(--gold));
+    box-shadow:0 0 16px rgba(232,197,114,.3);
+  }
+
+  /* 카드 펼침 */
+  #spread{
+    flex:1 1 auto; min-height:0; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    padding:6px 8px;
+    perspective:1400px;
+  }
+  #fan{ position:relative; width:100%; height:100%; }
+
+  .card{
+    position:absolute; transform-style:preserve-3d;
+    cursor:pointer; will-change:transform;
+    transition:transform .55s cubic-bezier(.22,.9,.28,1), filter .3s;
+  }
+  .card.picked{ z-index:40; }
+  .card.gone{ opacity:0; pointer-events:none; transition:opacity .4s, transform .5s; }
+
+  .face{
+    position:absolute; inset:0; border-radius:9px;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    overflow:hidden;
+  }
+
+  /* 뒷면 : 금빛 기하 문양 */
+  .back{
+    background:
+      radial-gradient(circle at 50% 50%, rgba(232,197,114,.30) 0 12%, transparent 13%),
+      radial-gradient(circle at 50% 50%, transparent 0 22%, rgba(232,197,114,.22) 22.5% 23.5%, transparent 24%),
+      radial-gradient(circle at 50% 50%, transparent 0 33%, rgba(232,197,114,.16) 33.5% 34.5%, transparent 35%),
+      repeating-conic-gradient(from 0deg at 50% 50%,
+        rgba(232,197,114,.16) 0deg 6deg, transparent 6deg 30deg),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.045) 0 3px, transparent 3px 9px),
+      linear-gradient(150deg, #2C1656 0%, #1B0D36 48%, #331A63 100%);
+    border:1px solid rgba(232,197,114,.42);
+    box-shadow:0 6px 18px rgba(0,0,0,.55), inset 0 0 22px rgba(232,197,114,.10);
+  }
+  .back::after{
+    content:'✦';
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:rgba(246,227,174,.85); font-size:18px;
+    text-shadow:0 0 12px rgba(232,197,114,.7);
+  }
+
+  /* 앞면 */
+  .front{
+    transform:rotateY(180deg);
+    background:linear-gradient(180deg, #F7F1E4, #E6DCC8);
+    border:1px solid rgba(232,197,114,.75);
+    box-shadow:0 8px 26px rgba(0,0,0,.6), 0 0 22px rgba(232,197,114,.22);
+    display:flex; flex-direction:column;
+  }
+  .front img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .front .fallback{
+    width:100%; height:100%; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px; padding:6px;
+    background:linear-gradient(160deg, #2A1550, #170B2F);
+    color:var(--gold2); text-align:center;
+  }
+  .front .fallback .rn{ font-family:var(--serif); font-size:15px; letter-spacing:.08em; }
+  .front .fallback .sym{ font-size:26px; }
+  .front .fallback .nm{ font-size:10px; color:var(--gold); line-height:1.3; }
+
+  /* 결과 */
+  .modal{
+    position:fixed; inset:0; z-index:60; display:none;
+    align-items:center; justify-content:center; padding:16px;
+    background:rgba(7,4,16,.86); backdrop-filter:blur(8px);
+  }
+  .modal.show{ display:flex; animation:fade .45s ease; }
+  @keyframes fade{ from{ opacity:0 } to{ opacity:1 } }
+  .sheet{
+    width:100%; max-width:400px; max-height:88dvh; overflow:auto;
+    background:linear-gradient(180deg, rgba(36,17,69,.96), rgba(15,8,30,.98));
+    border:1px solid rgba(232,197,114,.4); border-radius:16px; padding:20px 18px;
+    box-shadow:0 0 40px rgba(120,60,170,.4);
+  }
+  .readCard{
+    display:flex; gap:14px; padding:15px 0;
+    border-bottom:1px solid rgba(232,197,114,.16);
+  }
+  .readCard:last-of-type{ border-bottom:0; }
+  .thumb{
+    width:62px; height:106px; flex:none; border-radius:6px; overflow:hidden;
+    border:1px solid rgba(232,197,114,.5); background:#1B0D36;
+  }
+  .thumb img{ width:100%; height:100%; object-fit:cover; }
+  .pos{ font-size:11px; color:var(--gold); letter-spacing:.18em; font-weight:600; }
+  .cname{
+    margin:4px 0 5px; font-family:var(--serif); font-size:18px; font-weight:700;
+    letter-spacing:-.01em; color:var(--fg);
+  }
+  .kw{ font-size:12.5px; color:var(--gold); opacity:.82; margin-bottom:8px; font-weight:500; }
+  .desc{ font-size:14.5px; line-height:1.95; color:var(--body); letter-spacing:-.005em; word-break:keep-all; }
+
+  .gbtn{
+    width:100%; padding:12px; border-radius:10px; cursor:pointer;
+    border:1px solid var(--gold); font-family:var(--sans); font-size:14.5px; font-weight:700; letter-spacing:0;
+    background:linear-gradient(180deg, var(--gold2), var(--gold)); color:#1A0E2E; font-weight:700;
+  }
+  .obtn{
+    width:100%; padding:11px; border-radius:10px; cursor:pointer;
+    border:1px solid rgba(232,197,114,.32); background:transparent;
+    color:var(--fg); font-family:var(--sans); font-size:13.5px; font-weight:500;
+  }
+
+  footer{ flex:none; padding:6px 14px calc(12px + env(safe-area-inset-bottom)); }
+  .counter{ text-align:center; font-size:12.5px; color:var(--gold); letter-spacing:.1em; margin-bottom:9px; font-weight:600; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+</head>
+
+<body>
+
+<div id="sky"></div>
+
+<div id="app">
+
+  <header>
+    <h1>T A R O T</h1>
+    <div class="rule"></div>
+    <p class="hint" id="hint">마음속으로 질문을 떠올리고 카드를 고르세요</p>
+    <div class="seg" id="modeSeg">
+      <button data-n="1" class="on">오늘의 운세 · 1장</button>
+      <button data-n="3">과거 · 현재 · 미래 · 3장</button>
+    </div>
+  </header>
+
+  <div id="spread"><div id="fan"></div></div>
+
+  <footer>
+    <p class="counter" id="counter">0 / 1</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="obtn" id="shuffleBtn">다시 섞기</button>
+      <button class="gbtn" id="readBtn">해석 보기</button>
+    </div>
+  </footer>
+</div>
+
+<!-- 해석 -->
+<div class="modal" id="reading">
+  <div class="sheet">
+    <p style="margin:0; text-align:center; font-size:11px; color:var(--gold); letter-spacing:.28em; font-weight:600">R E A D I N G</p>
+    <div class="rule" style="margin:10px auto 4px"></div>
+    <div id="readBody"></div>
+    <div style="display:grid; gap:8px; margin-top:16px">
+      <button class="gbtn" id="againBtn">새로운 리딩</button>
+      <button class="obtn" id="closeRead">카드 다시 보기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // 위키미디어 커먼즈의 퍼블릭 도메인 라이더 웨이트 22장.
+  // 해시 경로를 추측하지 않도록 Special:FilePath 를 쓴다 (원본으로 자동 연결된다)
+  function url(file) {
+    return 'https://commons.wikimedia.org/wiki/Special:FilePath/' +
+           encodeURIComponent(file) + '?width=500';
+  }
+
+  const DECK = [
+    { n:0,  rn:'0',     ko:'바보',        en:'The Fool',           file:'RWS Tarot 00 Fool.jpg',            sym:'✧',
+      kw:'시작 · 순수 · 모험',
+      txt:'아직 아무것도 정해지지 않았습니다. 계산보다 마음이 앞서는 시기이니, 서툴러도 첫발을 내딛는 편이 낫습니다. 잃을 것이 적을수록 배울 것은 많아집니다.' },
+    { n:1,  rn:'I',     ko:'마법사',      en:'The Magician',       file:'RWS Tarot 01 Magician.jpg',        sym:'∞',
+      kw:'의지 · 재능 · 실행',
+      txt:'필요한 도구는 이미 손안에 있습니다. 부족한 것은 자원이 아니라 결심입니다. 지금 시작하면 뜻대로 형태를 만들 수 있습니다.' },
+    { n:2,  rn:'II',    ko:'여사제',      en:'The High Priestess', file:'RWS Tarot 02 High Priestess.jpg',  sym:'☾',
+      kw:'직관 · 침묵 · 내면',
+      txt:'서둘러 답을 내지 마십시오. 겉으로 드러난 것보다 감춰진 쪽이 진실에 가깝습니다. 조용히 기다리면 스스로 알게 됩니다.' },
+    { n:3,  rn:'III',   ko:'여황제',      en:'The Empress',        file:'RWS Tarot 03 Empress.jpg',         sym:'❀',
+      kw:'풍요 · 돌봄 · 결실',
+      txt:'공들인 것이 열매를 맺는 자리입니다. 자신과 주변을 넉넉히 돌보십시오. 베푼 만큼 돌아오는 흐름 위에 서 있습니다.' },
+    { n:4,  rn:'IV',    ko:'황제',        en:'The Emperor',        file:'RWS Tarot 04 Emperor.jpg',         sym:'♦',
+      kw:'질서 · 권위 · 기반',
+      txt:'느슨한 것을 다잡을 때입니다. 원칙과 구조를 세우면 흔들리던 일이 자리를 잡습니다. 책임을 피하지 않는 쪽이 유리합니다.' },
+    { n:5,  rn:'V',     ko:'교황',        en:'The Hierophant',     file:'RWS Tarot 05 Hierophant.jpg',      sym:'⚜',
+      kw:'가르침 · 전통 · 조언',
+      txt:'혼자 해결하려 애쓰기보다 앞서간 이의 말에 귀 기울이십시오. 검증된 방식이 지름길일 때가 있습니다.' },
+    { n:6,  rn:'VI',    ko:'연인',        en:'The Lovers',         file:'RWS Tarot 06 Lovers.jpg',          sym:'♡',
+      kw:'선택 · 관계 · 조화',
+      txt:'둘 중 하나를 골라야 하는 시기입니다. 이해득실보다 무엇을 사랑하는지가 답을 알려줍니다. 마음이 기우는 쪽에 진심이 있습니다.' },
+    { n:7,  rn:'VII',   ko:'전차',        en:'The Chariot',        file:'RWS Tarot 07 Chariot.jpg',         sym:'⚔',
+      kw:'전진 · 통제 · 승리',
+      txt:'방향만 정해지면 속도는 이미 갖췄습니다. 상반된 힘을 한 손에 쥐고 밀고 나가면 원하는 곳에 닿습니다.' },
+    { n:8,  rn:'VIII',  ko:'힘',          en:'Strength',           file:'RWS Tarot 08 Strength.jpg',        sym:'∞',
+      kw:'용기 · 인내 · 부드러움',
+      txt:'억누르는 힘이 아니라 다독이는 힘이 필요합니다. 조급함을 달래며 버티면 사나운 상황도 결국 순해집니다.' },
+    { n:9,  rn:'IX',    ko:'은둔자',      en:'The Hermit',         file:'RWS Tarot 09 Hermit.jpg',          sym:'✦',
+      kw:'성찰 · 고독 · 탐구',
+      txt:'물러나 홀로 있는 시간이 헛되지 않습니다. 등불은 멀리가 아니라 발밑을 비춥니다. 한 걸음만 보고 가면 됩니다.' },
+    { n:10, rn:'X',     ko:'운명의 수레바퀴', en:'Wheel of Fortune', file:'RWS Tarot 10 Wheel of Fortune.jpg', sym:'☸',
+      kw:'전환 · 순환 · 기회',
+      txt:'흐름이 바뀌는 지점에 서 있습니다. 붙잡으려 할수록 어긋나니, 변화를 받아들이면 오히려 유리해집니다.' },
+    { n:11, rn:'XI',    ko:'정의',        en:'Justice',            file:'RWS Tarot 11 Justice.jpg',         sym:'⚖',
+      kw:'균형 · 판단 · 책임',
+      txt:'감정을 걷어내고 사실만 저울에 올리십시오. 뿌린 대로 정확히 돌아옵니다. 지금의 선택이 훗날의 근거가 됩니다.' },
+    { n:12, rn:'XII',   ko:'매달린 사람', en:'The Hanged Man',     file:'RWS Tarot 12 Hanged Man.jpg',      sym:'↧',
+      kw:'멈춤 · 전환의 시선 · 희생',
+      txt:'지금은 나아갈 때가 아니라 다르게 볼 때입니다. 한 발 물러서면 뒤집혀 있던 답이 제자리를 찾습니다.' },
+    { n:13, rn:'XIII',  ko:'죽음',        en:'Death',              file:'RWS Tarot 13 Death.jpg',           sym:'✝',
+      kw:'끝맺음 · 변형 · 새 출발',
+      txt:'끝이라는 말에 놀라지 마십시오. 무언가를 정리해야 다음이 들어옵니다. 놓아주는 것이 이번 국면의 과제입니다.' },
+    { n:14, rn:'XIV',   ko:'절제',        en:'Temperance',         file:'RWS Tarot 14 Temperance.jpg',      sym:'♒',
+      kw:'조율 · 중용 · 치유',
+      txt:'양쪽을 섞어 알맞은 온도를 만드는 시기입니다. 극단으로 기울지 않으면 지친 마음도 서서히 회복됩니다.' },
+    { n:15, rn:'XV',    ko:'악마',        en:'The Devil',          file:'RWS Tarot 15 Devil.jpg',           sym:'⛧',
+      kw:'집착 · 유혹 · 속박',
+      txt:'묶여 있다고 느끼지만 사슬은 헐겁습니다. 무엇에 매여 있는지 이름을 붙이는 순간 힘이 빠지기 시작합니다.' },
+    { n:16, rn:'XVI',   ko:'탑',          en:'The Tower',          file:'RWS Tarot 16 Tower.jpg',           sym:'⚡',
+      kw:'붕괴 · 각성 · 해방',
+      txt:'예상 못 한 균열이 생길 수 있습니다. 다만 무너지는 것은 애초에 기울어 있던 것입니다. 그 자리에 더 단단한 것을 세우게 됩니다.' },
+    { n:17, rn:'XVII',  ko:'별',          en:'The Star',           file:'RWS Tarot 17 Star.jpg',            sym:'★',
+      kw:'희망 · 영감 · 회복',
+      txt:'어두운 시기를 지나 숨을 고르는 자리입니다. 조용하지만 분명한 빛이 있으니, 바라는 바를 다시 말해도 좋습니다.' },
+    { n:18, rn:'XVIII', ko:'달',          en:'The Moon',           file:'RWS Tarot 18 Moon.jpg',            sym:'☽',
+      kw:'불안 · 환상 · 무의식',
+      txt:'보이는 것이 전부가 아닙니다. 막연한 두려움과 실제 위험을 구분하십시오. 날이 밝기 전까지는 큰 결정을 미루는 편이 낫습니다.' },
+    { n:19, rn:'XIX',   ko:'태양',        en:'The Sun',            file:'RWS Tarot 19 Sun.jpg',             sym:'☀',
+      kw:'성취 · 활력 · 명료함',
+      txt:'감췄던 것이 환하게 드러나고 결과가 분명해집니다. 자신을 낮추지 말고 있는 그대로 내보이십시오.' },
+    { n:20, rn:'XX',    ko:'심판',        en:'Judgement',          file:'RWS Tarot 20 Judgement.jpg',       sym:'☖',
+      kw:'부름 · 결산 · 거듭남',
+      txt:'지나온 시간을 매듭짓고 답해야 할 때입니다. 미뤄둔 일이 다시 찾아오니, 이번에는 정면으로 마주하십시오.' },
+    { n:21, rn:'XXI',   ko:'세계',        en:'The World',          file:'RWS Tarot 21 World.jpg',           sym:'◎',
+      kw:'완성 · 통합 · 귀환',
+      txt:'하나의 여정이 마무리됩니다. 충분히 해냈으니 스스로를 인정하십시오. 닫힘과 동시에 다음 문이 열립니다.' }
+  ];
+
+  const POS1 = ['오늘의 카드'];
+  const POS3 = ['과 거', '현 재', '미 래'];
+
+  let order = [], picked = [], need = 1;
+
+  const fan = document.getElementById('fan');
+
+  /* ---------- 별 배경 ---------- */
+  (function stars() {
+    const sky = document.getElementById('sky');
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2 + 0.7;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.animationDuration = (2.5 + Math.random() * 4) + 's';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      frag.appendChild(s);
+    }
+    sky.appendChild(frag);
+  })();
+
+  /* ---------- 카드 만들기 ---------- */
+  function faceFront(card, big) {
+    // 이미지가 막히면 금빛 문양 카드로 대체한다
+    const img = document.createElement('img');
+    img.alt = card.ko;
+    img.loading = 'lazy';
+    img.src = url(card.file);
+    img.addEventListener('error', function () {
+      const box = img.parentNode;
+      if (!box) return;
+      img.remove();
+      const fb = document.createElement('div');
+      fb.className = 'fallback';
+      fb.innerHTML = '<div class="rn">' + card.rn + '</div>' +
+                     '<div class="sym">' + card.sym + '</div>' +
+                     '<div class="nm">' + card.ko + '<br>' + card.en + '</div>';
+      box.appendChild(fb);
+    });
+    return img;
+  }
+
+  function layout() {
+    const rect = fan.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+
+    // 카드 크기와 부채꼴 반경을 화면에 맞춘다
+    const cw = Math.max(46, Math.min(74, W / 7.4));
+    const ch = cw * 1.68;
+    const radius = Math.max(W * 0.72, 260);
+    const spread = Math.min(1.05, W / 460);        // 부채가 벌어지는 정도
+    const cx = W / 2, cy = H * 0.5 + radius * 0.62;
+
+    const cards = fan.querySelectorAll('.card');
+    cards.forEach(function (el, i) {
+      const t = (i / (cards.length - 1 || 1)) - 0.5;      // -0.5 ~ 0.5
+      const ang = t * spread;                              // 라디안
+      const x = cx + Math.sin(ang) * radius - cw / 2;
+      const y = cy - Math.cos(ang) * radius - ch / 2;
+
+      el.style.width = cw + 'px';
+      el.style.height = ch + 'px';
+      el.dataset.x = x; el.dataset.y = y; el.dataset.ang = ang;
+      el.style.zIndex = i;
+      place(el, false);
+    });
+  }
+
+  // 뽑힌 카드는 위로 솟으며 뒤집힌다
+  function place(el, flipped) {
+    const x = parseFloat(el.dataset.x), y = parseFloat(el.dataset.y);
+    const ang = parseFloat(el.dataset.ang);
+    const deg = ang * 180 / Math.PI;
+
+    if (!flipped) {
+      el.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) rotate(' + deg + 'deg) rotateY(0deg)';
+    } else {
+      const idx = picked.indexOf(parseInt(el.dataset.i, 10));
+      const rect = fan.getBoundingClientRect();
+      const cw = el.offsetWidth, ch = el.offsetHeight;
+      const slot = need === 1 ? 0 : idx;
+      const gap = Math.min(cw * 1.25, rect.width / 3.3);
+      const tx = rect.width / 2 - cw / 2 + (need === 1 ? 0 : (slot - 1) * gap);
+      const ty = rect.height * 0.30 - ch / 2;
+      el.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,0) scale(1.42) rotate(0deg) rotateY(180deg)';
+    }
+  }
+
+  function build() {
+    fan.innerHTML = '';
+    order = DECK.map(function (_, i) { return i; });
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+    picked = [];
+
+    order.forEach(function (deckIdx, i) {
+      const card = DECK[deckIdx];
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.dataset.i = i;
+      el.dataset.deck = deckIdx;
+
+      const back = document.createElement('div');
+      back.className = 'face back';
+
+      const front = document.createElement('div');
+      front.className = 'face front';
+      front.appendChild(faceFront(card));
+
+      el.appendChild(back);
+      el.appendChild(front);
+      el.addEventListener('click', function () { pick(el); });
+      fan.appendChild(el);
+    });
+
+    layout();
+    updateCounter();
+  }
+
+  function pick(el) {
+    const i = parseInt(el.dataset.i, 10);
+    if (picked.indexOf(i) !== -1) return;
+    if (picked.length >= need) return;
+
+    picked.push(i);
+    el.classList.add('picked');
+
+    // 살짝 솟았다가 뒤집히도록 두 단계로 움직인다
+    const x = parseFloat(el.dataset.x), y = parseFloat(el.dataset.y);
+    const deg = parseFloat(el.dataset.ang) * 180 / Math.PI;
+    el.style.transform = 'translate3d(' + x + 'px,' + (y - 26) + 'px,0) rotate(' + deg + 'deg) scale(1.06)';
+
+    try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {}
+
+    setTimeout(function () {
+      // 이미 뽑힌 카드들의 자리를 다시 잡는다
+      picked.forEach(function (pi) {
+        const pel = fan.querySelector('.card[data-i="' + pi + '"]');
+        if (pel) place(pel, true);
+      });
+      // 나머지는 뒤로 물린다
+      if (picked.length >= need) {
+        fan.querySelectorAll('.card').forEach(function (c) {
+          if (picked.indexOf(parseInt(c.dataset.i, 10)) === -1) c.classList.add('gone');
+        });
+      }
+      updateCounter();
+      if (picked.length >= need) setTimeout(showReading, 1000);
+    }, 190);
+  }
+
+  function updateCounter() {
+    document.getElementById('counter').textContent = picked.length + ' / ' + need;
+    document.getElementById('hint').textContent = picked.length >= need
+      ? '카드가 모두 열렸습니다'
+      : (need === 1 ? '마음속으로 질문을 떠올리고 한 장을 고르세요'
+                    : '과거 · 현재 · 미래 순으로 세 장을 고르세요');
+  }
+
+  /* ---------- 해석 ---------- */
+  function showReading() {
+    const body = document.getElementById('readBody');
+    body.innerHTML = '';
+    const pos = need === 1 ? POS1 : POS3;
+
+    picked.forEach(function (i, k) {
+      const el = fan.querySelector('.card[data-i="' + i + '"]');
+      const card = DECK[parseInt(el.dataset.deck, 10)];
+
+      const row = document.createElement('div');
+      row.className = 'readCard';
+
+      const th = document.createElement('div');
+      th.className = 'thumb';
+      th.appendChild(faceFront(card));
+
+      const info = document.createElement('div');
+      info.style.flex = '1';
+      info.innerHTML =
+        '<div class="pos">' + (pos[k] || '') + '</div>' +
+        '<div class="cname">' + card.rn + ' · ' + card.ko +
+        ' <span style="font-family:var(--sans); font-size:11.5px; font-weight:400; color:var(--dim)">' + card.en + '</span></div>' +
+        '<div class="kw">' + card.kw + '</div>' +
+        '<div class="desc">' + card.txt + '</div>';
+
+      row.appendChild(th);
+      row.appendChild(info);
+      body.appendChild(row);
+    });
+
+    if (need === 3) {
+      const sum = document.createElement('p');
+      sum.className = 'desc';
+      sum.style.cssText = 'margin:15px 0 0; padding-top:14px; border-top:1px solid rgba(232,197,114,.16); color:var(--gold2); font-size:13.5px; line-height:1.9';
+      const last = DECK[parseInt(fan.querySelector('.card[data-i="' + picked[2] + '"]').dataset.deck, 10)];
+      sum.textContent = '지나온 자리에서 지금에 이르렀고, 앞으로는 「' + last.ko + '」의 기운이 다가옵니다. ' +
+                        '세 장을 한 줄로 읽어 보면 흐름이 보입니다.';
+      body.appendChild(sum);
+    }
+
+    document.getElementById('reading').classList.add('show');
+  }
+
+  /* ---------- 조작 ---------- */
+  document.querySelectorAll('#modeSeg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      need = parseInt(b.dataset.n, 10);
+      document.querySelectorAll('#modeSeg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      build();
+    });
+  });
+
+  document.getElementById('shuffleBtn').addEventListener('click', function () {
+    document.getElementById('reading').classList.remove('show');
+    build();
+  });
+  document.getElementById('againBtn').addEventListener('click', function () {
+    document.getElementById('reading').classList.remove('show');
+    build();
+  });
+  document.getElementById('closeRead').addEventListener('click', function () {
+    document.getElementById('reading').classList.remove('show');
+  });
+  document.getElementById('readBtn').addEventListener('click', function () {
+    if (picked.length < need) {
+      document.getElementById('hint').textContent =
+        '아직 ' + (need - picked.length) + '장 남았습니다';
+      return;
+    }
+    showReading();
+  });
+
+  window.addEventListener('resize', function () {
+    layout();
+    picked.forEach(function (pi) {
+      const pel = fan.querySelector('.card[data-i="' + pi + '"]');
+      if (pel) place(pel, true);
+    });
+  });
+  window.addEventListener('orientationchange', function () { setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 220); });
+
+  build();
+})();
+</script>
+</body>
+</html>
