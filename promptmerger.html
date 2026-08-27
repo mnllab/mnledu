@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 프롬프트용 파일 병합기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  /* 드롭존 */
+  #drop{
+    border:2px dashed #CBD4DE; border-radius:12px; background:#fff;
+    padding:44px 24px; text-align:center; cursor:pointer;
+    transition:border-color .14s, background .14s, transform .1s;
+  }
+  #drop:hover{ border-color:var(--steel); background:#FAFCFD; }
+  #drop.over{ border-color:var(--steel); background:#EDF4FA; transform:scale(1.004); }
+  #drop:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+
+  /* 파일 칩 */
+  .chip{
+    display:inline-flex; align-items:center; gap:9px;
+    border:1px solid var(--hair); border-radius:999px; background:#fff;
+    padding:7px 8px 7px 14px; font-size:13px; max-width:100%;
+  }
+  .chip .nm{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
+  .chip .sz{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px; color:var(--muted); }
+  .chip button{
+    width:20px; height:20px; border-radius:999px; border:0; flex:none;
+    background:#EEF1F5; color:var(--muted); font-size:13px; line-height:1;
+    cursor:pointer; transition:background .12s, color .12s;
+  }
+  .chip button:hover{ background:#D9534F; color:#fff; }
+  .chip button:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:13px; line-height:1.75;
+    min-height:clamp(320px, 55vh, 700px);
+  }
+  textarea::placeholder{ color:#9AA7B4; font-family:'Pretendard',sans-serif; font-size:15px; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">AI 프롬프트용 파일 병합기</h1>
+      <p class="mt-1 text-[13px] text-muted">여러 파일을 한 덩어리 프롬프트로 · 브라우저 안에서만 처리</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="fmt" class="btn" aria-label="병합 형식" title="병합 형식">
+        <option value="line" selected>구분선 형식</option>
+        <option value="fence">코드펜스 형식</option>
+      </select>
+      <button id="saveBtn" class="btn">저장</button>
+      <button id="clearBtn" class="btn">전체 비우기</button>
+    </div>
+  </header>
+
+  <!-- 드롭존 -->
+  <div id="drop" tabindex="0" role="button" aria-label="파일 추가">
+    <svg class="mx-auto mb-3" width="34" height="34" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+         style="color:var(--steel)" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 9 12 4 17 9"></polyline>
+      <line x1="12" y1="4" x2="12" y2="16"></line>
+    </svg>
+    <p class="text-[14px] font-medium">여기에 텍스트 기반 파일을 끌어다 놓거나 클릭해서 추가하세요</p>
+    <p class="mt-1.5 text-[12px] text-muted">.txt .md .csv .js .py .html .css .json .xml .yml .sql 등</p>
+    <input type="file" id="picker" multiple class="hidden">
+  </div>
+
+  <!-- 파일 목록 -->
+  <div id="listWrap" class="mt-4 hidden">
+    <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2 text-[12px] text-muted">
+      <span>추가된 파일 <b id="fileCount" class="num text-ink">0</b>개</span>
+      <span id="sizeInfo" class="num"></span>
+    </div>
+    <div id="chips" class="flex flex-wrap gap-2"></div>
+  </div>
+
+  <!-- 병합 결과 -->
+  <section class="mt-5 rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+      <span class="text-[12px] font-medium tracking-wide text-muted">병합 결과</span>
+      <button id="copyBtn" class="btn btn-primary">프롬프트 전체 복사</button>
+    </div>
+    <div class="px-5 pt-4 sm:px-6">
+      <textarea id="output" readonly spellcheck="false"
+        placeholder="파일을 추가하면 병합된 프롬프트가 여기에 표시됩니다"></textarea>
+    </div>
+    <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+      <span>글자 <b id="chars" class="num ml-0.5 font-medium text-ink">0</b></span>
+      <span>줄 <b id="lines" class="num ml-0.5 font-medium text-ink">0</b></span>
+      <span>대략 <b id="tokens" class="num ml-0.5 font-medium text-ink">0</b> 토큰</span>
+    </div>
+  </section>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const drop      = document.getElementById('drop');
+  const picker    = document.getElementById('picker');
+  const chips     = document.getElementById('chips');
+  const listWrap  = document.getElementById('listWrap');
+  const fileCount = document.getElementById('fileCount');
+  const sizeInfo  = document.getElementById('sizeInfo');
+  const output    = document.getElementById('output');
+  const fmt       = document.getElementById('fmt');
+  const charsEl   = document.getElementById('chars');
+  const linesEl   = document.getElementById('lines');
+  const tokensEl  = document.getElementById('tokens');
+
+  let files = [];   // { name, size, text }
+
+  // 텍스트로 읽어도 되는 확장자
+  const TEXT_EXT = [
+    'txt','md','markdown','csv','tsv','log','json','xml','yml','yaml','ini','conf','env',
+    'js','jsx','ts','tsx','mjs','cjs','py','rb','php','java','c','h','cpp','hpp','cs','go','rs','swift','kt',
+    'html','htm','css','scss','sass','less','vue','svelte',
+    'sql','sh','bash','zsh','bat','ps1','r','m','lua','pl','toml','gitignore','dockerfile','makefile'
+  ];
+  // 확실한 바이너리
+  const BIN_EXT = [
+    'pdf','png','jpg','jpeg','gif','webp','bmp','tif','tiff','svgz','ico','heic',
+    'zip','rar','7z','tar','gz','bz2','exe','dll','dmg','iso',
+    'mp3','wav','flac','m4a','mp4','avi','mov','mkv','webm',
+    'doc','docx','xls','xlsx','ppt','pptx','hwp','hwpx','key','pages','numbers','ttf','otf','woff','woff2'
+  ];
+
+  function ext(name) {
+    const i = name.lastIndexOf('.');
+    return i < 0 ? name.toLowerCase() : name.slice(i + 1).toLowerCase();
+  }
+
+  function isTextFile(f) {
+    const e = ext(f.name);
+    if (BIN_EXT.indexOf(e) !== -1) return false;
+    if (TEXT_EXT.indexOf(e) !== -1) return true;
+    if (f.type && f.type.indexOf('text/') === 0) return true;
+    if (f.type && /json|xml|javascript|csv/.test(f.type)) return true;
+    return false;   // 알 수 없는 확장자는 내용으로 한 번 더 판정한다
+  }
+
+  // 내용에 널 문자나 제어 문자가 많으면 바이너리로 본다
+  function looksBinary(text) {
+    if (text.indexOf('\u0000') !== -1) return true;
+    const sample = text.slice(0, 2000);
+    let bad = 0;
+    for (let i = 0; i < sample.length; i++) {
+      const c = sample.charCodeAt(i);
+      if (c === 65533) bad++;                                  // 디코딩 실패 문자
+      else if (c < 32 && c !== 9 && c !== 10 && c !== 13) bad++;
+    }
+    return sample.length > 0 && bad / sample.length > 0.1;
+  }
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  /* ---------- 파일 읽기 ---------- */
+  function addFiles(list) {
+    const arr = Array.from(list);
+    if (!arr.length) return;
+
+    const rejected = [];
+    const accepted = [];
+
+    arr.forEach(function (f) {
+      if (BIN_EXT.indexOf(ext(f.name)) !== -1) rejected.push(f.name);
+      else accepted.push(f);
+    });
+
+    let pending = accepted.length;
+    if (!pending) {
+      if (rejected.length) alert('텍스트 기반 파일만 지원합니다\n\n제외됨 : ' + rejected.join(', '));
+      return;
+    }
+
+    accepted.forEach(function (f) {
+      const reader = new FileReader();
+
+      reader.onload = function (ev) {
+        const text = String(ev.target.result);
+        // 확장자로 판정이 안 되면 내용으로 한 번 더 본다
+        if (!isTextFile(f) && looksBinary(text)) {
+          rejected.push(f.name);
+        } else {
+          files.push({ name: f.name, size: f.size, text: text });
+        }
+        done();
+      };
+
+      reader.onerror = function () { rejected.push(f.name); done(); };
+      reader.readAsText(f, 'UTF-8');
+    });
+
+    function done() {
+      pending--;
+      if (pending > 0) return;
+      render();
+      if (rejected.length) {
+        alert('텍스트 기반 파일만 지원합니다\n\n제외됨 : ' + rejected.join(', '));
+      }
+    }
+  }
+
+  /* ---------- 병합 ---------- */
+  function merge() {
+    if (!files.length) return '';
+    const useFence = fmt.value === 'fence';
+
+    return files.map(function (f) {
+      const body = f.text.replace(/\r\n?/g, '\n').replace(/\s+$/, '');
+      if (useFence) {
+        const lang = ext(f.name);
+        return '## ' + f.name + '\n\n```' + lang + '\n' + body + '\n```';
+      }
+      const bar = '=============================='.slice(0, 30);
+      return bar + '\n[파일명: ' + f.name + ']\n' + bar + '\n' + body;
+    }).join('\n\n');
+  }
+
+  function render() {
+    // 칩 목록
+    chips.innerHTML = '';
+    files.forEach(function (f, i) {
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = f.name;
+      nm.title = f.name;
+
+      const sz = document.createElement('span');
+      sz.className = 'sz';
+      sz.textContent = fmtSize(f.size);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.textContent = '×';
+      del.setAttribute('aria-label', f.name + ' 제거');
+      del.addEventListener('click', function () {
+        files.splice(i, 1);
+        render();
+      });
+
+      chip.appendChild(nm);
+      chip.appendChild(sz);
+      chip.appendChild(del);
+      chips.appendChild(chip);
+    });
+
+    listWrap.classList.toggle('hidden', files.length === 0);
+    fileCount.textContent = files.length;
+    const total = files.reduce(function (s, f) { return s + f.size; }, 0);
+    sizeInfo.textContent = files.length ? '합계 ' + fmtSize(total) : '';
+
+    // 병합 결과
+    const text = merge();
+    output.value = text;
+
+    const chars = Array.from(text).length;
+    charsEl.textContent = chars.toLocaleString('ko-KR');
+    linesEl.textContent = (text ? text.split('\n').length : 0).toLocaleString('ko-KR');
+    // 한글이 섞인 문서 기준의 대략치 (정확한 값은 모델마다 다름)
+    tokensEl.textContent = Math.ceil(chars / 2.5).toLocaleString('ko-KR');
+  }
+
+  fmt.addEventListener('change', render);
+
+  /* ---------- 드래그 앤 드롭 ---------- */
+  drop.addEventListener('click', function () { picker.click(); });
+  drop.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+  });
+  picker.addEventListener('change', function (ev) {
+    addFiles(ev.target.files);
+    picker.value = '';   // 같은 파일을 다시 넣을 수 있도록 초기화
+  });
+
+  ['dragenter', 'dragover'].forEach(function (t) {
+    drop.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      drop.classList.add('over');
+    });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    drop.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && drop.contains(ev.relatedTarget)) return;
+      drop.classList.remove('over');
+    });
+  });
+  drop.addEventListener('drop', function (ev) {
+    if (ev.dataTransfer && ev.dataTransfer.files) addFiles(ev.dataTransfer.files);
+  });
+
+  // 창 밖으로 파일을 놓쳤을 때 브라우저가 파일을 열어버리는 것을 막는다
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) {
+      if (ev.target === drop || drop.contains(ev.target)) return;
+      ev.preventDefault();
+    });
+  });
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 복사 · 저장 · 비우기 ---------- */
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    const text = output.value;
+    if (!text.trim()) { toast('복사할 내용이 없습니다'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('프롬프트가 복사되었습니다!');
+    } catch (e) {
+      if (legacyCopy(text)) toast('프롬프트가 복사되었습니다!');
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!output.value.trim()) { toast('저장할 내용이 없습니다'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = '병합프롬프트_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      const blob = new Blob(['\uFEFF' + output.value], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    if (!files.length || confirm('추가한 파일을 모두 비웁니다. 계속할까요?')) {
+      files = [];
+      render();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>반복 이메일 생성기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1; padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s, color .12s;
+  }
+  .btn:hover:not([disabled]){ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+
+  .tab{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:6px; font-size:12.5px; line-height:1; padding:8px 12px;
+    cursor:pointer; transition:all .12s;
+  }
+  .tab:hover{ color:var(--ink); border-color:#C3CCD6; }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  textarea, .fld{
+    width:100%; border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:11px 13px; font-size:13.5px; line-height:1.75; color:var(--ink);
+    outline:none; transition:border-color .12s;
+  }
+  textarea:focus, .fld:focus{ border-color:var(--steel); }
+  textarea{ resize:vertical; font-family:'JetBrains Mono',ui-monospace,monospace; }
+  #tplBody{ min-height:clamp(220px,32vh,420px); }
+  #bulkData{ min-height:150px; }
+
+  .chip{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:999px; font-size:11.5px; line-height:1; padding:6px 11px; cursor:pointer;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{ border-color:var(--steel); color:var(--steel); background:#F3F8FC; }
+
+  /* 저장 목록 */
+  .tplRow{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--hair); border-radius:7px; background:#fff;
+    padding:8px 10px; font-size:13px;
+  }
+  .tplRow .nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+  .tplRow .nm:hover{ color:var(--steel); }
+  .mini{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:5px; font-size:11px; line-height:1; padding:5px 7px; cursor:pointer; flex:none;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .mini:hover{ border-color:var(--steel); color:var(--steel); }
+  .mini.del:hover{ border-color:var(--alert); background:var(--alert); color:#fff; }
+
+  /* 미리보기 */
+  #preview{
+    min-height:clamp(280px,42vh,560px); max-height:64vh; overflow:auto;
+    background:#fff; border:1px solid var(--hair); border-radius:8px;
+    padding:18px 20px; font-size:14px; line-height:1.8;
+  }
+  #preview.plain{ white-space:pre-wrap; word-break:break-word; font-family:'Pretendard',sans-serif; }
+  #preview.code{ white-space:pre-wrap; word-break:break-word; font-family:'JetBrains Mono',ui-monospace,monospace; font-size:13px; }
+  #preview h1{ font-size:1.5em; font-weight:700; margin:.6em 0 .4em; }
+  #preview h2{ font-size:1.28em; font-weight:700; margin:.6em 0 .4em; }
+  #preview h3{ font-size:1.12em; font-weight:600; margin:.6em 0 .3em; }
+  #preview p{ margin:0 0 .7em; }
+  #preview strong{ font-weight:700; color:var(--ink); }
+  #preview ul, #preview ol{ margin:.3em 0 .8em; padding-left:1.4em; }
+  #preview li{ margin:.2em 0; }
+  #preview a{ color:var(--steel); }
+  #preview hr{ border:0; border-top:1px solid var(--hair); margin:1.1em 0; }
+  #preview blockquote{ margin:.6em 0; padding-left:.9em; border-left:3px solid var(--hair); color:var(--muted); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease; pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-7xl px-4 sm:px-6 py-7 sm:py-10">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">반복 이메일 생성기</h1>
+      <p class="mt-1 text-[13px] text-muted">템플릿 하나로 여러 통을 한 번에 · 브라우저 안에서만 처리</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] text-muted">작성</span>
+        <div class="flex gap-1.5">
+          <button class="tab on" data-mode="single">1:1 단일</button>
+          <button class="tab" data-mode="bulk">대량 연속</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] text-muted">서식</span>
+        <div class="flex gap-1.5">
+          <button class="tab on" data-fmt="txt">일반 텍스트</button>
+          <button class="tab" data-fmt="md">마크다운</button>
+          <button class="tab" data-fmt="html">HTML</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+
+    <!-- 좌측 : 템플릿 -->
+    <section class="space-y-4">
+
+      <!-- 저장소 -->
+      <div class="rounded-lg border border-hair bg-white">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hair px-4 py-2.5">
+          <span class="text-[12px] font-medium tracking-wide text-muted">
+            저장된 양식 <b id="tplCount" class="num ml-1 text-ink">0</b>개
+          </span>
+          <div class="flex items-center gap-1.5">
+            <input id="tplName" class="fld py-1.5 text-[12px]" style="width:150px" placeholder="양식 이름" autocomplete="off">
+            <button id="tplSave" class="btn px-2.5 py-1.5 text-[12px]">저장</button>
+          </div>
+        </div>
+        <div id="tplList" class="grid gap-1.5 px-4 py-3"></div>
+      </div>
+
+      <!-- 에디터 -->
+      <div class="rounded-lg border border-hair bg-white">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hair px-4 py-2.5">
+          <span class="text-[12px] font-medium tracking-wide text-muted">템플릿 편집</span>
+          <div class="flex gap-1.5">
+            <button id="sampleBtn" class="btn px-2.5 py-1.5 text-[12px]">예시</button>
+            <button id="clearTpl" class="btn px-2.5 py-1.5 text-[12px]">비우기</button>
+          </div>
+        </div>
+
+        <div class="px-4 py-3">
+          <label for="subject" class="mb-1.5 block text-[11px] text-muted">제목</label>
+          <input id="subject" class="fld" placeholder="[{회사명}] {안건} 안내드립니다" autocomplete="off">
+
+          <label for="tplBody" class="mb-1.5 mt-3 block text-[11px] text-muted">본문</label>
+          <textarea id="tplBody" spellcheck="false"
+            placeholder="{회사명} {수신인} {직함}님께&#10;&#10;안녕하세요, {발신인}입니다.&#10;{안건}(이/가) 확정되었습니다."></textarea>
+
+          <div id="varChips" class="mt-3 flex flex-wrap gap-1.5"></div>
+          <p class="mt-2 text-[11.5px] leading-relaxed text-muted">
+            중괄호로 변수를 씁니다. 값이 비면 앞뒤 공백과 빈 줄이 자동으로 정리됩니다.
+            <span class="text-ink">(은/는) (이/가) (을/를) (와/과) (으로/로)</span> 는 앞말 받침에 맞춰 자동 선택됩니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- 입력 -->
+      <div class="rounded-lg border border-hair bg-white">
+        <div class="border-b border-hair px-4 py-2.5 text-[12px] font-medium tracking-wide text-muted">
+          <span id="inputTitle">값 입력</span>
+        </div>
+
+        <div id="singleWrap" class="grid gap-3 px-4 py-3 sm:grid-cols-2"></div>
+
+        <div id="bulkWrap" class="hidden px-4 py-3">
+          <p class="mb-2 text-[11.5px] leading-relaxed text-muted">
+            첫 줄에 변수명, 그 아래에 값을 넣습니다. 엑셀에서 복사해 붙여넣으면 그대로 인식됩니다(탭 구분). 쉼표 구분도 됩니다.
+          </p>
+          <textarea id="bulkData" spellcheck="false"
+            placeholder="회사명&#9;수신인&#9;직함&#9;안건&#10;㈜에임랩&#9;홍길동&#9;대표&#9;2단계 컨설팅&#10;유진엠에스&#9;이다은&#9;팀장&#9;착수보고"></textarea>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <button id="bulkSample" class="btn px-2.5 py-1.5 text-[12px]">예시 데이터</button>
+            <span id="bulkInfo" class="num text-[11.5px] text-muted"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 우측 : 결과 -->
+    <section class="rounded-lg border border-hair bg-white">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hair px-4 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">
+          미리보기 <span id="fmtLabel" class="num ml-1 text-ink">TXT</span>
+        </span>
+        <div class="flex flex-wrap gap-1.5">
+          <button id="saveBtn" class="btn px-2.5 py-1.5 text-[12px]">파일로 저장</button>
+          <button id="copyBtn" class="btn btn-primary px-2.5 py-1.5 text-[12px]">이메일 복사</button>
+        </div>
+      </div>
+
+      <div class="px-4 py-3">
+        <div id="subjectLine" class="mb-2 hidden rounded-md border border-hair bg-canvas px-3 py-2 text-[13px]">
+          <span class="text-[11px] text-muted">제목</span>
+          <span id="subjectText" class="ml-2 font-medium"></span>
+        </div>
+        <div id="preview" class="plain"></div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-hair px-4 py-2.5 text-[12px] text-muted">
+        <span>공백 포함 <b id="cAll" class="num ml-0.5 font-medium text-ink">0</b>자</span>
+        <span>공백 제외 <b id="cNoSp" class="num ml-0.5 font-medium text-ink">0</b>자</span>
+        <span id="mailCount" class="num"></span>
+        <span id="warnInfo" class="num text-alert"></span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const subject   = document.getElementById('subject');
+  const tplBody   = document.getElementById('tplBody');
+  const varChips  = document.getElementById('varChips');
+  const singleWrap= document.getElementById('singleWrap');
+  const bulkWrap  = document.getElementById('bulkWrap');
+  const bulkData  = document.getElementById('bulkData');
+  const bulkInfo  = document.getElementById('bulkInfo');
+  const preview   = document.getElementById('preview');
+  const subjectLine = document.getElementById('subjectLine');
+  const subjectText = document.getElementById('subjectText');
+  const cAll      = document.getElementById('cAll');
+  const cNoSp     = document.getElementById('cNoSp');
+  const mailCount = document.getElementById('mailCount');
+  const warnInfo  = document.getElementById('warnInfo');
+  const fmtLabel  = document.getElementById('fmtLabel');
+  const inputTitle= document.getElementById('inputTitle');
+  const tplList   = document.getElementById('tplList');
+  const tplName   = document.getElementById('tplName');
+  const tplCount  = document.getElementById('tplCount');
+
+  const KEY = 'email-templates-v1';
+  const SEP = '----------------------------------------';
+
+  let mode = 'single';
+  let fmt  = 'txt';
+  let values = {};          // 1:1 입력값
+  let lastPlain = '';       // 복사·저장용 텍스트
+  let lastHtml = '';        // HTML 모드 복사용
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 한국어 조사 ---------- */
+  function jong(ch) {
+    if (!ch) return { has: false, rieul: false };
+    const c = ch.charCodeAt(0);
+    if (c >= 0xAC00 && c <= 0xD7A3) {
+      const j = (c - 0xAC00) % 28;
+      return { has: j !== 0, rieul: j === 8 };
+    }
+    if (/[0-9]/.test(ch)) return { has: '1367800'.indexOf(ch) >= 0, rieul: '1780'.indexOf(ch) >= 0 };
+    return { has: false, rieul: false };
+  }
+
+  const PTL = '은|는|이|가|을|를|과|와|으로|로|아|야';
+  const WITH_JONG = { '은': 1, '이': 1, '을': 1, '과': 1, '으로': 1, '아': 1 };
+
+  function fixParticles(text) {
+    // 앞말이 사라져 조사 표기만 남은 경우는 통째로 지운다
+    text = text.replace(new RegExp('^[ \\t]*\\((' + PTL + ')\\/(' + PTL + ')\\)[ \\t]*', 'gm'), '');
+    // 줄을 넘어가지 않도록 같은 줄의 앞 글자만 본다
+    return text.replace(new RegExp('(\\S)[ \\t]*\\((' + PTL + ')\\/(' + PTL + ')\\)', 'g'),
+      function (m, prev, a, b) {
+        const st = jong(prev);
+        const withJong = WITH_JONG[a] ? a : b;
+        const without  = WITH_JONG[a] ? b : a;
+        if (withJong === '으로' && st.rieul) return prev + '로';
+        return prev + (st.has ? withJong : without);
+      });
+  }
+
+  /* ---------- 공란 정돈 ---------- */
+  function tidyLine(line) {
+    let t = line.replace(/[ \t]{2,}/g, ' ');
+    t = t.replace(/\(\s*\)|\[\s*\]|「\s*」|《\s*》/g, '');   // 빈 괄호 제거
+    t = t.replace(/\s+([,.;!?])/g, '$1');                    // 문장부호 앞 공백 (콜론은 유지)
+    t = t.replace(/([,·\/])\s*\1+/g, '$1');                  // 중복 구분자
+    t = t.replace(/^\s*[,·:]\s*/, '').replace(/\s*[,·:]\s*$/, '');
+    return t.replace(/[ \t]{2,}/g, ' ').trim();
+  }
+
+  function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function render(tpl, row) {
+    const source = String(tpl == null ? '' : tpl);
+    let out = source;
+
+    Object.keys(row).forEach(function (k) {
+      out = out.replace(new RegExp('\\{\\s*' + escapeRe(k) + '\\s*\\}', 'g'),
+                        row[k] == null ? '' : String(row[k]));
+    });
+    out = out.replace(/\{[^{}]*\}/g, '');     // 값이 주어지지 않은 변수는 제거
+    out = fixParticles(out);
+
+    const origLines = source.split('\n');
+    const hadVar = /\{[^{}]*\}/;
+    const kept = [];
+
+    out.split('\n').forEach(function (l, i) {
+      const orig = origLines[i] !== undefined ? origLines[i] : '';
+      const had = l.trim() !== '';
+      const t = tidyLine(l);
+
+      if (had && t === '') return;                       // 치환으로 비어버린 줄은 버린다
+      // "- 준비 : " 처럼 항목 라벨만 남고 값이 사라진 줄도 버린다
+      if (hadVar.test(orig) && /^[-·*•\s]*[^:：]{0,24}[:：]\s*$/.test(t)) return;
+
+      kept.push(t);
+    });
+
+    return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  /* ---------- 변수 감지 ---------- */
+  function detectVars() {
+    const src = subject.value + '\n' + tplBody.value;
+    const found = (src.match(/\{\s*[^{}]+\s*\}/g) || [])
+      .map(function (t) { return t.replace(/[{}]/g, '').trim(); })
+      .filter(function (x, i, a) { return x && a.indexOf(x) === i; });
+    return found;
+  }
+
+  function renderVarUI() {
+    const vars = detectVars();
+
+    // 칩
+    varChips.innerHTML = '';
+    if (!vars.length) {
+      const s = document.createElement('span');
+      s.className = 'text-[11.5px] text-muted';
+      s.textContent = '중괄호 변수를 쓰면 여기에 표시됩니다';
+      varChips.appendChild(s);
+    } else {
+      vars.forEach(function (v) {
+        const b = document.createElement('button');
+        b.className = 'chip';
+        b.type = 'button';
+        b.textContent = '{' + v + '}';
+        b.title = '본문 커서 위치에 넣기';
+        b.addEventListener('click', function () { insertVar('{' + v + '}'); });
+        varChips.appendChild(b);
+      });
+    }
+
+    // 1:1 입력 상자
+    singleWrap.innerHTML = '';
+    if (!vars.length) {
+      const s = document.createElement('p');
+      s.className = 'text-[12.5px] text-muted';
+      s.textContent = '템플릿에 변수를 넣으면 입력란이 자동으로 생깁니다';
+      singleWrap.appendChild(s);
+    }
+    vars.forEach(function (v) {
+      const wrap = document.createElement('div');
+      const lab = document.createElement('label');
+      lab.className = 'mb-1.5 block text-[11px] text-muted';
+      lab.textContent = v;
+      lab.htmlFor = 'v_' + v;
+
+      const inp = document.createElement('input');
+      inp.className = 'fld';
+      inp.id = 'v_' + v;
+      inp.value = values[v] || '';
+      inp.placeholder = '비우면 자동으로 정돈됩니다';
+      inp.autocomplete = 'off';
+      inp.addEventListener('input', function () { values[v] = inp.value; update(); });
+
+      wrap.appendChild(lab);
+      wrap.appendChild(inp);
+      singleWrap.appendChild(wrap);
+    });
+  }
+
+  function insertVar(text) {
+    const el = tplBody;
+    const s = el.selectionStart, e = el.selectionEnd;
+    el.value = el.value.slice(0, s) + text + el.value.slice(e);
+    el.focus();
+    el.setSelectionRange(s + text.length, s + text.length);
+    update();
+  }
+
+  /* ---------- 대량 데이터 ---------- */
+  function parseBulk() {
+    const raw = bulkData.value.replace(/\r\n?/g, '\n').trim();
+    if (!raw) return { keys: [], rows: [] };
+
+    const lines = raw.split('\n').filter(function (l) { return l.trim() !== ''; });
+    const useTab = lines[0].indexOf('\t') !== -1;
+    const split = function (l) {
+      return (useTab ? l.split('\t') : l.split(',')).map(function (c) { return c.trim(); });
+    };
+
+    const keys = split(lines[0]).filter(Boolean);
+    const rows = lines.slice(1).map(function (l) {
+      const cells = split(l);
+      const row = {};
+      keys.forEach(function (k, i) { row[k] = cells[i] !== undefined ? cells[i] : ''; });
+      return row;
+    });
+    return { keys: keys, rows: rows };
+  }
+
+  /* ---------- 서식 변환 ---------- */
+  // 일반 텍스트 : 마크다운 기호를 걷어내 메모장에 그대로 붙일 수 있게 한다
+  function stripMd(text) {
+    return text
+      .replace(/^#{1,6}\s+/gm, '')
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/__(.+?)__/g, '$1')
+      .replace(/\*(?!\s)(.+?)(?<!\s)\*/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/^\s*>\s?/gm, '')
+      .replace(/^\s*[-*]\s+/gm, '· ')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1($2)')
+      .replace(/^\s*[-*_]{3,}\s*$/gm, SEP);
+  }
+
+  function toHtml(text) {
+    try {
+      if (typeof marked === 'undefined') throw new Error('no marked');
+      return marked.parse ? marked.parse(text) : marked(text);
+    } catch (e) {
+      return '<p>' + text.replace(/[&<>]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+      }).replace(/\n/g, '<br>') + '</p>';
+    }
+  }
+
+  /* ---------- 본문 생성 ---------- */
+  function buildBodies() {
+    const tpl = tplBody.value;
+    const subj = subject.value;
+
+    if (mode === 'single') {
+      return [{ subject: render(subj, values), body: render(tpl, values), who: values['수신인'] || '' }];
+    }
+
+    const data = parseBulk();
+    bulkInfo.textContent = data.rows.length
+      ? '변수 ' + data.keys.length + '개 · ' + data.rows.length + '건 인식'
+      : (bulkData.value.trim() ? '데이터를 인식하지 못했습니다' : '');
+
+    return data.rows.map(function (row) {
+      const who = row['수신인'] || row[data.keys[0]] || '';
+      return { subject: render(subj, row), body: render(tpl, row), who: who };
+    });
+  }
+
+  function joinPlain(items) {
+    if (mode === 'single') return items.length ? items[0].body : '';
+    return items.map(function (it) {
+      const head = SEP + '\n[수신인: ' + (it.who || '(이름 없음)') + '님 메일]\n' + SEP;
+      const subj = it.subject ? '제목: ' + it.subject + '\n\n' : '';
+      return head + '\n' + subj + it.body;
+    }).join('\n\n');
+  }
+
+  /* ---------- 렌더링 ---------- */
+  function update() {
+    renderVarUI();
+    const items = buildBodies();
+
+    fmtLabel.textContent = fmt.toUpperCase();
+    inputTitle.textContent = mode === 'single' ? '값 입력' : '대량 데이터';
+
+    // 제목 줄 (단일 모드에서만 별도 표시)
+    if (mode === 'single' && items.length && items[0].subject) {
+      subjectText.textContent = items[0].subject;
+      subjectLine.classList.remove('hidden');
+    } else {
+      subjectLine.classList.add('hidden');
+    }
+
+    const mdText = joinPlain(items);
+
+    if (fmt === 'txt') {
+      lastPlain = stripMd(mdText).replace(/\n{3,}/g, '\n\n').trim();
+      lastHtml = '';
+      preview.className = 'plain';
+      preview.textContent = lastPlain;
+    } else if (fmt === 'md') {
+      lastPlain = mdText;
+      lastHtml = '';
+      preview.className = 'code';
+      preview.textContent = lastPlain;
+    } else {
+      lastHtml = toHtml(mdText);
+      preview.className = '';
+      preview.innerHTML = lastHtml;
+      lastPlain = preview.innerText;
+    }
+
+    // 글자수는 화면에 보이는 텍스트 기준
+    const shown = (fmt === 'html' ? preview.innerText : lastPlain).replace(/\r/g, '');
+    const flat = shown.replace(/\n/g, '');
+    cAll.textContent = Array.from(flat).length.toLocaleString('ko-KR');
+    cNoSp.textContent = Array.from(flat.replace(/\s/g, '')).length.toLocaleString('ko-KR');
+    mailCount.textContent = mode === 'bulk' ? '메일 ' + items.length + '통' : '';
+
+    // 값이 비어 있는 변수 안내
+    if (mode === 'single') {
+      const vars = detectVars();
+      const empty = vars.filter(function (v) { return !values[v] || !values[v].trim(); });
+      warnInfo.textContent = empty.length ? '빈 변수 ' + empty.length + '개 (자동 정돈됨)' : '';
+    } else {
+      warnInfo.textContent = '';
+    }
+  }
+
+  [subject, tplBody, bulkData].forEach(function (el) { el.addEventListener('input', update); });
+
+  /* ---------- 모드 · 서식 전환 ---------- */
+  document.querySelectorAll('[data-mode]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      mode = b.dataset.mode;
+      document.querySelectorAll('[data-mode]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      singleWrap.classList.toggle('hidden', mode !== 'single');
+      bulkWrap.classList.toggle('hidden', mode !== 'bulk');
+      document.getElementById('copyBtn').textContent = mode === 'bulk' ? '전체 이메일 복사' : '이메일 복사';
+      update();
+    });
+  });
+
+  document.querySelectorAll('[data-fmt]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      fmt = b.dataset.fmt;
+      document.querySelectorAll('[data-fmt]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.getElementById('copyBtn').textContent =
+        fmt === 'html' ? '서식 복사' : (mode === 'bulk' ? '전체 이메일 복사' : '이메일 복사');
+      update();
+    });
+  });
+
+  /* ---------- 복사 ---------- */
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    if (!lastPlain.trim() && !lastHtml.trim()) { toast('복사할 내용이 없습니다'); return; }
+
+    // HTML 모드는 text/html과 text/plain을 함께 담아 서식이 살아 있게 한다
+    if (fmt === 'html' && navigator.clipboard && window.ClipboardItem) {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([lastHtml], { type: 'text/html' }),
+          'text/plain': new Blob([lastPlain], { type: 'text/plain' })
+        })]);
+        toast('서식이 유지된 채 복사되었습니다!');
+        return;
+      } catch (e) { /* 아래 평문 복사로 넘어간다 */ }
+    }
+
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(lastPlain);
+      else throw new Error('no clipboard api');
+      toast('복사되었습니다!');
+    } catch (e) {
+      if (legacyCopy(lastPlain)) toast('복사되었습니다!');
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    const text = fmt === 'html' ? lastHtml : lastPlain;
+    if (!text.trim()) { toast('저장할 내용이 없습니다'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const ext = fmt === 'html' ? 'html' : (fmt === 'md' ? 'md' : 'txt');
+    const name = '이메일_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.' + ext;
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob([(ext === 'html' ? '' : '\uFEFF') + text],
+                            { type: ext === 'html' ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  /* ---------- 템플릿 저장소 ---------- */
+  // 저장이 막힌 환경(시크릿 모드, 미리보기 창)에서도 앱이 멈추지 않도록 감싼다
+  let storageOk = true;
+
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { storageOk = false; return {}; }
+  }
+  function saveAll(obj) {
+    try { localStorage.setItem(KEY, JSON.stringify(obj)); return true; }
+    catch (e) { storageOk = false; return false; }
+  }
+
+  function renderTplList() {
+    const all = loadAll();
+    const names = Object.keys(all).sort();
+    tplList.innerHTML = '';
+    tplCount.textContent = names.length;
+
+    if (!storageOk) {
+      const p = document.createElement('p');
+      p.className = 'text-[12px] text-alert';
+      p.textContent = '이 환경에서는 브라우저 저장이 막혀 있습니다. 파일로 저장해 두세요.';
+      tplList.appendChild(p);
+      return;
+    }
+    if (!names.length) {
+      const p = document.createElement('p');
+      p.className = 'text-[12.5px] text-muted';
+      p.textContent = '자주 쓰는 양식을 이름을 붙여 저장해 두면 언제든 불러올 수 있습니다';
+      tplList.appendChild(p);
+      return;
+    }
+
+    names.forEach(function (n) {
+      const row = document.createElement('div');
+      row.className = 'tplRow';
+
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = n;
+      nm.title = '눌러서 불러오기';
+      nm.addEventListener('click', function () { loadTpl(n); });
+
+      const load = document.createElement('button');
+      load.className = 'mini';
+      load.textContent = '불러오기';
+      load.addEventListener('click', function () { loadTpl(n); });
+
+      const del = document.createElement('button');
+      del.className = 'mini del';
+      del.textContent = '삭제';
+      del.addEventListener('click', function () {
+        if (!confirm('"' + n + '" 양식을 삭제할까요?')) return;
+        const all2 = loadAll();
+        delete all2[n];
+        saveAll(all2);
+        renderTplList();
+        toast('삭제했습니다');
+      });
+
+      row.appendChild(nm); row.appendChild(load); row.appendChild(del);
+      tplList.appendChild(row);
+    });
+  }
+
+  function loadTpl(n) {
+    const all = loadAll();
+    const t = all[n];
+    if (!t) return;
+    subject.value = t.subject || '';
+    tplBody.value = t.body || '';
+    tplName.value = n;
+    update();
+    toast('"' + n + '" 양식을 불러왔습니다');
+  }
+
+  document.getElementById('tplSave').addEventListener('click', function () {
+    const n = tplName.value.trim();
+    if (!n) { toast('양식 이름을 입력해 주세요'); tplName.focus(); return; }
+    if (!tplBody.value.trim()) { toast('본문이 비어 있습니다'); return; }
+
+    const all = loadAll();
+    if (all[n] && !confirm('같은 이름의 양식이 있습니다. 덮어쓸까요?')) return;
+
+    all[n] = { subject: subject.value, body: tplBody.value, at: Date.now() };
+    if (saveAll(all)) { renderTplList(); toast('"' + n + '" 양식을 저장했습니다'); }
+    else toast('이 환경에서는 저장이 막혀 있습니다');
+  });
+
+  /* ---------- 예시 · 비우기 ---------- */
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    subject.value = '[{회사명}] {안건} 진행 안내';
+    tplBody.value =
+      '{회사명} {수신인} {직함}님께\n\n' +
+      '안녕하세요, **{발신회사} {발신인}**입니다.\n\n' +
+      '{안건}(이/가) 다음과 같이 확정되어 안내드립니다.\n\n' +
+      '- 일시 : {일시}\n' +
+      '- 장소 : {장소}\n' +
+      '- 준비 : {준비물}\n\n' +
+      '{추가메모}\n\n' +
+      '문의사항은 회신 주시면 됩니다.\n감사합니다.\n\n' +
+      '{발신인} 드림';
+    values = {
+      회사명: '㈜에임랩', 수신인: '홍길동', 직함: '대표',
+      발신회사: '서울대학교 공학연구원', 발신인: '김장길',
+      안건: '2단계 컨설팅', 일시: '2026. 9. 3.(목) 14:00',
+      장소: '본사 회의실', 준비물: '', 추가메모: ''
+    };
+    tplName.value = '컨설팅 일정 안내';
+    update();
+    toast('예시 양식을 넣었습니다');
+  });
+
+  document.getElementById('bulkSample').addEventListener('click', function () {
+    bulkData.value =
+      '회사명\t수신인\t직함\t안건\t일시\t장소\t발신회사\t발신인\t준비물\t추가메모\n' +
+      '㈜에임랩\t홍길동\t대표\t2단계 컨설팅\t2026. 9. 3.(목) 14:00\t본사 회의실\t서울대학교 공학연구원\t김장길\t\t\n' +
+      '유진엠에스\t이다은\t팀장\t착수보고\t2026. 9. 5.(토) 10:00\t온라인\t서울대학교 공학연구원\t김장길\t사업계획서\t\n' +
+      '\t박신혜\t\t중간점검\t2026. 9. 10.(목) 15:00\t창조경제혁신센터\t서울대학교 공학연구원\t김장길\t\t자료는 사전 공유 예정';
+    update();
+    toast('예시 데이터를 넣었습니다');
+  });
+
+  document.getElementById('clearTpl').addEventListener('click', function () {
+    if (!tplBody.value.trim() || confirm('편집 중인 템플릿을 비웁니다. 계속할까요?')) {
+      subject.value = '';
+      tplBody.value = '';
+      values = {};
+      update();
+    }
+  });
+
+  renderTplList();
+  update();
+})();
+</script>
+</body>
+</html>

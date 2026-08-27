@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>올인원 템플릿 매칭기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E4E5E3',
+          canvas: '#F6F6F4',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E4E5E3; --canvas:#F6F6F4; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:inherit; font-size:14px; line-height:1.75;
+  }
+  textarea::placeholder{ color:#A7ADA6; }
+  #data{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:13px; min-height:clamp(200px,26vh,320px); }
+  #tpl{ min-height:clamp(150px,20vh,260px); }
+
+  /* 모드 탭 */
+  .tab{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:6px; font-size:13px; line-height:1; padding:9px 13px;
+    cursor:pointer; transition:border-color .12s, color .12s, background .12s;
+  }
+  .tab:hover{ color:var(--ink); border-color:#CDCFCB; }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .tab input{ position:absolute; opacity:0; width:0; height:0; }
+  .tab:focus-within{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  /* 변수 칩 */
+  .chip{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:999px; font-size:12.5px; line-height:1;
+    padding:8px 13px; cursor:pointer;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{ border-color:var(--steel); color:var(--steel); background:#F3F8FC; }
+  .chip:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#CDCFCB; background:#FBFBFA; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  .panel{
+    border:1px solid var(--hair); border-radius:10px; background:#fff;
+    box-shadow:0 1px 2px rgba(38,56,75,.04);
+  }
+  .panel.over{ border-color:var(--steel); background:#F4F9FC; }
+
+  .card{
+    border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:16px 18px; position:relative;
+  }
+  .card pre{
+    margin:0; white-space:pre-wrap; word-break:break-word;
+    font-family:inherit; font-size:14px; line-height:1.75;
+  }
+  .card .idx{
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:11px; color:var(--muted);
+  }
+  .cardCopy{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:5px; font-size:11px; line-height:1; padding:6px 9px; cursor:pointer;
+    transition:border-color .12s, color .12s;
+  }
+  .cardCopy:hover{ border-color:var(--steel); color:var(--steel); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">올인원 템플릿 매칭기</h1>
+      <p class="mt-1 text-[13px] text-muted">데이터를 문장 틀에 끼워 한 번에 생성 · 저장되지 않음</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="copyFmt" class="btn" aria-label="복사 형식" title="복사·저장 형식">
+        <option value="plain" selected>메모장용</option>
+        <option value="word">워드·한글용</option>
+      </select>
+      <button id="sampleBtn" class="btn">예시</button>
+      <button id="saveBtn" class="btn">저장</button>
+    </div>
+  </header>
+
+  <!-- 1단 : 데이터 -->
+  <section id="panel1" class="panel">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-3">
+      <span class="text-[12px] font-medium tracking-wide text-muted">1 · 데이터 입력</span>
+      <button id="clearData" class="btn px-2.5 py-1.5 text-[12px]">지우기</button>
+    </div>
+
+    <div class="flex flex-wrap gap-2 px-5 pt-4">
+      <label class="tab on"><input type="radio" name="mode" value="bracket" checked>대괄호 리스트</label>
+      <label class="tab"><input type="radio" name="mode" value="tsv">엑셀·스프레드시트</label>
+      <label class="tab"><input type="radio" name="mode" value="md">마크다운 표</label>
+    </div>
+
+    <div class="px-5 pt-3 sm:px-6">
+      <textarea id="data" spellcheck="false"></textarea>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+      <span id="parseInfo">파일을 이 영역에 끌어다 놓아도 됩니다</span>
+      <span id="parseErr" class="hidden text-alert"></span>
+    </div>
+  </section>
+
+  <!-- 2단 : 템플릿 -->
+  <section class="panel mt-4">
+    <div class="border-b border-hair px-5 py-3 text-[12px] font-medium tracking-wide text-muted">2 · 템플릿 작성</div>
+
+    <div class="px-5 pt-4 sm:px-6">
+      <div id="chips" class="mb-3 flex flex-wrap gap-2"></div>
+      <textarea id="tpl" spellcheck="false"
+        placeholder="변수 칩을 눌러 넣거나 {변수명} 형태로 직접 적으세요"></textarea>
+    </div>
+    <div class="border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+      <span id="tplInfo">칩을 누르면 커서 위치에 들어갑니다</span>
+    </div>
+  </section>
+
+  <!-- 3단 : 결과 -->
+  <section class="panel mt-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-3">
+      <span class="text-[12px] font-medium tracking-wide text-muted">
+        3 · 결과 <b id="resCount" class="num ml-1 text-ink">0</b>건
+      </span>
+      <div class="flex flex-wrap items-center gap-2">
+        <select id="sep" class="btn py-1.5 text-[12px]" aria-label="결과 구분자">
+          <option value="blank" selected>빈 줄로 구분</option>
+          <option value="line">줄바꿈만</option>
+          <option value="rule">구분선으로 구분</option>
+        </select>
+        <button id="copyAll" class="btn btn-primary py-1.5 text-[12px]">전체 결과 복사</button>
+      </div>
+    </div>
+    <div id="results" class="grid gap-3 px-5 py-4 sm:px-6"></div>
+  </section>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const dataEl   = document.getElementById('data');
+  const tplEl    = document.getElementById('tpl');
+  const chipsEl  = document.getElementById('chips');
+  const resultsEl= document.getElementById('results');
+  const resCount = document.getElementById('resCount');
+  const parseInfo= document.getElementById('parseInfo');
+  const parseErr = document.getElementById('parseErr');
+  const tplInfo  = document.getElementById('tplInfo');
+  const panel1   = document.getElementById('panel1');
+  const sepSel   = document.getElementById('sep');
+  const copyFmt  = document.getElementById('copyFmt');
+
+  const PLACEHOLDER = {
+    bracket:
+      '[제품명]\n스마트 그리퍼\n서보 액추에이터\n\n[가격]\n1,200,000원\n980,000원',
+    tsv:
+      '제품명\t가격\t납기\n스마트 그리퍼\t1,200,000원\t2주\n서보 액추에이터\t980,000원\t3주\n\n(엑셀에서 범위를 복사해 그대로 붙여넣으면 됩니다)',
+    md:
+      '| 제품명 | 가격 | 납기 |\n|---|---|---|\n| 스마트 그리퍼 | 1,200,000원 | 2주 |\n| 서보 액추에이터 | 980,000원 | 3주 |'
+  };
+
+  const SAMPLE = {
+    bracket: '[제품명]\n스마트 그리퍼\n서보 액추에이터\n감속기 모듈\n\n[가격]\n1,200,000원\n980,000원\n1,750,000원\n\n[납기]\n2주\n3주\n4주',
+    tsv: '제품명\t가격\t납기\n스마트 그리퍼\t1,200,000원\t2주\n서보 액추에이터\t980,000원\t3주\n감속기 모듈\t1,750,000원\t4주',
+    md: '| 제품명 | 가격 | 납기 |\n|---|---|---|\n| 스마트 그리퍼 | 1,200,000원 | 2주 |\n| 서보 액추에이터 | 980,000원 | 3주 |\n| 감속기 모듈 | 1,750,000원 | 4주 |'
+  };
+
+  function mode() {
+    const r = document.querySelector('input[name="mode"]:checked');
+    return r ? r.value : 'bracket';
+  }
+
+  /* ---------- 파싱 : 세 방식 모두 { keys, rows } 형태로 통일 ---------- */
+
+  // 1) 대괄호 리스트 : [키] 아래 줄들이 그 키의 값 목록
+  function parseBracket(text) {
+    const keys = [], cols = {};
+    let cur = null;
+
+    text.split('\n').forEach(function (raw) {
+      const line = raw.trim();
+      const m = line.match(/^\[\s*(.+?)\s*\]$/);
+      if (m) {
+        cur = m[1];
+        if (keys.indexOf(cur) === -1) { keys.push(cur); cols[cur] = []; }
+        return;
+      }
+      if (cur && line) cols[cur].push(line);
+    });
+
+    const n = keys.reduce(function (mx, k) { return Math.max(mx, cols[k].length); }, 0);
+    const rows = [];
+    for (let i = 0; i < n; i++) {
+      const row = {};
+      keys.forEach(function (k) { row[k] = cols[k][i] !== undefined ? cols[k][i] : ''; });
+      rows.push(row);
+    }
+    return { keys: keys, rows: rows };
+  }
+
+  // 2) 엑셀·스프레드시트 : 첫 행이 키, 탭으로 열 구분
+  function parseTsv(text) {
+    const lines = text.split('\n').filter(function (l) { return l.trim() !== ''; });
+    if (!lines.length) return { keys: [], rows: [] };
+
+    const split = function (l) { return l.split('\t').map(function (c) { return c.trim(); }); };
+    const keys = split(lines[0]).filter(function (k, i, a) { return k !== '' || i < a.length; });
+    const rows = lines.slice(1).map(function (l) {
+      const cells = split(l);
+      const row = {};
+      keys.forEach(function (k, i) { row[k] = cells[i] !== undefined ? cells[i] : ''; });
+      return row;
+    });
+    return { keys: keys.filter(Boolean), rows: rows };
+  }
+
+  // 3) 마크다운 표 : 파이프로 구분, |---| 구분선은 버림
+  function parseMd(text) {
+    const rowsRaw = text.split('\n')
+      .map(function (l) { return l.trim(); })
+      .filter(function (l) { return l.indexOf('|') !== -1; })
+      .map(function (l) { return l.replace(/^\|/, '').replace(/\|$/, ''); })
+      .map(function (l) { return l.split('|').map(function (c) { return c.trim(); }); })
+      .filter(function (cells) {
+        // |---|:--:| 같은 구분선 행 제외
+        const isSep = cells.length && cells.every(function (c) { return /^:?-{1,}:?$/.test(c); });
+        return !isSep && cells.some(function (c) { return c !== ''; });
+      });
+
+    if (!rowsRaw.length) return { keys: [], rows: [] };
+    const keys = rowsRaw[0].filter(Boolean);
+    const rows = rowsRaw.slice(1).map(function (cells) {
+      const row = {};
+      keys.forEach(function (k, i) { row[k] = cells[i] !== undefined ? cells[i] : ''; });
+      return row;
+    });
+    return { keys: keys, rows: rows };
+  }
+
+  function parse() {
+    const text = dataEl.value;
+    if (!text.trim()) return { keys: [], rows: [] };
+    const m = mode();
+    if (m === 'tsv') return parseTsv(text);
+    if (m === 'md') return parseMd(text);
+    return parseBracket(text);
+  }
+
+  /* ---------- 치환 ---------- */
+  function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function fill(tpl, row, keys) {
+    let out = tpl;
+    keys.forEach(function (k) {
+      const re = new RegExp('\\{\\s*' + escapeRe(k) + '\\s*\\}', 'g');
+      out = out.replace(re, row[k] !== undefined ? row[k] : '');
+    });
+    return out;
+  }
+
+  /* ---------- 렌더링 ---------- */
+  let lastResults = [];
+
+  function render() {
+    parseErr.classList.add('hidden');
+    let parsed = { keys: [], rows: [] };
+
+    try {
+      parsed = parse();
+    } catch (e) {
+      parseErr.textContent = '데이터를 읽지 못했습니다 : ' + (e && e.message ? e.message : '형식 확인 필요');
+      parseErr.classList.remove('hidden');
+    }
+
+    const keys = parsed.keys || [];
+    const rows = parsed.rows || [];
+
+    // 안내 문구
+    if (!dataEl.value.trim()) {
+      parseInfo.textContent = '파일을 이 영역에 끌어다 놓아도 됩니다';
+    } else if (!keys.length) {
+      parseInfo.textContent = '변수를 찾지 못했습니다. 선택한 입력 방식과 데이터 형식이 맞는지 확인해 주세요';
+    } else {
+      parseInfo.textContent = '변수 ' + keys.length + '개 · 데이터 ' + rows.length + '세트';
+    }
+
+    // 변수 칩
+    chipsEl.innerHTML = '';
+    if (!keys.length) {
+      const hint = document.createElement('span');
+      hint.className = 'text-[12px] text-muted';
+      hint.textContent = '데이터를 입력하면 변수 칩이 여기에 나타납니다';
+      chipsEl.appendChild(hint);
+    } else {
+      keys.forEach(function (k) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'chip';
+        b.textContent = '{' + k + '}';
+        b.addEventListener('click', function () { insertAtCursor('{' + k + '}'); });
+        chipsEl.appendChild(b);
+      });
+    }
+
+    // 미정의 변수 안내
+    const used = (tplEl.value.match(/\{\s*[^{}]+\s*\}/g) || [])
+      .map(function (t) { return t.replace(/[{}]/g, '').trim(); });
+    const unknown = used.filter(function (u) { return keys.indexOf(u) === -1; })
+                        .filter(function (x, i, a) { return a.indexOf(x) === i; });
+    tplInfo.textContent = unknown.length
+      ? '데이터에 없는 변수 : ' + unknown.map(function (u) { return '{' + u + '}'; }).join(', ')
+      : '칩을 누르면 커서 위치에 들어갑니다';
+    tplInfo.className = unknown.length
+      ? 'text-alert' : 'text-muted';
+
+    // 결과 카드
+    resultsEl.innerHTML = '';
+    lastResults = [];
+
+    if (!rows.length || !tplEl.value.trim()) {
+      const empty = document.createElement('p');
+      empty.className = 'text-[13px] text-muted';
+      empty.textContent = !rows.length
+        ? '데이터를 입력하면 결과가 생성됩니다'
+        : '템플릿 문장을 적으면 결과가 생성됩니다';
+      resultsEl.appendChild(empty);
+      resCount.textContent = '0';
+      return;
+    }
+
+    rows.forEach(function (row, i) {
+      let text = '';
+      try {
+        text = fill(tplEl.value, row, keys);
+      } catch (e) {
+        text = '(치환 실패)';
+      }
+      lastResults.push(text);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const head = document.createElement('div');
+      head.className = 'mb-2 flex items-center justify-between gap-3';
+
+      const idx = document.createElement('span');
+      idx.className = 'idx';
+      idx.textContent = String(i + 1).padStart(2, '0');
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cardCopy';
+      btn.textContent = '개별 복사';
+      btn.addEventListener('click', function () { copy(convert(text), '복사되었습니다!'); });
+
+      head.appendChild(idx);
+      head.appendChild(btn);
+
+      const pre = document.createElement('pre');
+      pre.textContent = text;
+
+      card.appendChild(head);
+      card.appendChild(pre);
+      resultsEl.appendChild(card);
+    });
+
+    resCount.textContent = rows.length;
+  }
+
+  /* ---------- 칩 삽입 ---------- */
+  function insertAtCursor(text) {
+    const s = tplEl.selectionStart, e = tplEl.selectionEnd;
+    const v = tplEl.value;
+    tplEl.value = v.slice(0, s) + text + v.slice(e);
+    const pos = s + text.length;
+    tplEl.focus();
+    tplEl.setSelectionRange(pos, pos);
+    render();
+  }
+
+  /* ---------- 모드 전환 ---------- */
+  function applyMode() {
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.classList.toggle('on', t.querySelector('input').checked);
+    });
+    dataEl.placeholder = PLACEHOLDER[mode()];
+    render();
+  }
+
+  document.querySelectorAll('input[name="mode"]').forEach(function (r) {
+    r.addEventListener('change', applyMode);
+  });
+
+  dataEl.addEventListener('input', render);
+  tplEl.addEventListener('input', render);
+
+  /* ---------- 파일 드래그 앤 드롭 ---------- */
+  ['dragenter', 'dragover'].forEach(function (t) {
+    panel1.addEventListener(t, function (ev) { ev.preventDefault(); panel1.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    panel1.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && panel1.contains(ev.relatedTarget)) return;
+      panel1.classList.remove('over');
+    });
+  });
+  panel1.addEventListener('drop', function (ev) {
+    const f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (!f) return;
+    const ok = /\.(txt|csv|tsv|md|markdown)$/i.test(f.name);
+    if (!ok) { toast('txt, csv, tsv, md 파일만 불러올 수 있습니다'); return; }
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      dataEl.value = String(e.target.result).replace(/\r\n?/g, '\n');
+      render();
+      toast(f.name + ' 을 불러왔습니다');
+    };
+    reader.onerror = function () { toast('파일을 읽지 못했습니다'); };
+    reader.readAsText(f, 'UTF-8');
+  });
+  window.addEventListener('dragover', function (ev) {
+    if (!panel1.contains(ev.target)) ev.preventDefault();
+  });
+  window.addEventListener('drop', function (ev) {
+    if (!panel1.contains(ev.target)) ev.preventDefault();
+  });
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 복사 · 저장 ---------- */
+  // 워드·한글은 CRLF를 문단 구분으로 읽는다
+  function convert(text) {
+    const t = text.replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '');
+    if (copyFmt.value === 'plain') return t;
+    return t.split('\n').join('\r\n');
+  }
+
+  function joinAll() {
+    const sep = sepSel.value === 'line' ? '\n'
+              : sepSel.value === 'rule' ? '\n\n------------------------------\n\n'
+              : '\n\n';
+    return convert(lastResults.join(sep));
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  async function copy(text, msg) {
+    if (!text || !text.trim()) { toast('복사할 내용이 없습니다'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast(msg);
+    } catch (e) {
+      if (legacyCopy(text)) toast(msg);
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  }
+
+  document.getElementById('copyAll').addEventListener('click', function () {
+    copy(joinAll(), lastResults.length + '건을 모두 복사했습니다!');
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!lastResults.length) { toast('저장할 결과가 없습니다'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = '템플릿결과_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + joinAll()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  sepSel.addEventListener('change', render);
+  copyFmt.addEventListener('change', render);
+
+  document.getElementById('clearData').addEventListener('click', function () {
+    dataEl.value = '';
+    render();
+    dataEl.focus();
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    dataEl.value = SAMPLE[mode()];
+    if (!tplEl.value.trim()) {
+      tplEl.value = '안녕하세요. 문의하신 {제품명} 견적 안내드립니다.\n공급가는 {가격}이며, 납기는 발주 후 {납기}입니다.';
+    }
+    render();
+  });
+
+  applyMode();
+  render();
+})();
+</script>
+</body>
+</html>
