@@ -175,7 +175,7 @@
       <span class="flex items-center gap-1.5">
         <input id="splitSize" type="number" min="50" max="2000" step="50" value="200"
                class="num w-20 rounded-md border border-hair px-2 py-1 text-right text-[12px] text-ink focus:border-steel focus:outline-none">
-        자마다 문단을 나누고 인식 세션을 새로 연결
+        자마다 문단 나누기
       </span>
 
       <span id="segInfo" class="num ml-auto"></span>
@@ -186,7 +186,7 @@
     </div>
 
     <p class="mt-2 text-[11.5px] leading-relaxed text-muted">
-      길게 받아쓰면 인식이 점점 흐트러집니다. 일정 분량마다 세션을 새로 연결하면 그 문제가 크게 줄어듭니다.
+      일정 분량이 쌓이면 빈 줄로 문단을 나눠 줍니다. 나중에 정리할 때 덩어리를 찾기 쉬워집니다.
     </p>
   </div>
 
@@ -325,88 +325,37 @@
 
   function mark() { lastEvent = Date.now(); }
 
-  // 버린 세션이 뒤늦게 보내는 이벤트를 막는다.
-  // 이걸 안 하면 옛 세션의 onend가 방금 시작한 새 세션을 다시 끊어버린다.
-  function detach(r) {
-    if (!r) return;
-    ['onstart','onaudiostart','onsoundstart','onspeechstart','onspeechend',
-     'onaudioend','onnomatch','onresult','onerror','onend'].forEach(function (k) {
-      try { r[k] = null; } catch (e) {}
-    });
-  }
-
-  // 세션 교체 : 옛 세션이 스스로 끝난 뒤에 새 세션을 연다.
-  // abort 직후 곧바로 start하면 엔진이 아직 정리 중이라 조용히 무시된다.
-  let rotating = false;
-  let rotateTimer = null;
-  let startCheck = null;
-  let sessionLive = false;   // 새 세션이 실제로 시작됐는지
-
-  function restartSession(reason, delay) {
-    if (!recording || rotating) return;
-    rotating = true;
+  // 세션은 브라우저가 수시로 끊는다. 끊길 때마다 새 객체로 다시 붙인다.
+  // 이전 객체를 재사용하면 InvalidStateError가 나면서 그대로 죽어버린다.
+  function scheduleRestart(delay) {
+    if (!recording) return;
     restarting = true;
-
-    const old = recognition;
-    let launched = false;
-
-    function launch() {
-      if (launched) return;
-      launched = true;
-      clearTimeout(rotateTimer);
-
-      if (old) { detach(old); try { old.abort(); } catch (e) {} }
-      if (!recording) { rotating = false; restarting = false; return; }
-
+    clearTimeout(restartTimer);
+    restartTimer = setTimeout(function () {
+      if (!recording) { restarting = false; return; }
+      try { if (recognition) recognition.abort(); } catch (e) {}
       recognition = buildRecognition();
-      sessionLive = false;
       try {
         recognition.start();
         sessions++;
+        startAttempts = 0;
         mark();
-        log('세션 재시작 #' + sessions + ' (' + reason + ')');
+        log('세션 재시작 #' + sessions);
       } catch (e) {
         startAttempts++;
-        rotating = false;
-        restarting = false;
         log('재시작 실패 · ' + e.name + ' (시도 ' + startAttempts + ')');
         if (startAttempts < 8) {
-          setTimeout(function () { restartSession(reason, 0); }, Math.min(400 * startAttempts, 2000));
+          scheduleRestart(Math.min(300 * startAttempts, 2000));  // 점점 간격을 늘려 재시도
         } else {
+          restarting = false;
           recording = false;
           micBtn.classList.remove('rec');
           setStatus('idle');
           hint.textContent = '누르면 인식 시작';
           showWarn('인식 세션을 다시 연결하지 못했습니다. 마이크 버튼을 다시 눌러 주세요.');
         }
-        return;
       }
-      rotating = false;
-
-      // 새 세션이 조용히 무시되는 경우를 대비해 시작 여부를 확인한다
-      clearTimeout(startCheck);
-      startCheck = setTimeout(function () {
-        if (recording && !sessionLive) {
-          startAttempts++;
-          log('새 세션이 시작되지 않음 → 다시 시도 (' + startAttempts + ')');
-          restarting = false;
-          if (startAttempts < 8) restartSession('재시도', 0);
-        }
-      }, 2500);
-    }
-
-    clearTimeout(rotateTimer);
-
-    if (old && sessionLive) {
-      // 아직 살아 있는 세션이면, 결과 수신을 끊고 스스로 끝나기를 기다렸다가 새로 연다
-      old.onresult = null;
-      old.onerror = null;
-      old.onend = function () { launch(); };
-      try { old.stop(); } catch (e) { launch(); return; }
-      rotateTimer = setTimeout(launch, 1500);   // onend가 오지 않으면 강제로 넘어간다
-    } else {
-      rotateTimer = setTimeout(launch, delay || 0);
-    }
+    }, delay);
   }
 
   // 감시 타이머 : 아무 이벤트도 없이 멈춰 있으면 강제로 다시 붙인다
@@ -416,7 +365,7 @@
       if (!recording || restarting) return;
       if (Date.now() - lastEvent > 12000) {
         log('12초간 무응답 → 강제 재연결');
-        restartSession('무응답', 0);
+        scheduleRestart(0);
       }
     }, 4000);
   }
@@ -427,7 +376,7 @@
     if (document.visibilityState === 'visible' && recording && !restarting) {
       if (Date.now() - lastEvent > 3000) {
         log('탭 복귀 → 세션 재연결');
-        restartSession('무응답', 0);
+        scheduleRestart(0);
       }
     }
   });
@@ -589,9 +538,9 @@
     updateSeg();
     updateCount();
 
-    log('구간 ' + (segNo - 1) + ' 마감 → 세션 새로 연결');
-    interimEl.textContent = '';
-    restartSession('구간 마감', 0);   // 새 세션으로 갈아탄다
+    // 세션은 그대로 두고 문단만 나눈다.
+    // 여기서 세션을 다시 열면 인식이 통째로 멈추는 문제가 있었다.
+    log('구간 ' + (segNo - 1) + ' 마감 (문단 나눔)');
   }
 
   splitOn.addEventListener('change', updateSeg);
@@ -609,10 +558,7 @@
 
     r.onstart = function () {
       restarting = false;
-      rotating = false;
-      sessionLive = true;
       startAttempts = 0;
-      clearTimeout(startCheck);
       mark();
       setStatus('rec');
       hint.textContent = '다시 누르면 중지';
@@ -642,7 +588,7 @@
           log('결과 없음 → continuous 끄고 재시도');
           showWarn('서버 응답이 없어 짧게 끊어 인식하는 방식으로 다시 시도합니다.');
           useContinuous = false;
-          restartSession('폴백', 400);
+          scheduleRestart(400);
         } else {
           log('폴백 후에도 결과 없음');
           if (canLocal && localState !== 'available') {
@@ -712,7 +658,7 @@
           emptySessions++;
           if (emptySessions >= 3) showWarn('인식이 시작되자마자 반복해서 끊깁니다. ' + envHint());
         }
-        restartSession('자동', 250);
+        scheduleRestart(250);
         return;
       }
       if (!recording) {
@@ -738,8 +684,6 @@
     recording = true;
     sessions = 1;
     startAttempts = 0;
-    rotating = false;
-    sessionLive = false;
     segChars = 0;
     segNo = 1;
     updateSeg();
@@ -765,9 +709,6 @@
     clearTimeout(audioTimer);
     clearTimeout(silentTimer);
     clearTimeout(restartTimer);
-    clearTimeout(rotateTimer);
-    clearTimeout(startCheck);
-    rotating = false;
     stopWatchdog();
     micBtn.classList.remove('rec');
     micBtn.setAttribute('aria-label', '음성 인식 시작');
