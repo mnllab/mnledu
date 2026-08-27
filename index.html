@@ -1,610 +1,630 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>김장길 | 창업·투자 교육 전문가 · 채널 '엠엔엘' 운영자</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --ink: #0f1115;
-            --ink-soft: #1b1f27;
-            --paper: #fbfaf7;
-            --gold: #e0a526;
-            --gold-deep: #b8821a;
-            --line: #e7e3da;
-        }
-        * { -webkit-font-smoothing: antialiased; }
-        body {
-            font-family: 'IBM Plex Sans KR', sans-serif;
-            background: var(--paper);
-            color: #20242c;
-            scroll-behavior: smooth;
-        }
-        .serif { font-family: 'Gowun Batang', 'IBM Plex Sans KR', serif; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TOOLKIT · Instant Web Utilities for Professional Workflow</title>
+<meta name="description" content="클릭 한 번으로 열리는 나만의 도구함" />
 
-        /* 다국어 제어 CSS (선택된 언어와 일치하지 않는 데이터는 숨김) */
-        html[lang="ko"] [data-lang]:not([data-lang="ko"]),
-        html[lang="en"] [data-lang]:not([data-lang="en"]),
-        html[lang="ja"] [data-lang]:not([data-lang="ja"]),
-        html[lang="fr"] [data-lang]:not([data-lang="fr"]) {
-            display: none !important;
-        }
+<!-- 모바일 웹앱 대응 -->
+<meta name="theme-color" content="#f8fafc" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="TOOLKIT" />
+<meta name="format-detection" content="telephone=no" />
 
-        /* 히어로 */
-        .hero {
-            background:
-                radial-gradient(120% 90% at 85% -10%, rgba(224,165,38,0.18), transparent 55%),
-                linear-gradient(155deg, #14171d 0%, #0f1115 60%, #0b0d11 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::after {
-            content: "";
-            position: absolute; inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-            background-size: 46px 46px;
-            mask-image: radial-gradient(80% 80% at 50% 30%, black, transparent 80%);
-            pointer-events: none;
-        }
-        .ring-photo {
-            background: conic-gradient(from 210deg, var(--gold), #7a5a12, var(--gold-deep), var(--gold));
-        }
+<!-- Fonts (Pretendard & JetBrains Mono) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
 
-        /* 진입 애니메이션 */
-        .reveal { opacity: 0; transform: translateY(16px); animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards; }
-        .d1 { animation-delay: .05s } .d2 { animation-delay: .18s } .d3 { animation-delay: .31s } .d4 { animation-delay: .44s }
-        @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        spacing: {
+          15: '3.75rem' /* h-15 = 60px · 기본 스케일에 없는 값이라 등록 필요 */
+        },
+        fontFamily: {
+          sans: ['Pretendard Variable', 'Pretendard', 'system-ui', '-apple-system', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  };
+</script>
 
-        /* 탭 */
-        .tab-btn { transition: all .25s ease; border: 1px solid transparent; }
-        .tab-active { background: var(--ink); color: #fff; border-color: var(--ink); }
-        .tab-inactive { background: #fff; color: #5a5f68; border-color: var(--line); }
-        .tab-inactive:hover { color: var(--ink); border-color: #cfcabe; }
-        .content { display: none; }
-        .content.active { display: block; animation: fade .45s ease; }
-        @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
 
-        .card { background: #fff; border: 1px solid var(--line); }
-        .gold-bar { background: var(--gold); }
-        .pill { border: 1px solid rgba(224,165,38,0.35); }
-    </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3498593810862454"
-     crossorigin="anonymous"></script>
+<style>
+  ::selection { background-color: #e0e7ff; color: #1e1b4b; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
+    overflow-x: clip;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+  /* 가로 스크롤바 숨기기 */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Card Stretched Link Pattern */
+  .stretched::after { content: ''; position: absolute; inset: 0; border-radius: 1rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      transition-duration: .001ms !important;
+      transform: none !important;
+    }
+  }
+</style>
 </head>
-<body>
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
+<body class="bg-slate-50/70 font-sans text-slate-900 antialiased pb-20 md:pb-0 selection:bg-indigo-100 selection:text-indigo-900">
 
-        <!-- ===== 언어 전환 토글 ===== -->
-        <div class="flex justify-end mb-6">
-            <div class="bg-gray-200/60 p-1 rounded-full flex gap-1 items-center border border-[var(--line)] shadow-inner flex-wrap">
-                <button class="lang-btn px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 bg-white shadow-sm text-gray-900" data-target-lang="ko">KOR</button>
-                <button class="lang-btn px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-800" data-target-lang="en">ENG</button>
-                <button class="lang-btn px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-800" data-target-lang="ja">JPN</button>
-                <button class="lang-btn px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-800" data-target-lang="fr">FRA</button>
-            </div>
-        </div>
+  <!-- ============ HEADER (Glassmorphism) ============ -->
+  <header class="backdrop-blur-xl bg-white/80 border-b border-slate-200/70 sticky top-0 z-50 transition-colors">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8">
+      <div class="flex h-14 sm:h-16 items-center justify-between gap-3">
 
-        <!-- ===== 히어로 ===== -->
-        <section class="hero rounded-3xl text-white p-8 sm:p-14 mb-10 shadow-xl">
-            <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
-                <div class="reveal d1 shrink-0">
-                    <div class="ring-photo p-[5px] rounded-full shadow-2xl">
-                        <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#0f1115]">
-                            <img src="https://mnllab.github.io/mnledu/assets/jgkim3d.png" alt="김장길" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
+        <!-- 좌측: 로고 + 뱃지 -->
+        <a href="#" id="logo" class="flex items-center gap-2.5 min-w-0 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 group">
+          <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-white shrink-0 group-hover:bg-indigo-600 transition-colors shadow-sm">
+            <i data-lucide="layers" class="h-4 w-4"></i>
+          </span>
+          <span class="font-extrabold tracking-tight text-slate-900 text-base sm:text-[17px] truncate font-mono">TOOLKIT</span>
+          <span class="hidden min-[380px]:inline-block bg-indigo-50 text-indigo-700 border border-indigo-200/60 text-[10px] sm:text-[11px] font-mono font-bold tracking-wider px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0">NO-SETUP</span>
+        </a>
 
-                <div class="text-center md:text-left">
-                    <span class="reveal d1 inline-block text-amber-400 tracking-[0.35em] text-xs font-semibold uppercase mb-3">Startup &amp; Investment Educator</span>
-                    
-                    <h1 class="reveal d2 serif text-5xl sm:text-6xl font-bold leading-none mb-4">
-                        <span data-lang="ko">김장길</span>
-                        <span data-lang="en">Janggil Kim</span>
-                        <span data-lang="ja">キム・ジャンギル</span>
-                        <span data-lang="fr">Janggil Kim</span>
-                    </h1>
+        <!-- 우측: 등록 툴 개수 -->
+        <p class="text-xs text-slate-500 font-medium whitespace-nowrap shrink-0">
+          <span class="hidden sm:inline">AVAILABLE UTILITIES </span>
+          <span id="header-count" class="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/80">0</span>
+        </p>
 
-                    <p class="reveal d2 text-lg text-amber-300 font-semibold">
-                        <span data-lang="ko">창업·투자 교육 전문가</span>
-                        <span data-lang="en">Startup & Investment Education Expert</span>
-                        <span data-lang="ja">起業・投資教育の専門家</span>
-                        <span data-lang="fr">Expert en éducation à l'entrepreneuriat et à l'investissement</span>
-                    </p>
-                    <p class="reveal d3 mt-1 text-gray-300 text-[15px] leading-relaxed">
-                        <span data-lang="ko">스타트업 유튜브 채널 <span class="text-white font-semibold">‘엠엔엘(MNL)’</span> 운영자<br>공학박사 · 서울대학교 연구교수</span>
-                        <span data-lang="en">Operator of Startup YouTube Channel <span class="text-white font-semibold">'MNL'</span><br>Ph.D. in Engineering · Research Professor at Seoul National University</span>
-                        <span data-lang="ja">スタートアップYouTubeチャンネル<span class="text-white font-semibold">「MNL」</span>運営者<br>工学博士・ソウル大学研究教授</span>
-                        <span data-lang="fr">Créateur de la chaîne YouTube sur les startups <span class="text-white font-semibold">'MNL'</span><br>Docteur en ingénierie · Professeur de recherche à l'Université nationale de Séoul</span>
-                    </p>
+      </div>
+    </div>
+  </header>
 
-                    <p class="reveal d4 serif italic text-2xl text-white/90 mt-6">
-                        <span data-lang="ko">“당신의 꿈은 곧 현실이 됩니다.”</span>
-                        <span data-lang="en">"Your dreams will soon become reality."</span>
-                        <span data-lang="ja">「あなたの夢は、やがて現実になります。」</span>
-                        <span data-lang="fr">"Vos rêves deviendront bientôt réalité."</span>
-                    </p>
+  <!-- ============ HERO & SEARCH ============ -->
+  <section class="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-50/40 via-slate-50/50 to-slate-50 border-b border-slate-200/70">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8 pt-12 pb-10 sm:pt-20 sm:pb-16 text-center">
 
-                    <div class="reveal d4 flex flex-wrap justify-center md:justify-start gap-2 mt-6">
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
-                            <span data-lang="ko">창업 교육</span><span data-lang="en">Startup Education</span><span data-lang="ja">起業教育</span><span data-lang="fr">Éducation à l'entrepreneuriat</span>
-                        </span>
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
-                            <span data-lang="ko">투자 유치 멘토링</span><span data-lang="en">Investment Mentoring</span><span data-lang="ja">資金調達メンタリング</span><span data-lang="fr">Mentorat en investissement</span>
-                        </span>
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
-                            <span data-lang="ko">사업화 컨설팅</span><span data-lang="en">Business Consulting</span><span data-lang="ja">事業化コンサルティング</span><span data-lang="fr">Conseil en affaires</span>
-                        </span>
-                        <span class="pill text-amber-200 text-xs px-3 py-1.5 rounded-full">
-                            <span data-lang="ko">콘텐츠 크리에이터</span><span data-lang="en">Content Creator</span><span data-lang="ja">コンテンツクリエイター</span><span data-lang="fr">Créateur de contenu</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600 mb-3.5 sm:mb-4">Instant Web Utilities</p>
 
-        <!-- ===== 채널 엠엔엘 강조 배너 ===== -->
-        <section class="card rounded-2xl p-7 sm:p-9 mb-12 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-            <a href="https://youtube.com/@mnl" class="group block"> 
-                <div class="flex items-center gap-5">
-                    <div class="w-14 h-14 rounded-xl bg-[#0f1115] flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
-                        <svg class="w-8 h-8 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
-                    </div>
-                    <div>
-                        <p class="text-xs tracking-widest text-gray-400 font-semibold uppercase">YouTube Channel</p>
-                        <p class="text-xl font-bold text-gray-900 mt-0.5 group-hover:text-amber-600 transition-colors">
-                            <span data-lang="ko">스타트업 채널 ‘엠엔엘(MNL)’</span>
-                            <span data-lang="en">Startup Channel 'MNL'</span>
-                            <span data-lang="ja">スタートアップチャンネル「MNL」</span>
-                            <span data-lang="fr">Chaîne Startup 'MNL'</span>
-                        </p>
-                        <p class="text-gray-500 text-sm mt-1">
-                            <span data-lang="ko">창업가의 시선으로 풀어내는 창업·투자 인사이트</span>
-                            <span data-lang="en">Startup & Investment Insights from an Entrepreneur's Perspective</span>
-                            <span data-lang="ja">起業家の視点から紐解く起業・投資インサイト</span>
-                            <span data-lang="fr">Aperçus sur l'entrepreneuriat et l'investissement du point de vue d'un entrepreneur</span>
-                        </p>
-                    </div>
-                </div>
-            </a>
-            <span class="text-gray-300 hidden sm:block text-sm">@MNL</span>
-        </section>
+      <h1 class="tracking-tight font-extrabold text-slate-900 text-3xl sm:text-5xl leading-[1.2] sm:leading-[1.15] break-keep">
+        클릭 한 번으로 열리는 <br class="sm:hidden" />나만의 도구함
+      </h1>
 
-        <!-- ===== My Story ===== -->
-        <section id="story" class="mb-16">
-            <div class="flex items-center gap-3 mb-7">
-                <span class="gold-bar w-10 h-[3px] rounded-full"></span>
-                <h2 class="serif text-3xl font-bold text-gray-900">My Story</h2>
-            </div>
+      <p class="mt-3.5 sm:mt-4 text-sm sm:text-[15px] leading-relaxed text-slate-500 max-w-xl mx-auto break-keep">
+        로그인이나 설치 없이 브라우저에서 바로 실행하세요.<br class="hidden sm:inline" /> 모든 데이터는 사용자 기기 내에서 안전하게 처리됩니다.
+      </p>
 
-            <div class="card rounded-2xl p-8 sm:p-10 shadow-sm">
-                <p class="text-gray-700 leading-loose text-[17px] mb-7" data-lang="ko">
-                    지난 수년간, 창업의 길목에서 수많은 창업가들과 함께 고민하고, 실험하고, 부딪혀 왔습니다.
-                    뛰어난 기술을 가진 분도, 날카로운 시장 감각으로 승부하는 분도 계셨습니다.
-                    하지만 한 가지는 늘 같았습니다.
-                </p>
-                <p class="text-gray-700 leading-loose text-[17px] mb-7" data-lang="en">
-                    Over the past few years, I have deliberated, experimented, and faced challenges alongside countless entrepreneurs at the crossroads of starting a business.
-                    There were those with outstanding technology and those competing with sharp market intuition.
-                    However, one thing always remained the same.
-                </p>
-                <p class="text-gray-700 leading-loose text-[17px] mb-7" data-lang="ja">
-                    過去数年間、起業の岐路に立つ数多くの起業家たちと共に悩み、実験し、壁にぶつかってきました。
-                    優れた技術を持つ方もいれば、鋭い市場感覚で勝負する方もいました。
-                    しかし、一つだけ常に同じことがありました。
-                </p>
-                <p class="text-gray-700 leading-loose text-[17px] mb-7" data-lang="fr">
-                    Au cours des dernières années, j'ai réfléchi, expérimenté et relevé des défis aux côtés d'innombrables entrepreneurs à la croisée des chemins de la création d'entreprise.
-                    Il y avait ceux dotés d'une technologie exceptionnelle et ceux rivalisant avec une forte intuition du marché.
-                    Cependant, une chose est toujours restée la même.
-                </p>
+      <!-- 검색 바 -->
+      <div class="relative max-w-xl mx-auto rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200/90 bg-white mt-8 sm:mt-10">
+        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+          <i data-lucide="search" class="h-4 w-4 sm:h-[18px] sm:w-[18px]"></i>
+        </span>
 
-                <p class="serif text-xl text-gray-900 font-bold text-center py-6 border-y border-dashed border-gray-200 mb-7">
-                    <span data-lang="ko">좋은 아이디어와 강한 의지만으로는, 성공에 도달하기 어렵다는 것.</span>
-                    <span data-lang="en">Good ideas and strong willpower alone are not enough to reach success.</span>
-                    <span data-lang="ja">良いアイデアと強い意志だけでは、成功に到達するのは難しいということ。</span>
-                    <span data-lang="fr">Les bonnes idées et une forte volonté ne suffisent pas à elles seules pour atteindre le succès.</span>
-                </p>
+        <input
+          id="search-input"
+          type="search"
+          autocomplete="off"
+          enterkeyhint="search"
+          placeholder="도구 이름, 기능 설명, #해시태그 검색..."
+          aria-label="도구 검색"
+          class="w-full bg-transparent rounded-2xl py-3.5 sm:py-4 pl-11 pr-4 sm:pr-24 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        />
 
-                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7" data-lang="ko">
-                    ‘비전’과 ‘현실’, ‘기술’과 ‘시장’ —<br>이 둘 사이의 간극은 언제나 창업가를 시험에 들게 합니다.
-                </blockquote>
-                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7" data-lang="en">
-                    'Vision' and 'Reality', 'Technology' and 'Market' —<br>The gap between these always puts entrepreneurs to the test.
-                </blockquote>
-                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7" data-lang="ja">
-                    「ビジョン」と「現実」、「技術」と「市場」 —<br>この二つの間のギャップは、常に起業家を試練に立たせます。
-                </blockquote>
-                <blockquote class="serif italic text-lg text-[var(--gold-deep)] text-center leading-relaxed mb-7" data-lang="fr">
-                    'Vision' et 'Réalité', 'Technologie' et 'Marché' —<br>L'écart entre ceux-ci met toujours les entrepreneurs à l'épreuve.
-                </blockquote>
+        <span class="pointer-events-none absolute inset-y-0 right-0 hidden sm:flex items-center pr-4">
+          <kbd class="font-mono text-[10px] font-bold tracking-wider text-slate-400 bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5">Ctrl</kbd>
+          <span class="mx-1 text-slate-300 text-xs">+</span>
+          <kbd class="font-mono text-[10px] font-bold tracking-wider text-slate-400 bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5">K</kbd>
+        </span>
+      </div>
 
-                <p class="text-gray-700 leading-loose text-[17px] mb-8" data-lang="ko">
-                    그 간극을 메우는 것, 바로 그것이 제가 하는 일입니다.
-                    저는 강의실과 멘토링 현장, 그리고 채널 ‘엠엔엘’을 통해
-                    창업가의 생각이 사업이 되고, 그 사업이 시장에서 살아남으며,
-                    나아가 투자를 이끌어낼 수 있도록 길을 함께 설계합니다.
-                </p>
-                <p class="text-gray-700 leading-loose text-[17px] mb-8" data-lang="en">
-                    Bridging that gap is exactly what I do.
-                    Through classrooms, mentoring sessions, and the channel 'MNL',
-                    I help design a path so that an entrepreneur's idea becomes a business, survives in the market,
-                    and ultimately attracts investment.
-                </p>
-                <p class="text-gray-700 leading-loose text-[17px] mb-8" data-lang="ja">
-                    そのギャップを埋めること、それこそが私の仕事です。
-                    講義室やメンタリングの現場、そしてチャンネル「MNL」を通じて、
-                    起業家のアイデアが事業となり、市場で生き残り、
-                    さらには投資を引き出せるよう、共に道を設計します。
-                </p>
-                <p class="text-gray-700 leading-loose text-[17px] mb-8" data-lang="fr">
-                    Combler cet écart est exactement ce que je fais.
-                    À travers les salles de classe, les séances de mentorat et la chaîne 'MNL',
-                    j'aide à concevoir un chemin pour que l'idée d'un entrepreneur devienne une entreprise, survive sur le marché,
-                    et finalement attire des investissements.
-                </p>
+    </div>
+  </section>
 
-                <div class="bg-[#0f1115] rounded-xl p-7 text-center">
-                    <p class="serif text-xl text-amber-300 font-bold">
-                        <span data-lang="ko">당신의 도전이 끝까지 갈 수 있도록, 제가 곁에서 함께하겠습니다.</span>
-                        <span data-lang="en">I will be by your side so that your challenge can go all the way to the end.</span>
-                        <span data-lang="ja">あなたの挑戦が最後まで続くよう、私がそばで伴走します。</span>
-                        <span data-lang="fr">Je serai à vos côtés pour que votre défi aille jusqu'au bout.</span>
-                    </p>
-                </div>
-            </div>
-        </section>
+  <!-- ============ CATEGORY FILTER ============ -->
+  <div class="sticky top-14 sm:top-16 z-40 backdrop-blur-xl bg-slate-50/80 border-b border-slate-200/70 md:border-b-0 md:bg-transparent md:backdrop-blur-none md:static">
+    <div class="mx-auto max-w-6xl">
+      <nav id="filter-bar" aria-label="카테고리 필터"
+           class="flex md:flex-wrap gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 sm:px-8 py-3 md:py-0 md:pt-10 md:pb-5"></nav>
+    </div>
+  </div>
 
-        <!-- ===== 상세 프로필 (탭) ===== -->
-        <section id="details">
-            <div class="flex items-center gap-3 mb-7">
-                <span class="gold-bar w-10 h-[3px] rounded-full"></span>
-                <h2 class="serif text-3xl font-bold text-gray-900">Profile</h2>
-            </div>
+  <!-- ============ TAG RAIL ============ -->
+  <div class="mx-auto max-w-6xl px-4 sm:px-8 pt-4 md:pt-0">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <span class="hidden md:flex items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-widest text-slate-400 shrink-0">
+        <i data-lucide="hash" class="h-3 w-3"></i>TAGS
+      </span>
+      <div id="tag-rail" aria-label="해시태그 필터" class="flex gap-1.5 min-w-0 flex-1 overflow-x-auto no-scrollbar py-0.5"></div>
+    </div>
+  </div>
 
-            <div class="flex flex-wrap gap-2 mb-7">
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-active" onclick="openTab(event, 'education')">
-                    <span data-lang="ko">학력</span><span data-lang="en">Education</span><span data-lang="ja">学歴</span><span data-lang="fr">Formation</span>
-                </button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'career')">
-                    <span data-lang="ko">경력</span><span data-lang="en">Experience</span><span data-lang="ja">経歴</span><span data-lang="fr">Expérience</span>
-                </button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'skills')">
-                    <span data-lang="ko">전문 분야</span><span data-lang="en">Expertise</span><span data-lang="ja">専門分野</span><span data-lang="fr">Expertise</span>
-                </button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'projects')">
-                    <span data-lang="ko">과제 수행</span><span data-lang="en">Projects</span><span data-lang="ja">プロジェクト</span><span data-lang="fr">Projets</span>
-                </button>
-                <button class="tab-btn px-4 py-2 rounded-full text-sm font-semibold tab-inactive" onclick="openTab(event, 'awards')">
-                    <span data-lang="ko">수상</span><span data-lang="en">Awards</span><span data-lang="ja">受賞</span><span data-lang="fr">Récompenses</span>
-                </button>
-            </div>
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="mx-auto max-w-6xl px-4 sm:px-8 pt-7 sm:pt-9 pb-16 sm:pb-24">
 
-            <!-- 학력 -->
-            <div id="education" class="content active">
-                <ul class="space-y-3">
-                    <li class="card rounded-xl p-5">
-                        <p class="font-bold text-lg text-gray-900">
-                            <span data-lang="ko">일본 도쿄대학교 · 공학박사</span>
-                            <span data-lang="en">The University of Tokyo, Japan · Ph.D. in Engineering</span>
-                            <span data-lang="ja">日本 東京大学 · 工学博士</span>
-                            <span data-lang="fr">Université de Tokyo, Japon · Doctorat en Ingénierie</span>
-                        </p>
-                        <p class="text-gray-500 text-sm mt-1">
-                            <span data-lang="ko">정밀공학 (반도체 공정 연구개발)</span>
-                            <span data-lang="en">Precision Engineering (Semiconductor Process R&D)</span>
-                            <span data-lang="ja">精密工学（半導体プロセス研究開発）</span>
-                            <span data-lang="fr">Ingénierie de précision (R&D procédés semi-conducteurs)</span>
-                        </p>
-                    </li>
-                    <li class="card rounded-xl p-5">
-                        <p class="font-bold text-lg text-gray-900">
-                            <span data-lang="ko">서울대학교 · 공학석사</span>
-                            <span data-lang="en">Seoul National University · M.S. in Engineering</span>
-                            <span data-lang="ja">ソウル大学 · 工学修士</span>
-                            <span data-lang="fr">Université nationale de Séoul · Master en Ingénierie</span>
-                        </p>
-                        <p class="text-gray-500 text-sm mt-1">
-                            <span data-lang="ko">기계항공우주공학부</span>
-                            <span data-lang="en">School of Mechanical and Aerospace Engineering</span>
-                            <span data-lang="ja">機械航空宇宙工学部</span>
-                            <span data-lang="fr">École d'ingénierie mécanique et aérospatiale</span>
-                        </p>
-                    </li>
-                    <li class="card rounded-xl p-5">
-                        <p class="font-bold text-lg text-gray-900">
-                            <span data-lang="ko">서울대학교 · 공학사</span>
-                            <span data-lang="en">Seoul National University · B.S. in Engineering</span>
-                            <span data-lang="ja">ソウル大学 · 工学士</span>
-                            <span data-lang="fr">Université nationale de Séoul · Licence en Ingénierie</span>
-                        </p>
-                        <p class="text-gray-500 text-sm mt-1">
-                            <span data-lang="ko">기계항공우주공학부</span>
-                            <span data-lang="en">School of Mechanical and Aerospace Engineering</span>
-                            <span data-lang="ja">機械航空宇宙工学部</span>
-                            <span data-lang="fr">École d'ingénierie mécanique et aérospatiale</span>
-                        </p>
-                    </li>
-                </ul>
-            </div>
+    <!-- FAVORITES SECTION -->
+    <section id="fav-section" class="hidden mb-10 sm:mb-12">
+      <div class="flex items-center gap-2.5 mb-4 sm:mb-5 min-w-0">
+        <i data-lucide="star" class="h-4 w-4 text-amber-400 fill-amber-400 shrink-0"></i>
+        <h2 class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-slate-900 truncate">Favorites</h2>
+        <span id="fav-count" class="font-mono text-[11px] font-bold text-slate-400 shrink-0">0</span>
+        <span class="h-px flex-1 min-w-[12px] bg-slate-200/80"></span>
+      </div>
+      <div id="fav-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
+    </section>
 
-            <!-- 경력 -->
-            <div id="career" class="content">
-                <ul class="space-y-2.5">
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-amber-500 font-bold shrink-0">
-                            <span data-lang="ko">現</span><span data-lang="en">Current</span><span data-lang="ja">現</span><span data-lang="fr">Actuel</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">서울프론티어인베스트먼트, 자문단장 <span class="text-gray-400 text-sm ml-1">(2025. 02 ~)</span></span>
-                            <span data-lang="en">Head of Advisory Board, Seoul Frontier Investment <span class="text-gray-400 text-sm ml-1">(Feb 2025 ~)</span></span>
-                            <span data-lang="ja">ソウルフロンティアインベストメント、諮問団長 <span class="text-gray-400 text-sm ml-1">(2025. 02 ~)</span></span>
-                            <span data-lang="fr">Chef du conseil consultatif, Seoul Frontier Investment <span class="text-gray-400 text-sm ml-1">(Fév 2025 ~)</span></span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-amber-500 font-bold shrink-0">
-                            <span data-lang="ko">現</span><span data-lang="en">Current</span><span data-lang="ja">現</span><span data-lang="fr">Actuel</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">스타트업 유튜브 채널 ‘엠엔엘(MNL)’ 운영자 · 크리에이터</span>
-                            <span data-lang="en">Operator & Creator of Startup YouTube Channel 'MNL'</span>
-                            <span data-lang="ja">スタートアップYouTubeチャンネル「MNL」運営者・クリエイター</span>
-                            <span data-lang="fr">Créateur et opérateur de la chaîne YouTube 'MNL'</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-amber-500 font-bold shrink-0">
-                            <span data-lang="ko">現</span><span data-lang="en">Current</span><span data-lang="ja">現</span><span data-lang="fr">Actuel</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">서울대학교 공과대학 / SNU공학컨설팅센터, 연구교수</span>
-                            <span data-lang="en">Research Professor, College of Engineering / SNU Engineering Consulting Center, Seoul National University</span>
-                            <span data-lang="ja">ソウル大学 工科大学 / SNU工学コンサルティングセンター 研究教授</span>
-                            <span data-lang="fr">Professeur de recherche, École d'ingénierie / Centre de conseil en ingénierie SNU, Université nationale de Séoul</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-amber-500 font-bold shrink-0">
-                            <span data-lang="ko">現</span><span data-lang="en">Current</span><span data-lang="ja">現</span><span data-lang="fr">Actuel</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">기술보증기금 · 이크레더블 · 농업기술실용화재단 · 이노비즈협회, 외부자문위원</span>
-                            <span data-lang="en">External Advisory Committee Member for KIBO, eCredible, FACT, and INNOBIZ</span>
-                            <span data-lang="ja">技術保証基金・eCredible・農業技術実用化財団・INNOBIZ協会 外部諮問委員</span>
-                            <span data-lang="fr">Membre du comité consultatif externe pour KIBO, eCredible, FACT et INNOBIZ</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-gray-300 font-bold shrink-0">
-                            <span data-lang="ko">前</span><span data-lang="en">Former</span><span data-lang="ja">前</span><span data-lang="fr">Ancien</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">서울대학교 기계항공공학부 BK21+사업단, BK조교수</span>
-                            <span data-lang="en">BK Assistant Professor, BK21+ Program, School of Mechanical & Aerospace Engineering, SNU</span>
-                            <span data-lang="ja">ソウル大学 機械航空工学部 BK21+事業団 BK助教授</span>
-                            <span data-lang="fr">Professeur assistant BK, Programme BK21+, École d'ingénierie mécanique et aérospatiale, SNU</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-gray-300 font-bold shrink-0">
-                            <span data-lang="ko">前</span><span data-lang="en">Former</span><span data-lang="ja">前</span><span data-lang="fr">Ancien</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">서울대학교 정밀기계설계공동연구소, 선임연구원 (정밀특수가공 / 생산공학)</span>
-                            <span data-lang="en">Senior Researcher, Institute of Advanced Machinery and Design, SNU (Precision Machining / Production Eng.)</span>
-                            <span data-lang="ja">ソウル大学 精密機械設計共同研究所 先任研究員（精密特殊加工 / 生産工学）</span>
-                            <span data-lang="fr">Chercheur principal, Institut des machines avancées et de conception, SNU (Usinage de précision / Ingénierie de production)</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-gray-300 font-bold shrink-0">
-                            <span data-lang="ko">前</span><span data-lang="en">Former</span><span data-lang="ja">前</span><span data-lang="fr">Ancien</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">IEMN CNRS UMR 8520 (France), 박사연구원 (RF MEMS 소자 및 MCP 공정개발)</span>
-                            <span data-lang="en">Postdoctoral Researcher, IEMN CNRS UMR 8520 (France) (RF MEMS & MCP Process Development)</span>
-                            <span data-lang="ja">IEMN CNRS UMR 8520 (France) 博士研究員（RF MEMS素子およびMCPプロセス開発）</span>
-                            <span data-lang="fr">Chercheur postdoctoral, IEMN CNRS UMR 8520 (France) (Développement de processus RF MEMS et MCP)</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="text-gray-300 font-bold shrink-0">
-                            <span data-lang="ko">前</span><span data-lang="en">Former</span><span data-lang="ja">前</span><span data-lang="fr">Ancien</span>
-                        </span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">동경대학교 생산기술연구소 (일본), 박사연구원 (소프트리소그래피 개발)</span>
-                            <span data-lang="en">Postdoctoral Researcher, Institute of Industrial Science, The University of Tokyo (Soft Lithography Development)</span>
-                            <span data-lang="ja">東京大学 生産技術研究所 (日本) 博士研究員（ソフトリソグラフィ開発）</span>
-                            <span data-lang="fr">Chercheur postdoctoral, Institut des sciences industrielles, Université de Tokyo (Développement de lithographie douce)</span>
-                        </span>
-                    </li>
-                </ul>
-            </div>
+    <!-- MAIN GRID SECTION -->
+    <section>
+      <div class="flex items-center gap-2.5 mb-4 sm:mb-5 min-w-0">
+        <h2 id="grid-heading" class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-slate-900 truncate shrink">All Utilities</h2>
+        <span id="grid-count" class="font-mono text-[11px] font-bold text-slate-400 shrink-0">0</span>
 
-            <!-- 전문 분야 -->
-            <div id="skills" class="content">
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <div class="card rounded-xl p-6">
-                        <h3 class="font-bold text-lg mb-3 text-gray-900">
-                            <span data-lang="ko">창업·투자 교육</span><span data-lang="en">Startup & Investment Education</span><span data-lang="ja">起業・投資教育</span><span data-lang="fr">Éducation à l'entrepreneuriat et à l'investissement</span>
-                        </h3>
-                        <ul class="space-y-2 text-gray-600 text-[15px] list-disc list-inside">
-                            <li>
-                                <span data-lang="ko">제품 기획 · 시제품 제작 실무 교육</span><span data-lang="en">Product Planning & Prototyping Practical Training</span><span data-lang="ja">製品企画・プロトタイプ制作 実務教育</span><span data-lang="fr">Formation pratique en planification de produits et prototypage</span>
-                            </li>
-                            <li>
-                                <span data-lang="ko">비즈니스 모델(BM) 수립 및 고도화</span><span data-lang="en">Business Model (BM) Establishment & Advancement</span><span data-lang="ja">ビジネスモデル(BM)の構築および高度化</span><span data-lang="fr">Établissement et avancement de modèles commerciaux (BM)</span>
-                            </li>
-                            <li>
-                                <span data-lang="ko">시장조사 · 분석, IR / 투자 유치 멘토링</span><span data-lang="en">Market Research & Analysis, IR / Investment Attraction Mentoring</span><span data-lang="ja">市場調査・分析、IR / 資金調達メンタリング</span><span data-lang="fr">Étude et analyse de marché, Mentorat en attraction d'investissements (IR)</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card rounded-xl p-6">
-                        <h3 class="font-bold text-lg mb-3 text-gray-900">
-                            <span data-lang="ko">공학·기술</span><span data-lang="en">Engineering & Technology</span><span data-lang="ja">工学・技術</span><span data-lang="fr">Ingénierie et Technologie</span>
-                        </h3>
-                        <ul class="space-y-2 text-gray-600 text-[15px] list-disc list-inside">
-                            <li>
-                                <span data-lang="ko">정밀가공 (방전·레이저·전해가공, CNC, 반도체 공정)</span><span data-lang="en">Precision Machining (EDM, Laser, ECM, CNC, Semiconductor Process)</span><span data-lang="ja">精密加工 (放電・レーザー・電解加工、CNC、半導体プロセス)</span><span data-lang="fr">Usinage de précision (Électroérosion, Laser, ECM, CNC, Procédé semi-conducteur)</span>
-                            </li>
-                            <li>
-                                <span data-lang="ko">무선통신 (RF-MEMS, 초소형 수동소자)</span><span data-lang="en">Wireless Communication (RF-MEMS, Micro Passive Components)</span><span data-lang="ja">無線通信 (RF-MEMS、超小型受動素子)</span><span data-lang="fr">Communication sans fil (RF-MEMS, Micro-composants passifs)</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card rounded-xl p-6 sm:col-span-2">
-                        <h3 class="font-bold text-lg mb-3 text-gray-900">
-                            <span data-lang="ko">어학</span><span data-lang="en">Languages</span><span data-lang="ja">語学</span><span data-lang="fr">Langues</span>
-                        </h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
-                                <span data-lang="ko">영어 — Business</span><span data-lang="en">English — Business Level</span><span data-lang="ja">英語 — ビジネスレベル</span><span data-lang="fr">Anglais — Niveau affaires</span>
-                            </span>
-                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
-                                <span data-lang="ko">일본어 — Native</span><span data-lang="en">Japanese — Native Level</span><span data-lang="ja">日本語 — ネイティブ</span><span data-lang="fr">Japonais — Langue maternelle</span>
-                            </span>
-                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
-                                <span data-lang="ko">프랑스어 — Conversational</span><span data-lang="en">French — Conversational</span><span data-lang="ja">フランス語 — 日常会話レベル</span><span data-lang="fr">Français — Conversation courante</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Active Tag Badge -->
+        <button id="active-tag" type="button"
+          class="hidden items-center gap-1.5 max-w-[45%] shrink-0 bg-indigo-600 text-white font-mono text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full shadow-sm active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+          <span id="active-tag-label" class="truncate"></span>
+          <i data-lucide="x" class="h-3 w-3 shrink-0"></i>
+        </button>
 
-            <!-- 과제 수행 -->
-            <div id="projects" class="content">
-                <ul class="space-y-2.5">
-                    <li class="card rounded-xl p-4 text-gray-700">
-                        <span data-lang="ko">SNU아산 유니버시티 창업지원사업 (기후기술 창업 특화 지원) — 아산나눔재단</span>
-                        <span data-lang="en">SNU Asan University Startup Support Program (Climate Tech) — Asan Nanum Foundation</span>
-                        <span data-lang="ja">SNUアサンユニバーシティ起業支援事業（気候テック起業特化支援） — アサン分かち合い財団</span>
-                        <span data-lang="fr">Programme de soutien aux startups de l'Université SNU Asan (Technologies climatiques) — Fondation Asan Nanum</span> 
-                        <span class="text-gray-400">(2023)</span>
-                    </li>
-                    <li class="card rounded-xl p-4 text-gray-700">
-                        <span data-lang="ko">국방특화연구실사업, 이중모드 스크램제트 탄화수소 연소성능 증진 연구 — 국방과학연구소</span>
-                        <span data-lang="en">Defense Specialized Lab Project, Dual-mode Scramjet Hydrocarbon Combustion Enhancement — Agency for Defense Development</span>
-                        <span data-lang="ja">国防特化研究室事業、デュアルモードスクラムジェット炭化水素燃焼性能向上研究 — 国防科学研究所</span>
-                        <span data-lang="fr">Projet de laboratoire spécialisé en défense, Amélioration de la combustion des hydrocarbures dans les superstatoréacteurs bimodaux — Agence pour le développement de la défense</span> 
-                        <span class="text-gray-400">(2019)</span>
-                    </li>
-                    <li class="card rounded-xl p-4 text-gray-700">
-                        <span data-lang="ko">창의융합형 공학인재양성 지원사업 — 현대NGV</span>
-                        <span data-lang="en">Creative Convergence Engineering Talent Fostering Project — Hyundai NGV</span>
-                        <span data-lang="ja">創意融合型工学人材養成支援事業 — 現代NGV</span>
-                        <span data-lang="fr">Projet de formation de talents en ingénierie de convergence créative — Hyundai NGV</span> 
-                        <span class="text-gray-400">(2019)</span>
-                    </li>
-                    <li class="card rounded-xl p-4 text-gray-700">
-                        <span data-lang="ko">아이디어팩토리 지원사업 — 중소벤처기업부</span>
-                        <span data-lang="en">Idea Factory Support Project — Ministry of SMEs and Startups</span>
-                        <span data-lang="ja">アイデアファクトリー支援事業 — 中小ベンチャー企業部</span>
-                        <span data-lang="fr">Projet de soutien Idea Factory — Ministère des PME et des Startups</span> 
-                        <span class="text-gray-400">(2017)</span>
-                    </li>
-                    <li class="card rounded-xl p-4 text-gray-400 italic">
-                        <span data-lang="ko">외 다수</span><span data-lang="en">And many others...</span><span data-lang="ja">他多数</span><span data-lang="fr">Et bien d'autres...</span>
-                    </li>
-                </ul>
-            </div>
+        <span class="h-px flex-1 min-w-[12px] bg-slate-200/80"></span>
+      </div>
 
-            <!-- 수상 -->
-            <div id="awards" class="content">
-                <ul class="space-y-2.5">
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="shrink-0">🏆</span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">경기도지사 표창장 — 창업활성화 유공자</span>
-                            <span data-lang="en">Gyeonggi Province Governor's Commendation — Person of Merit for Startup Activation</span>
-                            <span data-lang="ja">京畿道知事表彰状 — 起業活性化功労者</span>
-                            <span data-lang="fr">Distinction du Gouverneur de la province de Gyeonggi — Personne de mérite pour l'activation des startups</span>
-                            <span class="text-gray-400">(2020)</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="shrink-0">🥇</span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">공학교육학술대회 최우수논문 (기업가정신 분야)</span>
-                            <span data-lang="en">Best Paper Award, Engineering Education Conference (Entrepreneurship)</span>
-                            <span data-lang="ja">工学教育学術大会 最優秀論文（起業家精神分野）</span>
-                            <span data-lang="fr">Prix du meilleur article, Conférence sur l'enseignement de l'ingénierie (Entrepreneuriat)</span>
-                            <span class="text-gray-400">(2019)</span>
-                        </span>
-                    </li>
-                    <li class="card rounded-xl p-4 flex gap-3">
-                        <span class="shrink-0">🥇</span>
-                        <span class="text-gray-700">
-                            <span data-lang="ko">한국정밀공학회 춘계학술대회 최우수논문 (생산시스템 분야)</span>
-                            <span data-lang="en">Best Paper Award, KSPE Spring Conference (Production Systems)</span>
-                            <span data-lang="ja">韓国精密工学会 春季学術大会 最優秀論文（生産システム分野）</span>
-                            <span data-lang="fr">Prix du meilleur article, Conférence de printemps de la KSPE (Systèmes de production)</span>
-                            <span class="text-gray-400">(2014)</span>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </section>
+      <div id="tool-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
 
-    </main>
+      <!-- EMPTY STATE -->
+      <div id="empty-state" class="hidden text-center py-16 sm:py-24 bg-white/50 rounded-2xl border border-dashed border-slate-200/80 mt-2">
+        <span class="mx-auto w-12 h-12 rounded-2xl bg-slate-100/80 text-slate-400 flex items-center justify-center mb-3.5">
+          <i data-lucide="search-x" class="h-5 w-5"></i>
+        </span>
+        <p id="empty-title" class="text-sm font-bold text-slate-900">검색 결과가 없습니다</p>
+        <p id="empty-desc" class="mt-1 text-xs sm:text-sm text-slate-500">검색어를 지우거나 다른 카테고리를 선택해 보세요.</p>
+        <button id="reset-btn" class="mt-5 bg-slate-900 text-white font-mono text-xs font-bold tracking-wider px-4 py-2.5 rounded-xl active:scale-95 hover:bg-slate-800 transition-all shadow-sm">
+          RESET FILTERS
+        </button>
+      </div>
+    </section>
 
-    <script>
-        // 탭 메뉴 로직
-        function openTab(event, tabName) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('tab-active');
-                b.classList.add('tab-inactive');
-            });
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.remove('tab-inactive');
-            event.currentTarget.classList.add('tab-active');
-        }
+  </main>
 
-        // 다국어 제어 로직
-        const html = document.documentElement;
-        const langBtns = document.querySelectorAll('.lang-btn');
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-slate-200/70 bg-white/60">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8 py-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="font-mono text-[11px] font-bold tracking-widest text-slate-400 uppercase">TOOLKIT · Client-Side Utilities</p>
+        <p class="text-xs text-slate-500 font-medium text-center sm:text-right">모든 데이터 연산은 사용자의 브라우저 내에서 안전하게 처리됩니다.</p>
+      </div>
 
-        function setLanguage(lang) {
-            // HTML lang 속성 변경 (CSS 트리거)
-            html.setAttribute('lang', lang);
-            
-            // 사용자가 선택한 언어 브라우저에 저장
-            localStorage.setItem('preferred-lang', lang);
+      <div class="mt-6 pt-5 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-1.5">
+        <p class="font-mono text-[11px] text-slate-400 tracking-wider">&copy; 2026 Janggil Kim. All rights reserved.</p>
+        <p class="text-[11px] text-slate-400 font-medium">무단 복제 및 재배포를 금지합니다</p>
+      </div>
+    </div>
+  </footer>
 
-            // 버튼 스타일 업데이트
-            langBtns.forEach(btn => {
-                if (btn.dataset.targetLang === lang) {
-                    // 활성화된 버튼 스타일
-                    btn.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
-                    btn.classList.remove('text-gray-500', 'hover:text-gray-800');
-                } else {
-                    // 비활성화된 버튼 스타일
-                    btn.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
-                    btn.classList.add('text-gray-500', 'hover:text-gray-800');
-                }
-            });
-        }
+  <!-- ============ MOBILE BOTTOM TABBAR ============ -->
+  <nav id="tabbar" aria-label="모바일 내비게이션"
+       class="md:hidden fixed bottom-0 inset-x-0 z-50 backdrop-blur-xl bg-white/80 border-t border-slate-200/70">
+    <div class="grid grid-cols-3 safe-bottom">
+      <button type="button" data-view="all"
+        class="flex flex-col items-center justify-center gap-1 h-15 text-slate-400 active:bg-slate-100/60 transition-colors">
+        <i data-lucide="layout-grid" class="h-5 w-5"></i>
+        <span class="font-mono text-[10px] font-bold tracking-wider">ALL</span>
+      </button>
 
-        // 버튼 클릭 이벤트 리스너 등록
-        langBtns.forEach(btn => {
-            btn.addEventListener('click', () => setLanguage(btn.dataset.targetLang));
+      <button type="button" data-view="fav"
+        class="relative flex flex-col items-center justify-center gap-1 h-15 text-slate-400 active:bg-slate-100/60 transition-colors">
+        <i data-lucide="star" class="h-5 w-5"></i>
+        <span class="font-mono text-[10px] font-bold tracking-wider">FAVORITES</span>
+        <span id="tab-fav-badge" class="hidden absolute top-2 right-[26%] min-w-[16px] h-[16px] px-1 rounded-full bg-indigo-600 text-white font-mono text-[9px] font-bold flex items-center justify-center">0</span>
+      </button>
+
+      <button type="button" data-action="search"
+        class="flex flex-col items-center justify-center gap-1 h-15 text-slate-400 active:bg-slate-100/60 transition-colors">
+        <i data-lucide="search" class="h-5 w-5"></i>
+        <span class="font-mono text-[10px] font-bold tracking-wider">SEARCH</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- DATA SCRIPT & CORE ENGINE -->
+  <script src="./tools-data.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var CATEGORIES = ['PRODUCTIVITY', 'DATA & ANALYTICS', 'LIFESTYLE', 'DESIGN & MEDIA', 'ENTERTAINMENT'];
+    var STORE_KEY = 'toolkit.favorites.v1';
+
+    var BADGE_STYLE = {
+      HOT:  'bg-rose-50 text-rose-600 border border-rose-200/60',
+      NEW:  'bg-emerald-50 text-emerald-600 border border-emerald-200/60',
+      BEST: 'bg-amber-50 text-amber-700 border border-amber-200/60'
+    };
+
+    /* Safe LocalStorage Wrapper */
+    var store = (function () {
+      try {
+        var probe = '__toolkit_probe__';
+        window.localStorage.setItem(probe, '1');
+        window.localStorage.removeItem(probe);
+        return window.localStorage;
+      } catch (e) {
+        var mem = {};
+        return {
+          getItem: function (k) { return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null; },
+          setItem: function (k, v) { mem[k] = String(v); },
+          removeItem: function (k) { delete mem[k]; }
+        };
+      }
+    })();
+
+    function loadFavs() {
+      try {
+        var raw = store.getItem(STORE_KEY);
+        var arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) { return []; }
+    }
+    function saveFavs(list) {
+      try { store.setItem(STORE_KEY, JSON.stringify(list)); } catch (e) {}
+    }
+
+    var DATA = (window.TOOLS_DATA || []).slice();
+    var favs = loadFavs();
+    var activeCategory = 'ALL';
+    var activeTag = null;
+    var query = '';
+    var view = 'all';
+
+    var el = {
+      logo:         document.getElementById('logo'),
+      headerCount: document.getElementById('header-count'),
+      filterBar:   document.getElementById('filter-bar'),
+      tagRail:     document.getElementById('tag-rail'),
+      activeTag:   document.getElementById('active-tag'),
+      activeTagLbl:document.getElementById('active-tag-label'),
+      favSection:  document.getElementById('fav-section'),
+      favGrid:     document.getElementById('fav-grid'),
+      favCount:    document.getElementById('fav-count'),
+      grid:        document.getElementById('tool-grid'),
+      gridHeading: document.getElementById('grid-heading'),
+      gridCount:   document.getElementById('grid-count'),
+      empty:       document.getElementById('empty-state'),
+      emptyTitle:  document.getElementById('empty-title'),
+      emptyDesc:   document.getElementById('empty-desc'),
+      search:      document.getElementById('search-input'),
+      reset:       document.getElementById('reset-btn'),
+      tabbar:      document.getElementById('tabbar'),
+      tabFavBadge: document.getElementById('tab-fav-badge')
+    };
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function isFav(id) { return favs.indexOf(id) !== -1; }
+    function tagsOf(t) { return Array.isArray(t.tags) ? t.tags : []; }
+
+    function countOf(cat) {
+      if (cat === 'ALL') return DATA.length;
+      return DATA.filter(function (t) { return t.category === cat; }).length;
+    }
+
+    function matches(tool) {
+      if (activeCategory !== 'ALL' && tool.category !== activeCategory) return false;
+      if (activeTag && tagsOf(tool).indexOf(activeTag) === -1) return false;
+      if (!query) return true;
+      var hay = (tool.title + ' ' + tool.desc + ' ' + tool.category + ' ' + tagsOf(tool).join(' ')).toLowerCase();
+      return hay.indexOf(query) !== -1;
+    }
+
+    function syncHash() {
+      var base = location.pathname + location.search;
+      try {
+        if (activeTag) history.replaceState(null, '', base + '#' + encodeURIComponent(activeTag.replace(/^#/, '')));
+        else history.replaceState(null, '', base);
+      } catch (e) {}
+    }
+    function allTags() {
+      var seen = {}, out = [];
+      DATA.forEach(function (t) {
+        tagsOf(t).forEach(function (tag) { if (!seen[tag]) { seen[tag] = 1; out.push(tag); } });
+      });
+      return out;
+    }
+    function applyHash() {
+      var raw = (location.hash || '').replace(/^#/, '');
+      if (!raw) return;
+      var want = '#' + decodeURIComponent(raw);
+      if (allTags().indexOf(want) !== -1) activeTag = want;
+    }
+
+    /* Category Navigation UI */
+    var TAB_BASE = 'snap-start shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 min-h-[38px] active:scale-95 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 whitespace-nowrap font-mono text-xs font-bold tracking-wider';
+    var TAB_OFF  = 'bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-100/80';
+    var TAB_ON   = 'bg-slate-900 text-white shadow-md shadow-slate-900/10';
+
+    function renderFilters() {
+      var tabs = ['ALL'].concat(CATEGORIES);
+      el.filterBar.innerHTML = tabs.map(function (cat) {
+        var on = cat === activeCategory;
+        return '<button type="button" data-cat="' + esc(cat) + '" aria-pressed="' + on + '" ' +
+               'class="' + TAB_BASE + ' ' + (on ? TAB_ON : TAB_OFF) + '">' +
+                 '<span>' + esc(cat) + '</span>' +
+                 '<span class="text-[10px] ' + (on ? 'text-white/60' : 'text-slate-400') + '">' + countOf(cat) + '</span>' +
+               '</button>';
+      }).join('');
+    }
+
+    /* Hash Tags Rail */
+    var CHIP_BASE = 'shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] font-bold tracking-wider active:scale-95 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 whitespace-nowrap';
+    var CHIP_OFF  = 'bg-white border border-slate-200/80 text-slate-500 hover:border-indigo-300 hover:text-indigo-600';
+    var CHIP_ON   = 'bg-indigo-600 text-white shadow-sm';
+
+    function tagIndex() {
+      var map = {}, order = [];
+      DATA.forEach(function (t) {
+        if (activeCategory !== 'ALL' && t.category !== activeCategory) return;
+        tagsOf(t).forEach(function (tag) {
+          if (!(tag in map)) { map[tag] = 0; order.push(tag); }
+          map[tag]++;
         });
+      });
+      order.sort(function (a, b) { return map[b] - map[a] || a.localeCompare(b, 'ko'); });
+      return { map: map, order: order };
+    }
 
-        // 초기 언어 설정 (이전에 선택한 언어가 있으면 유지, 없으면 한국어 기본)
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('preferred-lang') || 'ko';
-            setLanguage(savedLang);
-        });
-    </script>
+    function renderTags() {
+      var idx = tagIndex();
+      el.tagRail.innerHTML = idx.order.map(function (tag) {
+        var on = tag === activeTag;
+        return '<button type="button" data-tag="' + esc(tag) + '" aria-pressed="' + on + '" ' +
+               'class="' + CHIP_BASE + ' ' + (on ? CHIP_ON : CHIP_OFF) + '">' +
+                 esc(tag) +
+                 '<span class="' + (on ? 'text-white/60' : 'text-slate-300') + '">' + idx.map[tag] + '</span>' +
+               '</button>';
+      }).join('');
+
+      if (activeTag) {
+        el.activeTag.classList.remove('hidden');
+        el.activeTag.classList.add('inline-flex');
+        el.activeTagLbl.textContent = activeTag;
+      } else {
+        el.activeTag.classList.add('hidden');
+        el.activeTag.classList.remove('inline-flex');
+      }
+    }
+
+    /* Tool Card Builder */
+    function cardHTML(tool) {
+      var fav = isFav(tool.id);
+      var starCls = fav ? 'text-amber-400 fill-amber-400' : 'text-slate-300';
+      var badge = tool.badge
+        ? '<span class="font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded shrink-0 ' +
+          (BADGE_STYLE[tool.badge] || 'bg-slate-100 text-slate-500') + '">' + esc(tool.badge) + '</span>'
+        : '';
+
+      var tagRow = tagsOf(tool).map(function (tag) {
+        var on = tag === activeTag;
+        return '<button type="button" data-tag="' + esc(tag) + '" ' +
+               'class="relative z-10 font-mono text-[11px] font-bold tracking-wider rounded transition-colors ' +
+               (on ? 'text-indigo-600' : 'text-slate-400 hover:text-indigo-600') +
+               ' focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">' + esc(tag) + '</button>';
+      }).join('');
+
+      return '' +
+      '<article class="relative bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md hover:border-indigo-300/80 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col justify-between">' +
+
+        '<div>' +
+          '<div class="flex items-start justify-between mb-4">' +
+            '<div class="w-10 h-10 rounded-xl bg-indigo-50/80 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-200 shadow-sm">' +
+              '<i data-lucide="' + esc(tool.icon) + '" class="h-5 w-5"></i>' +
+            '</div>' +
+            '<button type="button" data-fav="' + esc(tool.id) + '" aria-pressed="' + fav + '" ' +
+              'aria-label="' + esc(tool.title) + ' 즐겨찾기" title="즐겨찾기" ' +
+              'class="relative z-10 -mr-1 -mt-1 p-2 rounded-lg text-slate-300 hover:bg-slate-50 hover:text-amber-400 active:scale-90 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">' +
+              '<i data-lucide="star" class="h-4 w-4 ' + starCls + '"></i>' +
+            '</button>' +
+          '</div>' +
+
+          '<div class="flex items-center gap-2 mb-1.5 min-w-0">' +
+            '<h3 class="tracking-tight font-extrabold text-slate-900 text-base sm:text-[16px] min-w-0 break-keep">' + esc(tool.title) + '</h3>' +
+            badge +
+          '</div>' +
+
+          '<p class="line-clamp-2 text-xs sm:text-sm text-slate-500 leading-relaxed break-keep">' + esc(tool.desc) + '</p>' +
+        '</div>' +
+
+        '<div>' +
+          '<div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-4">' + tagRow + '</div>' +
+
+          '<div class="flex items-center justify-between gap-2 mt-5 pt-3.5 border-t border-slate-100 min-w-0">' +
+            '<span class="font-mono text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded tracking-wider uppercase truncate min-w-0">' + esc(tool.category) + '</span>' +
+            '<a href="' + esc(tool.url) + '" target="_blank" rel="noopener noreferrer" ' +
+               'aria-label="' + esc(tool.title) + ' 새 탭에서 실행" ' +
+               'class="stretched inline-flex items-center gap-1 shrink-0 font-mono text-xs font-bold tracking-wider text-slate-600 group-hover:text-indigo-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">' +
+              'RUN <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"></i>' +
+            '</a>' +
+          '</div>' +
+        '</div>' +
+
+      '</article>';
+    }
+
+    function renderTabbar() {
+      var btns = el.tabbar.querySelectorAll('[data-view]');
+      for (var i = 0; i < btns.length; i++) {
+        var on = btns[i].getAttribute('data-view') === view;
+        btns[i].classList.toggle('text-indigo-600', on);
+        btns[i].classList.toggle('text-slate-400', !on);
+        btns[i].setAttribute('aria-current', on ? 'page' : 'false');
+      }
+      if (favs.length) {
+        el.tabFavBadge.textContent = favs.length;
+        el.tabFavBadge.classList.remove('hidden');
+      } else {
+        el.tabFavBadge.classList.add('hidden');
+      }
+    }
+
+    function render() {
+      var visible = DATA.filter(matches);
+      var favVisible = visible.filter(function (t) { return isFav(t.id); });
+
+      if (view === 'fav') visible = favVisible;
+
+      if (favVisible.length && view === 'all') {
+        el.favSection.classList.remove('hidden');
+        el.favGrid.innerHTML = favVisible.map(cardHTML).join('');
+        el.favCount.textContent = favVisible.length;
+      } else {
+        el.favSection.classList.add('hidden');
+        el.favGrid.innerHTML = '';
+      }
+
+      el.grid.innerHTML = visible.map(cardHTML).join('');
+      el.gridCount.textContent = visible.length;
+      el.gridHeading.textContent = view === 'fav'
+        ? 'Favorites'
+        : (activeCategory === 'ALL' ? 'All Utilities' : activeCategory);
+
+      var isEmpty = visible.length === 0;
+      el.empty.classList.toggle('hidden', !isEmpty);
+      if (isEmpty) {
+        if (view === 'fav' && !query && !activeTag && activeCategory === 'ALL') {
+          el.emptyTitle.textContent = '즐겨찾기가 비어 있습니다';
+          el.emptyDesc.textContent = '자주 사용하는 도구 우측 상단의 별표를 눌러 보관함에 담아보세요.';
+        } else if (activeTag) {
+          el.emptyTitle.textContent = activeTag + ' 태그에 해당하는 도구가 없습니다';
+          el.emptyDesc.textContent = '해시태그 필터를 해제하거나 다른 카테고리를 선택해 보세요.';
+        } else {
+          el.emptyTitle.textContent = '조건에 맞는 도구가 없습니다';
+          el.emptyDesc.textContent = '검색어를 지우거나 다른 카테고리를 선택해 보세요.';
+        }
+      }
+
+      renderFilters();
+      renderTags();
+      renderTabbar();
+      el.headerCount.textContent = DATA.length;
+
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    }
+
+    /* Event Listeners */
+    el.filterBar.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-cat]');
+      if (!btn) return;
+      activeCategory = btn.getAttribute('data-cat');
+      if (activeTag && tagIndex().order.indexOf(activeTag) === -1) activeTag = null;
+      syncHash();
+      render();
+    });
+
+    document.addEventListener('click', function (e) {
+      var tagBtn = e.target.closest('[data-tag]');
+      if (tagBtn) {
+        e.preventDefault();
+        var tag = tagBtn.getAttribute('data-tag');
+        activeTag = (activeTag === tag) ? null : tag;
+        syncHash();
+        render();
+        return;
+      }
+
+      var favBtn = e.target.closest('[data-fav]');
+      if (favBtn) {
+        e.preventDefault();
+        var id = favBtn.getAttribute('data-fav');
+        var i = favs.indexOf(id);
+        if (i === -1) { favs.push(id); } else { favs.splice(i, 1); }
+        saveFavs(favs);
+        render();
+      }
+    });
+
+    el.activeTag.addEventListener('click', function () {
+      activeTag = null;
+      syncHash();
+      render();
+    });
+
+    el.logo.addEventListener('click', function (e) {
+      e.preventDefault();
+      activeCategory = 'ALL'; activeTag = null; query = ''; view = 'all';
+      el.search.value = '';
+      syncHash();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    el.tabbar.addEventListener('click', function (e) {
+      var viewBtn = e.target.closest('[data-view]');
+      if (viewBtn) {
+        view = viewBtn.getAttribute('data-view');
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (e.target.closest('[data-action="search"]')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(function () { el.search.focus(); }, 220);
+      }
+    });
+
+    el.search.addEventListener('input', function (e) {
+      query = e.target.value.trim().toLowerCase();
+      render();
+    });
+
+    el.reset.addEventListener('click', function () {
+      activeCategory = 'ALL'; activeTag = null; query = ''; view = 'all';
+      el.search.value = '';
+      syncHash();
+      render();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        el.search.focus();
+        el.search.select();
+      }
+      if (e.key === 'Escape' && document.activeElement === el.search) {
+        el.search.value = '';
+        query = '';
+        render();
+      }
+    });
+
+    window.addEventListener('storage', function (e) {
+      if (e.key === STORE_KEY) { favs = loadFavs(); render(); }
+    });
+
+    /* Init */
+    applyHash();
+    render();
+  })();
+  </script>
 </body>
 </html>
