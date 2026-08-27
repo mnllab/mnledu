@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개인정보 자동 지우개</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:inherit; font-size:15px; line-height:1.8;
+    min-height:clamp(300px, 50vh, 600px);
+  }
+  textarea::placeholder{ color:#9AA7B4; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  /* 제어부 토글 */
+  .opt{
+    display:flex; align-items:center; gap:10px;
+    border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:12px 14px; cursor:pointer; user-select:none;
+    transition:border-color .12s, background .12s;
+  }
+  .opt:hover{ border-color:#C3CCD6; }
+  .opt.on{ border-color:var(--steel); background:#F5F9FC; }
+  .opt input{ accent-color:var(--steel); width:16px; height:16px; flex:none; cursor:pointer; }
+  .tag{
+    margin-left:auto; font-size:11px; color:var(--muted);
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+  }
+
+  /* 결과창 복사 버튼 */
+  #copyRound{
+    position:absolute; right:14px; top:10px; z-index:10;
+    border-radius:999px; background:var(--ink); color:#fff;
+    font-size:12px; font-weight:500; padding:9px 16px;
+    border:0; cursor:pointer; box-shadow:0 1px 3px rgba(38,56,75,.18);
+    transition:background .14s, transform .1s;
+  }
+  #copyRound:hover{ background:#1D2C3B; }
+  #copyRound:active{ transform:scale(.97); }
+  #copyRound:focus-visible{ outline:2px solid var(--steel); outline-offset:2px; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">개인정보 자동 지우개</h1>
+      <p class="mt-1 text-[13px] text-muted">브라우저 안에서만 처리 · 어디에도 전송·저장되지 않음</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="copyFmt" class="btn" aria-label="복사 형식" title="복사·저장 형식">
+        <option value="plain" selected>메모장용</option>
+        <option value="word">워드·한글용</option>
+      </select>
+      <button id="sampleBtn" class="btn">예시</button>
+      <button id="saveBtn" class="btn">저장</button>
+      <button id="resetBtn" class="btn">초기화</button>
+    </div>
+  </header>
+
+  <!-- 제어부 -->
+  <div class="mb-4 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+    <label class="opt" data-key="phone">
+      <input type="checkbox" id="optPhone" checked>
+      <span class="text-[14px] font-medium">전화번호</span>
+      <span class="tag" id="tagPhone">0</span>
+    </label>
+    <label class="opt" data-key="email">
+      <input type="checkbox" id="optEmail" checked>
+      <span class="text-[14px] font-medium">이메일</span>
+      <span class="tag" id="tagEmail">0</span>
+    </label>
+    <label class="opt" data-key="rrn">
+      <input type="checkbox" id="optRrn" checked>
+      <span class="text-[14px] font-medium">주민·법인번호</span>
+      <span class="tag" id="tagRrn">0</span>
+    </label>
+    <label class="opt" data-key="ip">
+      <input type="checkbox" id="optIp" checked>
+      <span class="text-[14px] font-medium">IP 주소</span>
+      <span class="tag" id="tagIp">0</span>
+    </label>
+  </div>
+
+  <!-- 본문 -->
+  <div class="grid gap-4 md:grid-cols-2">
+
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">원본</span>
+        <button id="clearInput" class="btn px-2.5 py-1.5 text-[12px]">지우기</button>
+      </div>
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="input" placeholder="개인정보가 섞인 텍스트를 붙여넣으세요" spellcheck="false"></textarea>
+      </div>
+      <div class="border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        글자 <b id="inChars" class="num ml-0.5 font-medium text-ink">0</b>
+      </div>
+    </section>
+
+    <section class="relative rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="border-b border-hair px-5 py-2.5 text-[12px] font-medium tracking-wide text-muted">가려진 결과</div>
+      <button id="copyRound">전체 복사</button>
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="output" readonly spellcheck="false" placeholder="마스킹된 결과가 여기에 표시됩니다"></textarea>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <span>글자 <b id="outChars" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span id="totalInfo" class="num"></span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const input     = document.getElementById('input');
+  const output    = document.getElementById('output');
+  const optPhone  = document.getElementById('optPhone');
+  const optEmail  = document.getElementById('optEmail');
+  const optRrn    = document.getElementById('optRrn');
+  const optIp     = document.getElementById('optIp');
+  const inChars   = document.getElementById('inChars');
+  const outChars  = document.getElementById('outChars');
+  const totalInfo = document.getElementById('totalInfo');
+  const copyFmt   = document.getElementById('copyFmt');
+
+  const tags = {
+    phone: document.getElementById('tagPhone'),
+    email: document.getElementById('tagEmail'),
+    rrn:   document.getElementById('tagRrn'),
+    ip:    document.getElementById('tagIp')
+  };
+
+  /* ---------- 마스킹 ---------- */
+  // 적용 순서가 중요하다. IP를 먼저 처리해야 점 표기가 전화번호 규칙에 잡히지 않고,
+  // 주민번호를 전화번호보다 먼저 처리해야 자릿수가 겹치는 구간에서 어긋나지 않는다.
+  function mask(text) {
+    const n = { phone: 0, email: 0, rrn: 0, ip: 0 };
+    let out = text;
+
+    if (optIp.checked) {
+      out = out.replace(
+        /\b(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\b/g,
+        function () { n.ip++; return '[IP 숨김 처리]'; }
+      );
+    }
+
+    if (optRrn.checked) {
+      // 주민등록번호·법인등록번호 : 뒤 7자리 전부
+      out = out.replace(/\b(\d{6})[-–](\d{7})\b/g, function (m, a) { n.rrn++; return a + '-*******'; });
+      // 사업자등록번호 : 뒤 5자리
+      out = out.replace(/\b(\d{3}-\d{2})-(\d{5})\b/g, function (m, a) { n.rrn++; return a + '-*****'; });
+      // 하이픈 없는 13자리 (뒷자리 첫 숫자가 1~4일 때만 주민번호로 본다)
+      out = out.replace(/\b(\d{6})([1-4]\d{6})\b/g, function (m, a) { n.rrn++; return a + '-*******'; });
+    }
+
+    if (optPhone.checked) {
+      // 010-1234-5678, 02-880-1234 등
+      out = out.replace(/(?<![\d-])(0\d{1,2})[-.\s](\d{3,4})[-.\s](\d{4})(?![\d-])/g,
+        function (m, a, b) { n.phone++; return a + '-' + b + '-****'; });
+      // 하이픈 없는 휴대폰
+      out = out.replace(/(?<![\d-])(01[016789])(\d{3,4})(\d{4})(?![\d-])/g,
+        function (m, a, b) { n.phone++; return a + '-' + b + '-****'; });
+      // +82 국제표기
+      out = out.replace(/(\+82[-.\s]?)(\d{1,2})[-.\s]?(\d{3,4})[-.\s]?(\d{4})(?![\d-])/g,
+        function (m, p, a, b) { n.phone++; return p + a + '-' + b + '-****'; });
+    }
+
+    if (optEmail.checked) {
+      out = out.replace(/\b([A-Za-z0-9._%+-]+)@([A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/g,
+        function (m, id, dom) {
+          n.email++;
+          const keep = id.length <= 3 ? 1 : Math.min(3, Math.ceil(id.length / 2));
+          return id.slice(0, keep) + '*'.repeat(Math.max(3, id.length - keep)) + '@' + dom;
+        });
+    }
+
+    return { text: out, n: n };
+  }
+
+  function fmt(v) { return v.toLocaleString('ko-KR'); }
+
+  function run() {
+    const src = input.value;
+    const r = mask(src);
+    output.value = r.text;
+
+    inChars.textContent = fmt(Array.from(src.replace(/\n/g, '')).length);
+    outChars.textContent = fmt(Array.from(r.text.replace(/\n/g, '')).length);
+
+    let total = 0;
+    Object.keys(tags).forEach(function (k) {
+      tags[k].textContent = r.n[k];
+      tags[k].style.color = r.n[k] ? 'var(--steel)' : 'var(--muted)';
+      total += r.n[k];
+    });
+    totalInfo.textContent = total ? '가린 항목 ' + total + '건' : '';
+
+    document.querySelectorAll('.opt').forEach(function (el) {
+      const box = el.querySelector('input');
+      el.classList.toggle('on', box.checked);
+    });
+  }
+
+  input.addEventListener('input', run);
+  [optPhone, optEmail, optRrn, optIp].forEach(function (b) { b.addEventListener('change', run); });
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2200);
+  }
+
+  /* ---------- 복사 · 저장 ---------- */
+  function formatted() {
+    const text = output.value.replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '');
+    if (copyFmt.value === 'plain') return text.replace(/\n{3,}/g, '\n\n').trim();
+    return text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean).join('\r\n');
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyRound').addEventListener('click', async function () {
+    if (!output.value.trim()) { toast('복사할 결과가 없습니다'); return; }
+    const text = formatted();
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('개인정보가 안전하게 가려진 채 복사되었습니다!');
+    } catch (e) {
+      if (legacyCopy(text)) toast('개인정보가 안전하게 가려진 채 복사되었습니다!');
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!output.value.trim()) { toast('저장할 내용이 없습니다'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = '가린텍스트_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + formatted()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  /* ---------- 지우기 · 예시 ---------- */
+  function clearInput() { input.value = ''; run(); input.focus(); }
+  document.getElementById('clearInput').addEventListener('click', clearInput);
+  document.getElementById('resetBtn').addEventListener('click', clearInput);
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    input.value =
+      '담당자 김장길 010-1234-5678 / 사무실 02-880-1234\n' +
+      '이메일 jangkil.kim@snu.ac.kr, ab@naver.com\n' +
+      '주민등록번호 650312-1234567, 사업자등록번호 302-82-79641\n' +
+      '서버 IP는 192.168.0.1이며 외부 접속은 203.245.11.7입니다\n' +
+      '휴대폰 01012345678 또는 +82-10-1234-5678\n' +
+      '계약금액 1,234-5678 원, 작성일 2026-08-27 은 그대로 남습니다';
+    run();
+    input.focus();
+  });
+
+  run();
+  input.focus();
+})();
+</script>
+</body>
+</html>
