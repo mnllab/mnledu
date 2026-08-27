@@ -619,5 +619,102 @@
   dropzone.focus();
 })();
 </script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>캡처에서 가려야 할 것이 있을 때</h2>
+<p>화면을 공유하려는데 이름, 계좌번호, 이메일 주소가 함께 찍혀 있는 경우가 많습니다. 이걸 가리려고 이미지 편집 프로그램을 여는 건 번거롭고, 온라인 편집기에 올리자니 그 자료가 바로 가려야 할 내용입니다.</p>
+<p>이 도구는 브라우저에서 모자이크와 형광펜을 칠합니다. 이미지가 밖으로 나가지 않으므로 가려야 할 자료를 다룰 때 적합합니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>개인정보 가리기</dt><dd>캡처에 찍힌 이름, 연락처, 계좌번호를 지울 때.</dd>
+<dt>문의·오류 신고</dt><dd>화면을 캡처해 문의할 때 관계없는 정보를 가리고 보낼 때.</dd>
+<dt>강조 표시</dt><dd>설명하려는 부분에 형광펜을 칠해 눈길을 모을 때.</dd>
+<dt>교육 자료</dt><dd>실제 화면을 예시로 쓰되 식별 정보만 지울 때.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>이미지를 넣습니다.</li>
+<li>모자이크 또는 형광펜을 고릅니다.</li>
+<li>가리거나 강조할 부분을 끌어서 칠합니다.</li>
+<li><strong>이미지 복사</strong>로 가져갑니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>거칠기</dt><dd>모자이크의 입자 크기를 정합니다. 글자를 확실히 못 읽게 하려면 거칠게 잡으시는 편이 안전합니다.</dd>
+<dt>색상</dt><dd>형광펜 색을 고릅니다.</dd>
+<dt>실행 취소 · 원본으로</dt><dd>방금 칠한 것을 되돌리거나 처음 상태로 돌아갑니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>모자이크를 복원할 수 있나요</dt><dd>결과 이미지에서는 원본 화소가 사라지므로 되돌릴 수 없습니다. 다만 입자가 너무 곱게 설정되면 형태가 짐작될 수 있으니, 중요한 정보는 거칠게 처리하시기 바랍니다.</dd>
+<dt>이미지가 서버로 전송되나요</dt><dd>아닙니다. 브라우저 안에서만 처리됩니다.</dd>
+<dt>형광펜이 글자를 덮지 않나요</dt><dd>반투명하게 칠해져 아래 글자가 보입니다. 가리는 용도로는 모자이크를 쓰세요.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/design-media/screendeco.html">1초 캡처 뷰티파이어</a></li>
+<li><a href="https://mnledu.com/design-media/teleprompter.html">스마트 오토 프롬프터</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "모자이크를 복원할 수 있나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "결과 이미지에서는 원본 화소가 사라지므로 되돌릴 수 없습니다. 다만 입자가 너무 곱게 설정되면 형태가 짐작될 수 있으니, 중요한 정보는 거칠게 처리하시기 바랍니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "이미지가 서버로 전송되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아닙니다. 브라우저 안에서만 처리됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "형광펜이 글자를 덮지 않나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "반투명하게 칠해져 아래 글자가 보입니다. 가리는 용도로는 모자이크를 쓰세요."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>

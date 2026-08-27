@@ -796,5 +796,96 @@
   newGame();
 })();
 </script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>숫자를 채우는 규칙 하나</h2>
+<p>가로줄, 세로줄, 3×3 상자 안에 1부터 9까지가 한 번씩만 들어가면 됩니다. 규칙은 이것뿐인데, 어디서 시작해야 할지 찾는 데서 재미가 생깁니다.</p>
+<p>난이도에 따라 처음 주어지는 숫자의 개수가 달라집니다. 쉬움은 순서대로 채워지지만, 어려움은 여러 칸을 동시에 고려해야 합니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>조용한 집중</dt><dd>소리 없이 혼자 몰입할 거리가 필요할 때.</dd>
+<dt>이동 중</dt><dd>지하철이나 대기실에서. 끊었다가 이어서 할 수 있습니다.</dd>
+<dt>잠들기 전</dt><dd>화면이 밝지 않고 자극이 적어 마무리하기 좋습니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>난이도를 고르고 <strong>새 퍼즐 시작</strong>을 누릅니다.</li>
+<li>빈 칸을 누르고 숫자를 넣습니다.</li>
+<li>모든 칸이 규칙에 맞게 채워지면 완성입니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>난이도</dt><dd>쉬움·보통·어려움 중에 고릅니다. 처음 주어지는 숫자 개수가 달라집니다.</dd>
+<dt>실시간 오류 검사</dt><dd>규칙에 어긋나는 숫자를 바로 표시합니다. 끄면 스스로 찾아야 해서 난도가 올라갑니다.</dd>
+<dt>같은 숫자 강조 · 가로·세로·박스 강조</dt><dd>선택한 칸과 관련된 영역을 밝게 표시해 눈으로 찾기 쉽게 합니다.</dd>
+<dt>실수 3회 제한</dt><dd>틀리면 세 번까지만 허용합니다. 긴장감을 원할 때 켜세요.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>중간에 그만두면 사라지나요</dt><dd><strong>이어 하기</strong>로 다시 시작할 수 있습니다. 진행 상황이 브라우저 안에 남습니다.</dd>
+<dt>항상 답이 있는 퍼즐인가요</dt><dd>풀 수 있는 문제만 만들어집니다. 막히면 아직 방법을 못 찾은 것이니 다른 줄을 살펴보세요.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/entertainment/tetris.html">테트리스</a></li>
+<li><a href="https://mnledu.com/entertainment/snake.html">스네이크</a></li>
+<li><a href="https://mnledu.com/entertainment/minesweeper.html">지뢰찾기</a></li>
+<li><a href="https://mnledu.com/entertainment/tarot.html">타로 카드 리딩</a></li>
+<li><a href="https://mnledu.com/entertainment/neon-ladder.html">네온 사다리 타기</a></li>
+<li><a href="https://mnledu.com/entertainment/horse-race.html">행운의 번호 경마</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "중간에 그만두면 사라지나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "이어 하기로 다시 시작할 수 있습니다. 진행 상황이 브라우저 안에 남습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "항상 답이 있는 퍼즐인가요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "풀 수 있는 문제만 만들어집니다. 막히면 아직 방법을 못 찾은 것이니 다른 줄을 살펴보세요."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>

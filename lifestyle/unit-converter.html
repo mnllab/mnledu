@@ -407,5 +407,93 @@
   buildGrid();
 })();
 </script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>단위 변환을 검색으로 하면 생기는 일</h2>
+<p>평을 제곱미터로, 인치를 센티미터로 바꾸는 일은 자주 있습니다. 그때마다 검색창에 치면 광고가 가득한 페이지를 지나야 하고, 결과를 복사하기도 번거롭습니다.</p>
+<p>이 도구는 길이·무게·넓이·부피·온도 등을 한 화면에서 다룹니다. 값을 넣으면 관련 단위들이 동시에 바뀌어 표시됩니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>부동산 면적 확인</dt><dd>평과 제곱미터를 오갈 때. 임대차 계약이나 사무실을 알아볼 때 자주 필요합니다.</dd>
+<dt>해외 제품 사양 확인</dt><dd>인치, 파운드, 화씨로 적힌 사양을 국내 단위로 바꿀 때.</dd>
+<dt>수출입 서류 작성</dt><dd>무게와 부피 단위를 상대국 기준에 맞춰 적을 때.</dd>
+<dt>요리·계량</dt><dd>해외 레시피의 온스, 컵, 화씨 온도를 그램과 섭씨로 바꿀 때.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>변환할 분류를 고릅니다.</li>
+<li>값을 입력합니다.</li>
+<li>다른 단위의 값이 동시에 표시됩니다. 필요한 값을 복사해 갑니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>소수점 자리</dt><dd>자동 또는 소수점 2자리 등으로 표시 정밀도를 맞춥니다. 서류에 적을 때는 자릿수를 고정하는 편이 깔끔합니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>평 계산이 부동산 표기와 다를 때가 있는데요</dt><dd>1평은 약 3.3058제곱미터입니다. 부동산 광고에서 3.3으로 반올림해 쓰는 경우가 많아 소수점 이하에서 차이가 납니다. 계약서에는 제곱미터 값이 기준입니다.</dd>
+<dt>온도도 되나요</dt><dd>섭씨·화씨·켈빈을 지원합니다. 온도는 비율이 아니라 기준점이 다른 단위라 다른 항목과 계산 방식이 다릅니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/lifestyle/youtubenote.html">유튜브 타임스탬프 노트</a></li>
+<li><a href="https://mnledu.com/lifestyle/date-calc.html">만능 날짜 계산기</a></li>
+<li><a href="https://mnledu.com/lifestyle/calculator.html">스마트 수식 계산기</a></li>
+<li><a href="https://mnledu.com/lifestyle/timezone-dial.html">글로벌 시차 다이얼</a></li>
+<li><a href="https://mnledu.com/lifestyle/vocab-quiz.html">단어장 &amp; 퀴즈</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "평 계산이 부동산 표기와 다를 때가 있는데요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1평은 약 3.3058제곱미터입니다. 부동산 광고에서 3.3으로 반올림해 쓰는 경우가 많아 소수점 이하에서 차이가 납니다. 계약서에는 제곱미터 값이 기준입니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "온도도 되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "섭씨·화씨·켈빈을 지원합니다. 온도는 비율이 아니라 기준점이 다른 단위라 다른 항목과 계산 방식이 다릅니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>

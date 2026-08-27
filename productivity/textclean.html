@@ -430,5 +430,98 @@
   input.focus();
 })();
 </script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>복사해 온 텍스트가 지저분한 이유</h2>
+<p>웹페이지나 PDF, 한글 문서에서 텍스트를 복사하면 눈에 안 보이는 것들이 함께 딸려옵니다. 정렬용으로 넣은 연속 공백, 표 안의 줄바꿈, HTML 태그 조각 같은 것들입니다.</p>
+<p>문서에 붙여넣으면 "본  사업은   지역   창업기업의"처럼 간격이 벌어지거나, 한 문장이 여러 줄로 쪼개져 나타납니다. 이 도구는 그런 흔적을 골라 지웁니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>공고문 정리</dt><dd>정부지원사업 공고를 복사해 왔을 때. 표 형태로 정렬돼 있던 텍스트가 공백 덩어리로 붙어 오는 경우가 많습니다.</dd>
+<dt>웹 문서 인용</dt><dd>기사나 블로그에서 문단을 옮겨올 때. HTML 태그가 섞여 들어오면 문서에서 깨져 보입니다.</dd>
+<dt>AI 입력 정리</dt><dd>불필요한 공백과 줄바꿈은 토큰을 잡아먹습니다. 긴 자료를 넘기기 전에 정리하면 여유가 생깁니다.</dd>
+<dt>데이터 전처리</dt><dd>엑셀이나 데이터베이스에 넣기 전, 값에 붙은 잔여 공백을 걷어낼 때.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>왼쪽에 정리할 텍스트를 붙여넣습니다.</li>
+<li>필요한 정제 항목을 켭니다.</li>
+<li>오른쪽 결과를 복사해 갑니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>연속된 공백 압축</dt><dd>공백이 두 칸 이상 이어진 곳을 한 칸으로 줄입니다. 표에서 복사한 텍스트에 특히 효과가 큽니다.</dd>
+<dt>엔터를 공백 1칸으로 치환</dt><dd>줄바꿈을 공백으로 바꿔 한 문단으로 잇습니다.</dd>
+<dt>모든 줄바꿈 제거</dt><dd>줄바꿈을 아예 없애 붙입니다. 한글처럼 단어 사이 공백이 필요 없는 경우에 씁니다.</dd>
+<dt>꺾쇠 안의 태그를 모두 삭제</dt><dd>&lt;p&gt; &lt;span&gt; 같은 HTML 태그를 지웁니다. 웹에서 복사한 내용에 유용합니다.</dd>
+<dt>특수문자 제거</dt><dd>일반 문서에 쓰이지 않는 기호를 걸러냅니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>PDF 줄바꿈 복원기와 뭐가 다른가요</dt><dd>PDF 복원기는 문단 구조를 판단해 되살리는 데 초점이 있고, 이 도구는 공백·태그·특수문자를 걷어내는 범용 정리 도구입니다. 둘을 이어서 쓰셔도 됩니다.</dd>
+<dt>줄바꿈을 다 지우면 문단 구분이 사라지지 않나요</dt><dd>그렇습니다. 문단 구분을 살리려면 PDF 줄바꿈 복원기 쪽이 적합합니다. 이 도구의 줄바꿈 제거는 한 덩어리로 만들 때 쓰시는 게 좋습니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/productivity/notepad.html">나만의 웹 메모장</a></li>
+<li><a href="https://mnledu.com/productivity/emailgen.html">반복 이메일 생성기</a></li>
+<li><a href="https://mnledu.com/productivity/templatemerger.html">올인원 템플릿 매칭기</a></li>
+<li><a href="https://mnledu.com/productivity/promptmerger.html">AI 프롬프트용 파일 병합기</a></li>
+<li><a href="https://mnledu.com/productivity/listformat.html">스마트 리스트 포맷터</a></li>
+<li><a href="https://mnledu.com/productivity/anonymizer.html">개인정보 자동 지우개</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "PDF 줄바꿈 복원기와 뭐가 다른가요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDF 복원기는 문단 구조를 판단해 되살리는 데 초점이 있고, 이 도구는 공백·태그·특수문자를 걷어내는 범용 정리 도구입니다. 둘을 이어서 쓰셔도 됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "줄바꿈을 다 지우면 문단 구분이 사라지지 않나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "그렇습니다. 문단 구분을 살리려면 PDF 줄바꿈 복원기 쪽이 적합합니다. 이 도구의 줄바꿈 제거는 한 덩어리로 만들 때 쓰시는 게 좋습니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>
