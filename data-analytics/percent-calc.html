@@ -2,279 +2,796 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F7">
-<title>퍼센트 · 마진 계산기</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="프라이싱 엔진">
+<title>스마트 프라이싱 & 쇼핑 정산 엔진</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
   :root{
-    --bg:#FAF9F7; --panel:#FFFFFF; --line:#E8E5E0; --ink:#26384B; --dim:#5F7488;
-    --accent:#2C6BA0; --up:#2E7D5B; --down:#C0563F; --soft:#F1F4F7;
+    --bg:#FAF9F7; --card:#FFFFFF; --line:#E8E5E0; --ink:#1F2937; --dim:#6B7280;
+    --accent:#2563EB; --soft:#EFF4FE; --up:#15803D; --down:#C2410C;
+    --warnBg:#FFF7ED; --warnLine:#FED7AA; --warn:#C2410C;
   }
   *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
   html,body{
     margin:0; padding:0; min-height:100%;
     background:var(--bg); color:var(--ink);
     font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none; touch-action:manipulation;
   }
   .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
 
+  #app{ max-width:520px; margin:0 auto; padding:14px 14px calc(96px + env(safe-area-inset-bottom)); }
+
   .card{
-    background:var(--panel); border:1px solid var(--line); border-radius:14px;
-    padding:20px 20px 16px; box-shadow:0 1px 2px rgba(38,56,75,.04);
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px; margin-bottom:12px;
+    box-shadow:0 1px 2px rgba(31,41,55,.03), 0 6px 18px rgba(31,41,55,.05);
   }
-  .tag{
-    display:inline-block; font-size:10.5px; letter-spacing:.08em; color:var(--accent);
-    background:#EEF4F9; border-radius:5px; padding:3px 8px; margin-bottom:11px;
+  .h{ font-size:15px; font-weight:700; margin:0 0 3px; }
+  .sub{ font-size:11.5px; color:var(--dim); line-height:1.7; margin:0; }
+
+  .field{ margin-bottom:11px; }
+  .field:last-child{ margin-bottom:0; }
+  .lab{ display:block; font-size:12px; color:var(--dim); margin-bottom:6px; }
+  .inWrap{ position:relative; display:flex; align-items:center; }
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:11px; background:#fff;
+    padding:13px 40px 13px 13px; font-size:17px; color:var(--ink); outline:none; min-height:50px;
+    font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums;
+    text-align:right; font-weight:600;
   }
-  .sentence{ font-size:16px; line-height:2.4; }
-  .blank{
-    display:inline-block; width:118px; margin:0 3px;
-    border:0; border-bottom:2px solid var(--line); background:transparent;
-    color:var(--accent); font-family:'JetBrains Mono',monospace;
-    font-size:17px; font-weight:700; text-align:center; outline:none;
-    font-variant-numeric:tabular-nums; padding:2px 4px;
-    transition:border-color .14s;
+  .fld:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+  .fld::placeholder{ color:#C7CBD1; font-weight:400; }
+  .unit{
+    position:absolute; right:13px; font-size:12.5px; color:var(--dim); pointer-events:none; font-weight:500;
   }
-  .blank:focus{ border-bottom-color:var(--accent); }
-  .blank::placeholder{ color:#C3CCD6; font-weight:400; }
-  .blank.wide{ width:150px; }
+
+  .seg{ display:flex; gap:6px; }
+  .seg button{
+    flex:1; padding:10px 6px; border-radius:10px; cursor:pointer; min-height:44px;
+    border:1px solid var(--line); background:#fff; color:var(--dim);
+    font-size:13px; font-weight:500; transition:all .13s;
+  }
+  .seg button.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
 
   .out{
-    margin-top:15px; padding:14px 16px; border-radius:11px;
-    background:var(--soft); border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:linear-gradient(165deg,#1F2937,#111827); color:#fff;
+    border-radius:16px; padding:19px 17px; margin-bottom:12px;
   }
-  .out .v{ font-family:'JetBrains Mono',monospace; font-size:23px; font-weight:700; letter-spacing:-.01em; }
-  .out .s{ font-size:12px; color:var(--dim); margin-top:3px; }
-  .out.empty .v{ color:#B6C0CA; font-weight:400; font-size:17px; }
+  .out .cap{ font-size:11.5px; opacity:.62; letter-spacing:.04em; }
+  .out .big{
+    font-family:'JetBrains Mono',monospace; font-size:31px; font-weight:700;
+    line-height:1.15; letter-spacing:-.02em; margin:5px 0 3px;
+  }
+  .out .sub2{ font-size:12.5px; opacity:.78; }
+  .kv{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    padding:9px 0; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px;
+  }
+  .kv:last-child{ border-bottom:0; }
+  .kv .v{ font-family:'JetBrains Mono',monospace; font-weight:700; }
 
-  .copyBtn{
-    border:1px solid var(--line); background:#fff; color:var(--dim);
-    border-radius:8px; font-size:12px; padding:8px 12px; cursor:pointer; flex:none;
-    transition:all .12s;
+  .row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:11px 12px; border:1px solid var(--line); border-radius:11px; margin-bottom:7px;
   }
-  .copyBtn:hover{ border-color:var(--accent); color:var(--accent); }
-  .copyBtn:active{ transform:scale(.96); }
+  .row.hot{ border-color:var(--accent); background:var(--soft); }
+  .row .n{ font-size:13.5px; font-weight:600; }
+  .row .p{ font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; }
+  .row .m{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--dim); }
+
+  .alert{
+    background:var(--warnBg); border:1px solid var(--warnLine); border-radius:14px;
+    padding:16px; color:var(--warn); font-size:13.5px; line-height:1.8;
+  }
+  .alert b{ font-size:19px; font-family:'JetBrains Mono',monospace; }
+
+  .btn{
+    width:100%; border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:12px; font-size:14px; font-weight:600; padding:14px; cursor:pointer; min-height:50px;
+    box-shadow:0 2px 0 rgba(31,41,55,.05);
+  }
+  .btn:active{ transform:translateY(2px); box-shadow:none; }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 3px 0 #1D4ED8; }
+  .btn.p:active{ box-shadow:0 1px 0 #1D4ED8; }
+
+  /* 하단 탭 */
+  #tabs{
+    position:fixed; left:0; right:0; bottom:0; z-index:50;
+    background:rgba(255,255,255,.94); backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    display:flex; gap:6px; max-width:520px; margin:0 auto;
+  }
+  #tabs button{
+    flex:1; border:0; background:transparent; cursor:pointer; border-radius:12px;
+    padding:8px 2px; display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--dim); font-size:10.5px; font-weight:600; min-height:56px; transition:all .14s;
+  }
+  #tabs button .ic{ font-size:20px; line-height:1; }
+  #tabs button.on{ background:var(--soft); color:var(--accent); }
 
   #toast{
-    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
-    background:var(--ink); color:#fff; border-radius:9px;
-    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+    position:fixed; left:50%; bottom:96px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:11px;
+    padding:11px 17px; font-size:13.5px; z-index:70;
+    pointer-events:none; transition:opacity .2s, transform .2s;
   }
   #toast.show{ opacity:1; transform:translate(-50%,0); }
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+  /* 이미지 캡처 전용 카드 : 화면 폭과 무관하게 항상 같은 비율로 찍히도록 고정 폭으로 따로 그린다 */
+  #shareStage{ position:fixed; left:-9999px; top:0; z-index:-1; }
+  .shareCard{
+    width:380px; background:#FFFFFF; padding:26px 24px 22px;
+    font-family:'Pretendard',system-ui,sans-serif; color:#1F2937;
+  }
+  .shareCard .brand{ display:flex; align-items:center; gap:7px; margin-bottom:18px; }
+  .shareCard .brand .dot{ width:9px; height:9px; border-radius:999px; background:#2563EB; }
+  .shareCard .brand .nm{ font-size:12.5px; font-weight:700; color:#6B7280; letter-spacing:.02em; }
+  .shareCard .cap{ font-size:12px; color:#9CA3AF; margin:0 0 6px; }
+  .shareCard .big{
+    font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700;
+    color:#111827; line-height:1.2; letter-spacing:-.02em; margin:0 0 4px;
+  }
+  .shareCard .sub2{ font-size:13px; color:#6B7280; margin:0 0 18px; }
+  .shareCard .kvBox{ border-top:1px solid #E8E5E0; padding-top:4px; }
+  .shareCard .kv{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    padding:9px 0; border-bottom:1px solid #F0EEE9; font-size:13px; color:#374151;
+  }
+  .shareCard .kv:last-child{ border-bottom:0; }
+  .shareCard .kv .v{ font-family:'JetBrains Mono',monospace; font-weight:700; }
+  .shareCard .foot{
+    margin-top:18px; padding-top:14px; border-top:1px dashed #E8E5E0;
+    font-size:10.5px; color:#B0B7C0; display:flex; justify-content:space-between;
+  }
+  .shareCard .alertBox{
+    background:#FFF7ED; border:1px solid #FED7AA; border-radius:12px;
+    padding:14px 15px; margin-bottom:16px; font-size:13px; color:#C2410C; line-height:1.7;
+  }
+  .shareCard .alertBox b{ font-size:17px; font-family:'JetBrains Mono',monospace; }
+  .shareCard .rowMini{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:9px 11px; border:1px solid #E8E5E0; border-radius:10px; margin-bottom:6px; font-size:12.5px;
+  }
+  .shareCard .rowMini.hot{ border-color:#2563EB; background:#EFF4FE; }
 </style>
 </head>
 
 <body>
-<div class="mx-auto max-w-3xl px-4 py-7 sm:py-10">
+<div id="app">
 
-  <header class="mb-6">
-    <h1 class="text-[19px] font-semibold tracking-tight">퍼센트 · 마진 계산기</h1>
-    <p class="mt-1 text-[13px]" style="color:var(--dim)">공식을 몰라도 빈칸만 채우면 됩니다</p>
+  <header style="padding:4px 2px 14px">
+    <p style="margin:0; font-size:19px; font-weight:700; letter-spacing:-.01em">
+      💰 스마트 프라이싱 <span style="color:var(--dim); font-weight:500">&amp; 쇼핑 정산 엔진</span>
+    </p>
+    <p style="margin:4px 0 0; font-size:12.5px; color:var(--dim); line-height:1.6">
+      판매가 역산부터 할인 체감가, 가격 제안, 세금 분리까지 한 번에
+    </p>
   </header>
 
-  <div class="grid gap-4">
-
-    <!-- 1. 비율 -->
+  <!-- 1. 순수익 역산 -->
+  <section data-tab="net">
     <div class="card">
-      <span class="tag">비율 계산</span>
-      <p class="sentence" style="margin:0">
-        <input class="blank" id="p1a" inputmode="decimal" placeholder="50,000"> 의
-        <input class="blank" id="p1b" inputmode="decimal" placeholder="15" style="width:78px"> %는 얼마일까?
-      </p>
-      <div class="out empty" id="out1">
-        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub1"></div></div>
-        <button class="copyBtn" data-copy="1">결과 복사</button>
+      <p class="h">🎯 내 통장 순수익 역산기</p>
+      <p class="sub">받고 싶은 순수익을 넣으면 등록할 판매가를 거꾸로 계산합니다</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="lab" for="n_net">원하는 내 통장 순수익</label>
+        <div class="inWrap"><input class="fld" id="n_net" inputmode="numeric" value="10,000"><span class="unit">원</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_cost">제품 사입 원가</label>
+        <div class="inWrap"><input class="fld" id="n_cost" inputmode="numeric" value="12,000"><span class="unit">원</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_fee">플랫폼 수수료율</label>
+        <div class="inWrap"><input class="fld" id="n_fee" inputmode="decimal" value="12"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_ship">배송비 (내가 부담)</label>
+        <div class="inWrap"><input class="fld" id="n_ship" inputmode="numeric" value="3,000"><span class="unit">원</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_ad">광고비 (매출 대비)</label>
+        <div class="inWrap"><input class="fld" id="n_ad" inputmode="decimal" value="10"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab">부가세 반영</label>
+        <div class="seg" id="n_vatSeg">
+          <button data-vat="1" class="on">일반과세 (10%)</button>
+          <button data-vat="0">면세·간이 제외</button>
+        </div>
       </div>
     </div>
 
-    <!-- 2. 증감률 -->
+    <div class="out" id="n_out"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="net">텍스트 복사</button>
+      <button class="btn p" data-shot="net">📸 이미지 저장</button>
+    </div>
+  </section>
+
+  <!-- 2. 중복 할인 -->
+  <section data-tab="shop" style="display:none">
     <div class="card">
-      <span class="tag">증감률 계산</span>
-      <p class="sentence" style="margin:0">
-        <input class="blank" id="p2a" inputmode="decimal" placeholder="120,000"> 에서
-        <input class="blank" id="p2b" inputmode="decimal" placeholder="150,000"> 로 변하면 몇 % 증감한 것일까?
-      </p>
-      <div class="out empty" id="out2">
-        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub2"></div></div>
-        <button class="copyBtn" data-copy="2">결과 복사</button>
+      <p class="h">🛒 중복 할인 체감 단가</p>
+      <p class="sub">정가 → 기본할인 → 쿠폰 → 카드할인 → 포인트 순으로 계산합니다</p>
+    </div>
+
+    <div class="card">
+      <div style="display:grid; grid-template-columns:1fr 96px; gap:9px">
+        <div class="field" style="margin:0">
+          <label class="lab" for="s_list">정가 (1개)</label>
+          <div class="inWrap"><input class="fld" id="s_list" inputmode="numeric" value="50,000"><span class="unit">원</span></div>
+        </div>
+        <div class="field" style="margin:0">
+          <label class="lab" for="s_qty">수량</label>
+          <div class="inWrap"><input class="fld" id="s_qty" inputmode="numeric" value="2" style="padding-right:32px"><span class="unit">개</span></div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:11px">
+        <label class="lab" for="s_base">기본 할인율</label>
+        <div class="inWrap"><input class="fld" id="s_base" inputmode="decimal" value="20"><span class="unit">%</span></div>
+      </div>
+
+      <div class="field">
+        <label class="lab">장바구니 쿠폰</label>
+        <div class="seg" id="s_coupSeg" style="margin-bottom:8px">
+          <button data-coup="won" class="on">원 단위</button>
+          <button data-coup="pct">% 단위</button>
+        </div>
+        <div class="inWrap"><input class="fld" id="s_coup" inputmode="numeric" value="5,000"><span class="unit" id="s_coupUnit">원</span></div>
+      </div>
+
+      <div class="field">
+        <label class="lab" for="s_card">카드 청구할인</label>
+        <div class="inWrap"><input class="fld" id="s_card" inputmode="decimal" value="7"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="s_point">포인트 적립률</label>
+        <div class="inWrap"><input class="fld" id="s_point" inputmode="decimal" value="3"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="s_ship">배송비</label>
+        <div class="inWrap"><input class="fld" id="s_ship" inputmode="numeric" value="3,000"><span class="unit">원</span></div>
       </div>
     </div>
 
-    <!-- 3. 할인 -->
+    <div class="out" id="s_out"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="shop">텍스트 복사</button>
+      <button class="btn p" data-shot="shop">📸 이미지 저장</button>
+    </div>
+  </section>
+
+  <!-- 3. 900원 마감 -->
+  <section data-tab="price" style="display:none">
     <div class="card">
-      <span class="tag">할인율 계산</span>
-      <p class="sentence" style="margin:0">
-        원가 <input class="blank wide" id="p3a" inputmode="decimal" placeholder="89,000"> 원을
-        <input class="blank" id="p3b" inputmode="decimal" placeholder="30" style="width:78px"> % 할인하면 얼마일까?
-      </p>
-      <div class="out empty" id="out3">
-        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub3"></div></div>
-        <button class="copyBtn" data-copy="3">결과 복사</button>
+      <p class="h">🏷️ 목표 마진 900원 마감 제안</p>
+      <p class="sub">목표 마진을 채우는 최소가를 구한 뒤 끝자리를 다듬어 제안합니다</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="lab" for="p_cost">사입 원가</label>
+        <div class="inWrap"><input class="fld" id="p_cost" inputmode="numeric" value="12,000"><span class="unit">원</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="p_margin">목표 마진율 (판매가 대비)</label>
+        <div class="inWrap"><input class="fld" id="p_margin" inputmode="decimal" value="35"><span class="unit">%</span></div>
       </div>
     </div>
 
-    <!-- 4. 마진 -->
+    <div class="out" id="p_out"></div>
+    <div class="card" id="p_list" style="padding:12px"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="price">텍스트 복사</button>
+      <button class="btn p" data-shot="price">📸 이미지 저장</button>
+    </div>
+  </section>
+
+  <!-- 4. 세금 통장 -->
+  <section data-tab="tax" style="display:none">
     <div class="card">
-      <span class="tag">마진율 계산</span>
-      <p class="sentence" style="margin:0">
-        원가 <input class="blank wide" id="p4a" inputmode="decimal" placeholder="12,000"> 원짜리를
-        <input class="blank wide" id="p4b" inputmode="decimal" placeholder="20,000"> 원에 팔면 마진율은?
-      </p>
-      <div class="out empty" id="out4">
-        <div><div class="v">= 숫자를 입력해 주세요</div><div class="s" id="sub4"></div></div>
-        <button class="copyBtn" data-copy="4">결과 복사</button>
+      <p class="h">🛡️ 세금 방어 통장 분리기</p>
+      <p class="sub">오늘 들어온 돈에서 미리 떼어둘 금액을 알려줍니다</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="lab" for="t_in">오늘 총 입금 (매출)</label>
+        <div class="inWrap"><input class="fld" id="t_in" inputmode="numeric" value="1,000,000"><span class="unit">원</span></div>
+      </div>
+      <div class="field">
+        <label class="lab">과세 유형</label>
+        <div class="seg" id="t_typeSeg">
+          <button data-type="general" class="on">일반과세자</button>
+          <button data-type="simple">간이과세자</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lab" for="t_inc">종합소득세 적립률</label>
+        <div class="inWrap"><input class="fld" id="t_inc" inputmode="decimal" value="4"><span class="unit">%</span></div>
       </div>
     </div>
-  </div>
 
-  <p class="mt-5 text-[11.5px] leading-relaxed" style="color:var(--dim)">
-    마진율은 판매가 대비 이익 비율입니다. 원가 대비로 보는 이익률(마크업)도 함께 표시합니다.
-  </p>
+    <div class="alert" id="t_alert" style="margin-bottom:12px"></div>
+    <div class="out" id="t_out"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="tax">텍스트 복사</button>
+      <button class="btn p" data-shot="tax">📸 이미지 저장</button>
+    </div>
+  </section>
 </div>
 
+<nav id="tabs">
+  <button data-go="net" class="on"><span class="ic">🎯</span>순수익 역산</button>
+  <button data-go="shop"><span class="ic">🛒</span>할인 계산</button>
+  <button data-go="price"><span class="ic">🏷️</span>가격 제안</button>
+  <button data-go="tax"><span class="ic">🛡️</span>세금 분리</button>
+</nav>
+
+<div id="shareStage"><div id="shareCard" class="shareCard"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
   'use strict';
+  const $ = function (id) { return document.getElementById(id); };
 
-  const toastEl = document.getElementById('toast');
+  let tab = 'net', vatOn = true, coupType = 'won', taxType = 'general';
+  const texts = { net: '', shop: '', price: '', tax: '' };
+  const shots = { net: null, shop: null, price: null, tax: null };   // 캡처 카드용 데이터
+
+  const toastEl = $('toast');
   let tt = null;
   function toast(m) {
     toastEl.textContent = m; toastEl.classList.add('show');
-    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
   }
 
-  // 쉼표가 섞여 들어와도 읽고, 비어 있으면 null을 돌려준다
+  function won(v) { return Math.round(v).toLocaleString('ko-KR') + '원'; }
+  function pct(v) { return (Math.round(v * 10) / 10).toFixed(1) + '%'; }
   function num(id) {
-    const el = document.getElementById(id);
-    const t = el.value.replace(/[,\s]/g, '');
-    if (t === '' || t === '-' || isNaN(Number(t))) return null;
-    return Number(t);
-  }
-  function money(v) {
-    const r = Math.round(v * 100) / 100;
-    return r.toLocaleString('ko-KR', { maximumFractionDigits: 2 });
-  }
-  function pct(v) {
-    const r = Math.round(v * 100) / 100;
-    return r.toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '%';
+    const t = String($(id).value).replace(/[^0-9.]/g, '');
+    const v = parseFloat(t);
+    return isNaN(v) ? 0 : v;
   }
 
-  // 입력하는 동안 천 단위 쉼표를 붙이되 커서 위치를 지켜준다
+  // 입력 중 천 단위 쉼표를 붙이되 커서 자리를 지켜준다
   function comma(el) {
-    const raw = el.value;
+    if (el.dataset.raw === '1') return;      // % 입력칸은 쉼표를 붙이지 않는다
+    const before = el.value;
     const pos = el.selectionStart;
-    const digitsBefore = raw.slice(0, pos).replace(/[^0-9]/g, '').length;
+    const digitsBefore = before.slice(0, pos).replace(/[^0-9]/g, '').length;
 
-    const neg = raw.trim().charAt(0) === '-';
-    const parts = raw.replace(/[^0-9.]/g, '').split('.');
+    const parts = before.replace(/[^0-9.]/g, '').split('.');
     let ip = parts[0].replace(/^0+(?=\d)/, '');
-    const fp = parts.length > 1 ? '.' + parts.slice(1).join('').slice(0, 4) : '';
-    if (ip === '' && fp === '') { el.value = neg ? '-' : ''; return; }
+    const fp = parts.length > 1 ? '.' + parts.slice(1).join('').slice(0, 2) : '';
+    if (ip === '' && fp === '') { el.value = ''; return; }
 
-    const withComma = ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    el.value = (neg ? '-' : '') + withComma + fp;
+    el.value = ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + fp;
 
-    // 숫자 개수를 기준으로 커서를 원래 자리에 돌려놓는다
     let seen = 0, newPos = el.value.length;
     for (let i = 0; i < el.value.length; i++) {
       if (/[0-9]/.test(el.value[i])) seen++;
       if (seen === digitsBefore) { newPos = i + 1; break; }
     }
-    if (digitsBefore === 0) newPos = neg ? 1 : 0;
+    if (digitsBefore === 0) newPos = 0;
     try { el.setSelectionRange(newPos, newPos); } catch (e) {}
   }
 
-  const results = { 1: '', 2: '', 3: '', 4: '' };
+  /* ---------- 1. 순수익 역산 ---------- */
+  // 판매가 P에 수수료·광고비·부가세가 모두 연동되므로 P에 대해 정리해 한 번에 푼다
+  function calcNet() {
+    const net = num('n_net'), cost = num('n_cost'), fee = num('n_fee') / 100;
+    const ship = num('n_ship'), ad = num('n_ad') / 100;
+    const k = vatOn ? 1 / 11 : 0;              // 부가세 = (판매가 − 원가) ÷ 11
+    const denom = 1 - fee - ad - k;
+    const box = $('n_out');
 
-  function setOut(i, main, sub, color) {
-    const box = document.getElementById('out' + i);
-    const v = box.querySelector('.v');
-    const s = document.getElementById('sub' + i);
-    if (main === null) {
-      box.classList.add('empty');
-      v.textContent = '= 숫자를 입력해 주세요';
-      v.style.color = '';
-      s.textContent = '';
-      results[i] = '';
+    if (denom <= 0.02) {
+      box.innerHTML = '<p class="cap">수수료와 광고비 합이 너무 커서 계산할 수 없습니다</p>' +
+                      '<p class="sub2" style="margin-top:6px">두 값의 합을 낮춰 주세요</p>';
+      texts.net = '';
       return;
     }
-    box.classList.remove('empty');
-    v.textContent = main;
-    v.style.color = color || 'var(--ink)';
-    s.textContent = sub || '';
-    results[i] = main.replace(/^=\s*/, '') + (sub ? ' (' + sub + ')' : '');
+
+    const P = (net + cost + ship - cost * k) / denom;
+    const feeAmt = P * fee, adAmt = P * ad, vat = vatOn ? (P - cost) / 11 : 0;
+    const real = P - feeAmt - adAmt - vat - cost - ship;
+
+    box.innerHTML =
+      '<p class="cap">등록해야 할 최종 판매가</p>' +
+      '<p class="big">' + won(P) + '</p>' +
+      '<p class="sub2">순마진율 ' + pct(real / P * 100) + ' · 실수령 ' + won(real) + '</p>' +
+      '<div style="margin-top:14px">' +
+        kv('플랫폼 수수료 ' + pct(fee * 100), '−' + won(feeAmt)) +
+        kv('광고비 ' + pct(ad * 100), '−' + won(adAmt)) +
+        (vatOn ? kv('부가세 (매출−매입)÷11', '−' + won(vat)) : '') +
+        kv('사입 원가', '−' + won(cost)) +
+        kv('배송비', '−' + won(ship)) +
+        kv('<b>내 통장에 남는 돈</b>', '<b style="color:#7DD3A0">' + won(real) + '</b>') +
+      '</div>';
+
+    texts.net = '🎯 판매가 역산\n' +
+      '판매가 ' + won(P) + ' (순마진율 ' + pct(real / P * 100) + ')\n' +
+      '− 수수료 ' + won(feeAmt) + ' / 광고 ' + won(adAmt) +
+      (vatOn ? ' / 부가세 ' + won(vat) : '') + '\n' +
+      '− 원가 ' + won(cost) + ' / 배송 ' + won(ship) + '\n' +
+      '= 내 통장 ' + won(real);
+
+    shots.net = {
+      title: '🎯 내 통장 순수익 역산기',
+      cap: '등록해야 할 최종 판매가',
+      big: won(P),
+      sub: '순마진율 ' + pct(real / P * 100) + ' · 실수령 ' + won(real),
+      rows: [
+        ['플랫폼 수수료 ' + pct(fee * 100), '−' + won(feeAmt)],
+        ['광고비 ' + pct(ad * 100), '−' + won(adAmt)]
+      ].concat(vatOn ? [['부가세 (매출−매입)÷11', '−' + won(vat)]] : [])
+       .concat([['사입 원가', '−' + won(cost)], ['배송비', '−' + won(ship)],
+                ['내 통장에 남는 돈', won(real)]])
+    };
+  }
+  function kv(k, v) { return '<div class="kv"><span>' + k + '</span><span class="v">' + v + '</span></div>'; }
+
+  /* ---------- 2. 중복 할인 ---------- */
+  function calcShop() {
+    const list = num('s_list'), qty = Math.max(1, num('s_qty'));
+    const base = num('s_base'), coup = num('s_coup');
+    const card = num('s_card'), point = num('s_point'), ship = num('s_ship');
+
+    const unit = list * (1 - base / 100);
+    let sum = unit * qty;
+    const baseOff = list * qty - sum;
+
+    const coupOff = coupType === 'won' ? Math.min(coup, sum) : sum * coup / 100;
+    sum -= coupOff;
+
+    const beforeCard = sum + ship;
+    const cardOff = beforeCard * card / 100;
+    const pay = beforeCard - cardOff;
+    const pt = pay * point / 100;
+    const real = pay - pt;
+
+    const listTotal = list * qty;
+    const rate = listTotal ? (1 - real / listTotal) * 100 : 0;
+
+    $('s_out').innerHTML =
+      '<p class="cap">실제 결제 금액</p>' +
+      '<p class="big">' + won(pay) + '</p>' +
+      '<p class="sub2">포인트 차감 후 체감 ' + won(real) + ' · 1개당 ' + won(real / qty) + '</p>' +
+      '<div style="margin-top:14px">' +
+        kv('정가 합계 (' + qty + '개)', won(listTotal)) +
+        kv('기본 할인 ' + pct(base), '−' + won(baseOff)) +
+        kv('장바구니 쿠폰', '−' + won(coupOff)) +
+        kv('배송비', '+' + won(ship)) +
+        kv('카드 청구할인 ' + pct(card), '−' + won(cardOff)) +
+        kv('포인트 적립 ' + pct(point), '−' + won(pt)) +
+        kv('<b>총 할인율</b>', '<b style="color:#7DD3A0">' + pct(rate) + '</b>') +
+      '</div>';
+
+    texts.shop = '🛒 할인 계산\n' +
+      '정가 ' + won(listTotal) + ' (' + qty + '개)\n' +
+      '실제 결제 ' + won(pay) + '\n' +
+      '포인트 차감 후 체감 ' + won(real) + ' (1개당 ' + won(real / qty) + ')\n' +
+      '총 할인율 ' + pct(rate);
+
+    shots.shop = {
+      title: '🛒 중복 할인 체감 단가',
+      cap: '실제 결제 금액',
+      big: won(pay),
+      sub: '체감 ' + won(real) + ' · 1개당 ' + won(real / qty),
+      rows: [
+        ['정가 합계 (' + qty + '개)', won(listTotal)],
+        ['기본 할인 ' + pct(base), '−' + won(baseOff)],
+        ['장바구니 쿠폰', '−' + won(coupOff)],
+        ['배송비', '+' + won(ship)],
+        ['카드 청구할인 ' + pct(card), '−' + won(cardOff)],
+        ['포인트 적립 ' + pct(point), '−' + won(pt)],
+        ['총 할인율', pct(rate)]
+      ]
+    };
   }
 
-  function calc1() {
-    const a = num('p1a'), b = num('p1b');
-    if (a === null || b === null) return setOut(1, null);
-    const v = a * b / 100;
-    setOut(1, '= ' + money(v), a.toLocaleString('ko-KR') + ' 의 ' + b + '% · 나머지 ' + money(a - v));
+  /* ---------- 3. 900원 마감 ---------- */
+  function calcPrice() {
+    const cost = num('p_cost'), m = num('p_margin');
+    const box = $('p_out'), list = $('p_list');
+
+    if (m >= 100) {
+      box.innerHTML = '<p class="cap">마진율은 100% 미만이어야 합니다</p>';
+      list.innerHTML = '';
+      texts.price = '';
+      return;
+    }
+
+    const min = cost / (1 - m / 100);
+    // 900원 마감 : 바로 위 900원 자리를 찾는다
+    const up900 = function (v) {
+      const b = Math.floor(v / 1000) * 1000 + 900;
+      return b >= v ? b : b + 1000;
+    };
+    const cands = [
+      { nm: '최소 판매가', p: Math.ceil(min), note: '목표 마진 딱 맞춤' },
+      { nm: '900원 올림', p: up900(min), note: '가장 무난한 마케팅가' },
+      { nm: '900원 내림', p: up900(min) - 1000, note: '싸 보이지만 마진 감소' },
+      { nm: '500원 올림', p: Math.ceil(min / 500) * 500, note: '깔끔한 끝자리' },
+      { nm: '1,000원 올림', p: Math.ceil(min / 1000) * 1000, note: '가장 단순' }
+    ];
+
+    box.innerHTML =
+      '<p class="cap">목표 마진 ' + pct(m) + ' 최소 판매가</p>' +
+      '<p class="big">' + won(min) + '</p>' +
+      '<p class="sub2">원가 ' + won(cost) + ' · 개당 이익 ' + won(min - cost) + '</p>';
+
+    list.innerHTML = '';
+    cands.forEach(function (c, i) {
+      if (c.p <= cost) return;                 // 원가보다 낮으면 제안하지 않는다
+      const mg = (c.p - cost) / c.p * 100;
+      const el = document.createElement('div');
+      el.className = 'row' + (i === 1 ? ' hot' : '');
+      el.innerHTML =
+        '<span><span class="n">' + c.nm + '</span><br>' +
+        '<span class="m" style="font-family:Pretendard">' + c.note + '</span></span>' +
+        '<span style="text-align:right"><span class="p">' + won(c.p) + '</span><br>' +
+        '<span class="m">마진 ' + pct(mg) + ' · 이익 ' + won(c.p - cost) + '</span></span>';
+      list.appendChild(el);
+    });
+
+    texts.price = '🏷️ 가격 제안 (원가 ' + won(cost) + ' · 목표 마진 ' + pct(m) + ')\n' +
+      cands.filter(function (c) { return c.p > cost; }).map(function (c) {
+        return c.nm + ' ' + won(c.p) + ' (마진 ' + pct((c.p - cost) / c.p * 100) + ')';
+      }).join('\n');
+
+    shots.price = {
+      title: '🏷️ 목표 마진 900원 마감 제안',
+      cap: '목표 마진 ' + pct(m) + ' 최소 판매가',
+      big: won(min),
+      sub: '원가 ' + won(cost) + ' · 개당 이익 ' + won(min - cost),
+      picks: cands.filter(function (c) { return c.p > cost; }).map(function (c) {
+        return { nm: c.nm, note: c.note, p: won(c.p),
+                 m: pct((c.p - cost) / c.p * 100), hot: c.nm === '900원 올림' };
+      })
+    };
   }
 
-  function calc2() {
-    const a = num('p2a'), b = num('p2b');
-    if (a === null || b === null) return setOut(2, null);
-    if (a === 0) return setOut(2, '= 계산할 수 없음', '이전 값이 0이면 증감률을 낼 수 없습니다', 'var(--dim)');
-    const r = (b - a) / a * 100;
-    const up = r > 0, same = Math.abs(r) < 1e-9;
-    setOut(2,
-      (same ? '=  ' : (up ? '= ▲ ' : '= ▼ ')) + pct(Math.abs(r)) + (same ? ' 변화 없음' : (up ? ' 증가' : ' 감소')),
-      '차이 ' + money(b - a) + ' · ' + (b / a).toFixed(3) + '배',
-      same ? 'var(--dim)' : (up ? 'var(--up)' : 'var(--down)'));
+  /* ---------- 4. 세금 통장 ---------- */
+  function calcTax() {
+    const income = num('t_in');
+    const incRate = num('t_inc') / 100;
+
+    // 일반과세자는 매출의 1/11이 매출세액, 간이과세자는 업종 부가율을 반영해 약 2% 수준
+    const vat = taxType === 'general' ? income / 11 : income * 0.02;
+    const inc = income * incRate;
+    const total = vat + inc;
+    const keep = income - total;
+
+    $('t_alert').innerHTML =
+      '⚠️ 오늘 통장에 온 돈 중 <b>' + won(total) + '</b> 은 건드리지 말고<br>세금 통장으로 바로 이체하세요.';
+
+    $('t_out').innerHTML =
+      '<p class="cap">쓸 수 있는 돈</p>' +
+      '<p class="big">' + won(keep) + '</p>' +
+      '<p class="sub2">전체 입금 ' + won(income) + ' 중 ' + pct(income ? total / income * 100 : 0) + ' 를 떼어둔 금액</p>' +
+      '<div style="margin-top:14px">' +
+        kv('부가세 (' + (taxType === 'general' ? '일반 · 매출÷11' : '간이 · 약 2%') + ')', '−' + won(vat)) +
+        kv('종합소득세 적립 ' + pct(incRate * 100), '−' + won(inc)) +
+        kv('<b>세금 통장으로</b>', '<b style="color:#FBBF7A">' + won(total) + '</b>') +
+      '</div>';
+
+    texts.tax = '🛡️ 세금 방어\n' +
+      '오늘 입금 ' + won(income) + ' (' + (taxType === 'general' ? '일반과세' : '간이과세') + ')\n' +
+      '부가세 ' + won(vat) + ' + 소득세 ' + won(inc) + '\n' +
+      '→ 세금 통장으로 ' + won(total) + '\n' +
+      '쓸 수 있는 돈 ' + won(keep);
+
+    shots.tax = {
+      title: '🛡️ 세금 방어 통장 분리기',
+      alert: '오늘 통장에 온 돈 중 <b>' + won(total) + '</b> 은 건드리지 말고<br>세금 통장으로 바로 이체하세요.',
+      cap: '쓸 수 있는 돈',
+      big: won(keep),
+      sub: '전체 입금 ' + won(income) + ' 중 ' + pct(income ? total / income * 100 : 0) + ' 를 떼어둔 금액',
+      rows: [
+        ['부가세 (' + (taxType === 'general' ? '일반 · 매출÷11' : '간이 · 약 2%') + ')', '−' + won(vat)],
+        ['종합소득세 적립 ' + pct(incRate * 100), '−' + won(inc)],
+        ['세금 통장으로', won(total)]
+      ]
+    };
   }
 
-  function calc3() {
-    const a = num('p3a'), b = num('p3b');
-    if (a === null || b === null) return setOut(3, null);
-    const off = a * b / 100;
-    setOut(3, '= 할인가 ' + money(a - off) + '원',
-      '할인된 금액 ' + money(off) + '원 · 정가의 ' + pct(100 - b));
+  /* ---------- 갱신 ---------- */
+  function render() {
+    try {
+      if (tab === 'net') calcNet();
+      else if (tab === 'shop') calcShop();
+      else if (tab === 'price') calcPrice();
+      else calcTax();
+    } catch (e) { /* 입력 도중의 일시적인 값은 무시한다 */ }
   }
 
-  function calc4() {
-    const c = num('p4a'), s = num('p4b');
-    if (c === null || s === null) return setOut(4, null);
-    if (s === 0) return setOut(4, '= 계산할 수 없음', '판매가가 0이면 마진율을 낼 수 없습니다', 'var(--dim)');
-    const profit = s - c;
-    const margin = profit / s * 100;          // 판매가 대비
-    const markup = c === 0 ? null : profit / c * 100;   // 원가 대비
-    setOut(4, '= 마진율 ' + pct(margin),
-      '순수익 ' + money(profit) + '원' + (markup === null ? '' : ' · 원가 대비 ' + pct(markup)),
-      profit >= 0 ? 'var(--up)' : 'var(--down)');
+  // 모든 입력칸에 쉼표 처리와 실시간 계산을 건다
+  document.querySelectorAll('.fld').forEach(function (el) {
+    if (el.getAttribute('inputmode') === 'decimal' || el.id === 's_qty') el.dataset.raw = '1';
+    el.addEventListener('input', function () { comma(el); render(); });
+    el.addEventListener('focus', function () { setTimeout(function () { el.select(); }, 10); });
+  });
+
+  document.querySelectorAll('#n_vatSeg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      vatOn = b.dataset.vat === '1';
+      document.querySelectorAll('#n_vatSeg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      render();
+    });
+  });
+  document.querySelectorAll('#s_coupSeg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      coupType = b.dataset.coup;
+      document.querySelectorAll('#s_coupSeg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $('s_coupUnit').textContent = coupType === 'won' ? '원' : '%';
+      $('s_coup').dataset.raw = coupType === 'won' ? '' : '1';
+      render();
+    });
+  });
+  document.querySelectorAll('#t_typeSeg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      taxType = b.dataset.type;
+      document.querySelectorAll('#t_typeSeg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      render();
+    });
+  });
+
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      tab = b.dataset.go;
+      document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.querySelectorAll('section[data-tab]').forEach(function (s) {
+        s.style.display = s.dataset.tab === tab ? 'block' : 'none';
+      });
+      window.scrollTo(0, 0);
+      render();
+    });
+  });
+
+  /* ---------- 이미지 캡처 ---------- */
+  // 화면 폭이 얼마든 항상 같은 결과가 나오도록, 화면 밖 고정 폭(380px) 카드에 다시 그려서 찍는다
+  function nowLabel() {
+    const d = new Date();
+    const z = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' +
+           z(d.getHours()) + ':' + z(d.getMinutes()) + ' 기준';
   }
 
-  function all() { calc1(); calc2(); calc3(); calc4(); }
+  function buildShareHTML(data) {
+    let html = '<div class="brand"><span class="dot"></span><span class="nm">스마트 프라이싱 &amp; 쇼핑 정산 엔진</span></div>';
+    html += '<p class="cap" style="font-size:13px; font-weight:600; color:#374151; margin-bottom:14px">' + data.title + '</p>';
 
-  ['p1a','p1b','p2a','p2b','p3a','p3b','p4a','p4b'].forEach(function (id) {
-    const el = document.getElementById(id);
-    el.addEventListener('input', function () { comma(el); all(); });
+    if (data.alert) html += '<div class="alertBox">⚠️ ' + data.alert + '</div>';
+
+    html += '<p class="cap">' + data.cap + '</p>';
+    html += '<p class="big">' + data.big + '</p>';
+    html += '<p class="sub2">' + data.sub + '</p>';
+
+    if (data.rows) {
+      html += '<div class="kvBox">';
+      data.rows.forEach(function (r) {
+        html += '<div class="kv"><span>' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    if (data.picks) {
+      html += '<div style="margin-top:6px">';
+      data.picks.forEach(function (p) {
+        html += '<div class="rowMini' + (p.hot ? ' hot' : '') + '">' +
+          '<span><b>' + p.nm + '</b><br><span style="color:#9CA3AF; font-size:11px">' + p.note + '</span></span>' +
+          '<span style="text-align:right; font-family:\'JetBrains Mono\',monospace">' +
+          '<b>' + p.p + '</b><br><span style="color:#9CA3AF; font-size:11px; font-weight:400">마진 ' + p.m + '</span></span>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="foot"><span>' + nowLabel() + '</span><span>계산기 · 실제와 차이가 있을 수 있음</span></div>';
+    return html;
+  }
+
+  let shotting = false;
+  async function doShot(key) {
+    if (shotting) return;
+    const data = shots[key];
+    if (!data) { toast('먼저 값을 입력해 주세요'); return; }
+    if (typeof html2canvas !== 'function') { toast('이미지 기능을 불러오지 못했습니다'); return; }
+
+    shotting = true;
+    const btn = document.querySelector('[data-shot="' + key + '"]');
+    const origText = btn ? btn.textContent : '';
+    if (btn) { btn.textContent = '이미지 만드는 중…'; btn.disabled = true; }
+
+    try {
+      const stage = $('shareCard');
+      stage.innerHTML = buildShareHTML(data);
+
+      // 폰트 로딩을 한 박자 기다린 뒤 찍어야 글자가 깨지지 않는다
+      if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+      await new Promise(function (r) { requestAnimationFrame(function () { requestAnimationFrame(r); }); });
+
+      const canvas = await html2canvas(stage, {
+        backgroundColor: '#FFFFFF',
+        scale: Math.min(3, (window.devicePixelRatio || 1) * 2),   // 화면 배율과 무관하게 선명하게
+        useCORS: true,
+        logging: false
+      });
+
+      canvas.toBlob(async function (blob) {
+        if (!blob) { toast('이미지 생성에 실패했습니다'); shotting = false; if (btn) { btn.textContent = origText; btn.disabled = false; } return; }
+
+        const file = new File([blob], key + '_result.png', { type: 'image/png' });
+
+        // 모바일에서 공유 시트를 지원하면 그쪽을 우선 쓰고, 아니면 다운로드한다
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: data.title });
+            toast('공유 시트를 열었습니다');
+          } catch (e) {
+            if (e && e.name !== 'AbortError') downloadBlob(blob, key);
+          }
+        } else {
+          downloadBlob(blob, key);
+        }
+        shotting = false;
+        if (btn) { btn.textContent = origText; btn.disabled = false; }
+      }, 'image/png');
+    } catch (e) {
+      toast('이미지 생성 중 문제가 발생했습니다');
+      shotting = false;
+      if (btn) { btn.textContent = origText; btn.disabled = false; }
+    }
+  }
+
+  function downloadBlob(blob, key) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    const z = function (x) { return String(x).padStart(2, '0'); };
+    a.href = url;
+    a.download = key + '_' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' + z(d.getHours()) + z(d.getMinutes()) + '.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+    toast('이미지가 저장되었습니다!');
+  }
+
+  document.querySelectorAll('[data-shot]').forEach(function (b) {
+    b.addEventListener('click', function () { doShot(b.dataset.shot); });
   });
 
   document.querySelectorAll('[data-copy]').forEach(function (b) {
     b.addEventListener('click', async function () {
-      const i = b.dataset.copy;
-      if (!results[i]) { toast('먼저 숫자를 입력해 주세요'); return; }
-      const text = results[i];
+      const t = texts[b.dataset.copy];
+      if (!t) { toast('계산 결과가 없습니다'); return; }
       try {
-        if (navigator.clipboard) await navigator.clipboard.writeText(text);
+        if (navigator.clipboard) await navigator.clipboard.writeText(t);
         else throw new Error('no clipboard');
         toast('복사되었습니다!');
       } catch (e) {
         const ta = document.createElement('textarea');
-        ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+        ta.value = t; ta.style.position = 'fixed'; ta.style.top = '-1000px';
         document.body.appendChild(ta); ta.select();
         let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
         document.body.removeChild(ta);
@@ -283,7 +800,11 @@
     });
   });
 
-  all();
+  /* ---------- 시작 ---------- */
+  ['net', 'shop', 'price', 'tax'].forEach(function (t) {
+    tab = t; render();
+  });
+  tab = 'net';
 })();
 </script>
 </body>
