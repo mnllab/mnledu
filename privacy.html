@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>개인정보처리방침 · TOOLKIT</title>
+<meta name="description" content="TOOLKIT의 개인정보 처리 방침입니다. 도구 입력값은 서버로 전송되지 않으며, 광고 쿠키 사용과 거부 방법을 안내합니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://mnledu.com/privacy.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/privacy.html" />
+<meta property="og:title" content="개인정보처리방침 · TOOLKIT" />
+<meta property="og:description" content="TOOLKIT의 개인정보 처리 방침입니다. 도구 입력값은 서버로 전송되지 않으며, 광고 쿠키 사용과 거부 방법을 안내합니다." />
+
+<meta name="theme-color" content="#f8fafc" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { fontFamily: {
+      sans: ['Pretendard Variable', 'Pretendard', 'system-ui', '-apple-system', 'sans-serif'],
+      mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+    } } }
+  };
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  ::selection { background-color: #e0e7ff; color: #1e1b4b; }
+  body { -webkit-tap-highlight-color: transparent; overflow-x: clip;
+         padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+  .prose-doc h2 { margin-top: 2.75rem; font-size: 1.0625rem; font-weight: 800;
+                  letter-spacing: -0.01em; color: #0f172a; word-break: keep-all; }
+  .prose-doc h3 { margin-top: 1.75rem; font-size: 0.9375rem; font-weight: 700;
+                  color: #1e293b; word-break: keep-all; }
+  .prose-doc p  { margin-top: 0.875rem; font-size: 0.875rem; line-height: 1.85;
+                  color: #475569; word-break: keep-all; }
+  .prose-doc ul { margin-top: 0.875rem; padding-left: 1.05rem; list-style: disc; }
+  .prose-doc li { margin-top: 0.5rem; font-size: 0.875rem; line-height: 1.8;
+                  color: #475569; word-break: keep-all; }
+  .prose-doc strong { font-weight: 600; color: #1e293b; }
+  .prose-doc a { color: #4f46e5; text-decoration: underline; text-underline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+</style>
+</head>
+
+<body class="bg-slate-50/70 font-sans text-slate-900 antialiased">
+
+  <header class="backdrop-blur-xl bg-white/80 border-b border-slate-200/70 sticky top-0 z-50">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8">
+      <div class="flex h-14 sm:h-16 items-center justify-between gap-3">
+        <a href="/" class="flex items-center gap-2.5 min-w-0 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 group">
+          <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-white shrink-0 group-hover:bg-indigo-600 transition-colors shadow-sm">
+            <i data-lucide="layers" class="h-4 w-4"></i>
+          </span>
+          <span class="font-extrabold tracking-tight text-slate-900 text-base sm:text-[17px] truncate font-mono">TOOLKIT</span>
+        </a>
+
+        <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-500 px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
+            <i data-lucide="heart" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">응원하기</span>
+          </a>
+          <a href="/"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+            <i data-lucide="home" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">HOME</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-4 sm:px-8 py-12 sm:py-16">
+
+    <nav aria-label="현재 위치" class="mb-6 flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-400">
+      <a href="/" class="hover:text-indigo-600 transition-colors">HOME</a>
+      <i data-lucide="chevron-right" class="h-3 w-3"></i>
+      <span class="text-slate-600">PRIVACY</span>
+    </nav>
+
+    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 break-keep">개인정보처리방침</h1>
+    <p class="mt-3 text-sm leading-relaxed text-slate-500 break-keep">TOOLKIT이 어떤 정보를 다루고 다루지 않는지, 광고 쿠키가 어떻게 쓰이는지 설명합니다.</p>
+
+    <div class="prose-doc mt-10 border-t border-slate-200/70 pt-8">
+
+      <h2>1. 기본 원칙</h2>
+      <p>
+        TOOLKIT의 모든 도구는 <strong>사용자의 브라우저 안에서만 동작</strong>합니다.
+        도구에 입력한 문서, 파일, 숫자, 문자열은 운영자의 서버로 전송되지 않으며,
+        어디에도 저장되거나 기록되지 않습니다. 페이지를 닫으면 처리 중이던 내용은 사라집니다.
+      </p>
+      <p>
+        운영자는 회원 가입 절차를 두고 있지 않으므로, 이름·연락처·주소 등
+        사용자를 식별할 수 있는 정보를 직접 수집하지 않습니다.
+      </p>
+
+      <h2>2. 브라우저에 저장되는 정보</h2>
+      <p>
+        사용자 편의를 위해 아래 정보가 사용자 기기의 브라우저 저장소에 보관됩니다.
+        운영자는 이 값을 열람할 수 없습니다.
+      </p>
+      <ul>
+        <li><strong>즐겨찾기 목록</strong> — 별표로 표시한 도구의 식별자. 로컬 저장소에 보관됩니다.</li>
+        <li><strong>일부 도구의 최근 설정값</strong> — 해당 도구를 다시 열었을 때 이전 설정을 유지하기 위한 값</li>
+      </ul>
+      <p>
+        브라우저의 인터넷 사용 기록 및 사이트 데이터를 삭제하면 위 정보도 함께 지워집니다.
+      </p>
+
+      <h2>3. 접속 기록</h2>
+      <p>
+        이 사이트는 GitHub Pages를 통해 제공됩니다. 웹사이트 제공 과정에서 호스팅 사업자가
+        접속 IP 주소, 브라우저 종류, 요청 시각 등의 기술적 기록을 일시적으로 남길 수 있으며,
+        이는 서비스 제공과 보안을 위한 것으로 운영자가 별도로 수집하거나 보관하지 않습니다.
+      </p>
+
+      <h2>4. 광고 및 쿠키</h2>
+      <p>
+        이 사이트는 Google AdSense를 포함한 제3자 광고 서비스를 이용하여 광고를 게재할 수 있습니다.
+      </p>
+      <ul>
+        <li>
+          Google을 포함한 제3자 공급업체는 쿠키를 사용하여, 사용자가 이 사이트나 다른 사이트를
+          방문한 기록을 바탕으로 광고를 게재합니다.
+        </li>
+        <li>
+          Google이 광고 쿠키를 사용함으로써 사용자에게 맞춤형 광고가 표시될 수 있습니다.
+        </li>
+        <li>
+          사용자는 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google 광고 설정</a>에서
+          맞춤 광고를 사용 중지할 수 있습니다.
+        </li>
+        <li>
+          제3자 공급업체의 맞춤 광고는
+          <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">aboutads.info</a>에서
+          일괄 거부할 수 있습니다.
+        </li>
+      </ul>
+      <p>
+        광고 쿠키는 광고 사업자가 자체적으로 운영하는 것으로, 운영자는 해당 쿠키에 담긴 정보에
+        접근할 수 없습니다. 도구에 입력한 내용은 광고 사업자에게 전달되지 않습니다.
+      </p>
+
+      <h3>쿠키 거부 방법</h3>
+      <p>
+        사용자는 브라우저 설정에서 쿠키 저장을 거부하거나 삭제할 수 있습니다.
+        쿠키를 거부해도 도구 이용에는 영향이 없으나, 즐겨찾기 기능이 동작하지 않을 수 있습니다.
+      </p>
+      <ul>
+        <li>크롬 : 설정 → 개인 정보 보호 및 보안 → 서드 파티 쿠키</li>
+        <li>사파리 : 환경설정 → 개인정보 보호 → 쿠키 및 웹 사이트 데이터</li>
+        <li>엣지 : 설정 → 쿠키 및 사이트 권한</li>
+      </ul>
+
+      <h2>5. 외부 링크</h2>
+      <p>
+        이 사이트에는 유튜브 등 외부 사이트로 연결되는 링크가 포함되어 있습니다.
+        링크를 통해 이동한 사이트의 개인정보 처리에 대해서는 해당 사이트의 방침이 적용되며,
+        운영자는 책임지지 않습니다.
+      </p>
+
+      <h2>6. 만 14세 미만 아동</h2>
+      <p>
+        이 사이트는 만 14세 미만 아동을 대상으로 하지 않으며, 아동의 개인정보를 의도적으로 수집하지 않습니다.
+      </p>
+
+      <h2>7. 이용자의 권리</h2>
+      <p>
+        운영자가 보유한 개인정보가 없으므로 별도의 열람·정정·삭제 요청 절차를 두고 있지 않습니다.
+        브라우저에 저장된 정보는 사용자가 언제든 직접 삭제할 수 있습니다.
+        개인정보 처리와 관련하여 문의하실 내용이 있으면 아래 주소로 연락해 주세요.
+      </p>
+
+      <h2>8. 문의처</h2>
+      <ul>
+        <li>운영자 : 김장길 (Janggil Kim)</li>
+        <li>메일 : <a href="mailto:contact@mnlbiz.com">contact@mnlbiz.com</a></li>
+      </ul>
+      <p>
+        개인정보 침해에 대한 신고나 상담이 필요한 경우 아래 기관에 문의하실 수 있습니다.
+      </p>
+      <ul>
+        <li>개인정보침해신고센터 (privacy.kisa.or.kr / 국번없이 118)</li>
+        <li>개인정보 분쟁조정위원회 (kopico.go.kr / 1833-6972)</li>
+      </ul>
+
+      <h2>9. 방침 변경</h2>
+      <p>
+        이 방침의 내용이 변경되는 경우 변경 사항을 이 페이지에 게시합니다.
+      </p>
+      <ul>
+        <li>공고일 : 2026년 8월 28일</li>
+        <li>시행일 : 2026년 8월 28일</li>
+      </ul>
+
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-200/70 bg-white/60">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8 py-8">
+      <nav aria-label="사이트 정보" class="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 sm:justify-start">
+        <a href="/about.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">소개</a>
+        <a href="/contact.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">문의하기</a>
+        <a href="/privacy.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">개인정보처리방침</a>
+        <a href="/terms.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">이용약관</a>
+        <a href="/#about" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">자주 묻는 질문</a>
+      </nav>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="font-mono text-[11px] font-bold tracking-widest text-slate-400 uppercase">TOOLKIT · Client-Side Utilities</p>
+        <p class="text-xs text-slate-500 font-medium text-center sm:text-right">모든 데이터 연산은 사용자의 브라우저 내에서 안전하게 처리됩니다.</p>
+      </div>
+
+      <div class="mt-6 pt-5 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="font-mono text-[11px] text-slate-400 tracking-wider">&copy; 2026 Janggil Kim. All rights reserved.</p>
+        <p class="text-[11px] text-slate-400 font-medium">무단 복제 및 재배포를 금지합니다</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>if (window.lucide) window.lucide.createIcons();</script>
+</body>
+</html>
