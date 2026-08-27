@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F4F5F7">
+<title>자부담금 최적화 계산기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root[data-theme="light"]{
+    --bg:#F4F5F7; --panel:#FFFFFF; --line:#E3E7EC; --ink:#26384B; --dim:#5F7488;
+    --accent:#2C6BA0; --soft:#EEF3F8; --gov:#2C6BA0; --cash:#2E7D5B; --kind:#7C5CBF;
+    --warn:#A34A3C; --head:#26384B; --headFg:#FFFFFF;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --panel:#161C24; --line:#232C38; --ink:#E8EDF3; --dim:#8A97A6;
+    --accent:#5AB0E8; --soft:#1C242E; --gov:#5AB0E8; --cash:#4ADE80; --kind:#A78BFA;
+    --warn:#E05A4C; --head:#0A0E14; --headFg:#E8EDF3;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:13px; }
+
+  .tab{
+    flex:1; padding:11px 6px; border-radius:9px; border:1px solid var(--line);
+    background:var(--panel); color:var(--dim); font-size:12.5px; cursor:pointer; transition:all .12s;
+  }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:var(--panel); }
+
+  .preset{
+    padding:10px 12px; border-radius:9px; border:1px solid var(--line);
+    background:var(--panel); color:var(--ink); font-size:12.5px; cursor:pointer;
+    text-align:left; transition:all .12s;
+  }
+  .preset:hover{ border-color:var(--accent); }
+  .preset.on{ border-color:var(--accent); background:var(--soft); }
+  .preset .r{ display:block; font-size:10.5px; color:var(--dim); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:9px; background:var(--panel);
+    padding:11px 12px; font-size:17px; color:var(--ink); outline:none;
+    font-family:'JetBrains Mono',monospace; text-align:right; font-variant-numeric:tabular-nums;
+  }
+  .fld:focus{ border-color:var(--accent); }
+  .lab{ display:block; font-size:11.5px; color:var(--dim); margin-bottom:5px; }
+  select.sel, .sel{
+    border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--ink);
+    padding:8px 10px; font-size:12.5px; cursor:pointer; outline:none;
+  }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height:4px;
+    border-radius:999px; background:var(--line); outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:999px;
+    background:var(--accent); border:3px solid var(--panel); cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,.25);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:999px; background:var(--accent);
+    border:3px solid var(--panel); cursor:pointer;
+  }
+
+  .bar{ display:flex; height:34px; border-radius:9px; overflow:hidden; border:1px solid var(--line); }
+  .bar div{
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; color:#fff;
+    transition:flex-basis .35s ease; white-space:nowrap; overflow:hidden;
+  }
+  .legend{ display:flex; flex-wrap:wrap; gap:14px; font-size:11.5px; color:var(--dim); margin-top:9px; }
+  .dot{ display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th,td{ padding:10px 12px; text-align:right; white-space:nowrap; }
+  th:first-child, td:first-child{ text-align:left; }
+  thead th{ background:var(--head); color:var(--headFg); font-weight:500; font-size:11.5px; }
+  tbody tr{ border-bottom:1px solid var(--line); }
+  tbody tr.total{ background:var(--soft); font-weight:700; }
+  .swatch{ display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:7px; }
+
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--ink);
+    border-radius:8px; font-size:12.5px; padding:9px 12px; cursor:pointer;
+  }
+  .btn:active{ background:var(--soft); }
+  .btn.p{ background:var(--ink); border-color:var(--ink); color:var(--panel); }
+
+  .kpi{ background:var(--soft); border:1px solid var(--line); border-radius:10px; padding:12px 13px; }
+  .kpi .k{ font-size:10.5px; color:var(--dim); }
+  .kpi .v{ font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; margin-top:3px; }
+
+  #warn{ display:none; font-size:12px; color:var(--warn); margin-top:10px; line-height:1.6; }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:var(--panel); border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-6xl px-4 py-6 sm:py-9">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">자부담금 최적화 계산기</h1>
+      <p class="mt-1 text-[12.5px]" style="color:var(--dim)">정부지원금·자부담 현금·현물을 역산해 예산안을 잡습니다</p>
+    </div>
+    <button class="btn" id="themeBtn">다크</button>
+  </header>
+
+  <!-- 모드 -->
+  <div style="display:flex; gap:7px; margin-bottom:12px">
+    <button class="tab on" data-mode="gov">정부지원금 최대 기준</button>
+    <button class="tab" data-mode="total">총 사업비 기준</button>
+    <button class="tab" data-mode="cash">보유 현금 기준</button>
+  </div>
+
+  <!-- 프리셋 -->
+  <div class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))" id="presets"></div>
+
+  <div class="grid gap-4 lg:grid-cols-[340px_1fr]">
+
+    <!-- 좌 : 입력 -->
+    <section class="panel" style="padding:16px">
+      <label class="lab" id="amtLab" for="amount">희망 정부지원금</label>
+      <input class="fld" id="amount" inputmode="numeric" value="100,000,000">
+
+      <div style="display:flex; gap:7px; margin-top:9px">
+        <select class="sel" id="unit" style="flex:1">
+          <option value="원">원 단위</option>
+          <option value="천원">천원 단위</option>
+          <option value="만원" selected>만원 단위</option>
+        </select>
+        <select class="sel" id="round" style="flex:1">
+          <option value="ceil" selected>올림</option>
+          <option value="round">반올림</option>
+          <option value="floor">버림</option>
+        </select>
+      </div>
+      <p class="text-[11px] mt-2" style="color:var(--dim)">
+        보수적으로 예산을 잡으려면 만원 단위 올림이 무난합니다
+      </p>
+
+      <div style="height:1px; background:var(--line); margin:15px 0"></div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between">
+        <span class="lab" style="margin:0">정부지원금 비율</span>
+        <span class="mono" id="gVal" style="font-size:14px; font-weight:700; color:var(--gov)">70%</span>
+      </div>
+      <input type="range" id="gRange" min="0" max="100" step="1" value="70" style="margin-top:8px">
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:15px">
+        <span class="lab" style="margin:0">자부담 현금 비율</span>
+        <span class="mono" id="cVal" style="font-size:14px; font-weight:700; color:var(--cash)">10%</span>
+      </div>
+      <input type="range" id="cRange" min="0" max="100" step="1" value="10" style="margin-top:8px">
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:15px">
+        <span class="lab" style="margin:0">자부담 현물 (자동)</span>
+        <span class="mono" id="kVal" style="font-size:14px; font-weight:700; color:var(--kind)">20%</span>
+      </div>
+
+      <label class="opt" style="display:flex; align-items:center; gap:8px; margin-top:14px; font-size:12.5px; cursor:pointer">
+        <input type="checkbox" id="selfBase" style="accent-color:var(--accent); width:15px; height:15px">
+        현금·현물 비율을 자부담금 대비로 입력
+      </label>
+      <p class="text-[11px] mt-1.5" style="color:var(--dim)">
+        공고문이 「자부담 중 현금 30% 이상」처럼 쓰여 있으면 켜세요. 끄면 총사업비 대비입니다.
+      </p>
+
+      <p id="warn"></p>
+    </section>
+
+    <!-- 우 : 결과 -->
+    <section>
+      <div class="panel" style="padding:16px">
+        <div class="grid gap-2.5 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+          <div class="kpi"><div class="k">총 사업비</div><div class="v" id="kT">—</div></div>
+          <div class="kpi"><div class="k">정부지원금</div><div class="v" id="kG" style="color:var(--gov)">—</div></div>
+          <div class="kpi"><div class="k">자부담 합계</div><div class="v" id="kS">—</div></div>
+          <div class="kpi"><div class="k">필요 현금</div><div class="v" id="kC" style="color:var(--cash)">—</div></div>
+        </div>
+
+        <div class="bar" id="bar">
+          <div id="bG" style="background:var(--gov); flex:0 0 70%">70%</div>
+          <div id="bC" style="background:var(--cash); flex:0 0 10%">10%</div>
+          <div id="bK" style="background:var(--kind); flex:0 0 20%">20%</div>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--gov)"></i>정부지원금</span>
+          <span><i class="dot" style="background:var(--cash)"></i>자부담 현금</span>
+          <span><i class="dot" style="background:var(--kind)"></i>자부담 현물</span>
+        </div>
+      </div>
+
+      <div class="panel mt-3" style="overflow:hidden">
+        <table>
+          <thead>
+            <tr><th>구분</th><th>금액</th><th>비율</th><th>비고</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel mt-3" style="padding:14px">
+        <div style="display:flex; flex-wrap:wrap; gap:7px">
+          <span class="text-[12px] font-medium" style="color:var(--dim); align-self:center; margin-right:4px">내보내기</span>
+          <button class="btn p" id="txtBtn">사업계획서용 텍스트</button>
+          <button class="btn" id="richBtn">엑셀·한글용 표</button>
+          <button class="btn" id="csvBtn">CSV 다운로드</button>
+        </div>
+        <p class="text-[11px] mt-2.5" style="color:var(--dim)">
+          CSV에는 쉼표 없는 순수 숫자가 들어가 수식에 바로 쓸 수 있습니다
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const UNIT = { '원': 1, '천원': 1000, '만원': 10000 };
+
+  const PRESETS = [
+    { id:'startup', nm:'초기·창업도약패키지', g:70, c:10, note:'자부담 30% 중 현금 10% 이상' },
+    { id:'rnd',     nm:'디딤돌 R&D',          g:75, c:20, note:'자부담 25% 중 현금 20% 이상' },
+    { id:'tips',    nm:'TIPS (팁스)',         g:80, c:10, note:'자부담 20%' },
+    { id:'custom',  nm:'직접 입력',           g:70, c:10, note:'비율을 직접 조절' }
+  ];
+
+  let mode = 'gov', preset = 'startup';
+  let last = null;
+
+  const $ = function (id) { return document.getElementById(id); };
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1700);
+  }
+
+  function won(v) { return Math.round(v).toLocaleString('ko-KR') + '원'; }
+  function pct(v) { return (Math.round(v * 100) / 100).toFixed(2) + '%'; }
+
+  function parseNum(s) {
+    const t = String(s).replace(/[^0-9]/g, '');
+    return t === '' ? null : Number(t);
+  }
+  function comma(el) {
+    const v = parseNum(el.value);
+    el.value = v === null ? '' : v.toLocaleString('ko-KR');
+  }
+
+  // 단위와 처리 방식에 맞춰 금액을 다듬는다
+  function q(v, unit, rule) {
+    const u = UNIT[unit];
+    const x = v / u;
+    const r = rule === 'floor' ? Math.floor(x) : rule === 'ceil' ? Math.ceil(x) : Math.round(x);
+    return r * u;
+  }
+
+  /* ---------- 계산 ---------- */
+  // 사용자가 넣은 값(앵커)은 그대로 두고, 현물이 잔액을 흡수해 합계가 항상 총사업비와 맞는다
+  function calc() {
+    const amount = parseNum($('amount').value);
+    const unit = $('unit').value, rule = $('round').value;
+    let g = parseInt($('gRange').value, 10);
+    let c = parseInt($('cRange').value, 10);
+
+    // 자부담 대비로 입력했으면 총사업비 대비로 환산한다
+    if ($('selfBase').checked) c = (100 - g) * c / 100;
+
+    const k = 100 - g - c;
+    const warn = $('warn');
+    warn.style.display = 'none';
+
+    if (amount === null || amount <= 0) return null;
+    if (g <= 0 && mode === 'gov') { show(warn, '정부지원금 비율이 0%면 지원금 기준으로 계산할 수 없습니다'); return null; }
+    if (c <= 0 && mode === 'cash') { show(warn, '현금 비율이 0%면 보유 현금 기준으로 계산할 수 없습니다'); return null; }
+    if (k < -0.0001) { show(warn, '정부지원금과 현금 비율의 합이 100%를 넘습니다. 비율을 조정해 주세요'); return null; }
+
+    let T, gov, cash;
+    if (mode === 'gov') {
+      gov = q(amount, unit, rule);
+      T = q(gov * 100 / g, unit, rule === 'floor' ? 'floor' : 'ceil');   // 지원금을 채우려면 총액은 올리는 쪽이 안전
+      cash = q(T * c / 100, unit, rule);
+    } else if (mode === 'total') {
+      T = q(amount, unit, rule);
+      gov = q(T * g / 100, unit, rule === 'ceil' ? 'floor' : rule);      // 지원금은 한도를 넘지 않게
+      cash = q(T * c / 100, unit, rule);
+    } else {
+      cash = q(amount, unit, rule);
+      T = q(cash * 100 / c, unit, 'floor');                              // 가진 현금으로 감당 가능한 최대
+      gov = q(T * g / 100, unit, 'floor');
+    }
+
+    let inkind = T - gov - cash;
+    if (inkind < 0) { gov += inkind; inkind = 0; }                       // 반올림으로 넘치면 지원금에서 뺀다
+    if (gov < 0) { gov = 0; }
+
+    if (k > 0.0001 && inkind === 0 && T > 0) {
+      show(warn, '현물 몫이 0으로 계산됐습니다. 단위를 작게 잡거나 비율을 확인해 주세요');
+    }
+
+    return { T: T, gov: gov, cash: cash, inkind: inkind, g: g, c: c, k: k, unit: unit, rule: rule };
+  }
+
+  function show(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+  /* ---------- 그리기 ---------- */
+  function render() {
+    const r = calc();
+    last = r;
+
+    const tbody = $('tbody');
+    if (!r) {
+      ['kT','kG','kS','kC'].forEach(function (id) { $(id).textContent = '—'; });
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--dim); padding:18px">금액을 입력해 주세요</td></tr>';
+      return;
+    }
+
+    const self = r.cash + r.inkind;
+    $('kT').textContent = won(r.T);
+    $('kG').textContent = won(r.gov);
+    $('kS').textContent = won(self);
+    $('kC').textContent = won(r.cash);
+
+    const pg = r.T ? r.gov / r.T * 100 : 0;
+    const pc = r.T ? r.cash / r.T * 100 : 0;
+    const pk = r.T ? r.inkind / r.T * 100 : 0;
+
+    $('bG').style.flexBasis = pg + '%'; $('bG').textContent = pg >= 8 ? pct(pg) : '';
+    $('bC').style.flexBasis = pc + '%'; $('bC').textContent = pc >= 8 ? pct(pc) : '';
+    $('bK').style.flexBasis = pk + '%'; $('bK').textContent = pk >= 8 ? pct(pk) : '';
+
+    const rows = [
+      ['정부지원금',   r.gov,    pg, 'var(--gov)',  '지원기관 부담'],
+      ['자부담 현금',  r.cash,   pc, 'var(--cash)', '실제 통장에서 나가는 금액'],
+      ['자부담 현물',  r.inkind, pk, 'var(--kind)', '인건비·기존 보유자산 등'],
+      ['자부담 합계',  self,     pc + pk, 'var(--dim)', '현금 + 현물']
+    ];
+
+    tbody.innerHTML = '';
+    rows.forEach(function (row) {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><i class="swatch" style="background:' + row[3] + '"></i>' + row[0] + '</td>' +
+        '<td class="mono" style="font-weight:600">' + won(row[1]) + '</td>' +
+        '<td class="mono" style="color:var(--dim)">' + pct(row[2]) + '</td>' +
+        '<td style="font-size:11.5px; color:var(--dim)">' + row[4] + '</td>';
+      tbody.appendChild(tr);
+    });
+
+    const t = document.createElement('tr');
+    t.className = 'total';
+    t.innerHTML = '<td>총 사업비</td><td class="mono">' + won(r.T) + '</td><td class="mono">100.00%</td>' +
+                  '<td style="font-size:11.5px; color:var(--dim)">' + r.unit + ' 단위 ' +
+                  ({ ceil: '올림', round: '반올림', floor: '버림' })[r.rule] + '</td>';
+    tbody.appendChild(t);
+  }
+
+  /* ---------- 입력 연결 ---------- */
+  function syncLabels() {
+    let g = parseInt($('gRange').value, 10);
+    let c = parseInt($('cRange').value, 10);
+    const selfMode = $('selfBase').checked;
+
+    // 현금 슬라이더가 남은 몫을 넘지 않도록 잡아 준다
+    const maxC = selfMode ? 100 : 100 - g;
+    if (c > maxC) { c = maxC; $('cRange').value = c; }
+    $('cRange').max = maxC;
+
+    const cTotal = selfMode ? (100 - g) * c / 100 : c;
+    const k = 100 - g - cTotal;
+
+    $('gVal').textContent = g + '%';
+    $('cVal').textContent = c + '%' + (selfMode ? ' (총액 대비 ' + (Math.round(cTotal * 10) / 10) + '%)' : '');
+    $('kVal').textContent = (Math.round(k * 10) / 10) + '%';
+  }
+
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('on', b.dataset.mode === m); });
+    $('amtLab').textContent =
+      m === 'gov' ? '희망 정부지원금' : m === 'total' ? '총 사업비' : '동원 가능한 보유 현금';
+    const cur = parseNum($('amount').value);
+    if (m === 'cash' && cur > 50000000) $('amount').value = (10000000).toLocaleString('ko-KR');
+    if (m !== 'cash' && cur < 20000000) $('amount').value = (100000000).toLocaleString('ko-KR');
+    render();
+  }
+
+  function buildPresets() {
+    const wrap = $('presets');
+    wrap.innerHTML = '';
+    PRESETS.forEach(function (p) {
+      const b = document.createElement('button');
+      b.className = 'preset' + (p.id === preset ? ' on' : '');
+      b.innerHTML = p.nm + '<span class="r">정부 ' + p.g + '% · 현금 ' + p.c + '% · ' + p.note + '</span>';
+      b.addEventListener('click', function () {
+        preset = p.id;
+        $('selfBase').checked = false;
+        $('gRange').value = p.g;
+        $('cRange').value = p.c;
+        buildPresets(); syncLabels(); render();
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  document.querySelectorAll('.tab').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.dataset.mode); });
+  });
+
+  $('amount').addEventListener('input', function () { comma(this); render(); });
+  ['gRange','cRange'].forEach(function (id) {
+    $(id).addEventListener('input', function () {
+      preset = 'custom'; buildPresets(); syncLabels(); render();
+    });
+  });
+  ['unit','round'].forEach(function (id) { $(id).addEventListener('change', render); });
+  $('selfBase').addEventListener('change', function () { syncLabels(); render(); });
+
+  $('themeBtn').addEventListener('click', function () {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    this.textContent = next === 'light' ? '다크' : '라이트';
+  });
+
+  /* ---------- 내보내기 ---------- */
+  function plainText() {
+    if (!last) return '';
+    return '총 사업비: ' + won(last.T) +
+           ' (정부지원금: ' + won(last.gov) +
+           ', 자부담 현금: ' + won(last.cash) +
+           ', 자부담 현물: ' + won(last.inkind) + ')';
+  }
+
+  function tableRows() {
+    if (!last) return [];
+    const self = last.cash + last.inkind;
+    const p = function (v) { return last.T ? (v / last.T * 100).toFixed(2) : '0.00'; };
+    return [
+      ['정부지원금', last.gov, p(last.gov)],
+      ['자부담 현금', last.cash, p(last.cash)],
+      ['자부담 현물', last.inkind, p(last.inkind)],
+      ['자부담 합계', self, p(self)],
+      ['총 사업비', last.T, '100.00']
+    ];
+  }
+
+  function htmlTable() {
+    let s = '<table border="1" style="border-collapse:collapse;font-family:Pretendard,sans-serif;font-size:13px">';
+    s += '<thead><tr>' + ['구분', '금액(원)', '비율(%)'].map(function (h) {
+      return '<th style="background:#26384B;color:#fff;padding:6px 10px;font-weight:500">' + h + '</th>';
+    }).join('') + '</tr></thead><tbody>';
+    tableRows().forEach(function (r) {
+      s += '<tr><td style="padding:5px 10px">' + r[0] + '</td>' +
+           '<td style="padding:5px 10px;text-align:right">' + r[1] + '</td>' +
+           '<td style="padding:5px 10px;text-align:right">' + r[2] + '</td></tr>';
+    });
+    return s + '</tbody></table>';
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  async function copyText(text, msg) {
+    if (!text) { toast('먼저 금액을 입력해 주세요'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard');
+      toast(msg);
+    } catch (e) {
+      toast(legacyCopy(text) ? msg : '복사가 막혔습니다');
+    }
+  }
+
+  $('txtBtn').addEventListener('click', function () {
+    copyText(plainText(), '사업계획서용 문장을 복사했습니다!');
+  });
+
+  $('richBtn').addEventListener('click', async function () {
+    if (!last) { toast('먼저 금액을 입력해 주세요'); return; }
+    const html = htmlTable();
+    const plain = tableRows().map(function (r) { return r.join('\t'); }).join('\n');
+    // text/html 을 함께 담아야 엑셀·한글에서 표 모양 그대로 들어간다
+    if (navigator.clipboard && window.ClipboardItem) {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([plain], { type: 'text/plain' })
+        })]);
+        toast('표 서식 그대로 복사했습니다!');
+        return;
+      } catch (e) {}
+    }
+    copyText(plain, '탭 구분 표로 복사했습니다');
+  });
+
+  $('csvBtn').addEventListener('click', function () {
+    if (!last) { toast('먼저 금액을 입력해 주세요'); return; }
+    const lines = ['구분,금액(원),비율(%)'];
+    tableRows().forEach(function (r) { lines.push(r.join(',')); });
+    const d = new Date();
+    const p2 = function (x) { return String(x).padStart(2, '0'); };
+    const name = '사업비구성_' + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + '.csv';
+    try {
+      // UTF-8 BOM : 엑셀에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) { toast('브라우저가 다운로드를 막았습니다'); }
+  });
+
+  /* ---------- 시작 ---------- */
+  buildPresets();
+  syncLabels();
+  render();
+})();
+</script>
+</body>
+</html>
