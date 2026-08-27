@@ -325,6 +325,16 @@
 
   function mark() { lastEvent = Date.now(); }
 
+  // 버린 세션이 뒤늦게 보내는 이벤트를 막는다.
+  // 이걸 안 하면 옛 세션의 onend가 방금 시작한 새 세션을 다시 끊어버린다.
+  function detach(r) {
+    if (!r) return;
+    ['onstart','onaudiostart','onsoundstart','onspeechstart','onspeechend',
+     'onaudioend','onnomatch','onresult','onerror','onend'].forEach(function (k) {
+      try { r[k] = null; } catch (e) {}
+    });
+  }
+
   // 세션은 브라우저가 수시로 끊는다. 끊길 때마다 새 객체로 다시 붙인다.
   // 이전 객체를 재사용하면 InvalidStateError가 나면서 그대로 죽어버린다.
   function scheduleRestart(delay) {
@@ -333,7 +343,9 @@
     clearTimeout(restartTimer);
     restartTimer = setTimeout(function () {
       if (!recording) { restarting = false; return; }
-      try { if (recognition) recognition.abort(); } catch (e) {}
+      const old = recognition;
+      detach(old);                                  // 먼저 귀를 막고
+      try { if (old) old.abort(); } catch (e) {}    // 그다음 중단한다
       recognition = buildRecognition();
       try {
         recognition.start();
@@ -539,6 +551,7 @@
     updateCount();
 
     log('구간 ' + (segNo - 1) + ' 마감 → 세션 새로 연결');
+    toast('구간 ' + (segNo - 1) + ' 마감 · 구간 ' + segNo + ' 시작');
     interimEl.textContent = '';
     scheduleRestart(150);   // 새 세션으로 갈아탄다
   }
@@ -548,6 +561,8 @@
 
   function buildRecognition() {
     const r = new SR();
+    // 현재 세션인지 확인하는 표식. 다른 세션의 이벤트는 그대로 흘려보낸다
+    const mine = function () { return recognition === r; };
     r.lang = langSel.value;
     r.continuous = useContinuous;
     r.interimResults = true;
@@ -557,6 +572,7 @@
     }
 
     r.onstart = function () {
+      if (!mine()) return;
       restarting = false;
       startAttempts = 0;
       mark();
@@ -604,6 +620,7 @@
     r.onnomatch     = function () { log('onnomatch (인식 실패)'); };
 
     r.onresult = function (ev) {
+      if (!mine()) return;
       gotResult = true;
       emptySessions = 0;
       mark();
@@ -626,6 +643,7 @@
     };
 
     r.onerror = function (ev) {
+      if (!mine()) return;
       log('onerror · ' + ev.error + (ev.message ? ' / ' + ev.message : ''));
       if (ev.error === 'aborted') return;
 
@@ -650,6 +668,7 @@
     };
 
     r.onend = function () {
+      if (!mine()) return;
       log('onend' + (recording ? ' → 자동 재시작' : ''));
       mark();
       clearTimeout(audioTimer);
@@ -723,6 +742,7 @@
     try { recognition.stop(); } catch (e) {}
     // 서버 응답을 기다리며 onend가 오지 않는 경우가 있어 강제 종료를 예약한다
     const stuck = recognition;
+    detach(stuck);
     setTimeout(function () {
       if (!recording && stuck) {
         try { stuck.abort(); log('응답 없어 강제 종료'); } catch (e) {}
