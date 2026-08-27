@@ -115,8 +115,9 @@
   .panel{ background:var(--panel); border:1px solid var(--line); border-radius:13px; }
 
   .tab{
-    flex:1; padding:11px 6px; border-radius:9px; border:1px solid var(--line);
+    flex:1 1 auto; min-width:0; padding:11px 4px; border-radius:9px; border:1px solid var(--line);
     background:var(--panel); color:var(--dim); font-size:12.5px; cursor:pointer; transition:all .12s;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .tab.on{ background:var(--ink); border-color:var(--ink); color:var(--panel); }
 
@@ -164,8 +165,10 @@
   .legend{ display:flex; flex-wrap:wrap; gap:14px; font-size:11.5px; color:var(--dim); margin-top:9px; }
   .dot{ display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px; }
 
-  table{ width:100%; border-collapse:collapse; font-size:13px; }
-  th,td{ padding:10px 12px; text-align:right; white-space:nowrap; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed; }
+  th,td{ padding:10px 12px; text-align:right; word-break:keep-all; }
+  /* 금액은 붙어야 읽히므로 숫자 칸만 줄바꿈을 막는다 */
+  td.mono{ white-space:nowrap; }
   th:first-child, td:first-child{ text-align:left; }
   thead th{ background:var(--head); color:var(--headFg); font-weight:500; font-size:11.5px; }
   tbody tr{ border-bottom:1px solid var(--line); }
@@ -191,6 +194,38 @@
     padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
   }
   #toast.show{ opacity:1; transform:translate(-50%,0); }
+  /* 어떤 요소도 화면 밖으로 밀려나지 않게 한다 */
+  html,body{ max-width:100%; overflow-x:hidden; }
+  .panel, section, table{ max-width:100%; }
+
+  .tab .short{ display:none; }
+
+  @media (max-width:480px){
+    .noteMobile{ display:block !important; margin-top:2px; }
+    .tab{ font-size:12px; padding:11px 3px; }
+    .tab .full{ display:none; }
+    .tab .short{ display:inline; }          /* 좁은 화면에서는 짧은 라벨로 바꾼다 */
+
+    th,td{ padding:9px 7px; font-size:12.5px; }
+    thead th{ font-size:10.5px; }
+    /* 마지막 '비고' 칸은 좁은 화면에서 숨겨 표가 밀려나지 않게 한다 */
+    th:nth-child(4), td:nth-child(4){ display:none; }
+
+    .bar div{ font-size:10.5px; }
+    .legend{ gap:10px; font-size:11px; }
+    .kpi{ padding:10px 11px; }
+    .kpi .v{ font-size:16px; }
+    .fld{ font-size:16px; }                  /* 16px 미만이면 iOS가 자동 확대한다 */
+    .sel{ font-size:13px; }
+    .preset{ font-size:12.5px; }
+  }
+
+  @media (max-width:360px){
+    .tab{ font-size:11px; }
+    th,td{ padding:8px 5px; font-size:12px; }
+    .kpi .v{ font-size:15px; }
+  }
+
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
 </style>
 </head>
@@ -207,14 +242,14 @@
   </header>
 
   <!-- 모드 -->
-  <div style="display:flex; gap:7px; margin-bottom:12px">
-    <button class="tab on" data-mode="gov">정부지원금 최대 기준</button>
-    <button class="tab" data-mode="total">총 사업비 기준</button>
-    <button class="tab" data-mode="cash">보유 현금 기준</button>
+  <div id="modeTabs" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:12px">
+    <button class="tab on" data-mode="gov"><span class="full">정부지원금 최대 기준</span><span class="short">지원금 기준</span></button>
+    <button class="tab" data-mode="total"><span class="full">총 사업비 기준</span><span class="short">사업비 기준</span></button>
+    <button class="tab" data-mode="cash"><span class="full">보유 현금 기준</span><span class="short">현금 기준</span></button>
   </div>
 
   <!-- 프리셋 -->
-  <div class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))" id="presets"></div>
+  <div class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))" id="presets"></div>
 
   <div class="grid gap-4 lg:grid-cols-[340px_1fr]">
 
@@ -268,7 +303,7 @@
     <!-- 우 : 결과 -->
     <section>
       <div class="panel" style="padding:16px">
-        <div class="grid gap-2.5 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+        <div class="grid gap-2.5 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(108px,1fr))">
           <div class="kpi"><div class="k">총 사업비</div><div class="v" id="kT">—</div></div>
           <div class="kpi"><div class="k">정부지원금</div><div class="v" id="kG" style="color:var(--gov)">—</div></div>
           <div class="kpi"><div class="k">자부담 합계</div><div class="v" id="kS">—</div></div>
@@ -494,6 +529,10 @@
         '<td class="mono" style="font-weight:600">' + won(row[1]) + '</td>' +
         '<td class="mono" style="color:var(--dim)">' + pct(row[2]) + '</td>' +
         '<td style="font-size:11.5px; color:var(--dim)">' + row[4] + '</td>';
+      // 좁은 화면에서는 비고 열이 숨겨지므로 항목명 아래에 함께 적어 준다
+      tr.querySelector('td').innerHTML +=
+        '<span class="noteMobile" style="display:none; font-size:10.5px; color:var(--dim); line-height:1.5">' +
+        row[4] + '</span>';
       tbody.appendChild(tr);
     });
 
@@ -508,7 +547,10 @@
 
     const t = document.createElement('tr');
     t.className = 'total';
-    t.innerHTML = '<td>총 사업비</td><td class="mono">' + won(r.T) + '</td><td class="mono">100.0%</td>' +
+    t.innerHTML = '<td>총 사업비' +
+                    '<span class="noteMobile" style="display:none; font-size:10.5px; color:var(--dim); line-height:1.5; font-weight:400">' +
+                    r.unit + ' 단위로 최적화</span></td>' +
+                  '<td class="mono">' + won(r.T) + '</td><td class="mono">100.0%</td>' +
                   '<td style="font-size:11.5px; color:var(--dim)">' + r.unit + ' 단위로 최적화</td>';
     tbody.appendChild(t);
   }
