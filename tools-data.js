@@ -234,6 +234,17 @@ const TOOLS_DATA = [
     tags: ['#시차', '#일정관리', '#해외']
   },
 
+  {
+    id: 'vocab-quiz',
+    title: '단어장 & 퀴즈',
+    category: 'LIFESTYLE',
+    desc: '내 단어를 직접 넣거나 CSV로 불러와 객관식·주관식 퀴즈를 만듭니다. 틀린 문제는 오답 노트에 모입니다.',
+    url: 'https://mnledu.com/lifestyle/vocab-quiz.html',
+    icon: 'graduation-cap',
+    badge: 'NEW',
+    tags: ['#공부', '#자기계발', '#암기', '#시험준비']
+  },
+
   // ---------------------------------------------------------
   // 4. DESIGN & MEDIA (디자인 & 미디어)
   // ---------------------------------------------------------
