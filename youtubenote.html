@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>유튜브 타임스탬프 노트</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  .fld{
+    border:1px solid var(--hair); border-radius:6px; background:#fff;
+    padding:9px 12px; font-size:13.5px; color:var(--ink); outline:none; width:100%;
+    transition:border-color .12s;
+  }
+  .fld:focus{ border-color:var(--steel); }
+
+  /* 플레이어 */
+  #playerWrap{
+    position:relative; width:100%; padding-top:56.25%;
+    background:#111827; border-radius:10px; overflow:hidden;
+  }
+  #playerWrap iframe, #player{
+    position:absolute; inset:0; width:100%; height:100%; border:0;
+  }
+  #playerEmpty{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px; color:#94A3B8;
+    text-align:center; padding:20px;
+  }
+
+  /* 에디터 */
+  #editor{
+    min-height:clamp(320px, 52vh, 640px);
+    max-height:72vh; overflow-y:auto; outline:none;
+    font-size:15px; line-height:1.9; word-break:break-word;
+    white-space:pre-wrap;
+  }
+  #editor:empty::before{
+    content:attr(data-placeholder);
+    color:#9AA7B4;
+  }
+  .ts{
+    display:inline-block;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:12.5px; line-height:1.5;
+    color:var(--steel); background:#F0F6FB;
+    border:1px solid #D6E4F0; border-radius:5px;
+    padding:1px 6px; margin-right:2px;
+    cursor:pointer; user-select:none;
+    transition:background .12s, color .12s;
+  }
+  .ts:hover{ background:var(--steel); color:#fff; border-color:var(--steel); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  kbd{
+    font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px;
+    border:1px solid var(--hair); border-bottom-width:2px; border-radius:4px;
+    padding:1px 5px; background:#fff; color:var(--muted);
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-10">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">유튜브 타임스탬프 노트</h1>
+      <p class="mt-1 text-[13px] text-muted">영상을 보며 시간이 박힌 메모 작성 · 이 브라우저에 자동 저장</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="expFmt" class="btn" aria-label="내보내기 형식">
+        <option value="mdlink" selected>마크다운 (링크 포함)</option>
+        <option value="md">마크다운 (단순)</option>
+        <option value="plain">일반 텍스트</option>
+      </select>
+      <button id="copyBtn" class="btn btn-primary">마크다운으로 복사</button>
+      <button id="saveBtn" class="btn">저장</button>
+    </div>
+  </header>
+
+  <!-- URL 입력 -->
+  <div class="mb-4 flex flex-wrap items-center gap-2">
+    <input id="url" class="fld flex-1" style="min-width:260px"
+           placeholder="유튜브 주소를 붙여넣으세요 (youtu.be/… 또는 youtube.com/watch?v=…)" autocomplete="off">
+    <button id="loadBtn" class="btn">영상 불러오기</button>
+    <button id="clearNote" class="btn">메모 비우기</button>
+  </div>
+
+  <!-- 본문 -->
+  <div class="grid gap-4 lg:grid-cols-2">
+
+    <!-- 좌 : 영상 -->
+    <section>
+      <div id="playerWrap">
+        <div id="player"></div>
+        <div id="playerEmpty">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+            <polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"></polygon>
+          </svg>
+          <p class="text-[13px]">위에 유튜브 주소를 넣으면 여기에 영상이 나옵니다</p>
+        </div>
+      </div>
+
+      <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-hair bg-white px-4 py-3 text-[12px] text-muted">
+        <span>현재 <b id="nowTime" class="num ml-0.5 text-[14px] font-medium text-ink">0:00</b></span>
+        <button id="stampBtn" class="btn px-2.5 py-1.5 text-[12px]">현재 시간 삽입</button>
+        <span class="ml-auto flex items-center gap-1.5">
+          <kbd>Ctrl</kbd> + <kbd>Enter</kbd> 로도 삽입
+        </span>
+      </div>
+    </section>
+
+    <!-- 우 : 메모 -->
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">메모</span>
+        <span id="saveInfo" class="num text-[11px] text-muted"></span>
+      </div>
+      <div
+        id="editor"
+        contenteditable="true"
+        spellcheck="false"
+        role="textbox"
+        aria-multiline="true"
+        data-placeholder="영상을 보며 여기에 적으세요. Ctrl+Enter 를 누르면 현재 재생 시간이 들어갑니다."
+        class="px-5 py-4 sm:px-6"></div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <span>글자 <b id="chars" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span>타임스탬프 <b id="stamps" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span class="ml-auto">시간표를 누르면 그 지점으로 이동합니다</span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const urlEl    = document.getElementById('url');
+  const editor   = document.getElementById('editor');
+  const nowTime  = document.getElementById('nowTime');
+  const charsEl  = document.getElementById('chars');
+  const stampsEl = document.getElementById('stamps');
+  const saveInfo = document.getElementById('saveInfo');
+  const empty    = document.getElementById('playerEmpty');
+  const expFmt   = document.getElementById('expFmt');
+
+  const KEY = 'yt-timestamp-note-v1';
+  let player = null, ready = false, videoId = '', apiLoading = false;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 시간 표기 ---------- */
+  function fmtTime(sec) {
+    sec = Math.max(0, Math.floor(sec || 0));
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    return h ? h + ':' + p(m) + ':' + p(s) : m + ':' + p(s);
+  }
+  function toSec(label) {
+    const parts = label.split(':').map(Number);
+    if (parts.some(isNaN)) return 0;
+    return parts.length === 3 ? parts[0] * 3600 + parts[1] * 60 + parts[2]
+         : parts.length === 2 ? parts[0] * 60 + parts[1]
+         : parts[0];
+  }
+
+  /* ---------- 유튜브 ---------- */
+  function parseId(raw) {
+    const s = (raw || '').trim();
+    if (!s) return '';
+    if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+    const m = s.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : '';
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player('player', {
+      videoId: videoId,
+      playerVars: { rel: 0, modestbranding: 1, playsinline: 1 },
+      events: {
+        onReady: function () { ready = true; empty.style.display = 'none'; },
+        onError: function () { toast('영상을 불러오지 못했습니다. 주소를 확인해 주세요'); }
+      }
+    });
+  };
+
+  function loadApi() {
+    if (apiLoading) return;
+    apiLoading = true;
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.onerror = function () { toast('유튜브 플레이어를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요'); };
+    document.head.appendChild(tag);
+  }
+
+  function loadVideo(raw) {
+    const id = parseId(raw);
+    if (!id) { toast('유튜브 주소를 인식하지 못했습니다'); return; }
+    videoId = id;
+    save();
+
+    if (player && ready && player.loadVideoById) {
+      player.loadVideoById(id);
+      empty.style.display = 'none';
+    } else if (window.YT && window.YT.Player) {
+      window.onYouTubeIframeAPIReady();
+    } else {
+      loadApi();
+    }
+  }
+
+  function currentSec() {
+    try {
+      if (player && ready && player.getCurrentTime) return player.getCurrentTime();
+    } catch (e) {}
+    return 0;
+  }
+
+  setInterval(function () { nowTime.textContent = fmtTime(currentSec()); }, 500);
+
+  function seek(sec) {
+    if (!player || !ready) { toast('먼저 영상을 불러와 주세요'); return; }
+    try {
+      player.seekTo(sec, true);
+      player.playVideo();
+    } catch (e) { toast('이동하지 못했습니다'); }
+  }
+
+  /* ---------- 타임스탬프 삽입 ---------- */
+  function makeChip(sec) {
+    const span = document.createElement('span');
+    span.className = 'ts';
+    span.contentEditable = 'false';
+    span.dataset.t = Math.floor(sec);
+    span.textContent = '[' + fmtTime(sec) + ']';
+    span.title = '클릭하면 이 지점으로 이동합니다';
+    return span;
+  }
+
+  function insertStamp() {
+    if (!player || !ready) { toast('먼저 영상을 불러와 주세요'); return; }
+    const sec = currentSec();
+
+    editor.focus();
+    const sel = window.getSelection();
+    let range;
+    if (sel && sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+      range = sel.getRangeAt(0);
+    } else {
+      range = document.createRange();
+      range.selectNodeContents(editor);
+      range.collapse(false);
+    }
+
+    range.deleteContents();
+    const chip = makeChip(sec);
+    const space = document.createTextNode('\u00a0');
+    range.insertNode(space);
+    range.insertNode(chip);
+
+    const nr = document.createRange();
+    nr.setStartAfter(space);
+    nr.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(nr);
+
+    update();
+    save();
+  }
+
+  document.getElementById('stampBtn').addEventListener('click', insertStamp);
+
+  editor.addEventListener('keydown', function (ev) {
+    if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') {
+      ev.preventDefault();
+      insertStamp();
+    }
+  });
+
+  // 시간표 클릭 → 해당 지점으로 이동
+  editor.addEventListener('click', function (ev) {
+    const chip = ev.target.closest ? ev.target.closest('.ts') : null;
+    if (!chip) return;
+    ev.preventDefault();
+    seek(parseInt(chip.dataset.t, 10) || 0);
+  });
+
+  // 붙여넣기는 평문으로
+  editor.addEventListener('paste', function (ev) {
+    ev.preventDefault();
+    const text = (ev.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, text);
+    setTimeout(function () { linkify(); update(); save(); }, 0);
+  });
+
+  // 손으로 적은 [12:34] 도 클릭 가능한 시간표로 바꾼다 (커서가 빠졌을 때만 실행)
+  function linkify() {
+    const re = /\[(\d{1,2}:)?\d{1,2}:\d{2}\]/;
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+    const targets = [];
+    let n;
+    while ((n = walker.nextNode())) { if (re.test(n.nodeValue)) targets.push(n); }
+
+    targets.forEach(function (node) {
+      const parts = node.nodeValue.split(/(\[(?:\d{1,2}:)?\d{1,2}:\d{2}\])/);
+      if (parts.length < 2) return;
+      const frag = document.createDocumentFragment();
+      parts.forEach(function (p) {
+        if (/^\[(?:\d{1,2}:)?\d{1,2}:\d{2}\]$/.test(p)) {
+          frag.appendChild(makeChip(toSec(p.slice(1, -1))));
+        } else if (p) {
+          frag.appendChild(document.createTextNode(p));
+        }
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  editor.addEventListener('blur', function () { linkify(); update(); save(); });
+
+  /* ---------- 통계 ---------- */
+  function update() {
+    const text = editor.innerText.replace(/\u00a0/g, ' ');
+    charsEl.textContent = Array.from(text.replace(/\n/g, '')).length.toLocaleString('ko-KR');
+    stampsEl.textContent = editor.querySelectorAll('.ts').length;
+  }
+
+  /* ---------- 저장 (LocalStorage) ---------- */
+  // 브라우저가 저장을 막는 환경(시크릿 모드, iframe 등)에서도 앱이 멈추지 않도록 감싼다
+  let storageOk = true;
+  let saveTimer = null;
+
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      if (!storageOk) return;
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          html: editor.innerHTML,
+          videoId: videoId,
+          url: urlEl.value,
+          at: Date.now()
+        }));
+        const d = new Date();
+        const p = function (x) { return String(x).padStart(2, '0'); };
+        saveInfo.textContent = '자동 저장됨 ' + p(d.getHours()) + ':' + p(d.getMinutes());
+      } catch (e) {
+        storageOk = false;
+        saveInfo.textContent = '자동 저장 불가';
+        saveInfo.title = '이 환경에서는 브라우저 저장이 막혀 있습니다. 저장 버튼으로 파일로 남겨 주세요.';
+      }
+    }, 500);
+  }
+
+  function restore() {
+    let raw = null;
+    try { raw = localStorage.getItem(KEY); }
+    catch (e) { storageOk = false; saveInfo.textContent = '자동 저장 불가'; return; }
+    if (!raw) return;
+
+    try {
+      const data = JSON.parse(raw);
+      if (data.html) editor.innerHTML = data.html;
+      if (data.url) urlEl.value = data.url;
+      linkify();
+      update();
+      if (data.videoId) { videoId = data.videoId; loadApi(); }
+      if (data.at) {
+        const d = new Date(data.at);
+        const p = function (x) { return String(x).padStart(2, '0'); };
+        saveInfo.textContent = '마지막 저장 ' + p(d.getHours()) + ':' + p(d.getMinutes());
+      }
+    } catch (e) { /* 저장 내용이 깨졌으면 무시 */ }
+  }
+
+  editor.addEventListener('input', function () { update(); save(); });
+
+  /* ---------- 내보내기 ---------- */
+  function toMarkdown() {
+    const mode = expFmt.value;
+    const lines = [];
+
+    // 블록 태그를 줄바꿈으로 바꿔 줄 단위로 훑는다
+    const html = editor.innerHTML
+      .replace(/<div>/gi, '\n').replace(/<\/div>/gi, '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<p>/gi, '\n').replace(/<\/p>/gi, '');
+
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+
+    // 시간표를 표기로 되돌린다
+    Array.from(tmp.querySelectorAll('.ts')).forEach(function (el) {
+      const sec = parseInt(el.dataset.t, 10) || 0;
+      const label = el.textContent;
+      let out = label;
+      if (mode === 'mdlink' && videoId) {
+        out = '[' + label.replace(/[\[\]]/g, '') + '](https://youtu.be/' + videoId + '?t=' + sec + ')';
+      }
+      el.replaceWith(document.createTextNode(out));
+    });
+
+    (tmp.textContent || '').split('\n').forEach(function (l) {
+      const line = l.replace(/\u00a0/g, ' ').trim();
+      if (line) lines.push(line);
+    });
+
+    if (mode === 'plain') return lines.join('\n');
+
+    const head = videoId ? '# 영상 메모\n\nhttps://youtu.be/' + videoId + '\n\n' : '# 영상 메모\n\n';
+    return head + lines.map(function (l) { return '- ' + l; }).join('\n');
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    linkify();
+    const text = toMarkdown();
+    if (!text.trim()) { toast('복사할 메모가 없습니다'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('복사되었습니다!');
+    } catch (e) {
+      if (legacyCopy(text)) toast('복사되었습니다!');
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    const text = toMarkdown();
+    if (!text.trim()) { toast('저장할 메모가 없습니다'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const ext = expFmt.value === 'plain' ? 'txt' : 'md';
+    const name = '영상메모_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.' + ext;
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  /* ---------- 그 밖의 조작 ---------- */
+  document.getElementById('loadBtn').addEventListener('click', function () { loadVideo(urlEl.value); });
+  urlEl.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); loadVideo(urlEl.value); }
+  });
+  urlEl.addEventListener('paste', function () {
+    setTimeout(function () { if (parseId(urlEl.value)) loadVideo(urlEl.value); }, 0);
+  });
+
+  document.getElementById('clearNote').addEventListener('click', function () {
+    if (!editor.innerText.trim() || confirm('메모를 모두 지웁니다. 계속할까요?')) {
+      editor.innerHTML = '';
+      update();
+      save();
+      editor.focus();
+    }
+  });
+
+  restore();
+  update();
+})();
+</script>
+</body>
+</html>
