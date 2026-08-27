@@ -335,39 +335,78 @@
     });
   }
 
-  // 세션은 브라우저가 수시로 끊는다. 끊길 때마다 새 객체로 다시 붙인다.
-  // 이전 객체를 재사용하면 InvalidStateError가 나면서 그대로 죽어버린다.
-  function scheduleRestart(delay) {
-    if (!recording) return;
+  // 세션 교체 : 옛 세션이 스스로 끝난 뒤에 새 세션을 연다.
+  // abort 직후 곧바로 start하면 엔진이 아직 정리 중이라 조용히 무시된다.
+  let rotating = false;
+  let rotateTimer = null;
+  let startCheck = null;
+  let sessionLive = false;   // 새 세션이 실제로 시작됐는지
+
+  function restartSession(reason, delay) {
+    if (!recording || rotating) return;
+    rotating = true;
     restarting = true;
-    clearTimeout(restartTimer);
-    restartTimer = setTimeout(function () {
-      if (!recording) { restarting = false; return; }
-      const old = recognition;
-      detach(old);                                  // 먼저 귀를 막고
-      try { if (old) old.abort(); } catch (e) {}    // 그다음 중단한다
+
+    const old = recognition;
+    let launched = false;
+
+    function launch() {
+      if (launched) return;
+      launched = true;
+      clearTimeout(rotateTimer);
+
+      if (old) { detach(old); try { old.abort(); } catch (e) {} }
+      if (!recording) { rotating = false; restarting = false; return; }
+
       recognition = buildRecognition();
+      sessionLive = false;
       try {
         recognition.start();
         sessions++;
-        startAttempts = 0;
         mark();
-        log('세션 재시작 #' + sessions);
+        log('세션 재시작 #' + sessions + ' (' + reason + ')');
       } catch (e) {
         startAttempts++;
+        rotating = false;
+        restarting = false;
         log('재시작 실패 · ' + e.name + ' (시도 ' + startAttempts + ')');
         if (startAttempts < 8) {
-          scheduleRestart(Math.min(300 * startAttempts, 2000));  // 점점 간격을 늘려 재시도
+          setTimeout(function () { restartSession(reason, 0); }, Math.min(400 * startAttempts, 2000));
         } else {
-          restarting = false;
           recording = false;
           micBtn.classList.remove('rec');
           setStatus('idle');
           hint.textContent = '누르면 인식 시작';
           showWarn('인식 세션을 다시 연결하지 못했습니다. 마이크 버튼을 다시 눌러 주세요.');
         }
+        return;
       }
-    }, delay);
+      rotating = false;
+
+      // 새 세션이 조용히 무시되는 경우를 대비해 시작 여부를 확인한다
+      clearTimeout(startCheck);
+      startCheck = setTimeout(function () {
+        if (recording && !sessionLive) {
+          startAttempts++;
+          log('새 세션이 시작되지 않음 → 다시 시도 (' + startAttempts + ')');
+          restarting = false;
+          if (startAttempts < 8) restartSession('재시도', 0);
+        }
+      }, 2500);
+    }
+
+    clearTimeout(rotateTimer);
+
+    if (old && sessionLive) {
+      // 아직 살아 있는 세션이면, 결과 수신을 끊고 스스로 끝나기를 기다렸다가 새로 연다
+      old.onresult = null;
+      old.onerror = null;
+      old.onend = function () { launch(); };
+      try { old.stop(); } catch (e) { launch(); return; }
+      rotateTimer = setTimeout(launch, 1500);   // onend가 오지 않으면 강제로 넘어간다
+    } else {
+      rotateTimer = setTimeout(launch, delay || 0);
+    }
   }
 
   // 감시 타이머 : 아무 이벤트도 없이 멈춰 있으면 강제로 다시 붙인다
@@ -377,7 +416,7 @@
       if (!recording || restarting) return;
       if (Date.now() - lastEvent > 12000) {
         log('12초간 무응답 → 강제 재연결');
-        scheduleRestart(0);
+        restartSession('무응답', 0);
       }
     }, 4000);
   }
@@ -388,7 +427,7 @@
     if (document.visibilityState === 'visible' && recording && !restarting) {
       if (Date.now() - lastEvent > 3000) {
         log('탭 복귀 → 세션 재연결');
-        scheduleRestart(0);
+        restartSession('무응답', 0);
       }
     }
   });
@@ -551,9 +590,8 @@
     updateCount();
 
     log('구간 ' + (segNo - 1) + ' 마감 → 세션 새로 연결');
-    toast('구간 ' + (segNo - 1) + ' 마감 · 구간 ' + segNo + ' 시작');
     interimEl.textContent = '';
-    scheduleRestart(150);   // 새 세션으로 갈아탄다
+    restartSession('구간 마감', 0);   // 새 세션으로 갈아탄다
   }
 
   splitOn.addEventListener('change', updateSeg);
@@ -561,8 +599,6 @@
 
   function buildRecognition() {
     const r = new SR();
-    // 현재 세션인지 확인하는 표식. 다른 세션의 이벤트는 그대로 흘려보낸다
-    const mine = function () { return recognition === r; };
     r.lang = langSel.value;
     r.continuous = useContinuous;
     r.interimResults = true;
@@ -572,9 +608,11 @@
     }
 
     r.onstart = function () {
-      if (!mine()) return;
       restarting = false;
+      rotating = false;
+      sessionLive = true;
       startAttempts = 0;
+      clearTimeout(startCheck);
       mark();
       setStatus('rec');
       hint.textContent = '다시 누르면 중지';
@@ -604,7 +642,7 @@
           log('결과 없음 → continuous 끄고 재시도');
           showWarn('서버 응답이 없어 짧게 끊어 인식하는 방식으로 다시 시도합니다.');
           useContinuous = false;
-          scheduleRestart(400);
+          restartSession('폴백', 400);
         } else {
           log('폴백 후에도 결과 없음');
           if (canLocal && localState !== 'available') {
@@ -620,7 +658,6 @@
     r.onnomatch     = function () { log('onnomatch (인식 실패)'); };
 
     r.onresult = function (ev) {
-      if (!mine()) return;
       gotResult = true;
       emptySessions = 0;
       mark();
@@ -643,7 +680,6 @@
     };
 
     r.onerror = function (ev) {
-      if (!mine()) return;
       log('onerror · ' + ev.error + (ev.message ? ' / ' + ev.message : ''));
       if (ev.error === 'aborted') return;
 
@@ -668,7 +704,6 @@
     };
 
     r.onend = function () {
-      if (!mine()) return;
       log('onend' + (recording ? ' → 자동 재시작' : ''));
       mark();
       clearTimeout(audioTimer);
@@ -677,7 +712,7 @@
           emptySessions++;
           if (emptySessions >= 3) showWarn('인식이 시작되자마자 반복해서 끊깁니다. ' + envHint());
         }
-        scheduleRestart(250);
+        restartSession('자동', 250);
         return;
       }
       if (!recording) {
@@ -703,6 +738,8 @@
     recording = true;
     sessions = 1;
     startAttempts = 0;
+    rotating = false;
+    sessionLive = false;
     segChars = 0;
     segNo = 1;
     updateSeg();
@@ -728,6 +765,9 @@
     clearTimeout(audioTimer);
     clearTimeout(silentTimer);
     clearTimeout(restartTimer);
+    clearTimeout(rotateTimer);
+    clearTimeout(startCheck);
+    rotating = false;
     stopWatchdog();
     micBtn.classList.remove('rec');
     micBtn.setAttribute('aria-label', '음성 인식 시작');
@@ -742,7 +782,6 @@
     try { recognition.stop(); } catch (e) {}
     // 서버 응답을 기다리며 onend가 오지 않는 경우가 있어 강제 종료를 예약한다
     const stuck = recognition;
-    detach(stuck);
     setTimeout(function () {
       if (!recording && stuck) {
         try { stuck.abort(); log('응답 없어 강제 종료'); } catch (e) {}
