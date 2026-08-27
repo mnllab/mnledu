@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#F7FAF8">
+<meta name="mobile-web-app-capable" content="yes">
+<title>럭키 클로버 로또 추첨기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F7FAF8; --card:#FFFFFF; --line:#E3EAE6; --ink:#1F2A25; --dim:#6B7A73;
+    --emerald:#10B981; --emerald2:#34D399; --deep:#047857; --soft:#ECFAF4;
+    --warn:#B45309; --warnBg:#FFFBEB; --warnLine:#FDE68A;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none; touch-action:manipulation;
+  }
+  body{
+    background:
+      radial-gradient(680px 380px at 8% -6%, rgba(52,211,153,.16), transparent 62%),
+      radial-gradient(620px 360px at 96% 2%, rgba(16,185,129,.10), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:18px;
+    box-shadow:0 1px 2px rgba(31,42,37,.04), 0 10px 28px rgba(31,42,37,.06);
+  }
+
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:13px; font-size:14.5px; font-weight:600; padding:13px 16px; cursor:pointer;
+    min-height:48px; box-shadow:0 2px 0 rgba(31,42,37,.06);
+    transition:transform .07s, box-shadow .07s, border-color .14s;
+  }
+  .btn:hover{ border-color:#C6D6CE; }
+  .btn:active{ transform:translateY(2px); box-shadow:0 0 0 rgba(0,0,0,0); }
+  .btn[disabled]{ opacity:.5; cursor:not-allowed; }
+  .btn.p{
+    background:linear-gradient(180deg,var(--emerald2),var(--emerald));
+    border-color:var(--emerald); color:#fff;
+    box-shadow:0 4px 0 var(--deep), 0 12px 26px rgba(16,185,129,.3);
+  }
+  .btn.p:active{ box-shadow:0 1px 0 var(--deep); }
+
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:12px; background:#fff;
+    padding:12px 10px; font-size:19px; color:var(--ink); outline:none; min-height:52px;
+    font-family:'JetBrains Mono',monospace; text-align:center; font-weight:700;
+    -moz-appearance:textfield;
+  }
+  .fld::-webkit-outer-spin-button, .fld::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .fld:focus{ border-color:var(--emerald); box-shadow:0 0 0 3px rgba(16,185,129,.14); }
+  .fld::placeholder{ color:#C3CFC9; font-weight:400; font-size:15px; }
+  .lab{ display:block; font-size:11.5px; color:var(--dim); margin-bottom:6px; text-align:center; }
+
+  /* 로또 공 */
+  .ball{
+    width:44px; height:44px; border-radius:50%; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; color:#fff;
+    position:relative; text-shadow:0 1px 2px rgba(0,0,0,.28);
+    transform-origin:50% 100%;
+  }
+  .ball::after{
+    content:''; position:absolute; top:16%; left:22%; width:34%; height:24%;
+    background:rgba(255,255,255,.55); border-radius:50%; filter:blur(1px);
+  }
+  .ball.y{ background:radial-gradient(circle at 32% 26%, #FDE68A, #F5B301 62%, #C98A00);
+           box-shadow:0 5px 10px rgba(201,138,0,.32), inset 0 -3px 6px rgba(0,0,0,.16); }
+  .ball.b{ background:radial-gradient(circle at 32% 26%, #93C5FD, #3B82F6 62%, #1D4ED8);
+           box-shadow:0 5px 10px rgba(29,78,216,.3), inset 0 -3px 6px rgba(0,0,0,.16); }
+  .ball.r{ background:radial-gradient(circle at 32% 26%, #FCA5A5, #EF4444 62%, #B91C1C);
+           box-shadow:0 5px 10px rgba(185,28,28,.3), inset 0 -3px 6px rgba(0,0,0,.16); }
+  .ball.g{ background:radial-gradient(circle at 32% 26%, #D1D5DB, #9AA5B1 62%, #6B7280);
+           box-shadow:0 5px 10px rgba(107,114,128,.3), inset 0 -3px 6px rgba(0,0,0,.16); }
+  .ball.e{ background:radial-gradient(circle at 32% 26%, #6EE7B7, #10B981 62%, #047857);
+           box-shadow:0 5px 10px rgba(4,120,87,.3), inset 0 -3px 6px rgba(0,0,0,.16); }
+  .ball.lucky::before{
+    content:'🍀'; position:absolute; top:-9px; right:-7px; font-size:13px;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.25));
+  }
+
+  /* 팝콘처럼 튀어 오르는 등장 */
+  .ball.pop{ animation:pop .58s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes pop{
+    0%{ transform:translateY(26px) scale(.3); opacity:0; }
+    45%{ transform:translateY(-14px) scale(1.16); opacity:1; }
+    70%{ transform:translateY(3px) scale(.95); }
+    85%{ transform:translateY(-3px) scale(1.03); }
+    100%{ transform:translateY(0) scale(1); opacity:1; }
+  }
+
+  .setRow{
+    display:flex; align-items:center; gap:9px; padding:13px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .setRow:last-child{ border-bottom:0; }
+  .setTag{
+    width:30px; height:30px; border-radius:9px; flex:none;
+    background:var(--soft); color:var(--deep);
+    font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .balls{ display:flex; gap:7px; flex-wrap:wrap; }
+  @media (max-width:430px){
+    .ball{ width:39px; height:39px; font-size:14.5px; }
+    .balls{ gap:5px; }
+    .setRow{ gap:7px; padding:11px 10px; }
+  }
+
+  .warn{
+    background:var(--warnBg); border:1px solid var(--warnLine); border-radius:14px;
+    padding:14px 16px; font-size:12.5px; line-height:1.85; color:var(--warn);
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:11px;
+    padding:11px 17px; font-size:13.5px; z-index:70;
+    pointer-events:none; transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-xl px-4 py-6 sm:py-9">
+
+  <header class="mb-5 text-center">
+    <h1 class="text-[23px] font-bold tracking-tight">
+      🍀 <span style="background:linear-gradient(90deg,var(--emerald2),var(--deep));
+        -webkit-background-clip:text; background-clip:text; color:transparent">럭키 클로버</span> 로또
+    </h1>
+    <p class="mt-1.5 text-[12.5px]" style="color:var(--dim)">행운의 번호와 지금 이 순간을 섞어 5세트를 뽑습니다</p>
+  </header>
+
+  <!-- 행운의 번호 -->
+  <div class="card" style="padding:16px; margin-bottom:12px">
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span class="text-[13.5px] font-bold">🍀 우선순위 행운의 번호</span>
+      <button class="btn" id="clearLucky" style="padding:8px 12px; font-size:12.5px; min-height:38px">비우기</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:9px">
+      <div>
+        <label class="lab" for="l1">1순위</label>
+        <input class="fld" id="l1" type="number" inputmode="numeric" min="1" max="45" placeholder="비움">
+      </div>
+      <div>
+        <label class="lab" for="l2">2순위</label>
+        <input class="fld" id="l2" type="number" inputmode="numeric" min="1" max="45" placeholder="비움">
+      </div>
+      <div>
+        <label class="lab" for="l3">3순위</label>
+        <input class="fld" id="l3" type="number" inputmode="numeric" min="1" max="45" placeholder="비움">
+      </div>
+    </div>
+
+    <p class="text-[11.5px] mt-2.5" id="luckyNote" style="color:var(--dim); line-height:1.7; text-align:center">
+      비워두면 100% 자동 추첨입니다
+    </p>
+  </div>
+
+  <button class="btn p w-full" id="drawBtn" style="padding:18px; font-size:17px; margin-bottom:12px">
+    🍀 행운의 번호 추첨하기
+  </button>
+
+  <!-- 결과 -->
+  <div class="card" id="resultCard" style="margin-bottom:12px; overflow:hidden">
+    <div id="sets"></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px">
+    <button class="btn" id="copyBtn">전체 번호 복사</button>
+    <button class="btn" id="saveBtn">텍스트로 저장</button>
+  </div>
+
+  <p class="mono text-[11px] mb-3" id="seedLabel" style="color:var(--dim); text-align:center; line-height:1.7; word-break:break-all"></p>
+
+  <div class="warn">
+    ⚠️ <b>[주의]</b> 본 로또 번호 생성기는 사용자 시드 및 난수 알고리즘 기반 오락용 툴이며,
+    실제 로또 당첨을 보장하지 않습니다. 과도한 복권 구매는 유해할 수 있습니다.
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $ = function (id) { return document.getElementById(id); };
+  const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+
+  let sets = [], drawing = false, seedInfo = '', luckyUsed = [];
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+  }
+  function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+
+  /* ---------- 소리 ---------- */
+  let actx = null;
+  function ensureAudio() {
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+    } catch (e) {}
+  }
+  // '퐁' 소리 : 음이 살짝 올라갔다 사라지게 만든다
+  function pong(freq) {
+    try {
+      if (!actx) return;
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(freq * 0.72, actx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(freq, actx.currentTime + 0.07);
+      g.gain.setValueAtTime(0.0001, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.075, actx.currentTime + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.26);
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + 0.28);
+    } catch (e) {}
+  }
+  function fanfare() {
+    [523, 659, 784, 1047, 1319].forEach(function (f, i) {
+      setTimeout(function () {
+        try {
+          if (!actx) return;
+          const o = actx.createOscillator(), g = actx.createGain();
+          o.type = 'triangle'; o.frequency.value = f; g.gain.value = 0.05;
+          o.connect(g); g.connect(actx.destination);
+          o.start();
+          g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.2);
+          o.stop(actx.currentTime + 0.22);
+        } catch (e) {}
+      }, i * 105);
+    });
+  }
+  function boom() {
+    try {
+      if (typeof confetti !== 'function') return;
+      const colors = ['#10B981', '#34D399', '#F5B301', '#3B82F6', '#EF4444'];
+      confetti({ particleCount: 120, spread: 84, origin: { y: .68 }, colors: colors, disableForReducedMotion: true });
+      setTimeout(function () {
+        confetti({ particleCount: 70, angle: 60, spread: 62, origin: { x: 0, y: .8 }, colors: colors });
+        confetti({ particleCount: 70, angle: 120, spread: 62, origin: { x: 1, y: .8 }, colors: colors });
+      }, 230);
+    } catch (e) {}
+  }
+
+  /* ---------- 시드 ---------- */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function hash32(str) {
+    let h = 2166136261;
+    for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  // 행운의 번호 + 지금 이 순간(밀리초) + 기기 암호학적 난수를 섞는다.
+  // 1ms만 달라도 전혀 다른 시드가 나온다
+  function makeSeed(lucky) {
+    const d = new Date();
+    const z = function (x, w) { return String(x).padStart(w || 2, '0'); };
+    const stamp = d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' +
+                  z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds()) + '.' + z(d.getMilliseconds(), 3);
+
+    let crypt = 0;
+    try {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const a = new Uint32Array(4);
+        window.crypto.getRandomValues(a);
+        crypt = (a[0] ^ a[1] ^ a[2] ^ a[3]) >>> 0;
+      } else crypt = Math.floor(Math.random() * 4294967296);
+    } catch (e) { crypt = Math.floor(Math.random() * 4294967296); }
+
+    const perf = Math.floor((window.performance && performance.now ? performance.now() : 0) * 1000);
+    const nums = lucky.map(function (v) { return v === null ? '-' : v; }).join('·');
+
+    let h = hash32('L=' + nums + ';T=' + Date.now() + ';P=' + perf + ';C=' + crypt + ';S=' + stamp);
+    h ^= h >>> 13; h = Math.imul(h, 2654435761); h ^= h >>> 16;
+    const seed = h >>> 0;
+
+    seedInfo = '행운의 번호 ' + (nums === '-·-·-' ? '없음' : nums) +
+               ' · ' + stamp + ' · 시드 ' + seed.toString(36).toUpperCase();
+    return seed;
+  }
+
+  /* ---------- 추첨 ---------- */
+  function readLucky() {
+    return ['l1', 'l2', 'l3'].map(function (id) {
+      const v = parseInt($(id).value, 10);
+      return (isNaN(v) || v < 1 || v > 45) ? null : v;
+    });
+  }
+
+  function shuffle(a, rng) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  // 미리 정해둔 번호를 넣고 나머지를 중복 없이 채운다. ban에 든 번호는 뽑지 않는다
+  function fillSet(rng, seedNums, ban) {
+    const picked = seedNums.slice();
+    let guard = 0;
+    while (picked.length < 6 && guard++ < 800) {
+      const n = 1 + Math.floor(rng() * 45);
+      if (picked.indexOf(n) !== -1) continue;
+      if (ban.indexOf(n) !== -1) continue;
+      picked.push(n);
+    }
+    return picked.sort(function (a, b) { return a - b; });
+  }
+
+  // 다섯 세트에 역할을 나눠 준다.
+  // 한 세트는 행운의 번호 전부, 한 세트는 아예 없이, 나머지 세 세트는 최소 하나씩 담는다
+  function drawAll(rng, lucky) {
+    const L = lucky.filter(function (v) { return v !== null; });
+    if (!L.length) {
+      return [0, 1, 2, 3, 4].map(function () { return fillSet(rng, [], []); });
+    }
+
+    const roles = shuffle(['all', 'some', 'some', 'some', 'none'], rng);
+    return roles.map(function (role) {
+      if (role === 'all') return fillSet(rng, L.slice(), []);
+      if (role === 'none') return fillSet(rng, [], L);          // 행운의 번호를 통째로 제외
+      const k = 1 + Math.floor(rng() * Math.min(2, L.length));  // 한두 개만 넣는다
+      return fillSet(rng, shuffle(L.slice(), rng).slice(0, k), []);
+    });
+  }
+
+  function colorOf(n) {
+    return n <= 10 ? 'y' : n <= 20 ? 'b' : n <= 30 ? 'r' : n <= 40 ? 'g' : 'e';
+  }
+
+  function draw() {
+    if (drawing) return;
+    ensureAudio();
+
+    const lucky = readLucky();
+    luckyUsed = lucky.filter(function (v) { return v !== null; });
+
+    // 같은 번호를 두 칸에 넣으면 뒤쪽은 무시한다
+    const seen = {};
+    const clean = lucky.map(function (v) {
+      if (v === null) return null;
+      if (seen[v]) return null;
+      seen[v] = true;
+      return v;
+    });
+
+    const rng = mulberry32(makeSeed(clean));
+    sets = drawAll(rng, clean);
+
+    drawing = true;
+    $('drawBtn').disabled = true;
+    $('seedLabel').textContent = seedInfo;
+    render(true);
+  }
+
+  function render(animate) {
+    const wrap = $('sets');
+    wrap.innerHTML = '';
+
+    if (!sets.length) {
+      wrap.innerHTML = '<p style="padding:26px 16px; text-align:center; font-size:13px; color:var(--dim)">' +
+        '아래 버튼을 눌러 5세트를 뽑아 보세요</p>';
+      return;
+    }
+
+    let delay = 0;
+    sets.forEach(function (set, si) {
+      const row = document.createElement('div');
+      row.className = 'setRow';
+
+      const tag = document.createElement('span');
+      tag.className = 'setTag';
+      tag.textContent = LETTERS[si];
+
+      const balls = document.createElement('div');
+      balls.className = 'balls';
+
+      set.forEach(function (n) {
+        const b = document.createElement('span');
+        b.className = 'ball ' + colorOf(n) + (luckyUsed.indexOf(n) !== -1 ? ' lucky' : '');
+        b.textContent = String(n).padStart(2, '0');
+        if (animate) {
+          b.style.opacity = '0';
+          const d = delay;
+          setTimeout(function () {
+            b.style.opacity = '';
+            b.classList.add('pop');
+            pong(520 + n * 7);
+          }, d);
+          delay += 95;
+        }
+        balls.appendChild(b);
+      });
+
+      row.appendChild(tag); row.appendChild(balls);
+      wrap.appendChild(row);
+    });
+
+    if (animate) {
+      setTimeout(function () {
+        drawing = false;
+        $('drawBtn').disabled = false;
+        fanfare(); boom(); buzz([20, 40, 20, 60]);
+      }, delay + 260);
+    }
+  }
+
+  /* ---------- 내보내기 ---------- */
+  function text() {
+    if (!sets.length) return '';
+    const lines = ['🍀 행운의 로또 번호 5세트'];
+    sets.forEach(function (s, i) {
+      lines.push('[' + LETTERS[i] + '] ' + s.map(function (n) { return String(n).padStart(2, '0'); }).join(', '));
+    });
+    if (luckyUsed.length) lines.push('', '행운의 번호 : ' + luckyUsed.join(', '));
+    return lines.join('\n');
+  }
+
+  $('copyBtn').addEventListener('click', async function () {
+    const t = text();
+    if (!t) { toast('먼저 번호를 뽑아 주세요'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(t);
+      else throw new Error('no clipboard');
+      toast('복사되었습니다!');
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+      document.body.removeChild(ta);
+      toast(ok ? '복사되었습니다!' : '복사가 막혔습니다');
+    }
+  });
+
+  $('saveBtn').addEventListener('click', function () {
+    const t = text();
+    if (!t) { toast('먼저 번호를 뽑아 주세요'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = '로또번호_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + t + '\n\n' + seedInfo], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) { toast('브라우저가 다운로드를 막았습니다'); }
+  });
+
+  /* ---------- 입력 ---------- */
+  ['l1', 'l2', 'l3'].forEach(function (id) {
+    const el = $(id);
+    el.addEventListener('input', function () {
+      const v = parseInt(el.value, 10);
+      if (!isNaN(v)) {
+        const f = Math.max(1, Math.min(45, v));
+        if (f !== v) el.value = f;
+      }
+      updateNote();
+    });
+  });
+
+  function updateNote() {
+    const l = readLucky();
+    const on = l.filter(function (v) { return v !== null; });
+    const note = $('luckyNote');
+    if (!on.length) {
+      note.textContent = '비워두면 100% 자동 추첨입니다';
+      note.style.color = 'var(--dim)';
+      return;
+    }
+    const nums = on.join(', ') + '번';
+    note.innerHTML = nums + ' 반영 · 한 세트는 <b>' + on.length + '개 모두</b>, ' +
+                     '한 세트는 <b>전혀 없이</b>, 나머지 세 세트는 <b>최소 1개</b>씩';
+    note.style.color = 'var(--deep)';
+  }
+
+  $('clearLucky').addEventListener('click', function () {
+    ['l1', 'l2', 'l3'].forEach(function (id) { $(id).value = ''; });
+    updateNote();
+    toast('행운의 번호를 비웠습니다');
+  });
+
+  $('drawBtn').addEventListener('click', draw);
+
+  /* ---------- 시작 ---------- */
+  updateNote();
+  render(false);
+})();
+</script>
+</body>
+</html>
