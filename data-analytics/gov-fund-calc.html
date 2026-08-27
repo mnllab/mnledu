@@ -133,7 +133,7 @@
   </div>
 
   <!-- 프리셋 -->
-  <div class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))" id="presets"></div>
+  <div class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))" id="presets"></div>
 
   <div class="grid gap-4 lg:grid-cols-[340px_1fr]">
 
@@ -142,20 +142,16 @@
       <label class="lab" id="amtLab" for="amount">희망 정부지원금</label>
       <input class="fld" id="amount" inputmode="numeric" value="100,000,000">
 
-      <div style="display:flex; gap:7px; margin-top:9px">
-        <select class="sel" id="unit" style="flex:1">
-          <option value="원">원 단위</option>
-          <option value="천원">천원 단위</option>
-          <option value="만원" selected>만원 단위</option>
-        </select>
-        <select class="sel" id="round" style="flex:1">
-          <option value="ceil" selected>올림</option>
-          <option value="round">반올림</option>
-          <option value="floor">버림</option>
-        </select>
-      </div>
+      <label class="lab" for="unit" style="margin-top:11px">최적화 단위</label>
+      <select class="sel" id="unit" style="width:100%">
+        <option value="만원" selected>만원 단위</option>
+        <option value="천원">천원 단위</option>
+        <option value="백원">백원 단위</option>
+        <option value="십원">십원 단위</option>
+        <option value="원">원 단위</option>
+      </select>
       <p class="text-[11px] mt-2" style="color:var(--dim)">
-        보수적으로 예산을 잡으려면 만원 단위 올림이 무난합니다
+        단위가 클수록 숫자가 깔끔해지고, 작을수록 비율이 공고 기준에 더 가까워집니다
       </p>
 
       <div style="height:1px; background:var(--line); margin:15px 0"></div>
@@ -219,6 +215,30 @@
         </table>
       </div>
 
+      <details class="panel mt-3" id="howBox" open style="padding:14px 16px">
+        <summary style="cursor:pointer; font-size:12.5px; font-weight:600; color:var(--dim)">
+          비율이 딱 떨어지지 않는 이유 · 계산 방식
+        </summary>
+        <div style="font-size:12.5px; line-height:1.9; margin-top:11px">
+          <p style="margin:0 0 9px">
+            공고문의 비율은 <b>「정부지원금 ○% 이내」, 「자부담 현금 ○% 이상」</b> 처럼
+            한쪽은 한도이고 다른 쪽은 최소 기준입니다. 그래서 양쪽을 같은 방향으로 반올림하면
+            어느 한쪽이 기준을 벗어납니다.
+          </p>
+          <ol style="margin:0 0 9px; padding-left:18px">
+            <li id="s1">총 사업비 = 정부지원금 ÷ 지원 비율 → <b>최적화 단위로 올림</b></li>
+            <li id="s2">자부담 현금 = 총 사업비 × 현금 비율 → <b>최적화 단위로 올림</b> (최소 기준 충족)</li>
+            <li>자부담 현물 = 총 사업비 − 정부지원금 − 자부담 현금 (잔액)</li>
+            <li>자부담 합계 = 현금 + 현물</li>
+          </ol>
+          <p style="margin:0; color:var(--dim)">
+            올림을 거치므로 실제 비율은 70.0%가 아니라 69.9%나 70.0% 부근으로 나옵니다.
+            기준을 벗어나지 않으려면 이 방향이 맞기 때문에, 표의 비율은 소수점 첫째 자리까지만 보여줍니다.
+            단위를 <b>원</b>으로 좁힐수록 공고 비율에 더 가까워지고, <b>만원</b>으로 넓힐수록 금액이 깔끔해집니다.
+          </p>
+        </div>
+      </details>
+
       <div class="panel mt-3" style="padding:14px">
         <div style="display:flex; flex-wrap:wrap; gap:7px">
           <span class="text-[12px] font-medium" style="color:var(--dim); align-self:center; margin-right:4px">내보내기</span>
@@ -240,16 +260,28 @@
 (function () {
   'use strict';
 
-  const UNIT = { '원': 1, '천원': 1000, '만원': 10000 };
+  const UNIT = { '만원': 10000, '천원': 1000, '백원': 100, '십원': 10, '원': 1 };
 
+  // 현금 기준이 같은 사업끼리 묶는다.
+  // 사업화 계열은 총사업비 대비, R&D 계열은 자부담(민간부담금) 대비로 현금 비율을 본다
   const PRESETS = [
-    { id:'startup', nm:'초기·창업도약패키지', g:70, c:10, note:'자부담 30% 중 현금 10% 이상' },
-    { id:'rnd',     nm:'디딤돌 R&D',          g:75, c:20, note:'자부담 25% 중 현금 20% 이상' },
-    { id:'tips',    nm:'TIPS (팁스)',         g:80, c:10, note:'자부담 20%' },
-    { id:'custom',  nm:'직접 입력',           g:70, c:10, note:'비율을 직접 조절' }
+    { id:'biz', nm:'사업화 계열',
+      sub:'초기창업패키지 · 창업도약패키지 · 청년창업사관학교 · TIPS(비R&D)',
+      g:70, c:10, self:false,
+      note:'정부 70% · 자부담 30% (총사업비 대비 현금 10% 이상, 현물 20% 이하)' },
+
+    { id:'rnd', nm:'R&D 계열',
+      sub:'디딤돌 R&D · TIPS(R&D) 등 중소기업 기술개발사업',
+      g:75, c:10, self:true,
+      note:'정부 75% · 자부담 25% (자부담 중 현금 10% 이상)' },
+
+    { id:'custom', nm:'직접 입력',
+      sub:'공고문에 맞춰 비율을 직접 조절',
+      g:70, c:10, self:false,
+      note:'아래 슬라이더로 자유롭게 설정' }
   ];
 
-  let mode = 'gov', preset = 'startup';
+  let mode = 'gov', preset = 'biz';
   let last = null;
 
   const $ = function (id) { return document.getElementById(id); };
@@ -262,7 +294,7 @@
   }
 
   function won(v) { return Math.round(v).toLocaleString('ko-KR') + '원'; }
-  function pct(v) { return (Math.round(v * 100) / 100).toFixed(2) + '%'; }
+  function pct(v) { return (Math.round(v * 10) / 10).toFixed(1) + '%'; }
 
   function parseNum(s) {
     const t = String(s).replace(/[^0-9]/g, '');
@@ -273,19 +305,17 @@
     el.value = v === null ? '' : v.toLocaleString('ko-KR');
   }
 
-  // 단위와 처리 방식에 맞춰 금액을 다듬는다
-  function q(v, unit, rule) {
-    const u = UNIT[unit];
-    const x = v / u;
-    const r = rule === 'floor' ? Math.floor(x) : rule === 'ceil' ? Math.ceil(x) : Math.round(x);
-    return r * u;
-  }
+  // 최적화 단위로 올리거나 내린다
+  function up(v, u) { return Math.ceil(v / u - 1e-9) * u; }
+  function dn(v, u) { return Math.floor(v / u + 1e-9) * u; }
 
   /* ---------- 계산 ---------- */
-  // 사용자가 넣은 값(앵커)은 그대로 두고, 현물이 잔액을 흡수해 합계가 항상 총사업비와 맞는다
+  // 기준 미달이 나오면 안 되므로 자부담(현금)은 항상 올리고, 지원 한도는 넘지 않도록 내린다.
+  // 그래서 비율이 70.0%처럼 딱 떨어지지 않고 소수점이 조금 남는다.
   function calc() {
     const amount = parseNum($('amount').value);
-    const unit = $('unit').value, rule = $('round').value;
+    const unitName = $('unit').value;
+    const u = UNIT[unitName];
     let g = parseInt($('gRange').value, 10);
     let c = parseInt($('cRange').value, 10);
 
@@ -302,29 +332,39 @@
     if (k < -0.0001) { show(warn, '정부지원금과 현금 비율의 합이 100%를 넘습니다. 비율을 조정해 주세요'); return null; }
 
     let T, gov, cash;
+
     if (mode === 'gov') {
-      gov = q(amount, unit, rule);
-      T = q(gov * 100 / g, unit, rule === 'floor' ? 'floor' : 'ceil');   // 지원금을 채우려면 총액은 올리는 쪽이 안전
-      cash = q(T * c / 100, unit, rule);
+      // 원하는 지원금을 그대로 확보하려면 총사업비를 올려야 한다
+      gov = amount;
+      T = up(gov * 100 / g, u);
+      cash = up(T * c / 100, u);
+
     } else if (mode === 'total') {
-      T = q(amount, unit, rule);
-      gov = q(T * g / 100, unit, rule === 'ceil' ? 'floor' : rule);      // 지원금은 한도를 넘지 않게
-      cash = q(T * c / 100, unit, rule);
+      T = up(amount, u);
+      gov = dn(T * g / 100, u);      // 지원 한도를 넘지 않도록 내린다
+      cash = up(T * c / 100, u);     // 현금 최소 기준을 채우도록 올린다
+
     } else {
-      cash = q(amount, unit, rule);
-      T = q(cash * 100 / c, unit, 'floor');                              // 가진 현금으로 감당 가능한 최대
-      gov = q(T * g / 100, unit, 'floor');
+      // 가진 현금으로 감당할 수 있는 최대 규모를 찾는다.
+      // 올림 때문에 보유액을 넘길 수 있어 한 칸씩 줄이며 맞춘다
+      const have = amount;
+      T = dn(have * 100 / c, u);
+      let guard = 0;
+      while (T > 0 && up(T * c / 100, u) > have && guard++ < 10000) T -= u;
+      gov = dn(T * g / 100, u);
+      cash = up(T * c / 100, u);
     }
 
     let inkind = T - gov - cash;
-    if (inkind < 0) { gov += inkind; inkind = 0; }                       // 반올림으로 넘치면 지원금에서 뺀다
-    if (gov < 0) { gov = 0; }
 
-    if (k > 0.0001 && inkind === 0 && T > 0) {
+    if (inkind < 0) {
+      show(warn, '현물 몫이 음수가 됩니다. 비율이나 최적화 단위를 조정해 주세요');
+      inkind = 0;
+    } else if (k > 0.0001 && inkind === 0 && T > 0) {
       show(warn, '현물 몫이 0으로 계산됐습니다. 단위를 작게 잡거나 비율을 확인해 주세요');
     }
 
-    return { T: T, gov: gov, cash: cash, inkind: inkind, g: g, c: c, k: k, unit: unit, rule: rule };
+    return { T: T, gov: gov, cash: cash, inkind: inkind, g: g, c: c, k: k, unit: unitName };
   }
 
   function show(el, msg) { el.textContent = msg; el.style.display = 'block'; }
@@ -355,10 +395,13 @@
     $('bC').style.flexBasis = pc + '%'; $('bC').textContent = pc >= 8 ? pct(pc) : '';
     $('bK').style.flexBasis = pk + '%'; $('bK').textContent = pk >= 8 ? pct(pk) : '';
 
+    const gTarget = r.g, cTarget = r.c;
     const rows = [
-      ['정부지원금',   r.gov,    pg, 'var(--gov)',  '지원기관 부담'],
-      ['자부담 현금',  r.cash,   pc, 'var(--cash)', '실제 통장에서 나가는 금액'],
-      ['자부담 현물',  r.inkind, pk, 'var(--kind)', '인건비·기존 보유자산 등'],
+      ['정부지원금',   r.gov,    pg, 'var(--gov)',
+        mode === 'gov' ? '입력값 그대로' : '기준 ' + gTarget.toFixed(1) + '% 이내로 내림'],
+      ['자부담 현금',  r.cash,   pc, 'var(--cash)',
+        '기준 ' + cTarget.toFixed(1) + '% 이상 되도록 올림'],
+      ['자부담 현물',  r.inkind, pk, 'var(--kind)', '총사업비 − 정부지원금 − 현금'],
       ['자부담 합계',  self,     pc + pk, 'var(--dim)', '현금 + 현물']
     ];
 
@@ -373,11 +416,19 @@
       tbody.appendChild(tr);
     });
 
+    const s1 = $('s1');
+    if (s1) {
+      s1.innerHTML = mode === 'gov'
+        ? '총 사업비 = 정부지원금 ÷ 지원 비율 → <b>최적화 단위로 올림</b>'
+        : mode === 'total'
+          ? '정부지원금 = 총 사업비 × 지원 비율 → <b>최적화 단위로 내림</b> (한도 초과 방지)'
+          : '총 사업비 = 보유 현금 ÷ 현금 비율 → <b>최적화 단위로 내림</b> (현금 부족 방지)';
+    }
+
     const t = document.createElement('tr');
     t.className = 'total';
-    t.innerHTML = '<td>총 사업비</td><td class="mono">' + won(r.T) + '</td><td class="mono">100.00%</td>' +
-                  '<td style="font-size:11.5px; color:var(--dim)">' + r.unit + ' 단위 ' +
-                  ({ ceil: '올림', round: '반올림', floor: '버림' })[r.rule] + '</td>';
+    t.innerHTML = '<td>총 사업비</td><td class="mono">' + won(r.T) + '</td><td class="mono">100.0%</td>' +
+                  '<td style="font-size:11.5px; color:var(--dim)">' + r.unit + ' 단위로 최적화</td>';
     tbody.appendChild(t);
   }
 
@@ -417,10 +468,12 @@
     PRESETS.forEach(function (p) {
       const b = document.createElement('button');
       b.className = 'preset' + (p.id === preset ? ' on' : '');
-      b.innerHTML = p.nm + '<span class="r">정부 ' + p.g + '% · 현금 ' + p.c + '% · ' + p.note + '</span>';
+      b.innerHTML = '<span style="font-size:13.5px; font-weight:600">' + p.nm + '</span>' +
+                    '<span class="r">' + p.sub + '</span>' +
+                    '<span class="r" style="margin-top:4px; color:var(--accent); opacity:.9">' + p.note + '</span>';
       b.addEventListener('click', function () {
         preset = p.id;
-        $('selfBase').checked = false;
+        $('selfBase').checked = !!p.self;      // R&D 계열은 자부담 대비 기준으로 맞춘다
         $('gRange').value = p.g;
         $('cRange').value = p.c;
         buildPresets(); syncLabels(); render();
@@ -439,7 +492,7 @@
       preset = 'custom'; buildPresets(); syncLabels(); render();
     });
   });
-  ['unit','round'].forEach(function (id) { $(id).addEventListener('change', render); });
+  $('unit').addEventListener('change', render);
   $('selfBase').addEventListener('change', function () { syncLabels(); render(); });
 
   $('themeBtn').addEventListener('click', function () {
@@ -461,13 +514,13 @@
   function tableRows() {
     if (!last) return [];
     const self = last.cash + last.inkind;
-    const p = function (v) { return last.T ? (v / last.T * 100).toFixed(2) : '0.00'; };
+    const p = function (v) { return last.T ? (v / last.T * 100).toFixed(1) : '0.0'; };
     return [
       ['정부지원금', last.gov, p(last.gov)],
       ['자부담 현금', last.cash, p(last.cash)],
       ['자부담 현물', last.inkind, p(last.inkind)],
       ['자부담 합계', self, p(self)],
-      ['총 사업비', last.T, '100.00']
+      ['총 사업비', last.T, '100.0']
     ];
   }
 
