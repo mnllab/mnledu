@@ -361,6 +361,16 @@ const TOOLS_DATA = [
     icon: 'clover',
     badge: 'NEW',
     tags: ['#랜덤', '#로또', '#쉬는시간']
+  },
+  {
+    id: 'russian-roulette',
+    title: '러시안 룰렛',
+    category: 'ENTERTAINMENT',
+    desc: '여섯 개의 탄창에 단 한 발. 벌칙이나 순서를 정할 때 긴장감을 더합니다.',
+    url: 'https://mnledu.com/entertainment/russian-roulette.html',
+    icon: 'crosshair',
+    badge: 'NEW',
+    tags: ['#게임', '#모임', '#랜덤', '#내기']
   }
 ];
 
