@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F1420">
+<title>글로벌 시차 다이얼</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/utc.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/timezone.js"></script>
+
+<style>
+  :root{
+    --bg:#0F1420; --panel:#18202E; --line:#27313F; --fg:#E8EDF3; --dim:#8A97A6;
+    --accent:#5AB0E8; --day:#FDF6E6; --dayInk:#3A2E18; --night:#161F35; --nightInk:#D6E0F0;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--fg);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:14px; }
+
+  /* 슬라이더 */
+  #slider{
+    -webkit-appearance:none; appearance:none; width:100%; height:8px;
+    border-radius:999px; outline:none; touch-action:none;
+    background:linear-gradient(90deg,
+      #1B2537 0%, #1B2537 22%, #F5D97A 27%, #FDF3D8 50%, #F5A25A 71%, #1B2537 78%, #1B2537 100%);
+  }
+  #slider::-webkit-slider-thumb{
+    -webkit-appearance:none; width:30px; height:30px; border-radius:999px;
+    background:#fff; border:4px solid var(--accent); cursor:grab;
+    box-shadow:0 3px 12px rgba(0,0,0,.45);
+  }
+  #slider::-webkit-slider-thumb:active{ cursor:grabbing; }
+  #slider::-moz-range-thumb{
+    width:26px; height:26px; border-radius:999px; background:#fff;
+    border:4px solid var(--accent); cursor:grab;
+  }
+  .ticks{ display:flex; justify-content:space-between; font-size:10px; color:var(--dim); margin-top:6px; }
+
+  /* 도시 카드 */
+  .city{
+    border-radius:13px; padding:15px 16px; border:1px solid var(--line);
+    display:flex; align-items:center; gap:14px;
+    transition:background .35s ease, color .35s ease, border-color .35s ease;
+  }
+  .city.dayC{ background:var(--day); color:var(--dayInk); border-color:#E6D9B8; }
+  .city.nightC{ background:var(--night); color:var(--nightInk); border-color:#2A3550; }
+  .city .ic{ font-size:26px; flex:none; }
+  .city .nm{ font-size:14.5px; font-weight:600; }
+  .city .zone{ font-size:10.5px; opacity:.6; margin-top:1px; }
+  .city .tm{ font-family:'JetBrains Mono',monospace; font-size:27px; font-weight:700; line-height:1.1; letter-spacing:-.02em; }
+  .city .dt{ font-size:11.5px; opacity:.72; margin-top:2px; font-family:'JetBrains Mono',monospace; }
+  .badge{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    border:1px solid currentColor; opacity:.75; border-radius:999px; padding:2px 8px;
+  }
+  .rm{
+    width:26px; height:26px; border-radius:7px; border:1px solid currentColor;
+    background:transparent; color:inherit; opacity:.45; cursor:pointer; flex:none;
+    font-size:14px; line-height:1;
+  }
+  .rm:hover{ opacity:1; }
+
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--fg);
+    border-radius:9px; font-size:13px; padding:10px 13px; cursor:pointer;
+  }
+  .btn:active{ background:#212B3A; }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#0F1420; font-weight:600; }
+  select.btn{ padding-right:28px; }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--panel); border:1px solid var(--line); color:var(--fg); border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-3xl px-4 py-6 sm:py-9">
+
+  <header class="mb-4 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-[18px] font-semibold tracking-tight">글로벌 시차 다이얼</h1>
+      <p class="mt-1 text-[12.5px]" style="color:var(--dim)">슬라이더를 밀면 모든 도시의 시계가 함께 움직입니다</p>
+    </div>
+    <button class="btn" id="nowBtn">지금 시각으로</button>
+  </header>
+
+  <!-- 슬라이더 -->
+  <div class="panel" style="padding:16px 18px 13px; margin-bottom:14px">
+    <div class="flex items-baseline justify-between gap-3" style="margin-bottom:12px">
+      <div>
+        <p class="text-[11px]" style="color:var(--dim)">기준 · <span id="baseZone">—</span></p>
+        <p class="mono" id="baseTime" style="font-size:30px; font-weight:700; line-height:1.15; margin:2px 0 0">--:--</p>
+        <p class="mono text-[12px]" id="baseDate" style="color:var(--dim); margin:2px 0 0"></p>
+      </div>
+      <div class="mono" id="offsetLabel" style="font-size:13px; color:var(--accent)">기준 시각</div>
+    </div>
+
+    <input type="range" id="slider" min="-1440" max="1440" step="15" value="0">
+    <div class="ticks">
+      <span>−24시간</span><span>−12</span><span>지금</span><span>+12</span><span>+24시간</span>
+    </div>
+  </div>
+
+  <!-- 도시 추가 -->
+  <div class="flex flex-wrap gap-2" style="margin-bottom:14px">
+    <select class="btn" id="citySel" style="flex:1; min-width:180px"></select>
+    <button class="btn p" id="addBtn">도시 추가</button>
+  </div>
+
+  <div id="list" class="grid gap-2.5"></div>
+  <p id="empty" class="text-[12.5px]" style="color:var(--dim)">도시를 추가하면 여기에 시계가 나열됩니다</p>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const CITIES = [
+    { id: 'Asia/Seoul',          ko: '서울',        flag: '🇰🇷' },
+    { id: 'Asia/Tokyo',          ko: '도쿄',        flag: '🇯🇵' },
+    { id: 'Asia/Shanghai',       ko: '베이징·상하이', flag: '🇨🇳' },
+    { id: 'Asia/Hong_Kong',      ko: '홍콩',        flag: '🇭🇰' },
+    { id: 'Asia/Singapore',      ko: '싱가포르',    flag: '🇸🇬' },
+    { id: 'Asia/Bangkok',        ko: '방콕',        flag: '🇹🇭' },
+    { id: 'Asia/Kolkata',        ko: '뉴델리',      flag: '🇮🇳' },
+    { id: 'Asia/Dubai',          ko: '두바이',      flag: '🇦🇪' },
+    { id: 'Europe/Moscow',       ko: '모스크바',    flag: '🇷🇺' },
+    { id: 'Europe/Berlin',       ko: '베를린',      flag: '🇩🇪' },
+    { id: 'Europe/Paris',        ko: '파리',        flag: '🇫🇷' },
+    { id: 'Europe/London',       ko: '런던',        flag: '🇬🇧' },
+    { id: 'America/Sao_Paulo',   ko: '상파울루',    flag: '🇧🇷' },
+    { id: 'America/New_York',    ko: '뉴욕',        flag: '🇺🇸' },
+    { id: 'America/Chicago',     ko: '시카고',      flag: '🇺🇸' },
+    { id: 'America/Denver',      ko: '덴버',        flag: '🇺🇸' },
+    { id: 'America/Los_Angeles', ko: '로스앤젤레스', flag: '🇺🇸' },
+    { id: 'Pacific/Honolulu',    ko: '호놀룰루',    flag: '🇺🇸' },
+    { id: 'Australia/Sydney',    ko: '시드니',      flag: '🇦🇺' },
+    { id: 'Pacific/Auckland',    ko: '오클랜드',    flag: '🇳🇿' }
+  ];
+  const DOW = ['일', '월', '화', '수', '목', '금', '토'];
+  const KEY = 'tzdial-v1';
+
+  let list = [], offsetMin = 0, anchor = new Date();
+  let localZone = 'Asia/Seoul';
+
+  const toastEl = document.getElementById('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  function ready() { return !!(window.dayjs && dayjs.tz); }
+
+  /* ---------- 저장 ---------- */
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (d && Array.isArray(d.list) && d.list.length) list = d.list;
+    } catch (e) {}
+    if (!list.length) list = ['Asia/Seoul', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify({ list: list })); } catch (e) {}
+  }
+
+  function info(id) {
+    for (let i = 0; i < CITIES.length; i++) if (CITIES[i].id === id) return CITIES[i];
+    return { id: id, ko: id.split('/').pop().replace(/_/g, ' '), flag: '🏳️' };
+  }
+
+  // 기준 시각 = 고정한 시점 + 슬라이더로 민 분
+  function baseMoment() {
+    return dayjs(anchor).add(offsetMin, 'minute');
+  }
+
+  /* ---------- 그리기 ---------- */
+  function buildSelect() {
+    const sel = document.getElementById('citySel');
+    sel.innerHTML = '';
+    CITIES.forEach(function (c) {
+      const o = document.createElement('option');
+      o.value = c.id;
+      o.textContent = c.flag + '  ' + c.ko;
+      sel.appendChild(o);
+    });
+  }
+
+  function buildList() {
+    const wrap = document.getElementById('list');
+    wrap.innerHTML = '';
+    document.getElementById('empty').style.display = list.length ? 'none' : 'block';
+
+    list.forEach(function (id) {
+      const c = info(id);
+      const el = document.createElement('div');
+      el.className = 'city';
+      el.dataset.id = id;
+      el.innerHTML =
+        '<span class="ic" data-role="ic">🌙</span>' +
+        '<div style="flex:1; min-width:0">' +
+          '<div class="nm">' + c.flag + ' ' + c.ko + '</div>' +
+          '<div class="zone">' + id + '</div>' +
+        '</div>' +
+        '<div style="text-align:right">' +
+          '<div class="tm" data-role="tm">--:--</div>' +
+          '<div class="dt" data-role="dt"></div>' +
+          '<div style="margin-top:5px"><span class="badge" data-role="bd"></span></div>' +
+        '</div>';
+
+      const rm = document.createElement('button');
+      rm.className = 'rm';
+      rm.textContent = '×';
+      rm.title = '삭제';
+      rm.addEventListener('click', function () {
+        list = list.filter(function (x) { return x !== id; });
+        save(); buildList(); tick();
+        toast(c.ko + ' 을(를) 뺐습니다');
+      });
+      el.appendChild(rm);
+      wrap.appendChild(el);
+    });
+  }
+
+  // 여러 도시를 한 번에 갱신한다. DOM을 새로 만들지 않고 글자만 바꿔 버벅임을 없앴다
+  function tick() {
+    if (!ready()) return;
+    const base = baseMoment();
+
+    document.getElementById('baseZone').textContent = info(localZone).ko + ' · ' + localZone;
+    const bl = base.tz(localZone);
+    document.getElementById('baseTime').textContent = bl.format('HH:mm');
+    document.getElementById('baseDate').textContent = bl.format('YYYY-MM-DD') + ' (' + DOW[bl.day()] + ')';
+
+    const h = Math.floor(Math.abs(offsetMin) / 60), m = Math.abs(offsetMin) % 60;
+    document.getElementById('offsetLabel').textContent =
+      offsetMin === 0 ? '지금 이 시각' :
+      (offsetMin > 0 ? '+' : '−') + h + '시간' + (m ? ' ' + m + '분' : '');
+
+    const localOff = bl.utcOffset();
+
+    document.querySelectorAll('.city').forEach(function (el) {
+      const id = el.dataset.id;
+      const t = base.tz(id);
+      const hh = t.hour();
+      const isDay = hh >= 6 && hh < 18;
+
+      el.classList.toggle('dayC', isDay);
+      el.classList.toggle('nightC', !isDay);
+      el.querySelector('[data-role="ic"]').textContent = isDay ? '☀️' : '🌙';
+      el.querySelector('[data-role="tm"]').textContent = t.format('HH:mm');
+
+      const sameDay = t.format('YYYY-MM-DD') === bl.format('YYYY-MM-DD');
+      el.querySelector('[data-role="dt"]').textContent =
+        t.format('MM-DD') + ' (' + DOW[t.day()] + ')' +
+        (sameDay ? '' : (t.isAfter(bl, 'day') ? ' 다음날' : ' 전날'));
+
+      const diff = (t.utcOffset() - localOff) / 60;
+      const dh = Math.floor(Math.abs(diff)), dm = Math.round((Math.abs(diff) - dh) * 60);
+      el.querySelector('[data-role="bd"]').textContent =
+        diff === 0 ? '시차 없음'
+        : (diff > 0 ? '+' : '−') + dh + (dm ? ':' + String(dm).padStart(2, '0') : '') + '시간';
+    });
+  }
+
+  /* ---------- 조작 ---------- */
+  const slider = document.getElementById('slider');
+  // 슬라이더는 자주 움직이므로 프레임마다 한 번씩만 다시 그린다
+  let pending = false;
+  slider.addEventListener('input', function () {
+    offsetMin = parseInt(slider.value, 10);
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; tick(); });
+  });
+
+  document.getElementById('nowBtn').addEventListener('click', function () {
+    anchor = new Date();
+    offsetMin = 0;
+    slider.value = 0;
+    tick();
+    toast('지금 시각으로 맞췄습니다');
+  });
+
+  document.getElementById('addBtn').addEventListener('click', function () {
+    const id = document.getElementById('citySel').value;
+    if (list.indexOf(id) !== -1) { toast('이미 추가된 도시입니다'); return; }
+    if (list.length >= 12) { toast('도시는 12개까지 넣을 수 있습니다'); return; }
+    list.push(id);
+    save(); buildList(); tick();
+    toast(info(id).ko + ' 을(를) 넣었습니다');
+  });
+
+  /* ---------- 시작 ---------- */
+  function start() {
+    // 플러그인을 먼저 등록해야 dayjs.tz 가 생긴다. 순서를 바꾸면 항상 실패한다
+    if (!window.dayjs || !window.dayjs_plugin_utc || !window.dayjs_plugin_timezone) {
+      document.getElementById('empty').textContent =
+        '시간대 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.';
+      return;
+    }
+    dayjs.extend(window.dayjs_plugin_utc);
+    dayjs.extend(window.dayjs_plugin_timezone);
+    if (!ready()) {
+      document.getElementById('empty').textContent = '시간대 기능을 사용할 수 없습니다.';
+      return;
+    }
+
+    try { localZone = dayjs.tz.guess() || 'Asia/Seoul'; } catch (e) { localZone = 'Asia/Seoul'; }
+
+    load();
+    // 내 시간대가 목록에 없으면 맨 앞에 넣어 준다
+    if (list.indexOf(localZone) === -1) {
+      const known = CITIES.some(function (c) { return c.id === localZone; });
+      if (known) list.unshift(localZone);
+    }
+
+    buildSelect();
+    document.getElementById('citySel').value =
+      CITIES.some(function (c) { return c.id === localZone; }) ? localZone : 'America/New_York';
+
+    buildList();
+    tick();
+
+    // 슬라이더가 0일 때는 실제 시간이 흐르도록 매초 갱신한다
+    setInterval(function () {
+      if (offsetMin === 0) { anchor = new Date(); tick(); }
+    }, 1000);
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(start, 0);
+  else window.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+</body>
+</html>

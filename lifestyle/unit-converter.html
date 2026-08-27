@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F4F5F7">
+<title>단위 변환기</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#F4F5F7; --panel:#FFFFFF; --line:#E3E7EC; --ink:#26384B; --dim:#5F7488;
+    --accent:#2C6BA0; --soft:#EAF1F7;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .tab{
+    width:100%; text-align:left; padding:12px 14px; border-radius:10px;
+    border:1px solid var(--line); background:#fff; color:var(--dim);
+    font-size:13.5px; cursor:pointer; margin-bottom:7px; transition:all .12s;
+    display:flex; align-items:center; gap:9px;
+  }
+  .tab:hover{ border-color:#C3CCD6; color:var(--ink); }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .tab .ic{ font-size:16px; }
+
+  .cell{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:13px 14px; transition:border-color .12s, box-shadow .12s;
+  }
+  .cell:focus-within{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(44,107,160,.1); }
+  .cell.active{ border-color:var(--accent); background:#FAFCFE; }
+  .cell .u{ font-size:11.5px; color:var(--dim); margin-bottom:5px; display:flex; justify-content:space-between; align-items:center; gap:6px; }
+  .cell input{
+    width:100%; border:0; outline:none; background:transparent; color:var(--ink);
+    font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  .cell input::placeholder{ color:#B6C0CA; font-weight:400; }
+  .copyBtn{
+    border:1px solid var(--line); background:#fff; border-radius:6px;
+    width:26px; height:26px; flex:none; cursor:pointer; color:var(--dim);
+    display:flex; align-items:center; justify-content:center; transition:all .12s;
+  }
+  .copyBtn:hover{ border-color:var(--accent); color:var(--accent); }
+  .copyBtn:active{ transform:scale(.92); }
+
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:8px; font-size:12.5px; padding:8px 12px; cursor:pointer;
+  }
+  .btn:active{ background:var(--soft); }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-5xl px-4 py-6 sm:py-9">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-[18px] font-semibold tracking-tight">유니버설 단위 변환기</h1>
+      <p class="mt-1 text-[12.5px]" style="color:var(--dim)">아무 칸에나 숫자를 넣으면 나머지가 동시에 채워집니다</p>
+    </div>
+    <div style="display:flex; gap:7px">
+      <select class="btn" id="digits" aria-label="소수점 자릿수">
+        <option value="2">소수점 2자리</option>
+        <option value="4" selected>4자리</option>
+        <option value="6">6자리</option>
+        <option value="auto">자동</option>
+      </select>
+      <button class="btn" id="clearBtn">비우기</button>
+    </div>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-[190px_1fr]">
+    <div id="tabs"></div>
+    <div>
+      <div id="grid" class="grid gap-3 sm:grid-cols-2"></div>
+      <p id="note" class="mt-3 text-[11.5px] leading-relaxed" style="color:var(--dim)"></p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // 각 단위를 기준 단위 대비 배율로 정의한다. 변환은 '입력값 → 기준값 → 나머지' 두 단계다
+  const CATS = {
+    length: {
+      icon: '📏', label: '길이', base: 'm',
+      note: '기준 단위는 미터입니다. 자·척은 한국 곡척(30.303cm) 기준입니다.',
+      units: [
+        { k: 'mm', n: '밀리미터 (mm)', f: 0.001 },
+        { k: 'cm', n: '센티미터 (cm)', f: 0.01 },
+        { k: 'm',  n: '미터 (m)',      f: 1 },
+        { k: 'km', n: '킬로미터 (km)', f: 1000 },
+        { k: 'in', n: '인치 (in)',     f: 0.0254 },
+        { k: 'ft', n: '피트 (ft)',     f: 0.3048 },
+        { k: 'yd', n: '야드 (yd)',     f: 0.9144 },
+        { k: 'mi', n: '마일 (mi)',     f: 1609.344 },
+        { k: 'ja', n: '자 (尺)',       f: 0.30303 },
+        { k: 'nm', n: '해리 (nmi)',    f: 1852 }
+      ]
+    },
+    weight: {
+      icon: '⚖️', label: '무게', base: 'kg',
+      note: '기준 단위는 킬로그램입니다. 근은 600g(육류·일반 기준), 관은 3.75kg입니다.',
+      units: [
+        { k: 'mg',  n: '밀리그램 (mg)', f: 0.000001 },
+        { k: 'g',   n: '그램 (g)',      f: 0.001 },
+        { k: 'kg',  n: '킬로그램 (kg)', f: 1 },
+        { k: 't',   n: '톤 (t)',        f: 1000 },
+        { k: 'oz',  n: '온스 (oz)',     f: 0.028349523125 },
+        { k: 'lb',  n: '파운드 (lb)',   f: 0.45359237 },
+        { k: 'geun',n: '근 (斤)',       f: 0.6 },
+        { k: 'gwan',n: '관 (貫)',       f: 3.75 }
+      ]
+    },
+    area: {
+      icon: '🏠', label: '넓이 · 평수', base: 'm2',
+      note: '1평은 3.305785m²(400/121)입니다. 부동산에서 쓰는 값과 같습니다.',
+      units: [
+        { k: 'cm2', n: '제곱센티미터 (cm²)', f: 0.0001 },
+        { k: 'm2',  n: '제곱미터 (m²)',      f: 1 },
+        { k: 'pyeong', n: '평 (坪)',         f: 400 / 121 },
+        { k: 'a',   n: '아르 (a)',           f: 100 },
+        { k: 'ha',  n: '헥타르 (ha)',        f: 10000 },
+        { k: 'km2', n: '제곱킬로미터 (km²)', f: 1000000 },
+        { k: 'ac',  n: '에이커 (ac)',        f: 4046.8564224 },
+        { k: 'ft2', n: '제곱피트 (ft²)',     f: 0.09290304 }
+      ]
+    },
+    volume: {
+      icon: '🧴', label: '부피', base: 'L',
+      note: '되·말은 한국 전통 단위로 1되는 1.8039L입니다. 갤런은 미국 기준입니다.',
+      units: [
+        { k: 'mL',  n: '밀리리터 (mL)',   f: 0.001 },
+        { k: 'L',   n: '리터 (L)',        f: 1 },
+        { k: 'm3',  n: '세제곱미터 (m³)', f: 1000 },
+        { k: 'cup', n: '컵 (200mL)',      f: 0.2 },
+        { k: 'gal', n: '갤런 (US gal)',   f: 3.785411784 },
+        { k: 'floz',n: '액량온스 (fl oz)',f: 0.0295735295625 },
+        { k: 'doe', n: '되 (升)',         f: 1.8039 },
+        { k: 'mal', n: '말 (斗)',         f: 18.039 }
+      ]
+    },
+    data: {
+      icon: '💾', label: '데이터 (IT)', base: 'B',
+      note: '1024 진수(KiB 기준)로 변환합니다. 저장장치 제조사가 쓰는 1000 진수와는 값이 다릅니다.',
+      units: [
+        { k: 'bit', n: '비트 (bit)',     f: 1 / 8 },
+        { k: 'B',   n: '바이트 (Byte)',  f: 1 },
+        { k: 'KB',  n: '킬로바이트 (KB)',f: 1024 },
+        { k: 'MB',  n: '메가바이트 (MB)',f: 1024 ** 2 },
+        { k: 'GB',  n: '기가바이트 (GB)',f: 1024 ** 3 },
+        { k: 'TB',  n: '테라바이트 (TB)',f: 1024 ** 4 },
+        { k: 'PB',  n: '페타바이트 (PB)',f: 1024 ** 5 }
+      ]
+    }
+  };
+
+  let cat = 'length', typing = null;
+
+  const toastEl = document.getElementById('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1500);
+  }
+
+  function digits() { return document.getElementById('digits').value; }
+
+  // 아주 크거나 작은 값도 읽히도록 자릿수를 상황에 맞게 고른다
+  function fmt(v) {
+    if (!isFinite(v)) return '';
+    if (v === 0) return '0';
+    const d = digits();
+    if (d === 'auto') {
+      const a = Math.abs(v);
+      if (a >= 1e12 || a < 1e-6) return v.toExponential(4);
+      const dec = a >= 1000 ? 2 : a >= 1 ? 4 : 8;
+      return trim(v.toFixed(dec));
+    }
+    const a = Math.abs(v);
+    if (a >= 1e15 || (a < 1e-9 && a > 0)) return v.toExponential(4);
+    return trim(v.toFixed(parseInt(d, 10)));
+  }
+  function trim(s) {
+    return s.indexOf('.') === -1 ? s : s.replace(/0+$/, '').replace(/\.$/, '');
+  }
+  function parse(s) {
+    const t = String(s).replace(/[,\s]/g, '');
+    if (t === '') return null;
+    const v = Number(t);
+    return isNaN(v) ? null : v;
+  }
+
+  function buildTabs() {
+    const wrap = document.getElementById('tabs');
+    wrap.innerHTML = '';
+    Object.keys(CATS).forEach(function (k) {
+      const b = document.createElement('button');
+      b.className = 'tab' + (k === cat ? ' on' : '');
+      b.innerHTML = '<span class="ic">' + CATS[k].icon + '</span>' + CATS[k].label;
+      b.addEventListener('click', function () { cat = k; buildTabs(); buildGrid(); });
+      wrap.appendChild(b);
+    });
+  }
+
+  function buildGrid() {
+    const g = document.getElementById('grid');
+    g.innerHTML = '';
+    document.getElementById('note').textContent = CATS[cat].note;
+
+    CATS[cat].units.forEach(function (u) {
+      const c = document.createElement('div');
+      c.className = 'cell';
+      c.dataset.k = u.k;
+
+      const head = document.createElement('div');
+      head.className = 'u';
+      const nm = document.createElement('span');
+      nm.textContent = u.n;
+
+      const cp = document.createElement('button');
+      cp.className = 'copyBtn';
+      cp.title = '복사';
+      cp.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>';
+      cp.addEventListener('click', function () { copyVal(u.k); });
+
+      head.appendChild(nm); head.appendChild(cp);
+
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.inputMode = 'decimal';
+      inp.placeholder = '0';
+      inp.dataset.k = u.k;
+      inp.addEventListener('input', function () { onInput(u.k, inp.value); });
+      inp.addEventListener('focus', function () { c.classList.add('active'); });
+      inp.addEventListener('blur', function () { c.classList.remove('active'); });
+
+      c.appendChild(head); c.appendChild(inp);
+      g.appendChild(c);
+    });
+  }
+
+  // 입력 중인 칸은 건드리지 않고 나머지만 채운다
+  function onInput(key, raw) {
+    typing = key;
+    const v = parse(raw);
+    const list = CATS[cat].units;
+    const src = list.filter(function (u) { return u.k === key; })[0];
+
+    if (v === null) {
+      list.forEach(function (u) {
+        if (u.k === key) return;
+        const el = document.querySelector('input[data-k="' + u.k + '"]');
+        if (el) el.value = '';
+      });
+      return;
+    }
+
+    const baseVal = v * src.f;
+    list.forEach(function (u) {
+      if (u.k === key) return;
+      const el = document.querySelector('input[data-k="' + u.k + '"]');
+      if (el) el.value = fmt(baseVal / u.f);
+    });
+  }
+
+  function copyVal(key) {
+    const el = document.querySelector('input[data-k="' + key + '"]');
+    if (!el || !el.value) { toast('값이 비어 있습니다'); return; }
+    const text = el.value;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () { toast('복사 · ' + text); })
+        .catch(function () { legacy(text); });
+    } else legacy(text);
+  }
+  function legacy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    toast(ok ? '복사 · ' + text : '복사가 막혔습니다');
+  }
+
+  document.getElementById('digits').addEventListener('change', function () {
+    // 자릿수를 바꾸면 마지막으로 입력한 칸 기준으로 다시 계산한다
+    const key = typing || CATS[cat].units[0].k;
+    const el = document.querySelector('input[data-k="' + key + '"]');
+    if (el) onInput(key, el.value);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    document.querySelectorAll('#grid input').forEach(function (i) { i.value = ''; });
+    typing = null;
+    toast('모두 비웠습니다');
+  });
+
+  buildTabs();
+  buildGrid();
+})();
+</script>
+</body>
+</html>
