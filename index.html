@@ -105,7 +105,7 @@
       <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600 mb-3.5 sm:mb-4">Instant Web Utilities</p>
 
       <h1 class="tracking-tight font-extrabold text-slate-900 text-3xl sm:text-5xl leading-[1.2] sm:leading-[1.15] break-keep">
-        클릭 한 번으로 열리는 <br class="sm:hidden" />나만의 도구함
+        설치 없이 즉시 연결되는<br class="sm:hidden" /> 스마트한 업무 워크플로우
       </h1>
 
       <p class="mt-3.5 sm:mt-4 text-sm sm:text-[15px] leading-relaxed text-slate-500 max-w-xl mx-auto break-keep">
@@ -363,7 +363,10 @@
     var TAB_ON   = 'bg-slate-900 text-white shadow-md shadow-slate-900/10';
 
     function renderFilters() {
-      var tabs = ['ALL'].concat(CATEGORIES);
+      // 등록된 도구가 없는 카테고리는 탭에서 숨긴다 (선택 중인 탭은 유지)
+      var tabs = ['ALL'].concat(CATEGORIES.filter(function (c) {
+        return countOf(c) > 0 || c === activeCategory;
+      }));
       el.filterBar.innerHTML = tabs.map(function (cat) {
         var on = cat === activeCategory;
         return '<button type="button" data-cat="' + esc(cat) + '" aria-pressed="' + on + '" ' +

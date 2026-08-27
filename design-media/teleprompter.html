@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스마트 오토 프롬프터</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+  /* ---------- 테마 ---------- */
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --fg:#F2F5F8; --dim:#8A97A6;
+    --bold:#FFD54A;          /* 볼드 : 노랑 */
+    --head:#5EE6C5;          /* 제목 : 민트 */
+    --accent:#5EE6C5;
+    --panel:rgba(22,29,38,.92); --line:rgba(255,255,255,.14);
+    --guide:rgba(94,230,197,.30); --guideEdge:rgba(94,230,197,.55);
+  }
+  :root[data-theme="light"]{
+    --bg:#FFFFFF; --fg:#111827; --dim:#5F7488;
+    --bold:#1D5FBF;          /* 볼드 : 파랑 */
+    --head:#0F4C81;
+    --accent:#2C6BA0;
+    --panel:rgba(255,255,255,.94); --line:rgba(38,56,75,.14);
+    --guide:rgba(44,107,160,.22); --guideEdge:rgba(44,107,160,.5);
+  }
+
+  html,body{ margin:0; height:100%; }
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+    transition:background .25s, color .25s;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  /* ---------- 프롬프터 화면 ---------- */
+  #viewport{
+    position:fixed; inset:0; overflow-y:auto; overflow-x:hidden;
+    scrollbar-width:none;
+  }
+  #viewport::-webkit-scrollbar{ display:none; }
+
+  #script{
+    margin:0 auto;
+    padding:50vh 0;                      /* 위아래 여백으로 첫 줄과 끝 줄도 중앙에 올 수 있게 */
+    max-width:900px;
+    font-size:44px; line-height:1.55;
+    word-break:keep-all;
+    transition:max-width .2s, font-size .12s;
+  }
+  #script.mirrorX{ transform:scaleX(-1); }
+  #script.mirrorY{ transform:scaleY(-1); }
+  #script.mirrorX.mirrorY{ transform:scale(-1,-1); }
+
+  #script h1, #script h2, #script h3{
+    color:var(--head); font-weight:700; line-height:1.35;
+    margin:1.1em 0 .5em;
+  }
+  #script h1{ font-size:1.35em; }
+  #script h2{ font-size:1.2em; }
+  #script h3{ font-size:1.08em; }
+  #script p{ margin:0 0 .75em; }
+  #script strong, #script b{ color:var(--bold); font-weight:700; }
+  #script em{ color:var(--dim); font-style:normal; }
+  #script ul, #script ol{ margin:.4em 0 .8em; padding-left:1.4em; }
+  #script li{ margin:.25em 0; }
+  #script hr{ border:0; border-top:2px solid var(--line); margin:1.2em 0; }
+  #script blockquote{
+    margin:.8em 0; padding:.2em 0 .2em 1em;
+    border-left:4px solid var(--accent); color:var(--dim);
+  }
+  #script code{ font-family:'JetBrains Mono',monospace; font-size:.85em; color:var(--accent); }
+
+  /* ---------- 시선 유도선 ---------- */
+  #guide{
+    position:fixed; left:0; right:0; top:50%; transform:translateY(-50%);
+    height:calc(1.55em * 1); pointer-events:none; z-index:20;
+    background:var(--guide);
+    border-top:2px solid var(--guideEdge);
+    border-bottom:2px solid var(--guideEdge);
+    transition:opacity .2s;
+  }
+  #guide.off{ opacity:0; }
+
+  /* ---------- 컨트롤 ---------- */
+  #panel{
+    position:fixed; left:50%; bottom:20px; transform:translateX(-50%);
+    z-index:40; max-width:calc(100vw - 24px);
+    background:var(--panel); color:var(--fg);
+    border:1px solid var(--line); border-radius:12px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 6px 24px rgba(0,0,0,.22);
+    transition:opacity .25s, transform .25s;
+  }
+  #panel.hide{ opacity:0; transform:translate(-50%, 20px); pointer-events:none; }
+
+  .ctl{
+    border:1px solid var(--line); background:transparent; color:var(--fg);
+    border-radius:6px; font-size:12.5px; line-height:1; padding:8px 11px;
+    cursor:pointer; transition:border-color .12s, background .12s, color .12s;
+    font-family:inherit;
+  }
+  .ctl:hover{ border-color:var(--accent); color:var(--accent); }
+  .ctl.on{ background:var(--accent); border-color:var(--accent); color:var(--bg); }
+  .ctl:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  #playBtn{
+    min-width:96px; font-size:13px; font-weight:600; padding:10px 14px;
+    background:var(--accent); border-color:var(--accent); color:var(--bg);
+  }
+  #playBtn:hover{ opacity:.88; color:var(--bg); }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:104px; height:3px; border-radius:999px; background:var(--line); outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:14px; height:14px; border-radius:999px; background:var(--accent); cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:14px; height:14px; border-radius:999px; background:var(--accent); border:0; cursor:pointer;
+  }
+
+  /* ---------- 진행 막대 ---------- */
+  #progress{
+    position:fixed; left:0; top:0; height:3px; width:0;
+    background:var(--accent); z-index:50; transition:width .1s linear;
+  }
+
+  /* ---------- 안내 · 드래그 ---------- */
+  #intro{
+    position:fixed; inset:0; z-index:30; display:flex;
+    align-items:center; justify-content:center; padding:24px;
+    background:var(--bg);
+  }
+  #introCard{
+    border:2px dashed var(--line); border-radius:14px;
+    padding:48px 32px; text-align:center; max-width:640px; width:100%;
+    transition:border-color .14s, background .14s;
+  }
+  #intro.over #introCard{ border-color:var(--accent); background:rgba(127,127,127,.06); }
+
+  #editor{
+    width:100%; min-height:180px; margin-top:18px;
+    background:transparent; color:var(--fg);
+    border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; font-size:14px; line-height:1.7;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    outline:none; resize:vertical;
+  }
+  #editor:focus{ border-color:var(--accent); }
+
+  #topBtn{
+    position:fixed; left:50%; top:calc(50% + 90px); transform:translateX(-50%);
+    z-index:45; font-size:13px; padding:10px 18px; border-radius:999px;
+    background:var(--accent); color:var(--bg); border:0; cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,.25);
+  }
+
+  kbd{
+    font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px;
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:4px;
+    padding:1px 5px; color:var(--dim);
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:110px; transform:translate(-50%, 10px);
+    z-index:60; opacity:0; pointer-events:none;
+    background:var(--panel); border:1px solid var(--line); color:var(--fg);
+    border-radius:8px; padding:10px 16px; font-size:13px; font-weight:500;
+    transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+
+<div id="progress"></div>
+
+<!-- 프롬프터 -->
+<div id="viewport">
+  <div id="script"></div>
+</div>
+
+<div id="guide"></div>
+
+<button id="topBtn" class="hidden">맨 위로</button>
+
+<!-- 시작 화면 -->
+<div id="intro">
+  <div id="introCard">
+    <p class="text-[20px] font-semibold" style="color:var(--fg)">원고를 불러오세요</p>
+    <p class="mt-2 text-[13.5px]" style="color:var(--dim)">
+      .md 또는 .txt 파일을 이 화면에 끌어다 놓거나, 아래에 직접 붙여넣으세요
+    </p>
+
+    <textarea id="editor" spellcheck="false" placeholder="# 발표 제목&#10;&#10;안녕하세요. **핵심 메시지**는 노란색으로 강조됩니다.&#10;&#10;- 첫째 항목&#10;- 둘째 항목"></textarea>
+
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+      <button id="fileBtn" class="ctl">파일 선택</button>
+      <button id="sampleBtn" class="ctl">예시 원고</button>
+      <button id="startBtn" class="ctl" style="background:var(--accent);border-color:var(--accent);color:var(--bg)">원고 적용</button>
+      <input type="file" id="picker" accept=".md,.txt,.markdown,text/plain,text/markdown" class="hidden">
+    </div>
+
+    <p class="mt-5 text-[12px] leading-relaxed" style="color:var(--dim)">
+      <kbd>Space</kbd> 재생·정지 · <kbd>↑</kbd><kbd>↓</kbd> 속도 · <kbd>Home</kbd> 처음으로 · <kbd>M</kbd> 거울 · <kbd>T</kbd> 테마 · <kbd>H</kbd> 패널 숨김
+    </p>
+  </div>
+</div>
+
+<!-- 컨트롤 패널 -->
+<div id="panel" class="px-4 py-3">
+  <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+
+    <button id="playBtn" class="ctl">재생</button>
+
+    <div class="flex items-center gap-2">
+      <span class="text-[11px]" style="color:var(--dim)">속도</span>
+      <input type="range" id="speed" min="10" max="320" step="5" value="70">
+      <span id="speedVal" class="num w-10 text-right text-[11px]" style="color:var(--dim)">70</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="text-[11px]" style="color:var(--dim)">글자</span>
+      <input type="range" id="size" min="20" max="110" step="2" value="44">
+      <span id="sizeVal" class="num w-10 text-right text-[11px]" style="color:var(--dim)">44</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="text-[11px]" style="color:var(--dim)">폭</span>
+      <input type="range" id="width" min="480" max="1600" step="20" value="900">
+      <span id="widthVal" class="num w-11 text-right text-[11px]" style="color:var(--dim)">900</span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-1.5">
+      <button id="mirrorX" class="ctl">좌우 반전</button>
+      <button id="mirrorY" class="ctl">상하 반전</button>
+      <button id="guideBtn" class="ctl on">가이드</button>
+      <button id="themeBtn" class="ctl">라이트</button>
+      <button id="fsBtn" class="ctl">전체화면</button>
+      <button id="editBtn" class="ctl">원고</button>
+    </div>
+
+    <span id="timeInfo" class="num text-[11px]" style="color:var(--dim)"></span>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const viewport = document.getElementById('viewport');
+  const script   = document.getElementById('script');
+  const intro    = document.getElementById('intro');
+  const editor   = document.getElementById('editor');
+  const picker   = document.getElementById('picker');
+  const playBtn  = document.getElementById('playBtn');
+  const speedEl  = document.getElementById('speed');
+  const sizeEl   = document.getElementById('size');
+  const widthEl  = document.getElementById('width');
+  const guide    = document.getElementById('guide');
+  const panel    = document.getElementById('panel');
+  const topBtn   = document.getElementById('topBtn');
+  const progress = document.getElementById('progress');
+  const timeInfo = document.getElementById('timeInfo');
+  const root     = document.documentElement;
+
+  let playing = false;
+  let lastTs = 0;
+  let carry = 0;        // 소수점 이하 스크롤 누적분
+  let hasScript = false;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  /* ---------- 원고 적용 ---------- */
+  function setScript(text) {
+    if (!text || !text.trim()) { toast('원고 내용이 비어 있습니다'); return; }
+    try {
+      script.innerHTML = (typeof marked !== 'undefined')
+        ? (marked.parse ? marked.parse(text) : marked(text))
+        : text.split('\n').map(function (l) {
+            return '<p>' + l.replace(/[&<>]/g, function (c) {
+              return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+            }) + '</p>';
+          }).join('');
+    } catch (e) {
+      script.textContent = text;
+    }
+    hasScript = true;
+    intro.style.display = 'none';
+    viewport.scrollTop = 0;
+    stop();
+    updateInfo();
+    toast('원고를 불러왔습니다 · Space로 시작하세요');
+  }
+
+  document.getElementById('startBtn').addEventListener('click', function () { setScript(editor.value); });
+  document.getElementById('fileBtn').addEventListener('click', function () { picker.click(); });
+
+  picker.addEventListener('change', function (ev) {
+    const f = ev.target.files && ev.target.files[0];
+    if (f) readFile(f);
+    picker.value = '';
+  });
+
+  function readFile(f) {
+    if (!/\.(md|markdown|txt)$/i.test(f.name) && f.type.indexOf('text/') !== 0) {
+      toast('md 또는 txt 파일만 열 수 있습니다');
+      return;
+    }
+    const r = new FileReader();
+    r.onload = function (e) {
+      editor.value = String(e.target.result);
+      setScript(editor.value);
+    };
+    r.onerror = function () { toast('파일을 읽지 못했습니다'); };
+    r.readAsText(f, 'UTF-8');
+  }
+
+  // 화면 어디에 떨어뜨려도 받는다
+  ['dragenter', 'dragover'].forEach(function (t) {
+    window.addEventListener(t, function (ev) { ev.preventDefault(); intro.classList.add('over'); });
+  });
+  window.addEventListener('dragleave', function (ev) {
+    if (ev.relatedTarget) return;
+    intro.classList.remove('over');
+  });
+  window.addEventListener('drop', function (ev) {
+    ev.preventDefault();
+    intro.classList.remove('over');
+    const f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    editor.value =
+      '# 모두의 창업 프로젝트\n\n' +
+      '안녕하세요. 오늘은 **창업의 첫 단계**에 대해 말씀드리겠습니다.\n\n' +
+      '## 첫째, 문제를 정의합니다\n\n' +
+      '많은 팀이 기술부터 시작합니다. 그러나 순서가 **반대**입니다.\n' +
+      '고객이 겪는 불편을 먼저 찾아야 합니다.\n\n' +
+      '- 누가 겪는 문제인가\n' +
+      '- 얼마나 자주 겪는가\n' +
+      '- 지금은 어떻게 해결하고 있는가\n\n' +
+      '## 둘째, 가장 작은 실험을 설계합니다\n\n' +
+      '> 완성된 제품이 아니라 답을 얻을 수 있는 최소한의 형태\n\n' +
+      '검증에 필요한 것은 **속도**입니다.\n\n' +
+      '---\n\n' +
+      '## 마무리\n\n' +
+      '오늘 말씀드린 두 가지, **문제 정의**와 **작은 실험**을 기억해 주십시오.\n' +
+      '감사합니다.';
+    setScript(editor.value);
+  });
+
+  document.getElementById('editBtn').addEventListener('click', function () {
+    stop();
+    intro.style.display = 'flex';
+    editor.focus();
+  });
+
+  /* ---------- 자동 스크롤 ---------- */
+  function maxScroll() { return viewport.scrollHeight - viewport.clientHeight; }
+
+  function tick(ts) {
+    if (!playing) return;
+    if (!lastTs) lastTs = ts;
+    const dt = Math.min(100, ts - lastTs) / 1000;   // 탭 전환 후 튀는 것 방지
+    lastTs = ts;
+
+    // 초당 픽셀 값을 누적해 소수점 손실 없이 부드럽게 움직인다
+    carry += parseFloat(speedEl.value) * dt;
+    const step = Math.floor(carry);
+    if (step > 0) {
+      carry -= step;
+      viewport.scrollTop += step;
+    }
+
+    updateInfo();
+
+    if (viewport.scrollTop >= maxScroll() - 1) {
+      stop();
+      topBtn.classList.remove('hidden');
+      toast('원고가 끝났습니다');
+      return;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function play() {
+    if (!hasScript) { toast('먼저 원고를 불러와 주세요'); return; }
+    if (viewport.scrollTop >= maxScroll() - 1) { viewport.scrollTop = 0; }
+    playing = true;
+    lastTs = 0;
+    carry = 0;
+    playBtn.textContent = '일시정지';
+    topBtn.classList.add('hidden');
+    requestAnimationFrame(tick);
+  }
+
+  function stop() {
+    playing = false;
+    lastTs = 0;
+    playBtn.textContent = '재생';
+  }
+
+  function toggle() { playing ? stop() : play(); }
+
+  playBtn.addEventListener('click', toggle);
+  viewport.addEventListener('click', function (ev) {
+    if (ev.target.closest('#panel') || !hasScript) return;
+    toggle();
+  });
+
+  function updateInfo() {
+    const max = maxScroll();
+    const pct = max > 0 ? viewport.scrollTop / max : 0;
+    progress.style.width = (pct * 100).toFixed(1) + '%';
+
+    const remain = Math.max(0, max - viewport.scrollTop) / parseFloat(speedEl.value);
+    const m = Math.floor(remain / 60), s = Math.round(remain % 60);
+    timeInfo.textContent = hasScript ? '남은 시간 ' + m + ':' + String(s).padStart(2, '0') : '';
+  }
+
+  viewport.addEventListener('scroll', function () {
+    updateInfo();
+    if (viewport.scrollTop < maxScroll() - 1) topBtn.classList.add('hidden');
+  });
+
+  topBtn.addEventListener('click', function () {
+    viewport.scrollTop = 0;
+    topBtn.classList.add('hidden');
+    updateInfo();
+  });
+
+  /* ---------- 슬라이더 ---------- */
+  speedEl.addEventListener('input', function () {
+    document.getElementById('speedVal').textContent = speedEl.value;
+    updateInfo();
+  });
+  sizeEl.addEventListener('input', function () {
+    script.style.fontSize = sizeEl.value + 'px';
+    document.getElementById('sizeVal').textContent = sizeEl.value;
+    guide.style.height = (sizeEl.value * 1.55) + 'px';
+    updateInfo();
+  });
+  widthEl.addEventListener('input', function () {
+    script.style.maxWidth = widthEl.value + 'px';
+    document.getElementById('widthVal').textContent = widthEl.value;
+    updateInfo();
+  });
+
+  /* ---------- 토글 ---------- */
+  function flip(btn, cls) {
+    const on = script.classList.toggle(cls);
+    btn.classList.toggle('on', on);
+    return on;
+  }
+  document.getElementById('mirrorX').addEventListener('click', function () {
+    toast(flip(this, 'mirrorX') ? '좌우 반전 켜짐' : '좌우 반전 꺼짐');
+  });
+  document.getElementById('mirrorY').addEventListener('click', function () {
+    toast(flip(this, 'mirrorY') ? '상하 반전 켜짐' : '상하 반전 꺼짐');
+  });
+
+  document.getElementById('guideBtn').addEventListener('click', function () {
+    const off = guide.classList.toggle('off');
+    this.classList.toggle('on', !off);
+  });
+
+  const themeBtn = document.getElementById('themeBtn');
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? '라이트' : '다크';
+  }
+  themeBtn.addEventListener('click', function () {
+    setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  document.getElementById('fsBtn').addEventListener('click', function () {
+    if (!document.fullscreenElement) {
+      (document.documentElement.requestFullscreen || function () {}).call(document.documentElement);
+      this.textContent = '창 모드';
+    } else {
+      document.exitFullscreen();
+      this.textContent = '전체화면';
+    }
+  });
+
+  /* ---------- 단축키 ---------- */
+  document.addEventListener('keydown', function (ev) {
+    const typing = /^(INPUT|TEXTAREA)$/.test(ev.target.tagName);
+    if (typing) return;
+
+    const k = ev.key;
+    if (k === ' ' || k === 'Spacebar') { ev.preventDefault(); toggle(); return; }
+
+    if (k === 'ArrowUp' || k === 'ArrowDown') {
+      ev.preventDefault();
+      const d = k === 'ArrowUp' ? 5 : -5;
+      speedEl.value = Math.min(320, Math.max(10, parseFloat(speedEl.value) + d));
+      document.getElementById('speedVal').textContent = speedEl.value;
+      updateInfo();
+      toast('속도 ' + speedEl.value);
+      return;
+    }
+
+    if (k === 'ArrowRight' || k === 'ArrowLeft') {
+      ev.preventDefault();
+      viewport.scrollTop += (k === 'ArrowRight' ? 1 : -1) * viewport.clientHeight * 0.25;
+      return;
+    }
+
+    if (k === 'Home') { ev.preventDefault(); viewport.scrollTop = 0; stop(); return; }
+    if (k === 'End')  { ev.preventDefault(); viewport.scrollTop = maxScroll(); stop(); return; }
+
+    const low = k.toLowerCase();
+    if (low === 'm') { document.getElementById('mirrorX').click(); }
+    else if (low === 't') { themeBtn.click(); }
+    else if (low === 'h') { panel.classList.toggle('hide'); }
+    else if (low === 'g') { document.getElementById('guideBtn').click(); }
+    else if (low === 'f') { document.getElementById('fsBtn').click(); }
+    else if (k === '+' || k === '=') { sizeEl.value = Math.min(110, +sizeEl.value + 2); sizeEl.dispatchEvent(new Event('input')); }
+    else if (k === '-') { sizeEl.value = Math.max(20, +sizeEl.value - 2); sizeEl.dispatchEvent(new Event('input')); }
+  });
+
+  /* ---------- 시작 상태 ---------- */
+  setTheme('dark');
+  script.style.fontSize = sizeEl.value + 'px';
+  script.style.maxWidth = widthEl.value + 'px';
+  guide.style.height = (sizeEl.value * 1.55) + 'px';
+  editor.focus();
+})();
+</script>
+</body>
+</html>

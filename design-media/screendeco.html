@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1초 캡처 뷰티파이어</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+
+  /* 붙여넣기 안내 영역 */
+  #dropzone{
+    border:2px dashed #CBD4DE; border-radius:12px; background:#fff;
+    padding:64px 24px; text-align:center; cursor:pointer;
+    transition:border-color .14s, background .14s;
+  }
+  #dropzone:hover{ border-color:var(--steel); background:#FAFCFD; }
+  #dropzone.over{ border-color:var(--steel); background:#EDF4FA; }
+  #dropzone:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+
+  /* 미리보기 */
+  #stage{
+    background:
+      linear-gradient(45deg, #EFF1F4 25%, transparent 25%, transparent 75%, #EFF1F4 75%),
+      linear-gradient(45deg, #EFF1F4 25%, #fff 25%, #fff 75%, #EFF1F4 75%);
+    background-size:18px 18px;
+    background-position:0 0, 9px 9px;
+    border-radius:10px;
+  }
+  #canvas{ max-width:100%; height:auto; display:block; margin:0 auto; }
+
+  /* 슬라이더 */
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:3px; border-radius:999px; background:var(--hair);
+    outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:16px; height:16px; border-radius:999px;
+    background:var(--ink); border:2px solid #fff;
+    box-shadow:0 1px 3px rgba(38,56,75,.3); cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:16px; height:16px; border-radius:999px;
+    background:var(--ink); border:2px solid #fff; cursor:pointer;
+  }
+
+  input[type=color]{
+    width:38px; height:32px; padding:2px; cursor:pointer;
+    border:1px solid var(--hair); border-radius:6px; background:#fff;
+  }
+
+  .swatch{
+    width:22px; height:22px; border-radius:999px; border:1px solid rgba(38,56,75,.12);
+    cursor:pointer; padding:0; transition:transform .1s;
+  }
+  .swatch:hover{ transform:scale(1.12); }
+  .swatch:focus-visible{ outline:2px solid var(--steel); outline-offset:2px; }
+
+  .switch{ position:relative; width:38px; height:22px; flex:none; }
+  .switch input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+  .track{ position:absolute; inset:0; border-radius:999px; background:#D6DDE4; transition:background .16s; pointer-events:none; }
+  .knob{ position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:999px; background:#fff;
+         box-shadow:0 1px 2px rgba(38,56,75,.25); transition:transform .16s; pointer-events:none; }
+  .switch input:checked ~ .track{ background:var(--steel); }
+  .switch input:checked ~ .knob{ transform:translateX(16px); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">1초 캡처 뷰티파이어</h1>
+      <p class="mt-1 text-[13px] text-muted">스크린샷에 여백과 그림자를 입혀 목업으로 · 브라우저 안에서만 처리</p>
+    </div>
+    <button id="newBtn" class="btn shrink-0">다른 이미지</button>
+  </header>
+
+  <!-- 컨트롤 -->
+  <div id="controls" class="mb-4 hidden rounded-lg border border-hair bg-white px-5 py-4">
+    <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">배경색</span>
+        <input type="color" id="bgColor" value="#26384B" aria-label="배경 여백 색상">
+        <div class="flex flex-wrap gap-1.5">
+          <button class="swatch" data-c="#26384B" style="background:#26384B" title="딥 슬레이트"></button>
+          <button class="swatch" data-c="#2C6BA0" style="background:#2C6BA0" title="스틸 블루"></button>
+          <button class="swatch" data-c="#5F7488" style="background:#5F7488" title="뮤티드 슬레이트"></button>
+          <button class="swatch" data-c="#F4F5F7" style="background:#F4F5F7" title="라이트 그레이"></button>
+          <button class="swatch" data-c="#FFFFFF" style="background:#FFFFFF" title="화이트"></button>
+          <button class="swatch" data-c="#111827" style="background:#111827" title="차콜"></button>
+        </div>
+      </div>
+
+      <label class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">신호등</span>
+        <span class="switch"><input type="checkbox" id="mac" checked><span class="track"></span><span class="knob"></span></span>
+        <span class="text-[13px]">맥 창 헤더 표시</span>
+      </label>
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">그림자</span>
+        <input type="range" id="shadow" min="0" max="100" value="45">
+        <span id="shadowVal" class="num w-9 shrink-0 text-right text-[12px] text-muted">45</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">여백</span>
+        <input type="range" id="pad" min="0" max="200" value="64">
+        <span id="padVal" class="num w-9 shrink-0 text-right text-[12px] text-muted">64</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">모서리</span>
+        <input type="range" id="radius" min="0" max="48" value="12">
+        <span id="radiusVal" class="num w-9 shrink-0 text-right text-[12px] text-muted">12</span>
+      </div>
+
+      <div class="flex items-center gap-3 text-[12px] text-muted">
+        <span class="w-16 shrink-0">크기</span>
+        <span id="sizeInfo" class="num"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 붙여넣기 안내 -->
+  <div id="dropzone" tabindex="0" role="button" aria-label="스크린샷 붙여넣기">
+    <svg class="mx-auto mb-4" width="38" height="38" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"
+         style="color:var(--steel)" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.6"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+    <p class="text-[16px] font-medium">여기에 스크린샷을 붙여넣으세요 (Ctrl + V)</p>
+    <p class="mt-2 text-[12.5px] text-muted">맥은 ⌘ + V · 이미지를 끌어다 놓거나 클릭해서 열 수도 있습니다</p>
+    <input type="file" id="picker" accept="image/*" class="hidden">
+  </div>
+
+  <!-- 미리보기 -->
+  <div id="preview" class="hidden">
+    <div id="stage" class="border border-hair p-5">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="mt-4 flex flex-wrap items-center justify-end gap-2">
+      <button id="copyBtn" class="btn">이미지로 복사</button>
+      <button id="dlBtn" class="btn btn-primary">PNG 다운로드</button>
+    </div>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const dropzone = document.getElementById('dropzone');
+  const preview  = document.getElementById('preview');
+  const controls = document.getElementById('controls');
+  const picker   = document.getElementById('picker');
+  const canvas   = document.getElementById('canvas');
+  const ctx      = canvas.getContext('2d');
+
+  const bgColor  = document.getElementById('bgColor');
+  const mac      = document.getElementById('mac');
+  const shadow   = document.getElementById('shadow');
+  const pad      = document.getElementById('pad');
+  const radius   = document.getElementById('radius');
+  const sizeInfo = document.getElementById('sizeInfo');
+
+  let img = null;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 둥근 사각형 ---------- */
+  function roundRect(c, x, y, w, h, r) {
+    const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+    c.beginPath();
+    if (c.roundRect) { c.roundRect(x, y, w, h, rr); return; }
+    c.moveTo(x + rr, y);
+    c.lineTo(x + w - rr, y);
+    c.quadraticCurveTo(x + w, y, x + w, y + rr);
+    c.lineTo(x + w, y + h - rr);
+    c.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+    c.lineTo(x + rr, y + h);
+    c.quadraticCurveTo(x, y + h, x, y + h - rr);
+    c.lineTo(x, y + rr);
+    c.quadraticCurveTo(x, y, x + rr, y);
+    c.closePath();
+  }
+
+  /* ---------- 렌더링 ---------- */
+  function render() {
+    if (!img) return;
+
+    const p = parseInt(pad.value, 10);
+    const r = parseInt(radius.value, 10);
+    const sh = parseInt(shadow.value, 10);
+
+    // 신호등 헤더 : 이미지 폭에 맞춰 완만하게 커진다 (기본 30px)
+    const barH = mac.checked ? Math.round(Math.min(56, Math.max(30, img.width * 0.032))) : 0;
+
+    const frameW = img.width;
+    const frameH = img.height + barH;
+    const W = frameW + p * 2;
+    const H = frameH + p * 2;
+
+    canvas.width = W;
+    canvas.height = H;
+
+    // 1) 배경
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = bgColor.value;
+    ctx.fillRect(0, 0, W, H);
+
+    // 2) 그림자 : 창 모양을 한 번 채워서 그림자만 남긴다
+    if (sh > 0 && p > 0) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(15, 23, 35, ' + (sh / 100 * 0.45).toFixed(3) + ')';
+      ctx.shadowBlur = sh * 0.75;
+      ctx.shadowOffsetY = sh * 0.28;
+      ctx.fillStyle = '#000';
+      roundRect(ctx, p, p, frameW, frameH, r);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 3) 창 영역을 둥글게 잘라내고 그 안에 헤더와 이미지를 그린다
+    ctx.save();
+    roundRect(ctx, p, p, frameW, frameH, r);
+    ctx.clip();
+
+    if (barH > 0) {
+      ctx.fillStyle = '#EDEFF2';
+      ctx.fillRect(p, p, frameW, barH);
+      ctx.fillStyle = 'rgba(38,56,75,.10)';
+      ctx.fillRect(p, p + barH - 1, frameW, 1);
+
+      const cr = barH * 0.185;                 // 신호등 반지름
+      const cy = p + barH / 2;
+      const gap = cr * 3.4;
+      let cx = p + barH * 0.62;
+      ['#FF5F57', '#FEBC2E', '#28C840'].forEach(function (color) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, cr, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        cx += gap;
+      });
+    }
+
+    ctx.drawImage(img, p, p + barH, img.width, img.height);
+    ctx.restore();
+
+    sizeInfo.textContent = W + ' × ' + H + ' px  (원본 ' + img.width + ' × ' + img.height + ')';
+  }
+
+  /* ---------- 이미지 불러오기 ---------- */
+  function loadBlob(blob) {
+    if (!blob || blob.type.indexOf('image/') !== 0) {
+      toast('이미지 파일이 아닙니다');
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const im = new Image();
+    im.onload = function () {
+      img = im;
+      dropzone.classList.add('hidden');
+      preview.classList.remove('hidden');
+      controls.classList.remove('hidden');
+      render();
+      URL.revokeObjectURL(url);
+      toast('이미지를 불러왔습니다');
+    };
+    im.onerror = function () {
+      URL.revokeObjectURL(url);
+      toast('이미지를 읽지 못했습니다');
+    };
+    im.src = url;
+  }
+
+  // 붙여넣기 : 페이지 어디서든 동작
+  document.addEventListener('paste', function (ev) {
+    const items = ev.clipboardData && ev.clipboardData.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image/') === 0) {
+        ev.preventDefault();
+        loadBlob(items[i].getAsFile());
+        return;
+      }
+    }
+  });
+
+  // 파일 선택
+  dropzone.addEventListener('click', function () { picker.click(); });
+  dropzone.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+  });
+  picker.addEventListener('change', function (ev) {
+    if (ev.target.files && ev.target.files[0]) loadBlob(ev.target.files[0]);
+    picker.value = '';
+  });
+
+  // 드래그 앤 드롭
+  ['dragenter', 'dragover'].forEach(function (t) {
+    dropzone.addEventListener(t, function (ev) { ev.preventDefault(); dropzone.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    dropzone.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && dropzone.contains(ev.relatedTarget)) return;
+      dropzone.classList.remove('over');
+    });
+  });
+  dropzone.addEventListener('drop', function (ev) {
+    if (ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0]) {
+      loadBlob(ev.dataTransfer.files[0]);
+    }
+  });
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) {
+      if (dropzone.contains(ev.target)) return;
+      ev.preventDefault();
+    });
+  });
+
+  /* ---------- 컨트롤 ---------- */
+  [bgColor, mac].forEach(function (el) { el.addEventListener('input', render); });
+  mac.addEventListener('change', render);
+
+  [['shadow', shadow], ['pad', pad], ['radius', radius]].forEach(function (pair) {
+    const el = pair[1];
+    const out = document.getElementById(pair[0] + 'Val');
+    el.addEventListener('input', function () { out.textContent = el.value; render(); });
+  });
+
+  document.querySelectorAll('.swatch').forEach(function (s) {
+    s.addEventListener('click', function () { bgColor.value = s.dataset.c; render(); });
+  });
+
+  document.getElementById('newBtn').addEventListener('click', function () {
+    img = null;
+    preview.classList.add('hidden');
+    controls.classList.add('hidden');
+    dropzone.classList.remove('hidden');
+    dropzone.focus();
+  });
+
+  /* ---------- 내보내기 ---------- */
+  function stamp() {
+    const d = new Date();
+    const p2 = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + '_' + p2(d.getHours()) + p2(d.getMinutes());
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    if (!img) { toast('먼저 이미지를 붙여넣어 주세요'); return; }
+
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      toast('이 브라우저는 이미지 복사를 지원하지 않습니다. 다운로드를 사용해 주세요');
+      return;
+    }
+
+    try {
+      // ClipboardItem에 Promise를 넘겨야 사파리에서도 사용자 제스처가 유지된다
+      const item = new ClipboardItem({
+        'image/png': new Promise(function (resolve, reject) {
+          canvas.toBlob(function (blob) {
+            blob ? resolve(blob) : reject(new Error('blob 생성 실패'));
+          }, 'image/png');
+        })
+      });
+      navigator.clipboard.write([item]).then(function () {
+        toast('이미지가 복사되었습니다! 붙여넣기로 바로 쓰세요');
+      }).catch(function (e) {
+        toast('복사가 차단되었습니다 (' + (e && e.name ? e.name : '오류') + '). 다운로드를 사용해 주세요');
+      });
+    } catch (e) {
+      toast('복사에 실패했습니다. 다운로드를 사용해 주세요');
+    }
+  });
+
+  document.getElementById('dlBtn').addEventListener('click', function () {
+    if (!img) { toast('먼저 이미지를 붙여넣어 주세요'); return; }
+    try {
+      canvas.toBlob(function (blob) {
+        if (!blob) { toast('이미지를 만들지 못했습니다'); return; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '목업_' + stamp() + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        toast('저장되었습니다!');
+      }, 'image/png');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  dropzone.focus();
+})();
+</script>
+</body>
+</html>
