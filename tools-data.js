@@ -218,6 +218,26 @@ const TOOLS_DATA = [
     icon: 'gamepad-2',
     badge: 'NEW',
     tags: ['#게임', '#쉬는시간', '#오프라인']
+  },
+  {
+    id: 'sudoku',
+    title: '스도쿠',
+    category: 'ENTERTAINMENT',
+    desc: '난이도 세 단계에 메모·힌트·되돌리기를 갖춘 스도쿠. 실수 횟수와 최고 기록을 함께 남깁니다.',
+    url: 'https://mnledu.com/entertainment/sudoku.html',
+    icon: 'grid-3x3',
+    badge: 'NEW',
+    tags: ['#게임', '#퍼즐', '#쉬는시간', '#오프라인']
+  },
+  {
+    id: 'snake',
+    title: '스네이크',
+    category: 'ENTERTAINMENT',
+    desc: '키보드와 스와이프로 조작하는 뱀 게임. 벽 통과 여부와 속도를 고르고 최고 점수에 도전합니다.',
+    url: 'https://mnledu.com/entertainment/snake.html',
+    icon: 'worm',
+    badge: 'NEW',
+    tags: ['#게임', '#쉬는시간', '#오프라인', '#모바일']
   }
 ];
 
