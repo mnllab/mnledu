@@ -164,46 +164,31 @@
     </div>
   </section>
 
-  <!-- 용어 사전 -->
-  <details id="dictPanel" class="mt-4 rounded-lg border border-hair bg-white">
-    <summary class="cursor-pointer px-5 py-3 text-[12px] font-medium tracking-wide text-muted hover:text-ink">
-      추천 단어 사전 <span id="dictCount" class="num ml-1 text-ink">0</span>개
-    </summary>
-    <div class="border-t border-hair px-5 py-4">
-      <p class="mb-2 text-[12px] leading-relaxed text-muted">
-        자주 쓰는 고유명사·전문용어를 한 줄에 하나씩 적으면, 비슷하게 인식된 말을 그 단어로 바로잡습니다.
-        확실한 오인식은 <span class="text-ink">잘못된말 → 고칠말</span> 형식으로 지정할 수 있습니다.
-      </p>
-      <textarea id="dictText" spellcheck="false" rows="6"
-        class="w-full rounded-md border border-hair px-3 py-2 text-[13px] leading-relaxed text-ink focus:border-steel focus:outline-none"
-        style="min-height:auto; resize:vertical;"
-        placeholder="한 줄에 하나씩 · 잘못된말 → 고칠말">MNL
-측정
-전시회
-투자
-스타트업
-고중량
-상용화
-연구소
-로보틱스
-유료화</textarea>
+  <!-- 구간 나누기 -->
+  <div class="mt-4 rounded-lg border border-hair bg-white px-5 py-3.5">
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 text-[12px] text-muted">
+      <label class="flex cursor-pointer select-none items-center gap-2">
+        <input type="checkbox" id="splitOn" checked style="accent-color:var(--steel);width:15px;height:15px;">
+        <span class="text-[13px] font-medium text-ink">구간 나누기</span>
+      </label>
 
-      <div class="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-muted">
-        <label class="flex cursor-pointer select-none items-center gap-1.5">
-          <input type="checkbox" id="autoFix" checked style="accent-color:var(--steel);width:15px;height:15px;">실시간 교정
-        </label>
-        <label for="strictness">정확도</label>
-        <select id="strictness" class="btn py-1.5 text-[12px]">
-          <option value="0.85">엄격</option>
-          <option value="0.75" selected>보통</option>
-          <option value="0.65">느슨</option>
-        </select>
-        <button id="fixAllBtn" class="btn ml-auto">전체 다듬기</button>
-      </div>
+      <span class="flex items-center gap-1.5">
+        <input id="splitSize" type="number" min="50" max="2000" step="50" value="200"
+               class="num w-20 rounded-md border border-hair px-2 py-1 text-right text-[12px] text-ink focus:border-steel focus:outline-none">
+        자마다 문단을 나누고 인식 세션을 새로 연결
+      </span>
 
-      <p id="fixLog" class="mt-2 hidden text-[12px] leading-relaxed text-steel"></p>
+      <span id="segInfo" class="num ml-auto"></span>
     </div>
-  </details>
+
+    <div class="mt-2.5 h-[3px] w-full overflow-hidden rounded-full bg-hair">
+      <div id="segBar" class="h-full w-0 bg-steel" style="transition:width .2s ease"></div>
+    </div>
+
+    <p class="mt-2 text-[11.5px] leading-relaxed text-muted">
+      길게 받아쓰면 인식이 점점 흐트러집니다. 일정 분량마다 세션을 새로 연결하면 그 문제가 크게 줄어듭니다.
+    </p>
+  </div>
 
   <!-- 마이크 -->
   <div class="mt-8 flex flex-col items-center gap-3">
@@ -499,21 +484,67 @@
 
   // 확정 문장을 노트 끝에 누적
   function appendFinal(text) {
-    let chunk = text.trim();
+    const chunk = text.trim();
     if (!chunk) return;
-
-    // 사전이 있으면 확정된 문장을 곧바로 다듬는다
-    if (typeof autoFix !== 'undefined' && autoFix.checked) {
-      const r = correct(chunk, parseDict(), parseFloat(strictness.value));
-      if (r.changes.length) { chunk = r.text; showFixes(r.changes); log('교정 · ' + r.changes.join(', ')); }
-    }
 
     const cur = notepad.value;
     const needsSpace = cur.length > 0 && !/\s$/.test(cur);
     notepad.value = cur + (needsSpace ? ' ' : '') + chunk;
     notepad.scrollTop = notepad.scrollHeight;
     updateCount();
+
+    segChars += chunk.length;
+    updateSeg();
+    checkSplit();
   }
+
+  /* ---------- 구간 나누기 ---------- */
+  // 한 세션을 오래 끌면 인식 품질이 떨어지고 결과가 끊긴다.
+  // 정해진 분량이 쌓이면 문단을 나누고 세션을 새로 연결해 매번 깨끗한 상태에서 시작한다.
+  const splitOn    = document.getElementById('splitOn');
+  const splitSize  = document.getElementById('splitSize');
+  const segInfo    = document.getElementById('segInfo');
+  const segBar     = document.getElementById('segBar');
+
+  let segChars = 0;      // 현재 구간에 쌓인 글자 수
+  let segNo = 1;         // 구간 번호
+
+  function segLimit() {
+    const n = parseInt(splitSize.value, 10);
+    return (!n || n < 50) ? 200 : Math.min(2000, n);
+  }
+
+  function updateSeg() {
+    const lim = segLimit();
+    if (!splitOn.checked) {
+      segInfo.textContent = '';
+      segBar.style.width = '0%';
+      return;
+    }
+    segInfo.textContent = '구간 ' + segNo + ' · ' + segChars + ' / ' + lim + '자';
+    segBar.style.width = Math.min(100, segChars / lim * 100) + '%';
+  }
+
+  function checkSplit() {
+    if (!splitOn.checked || !recording) return;
+    if (segChars < segLimit()) return;
+
+    // 문단을 나눈다
+    segNo++;
+    notepad.value = notepad.value.replace(/\s+$/, '') + '\n\n';
+    notepad.scrollTop = notepad.scrollHeight;
+
+    segChars = 0;
+    updateSeg();
+    updateCount();
+
+    log('구간 ' + (segNo - 1) + ' 마감 → 세션 새로 연결');
+    interimEl.textContent = '';
+    scheduleRestart(150);   // 새 세션으로 갈아탄다
+  }
+
+  splitOn.addEventListener('change', updateSeg);
+  splitSize.addEventListener('input', updateSeg);
 
   function buildRecognition() {
     const r = new SR();
@@ -653,6 +684,9 @@
     recording = true;
     sessions = 1;
     startAttempts = 0;
+    segChars = 0;
+    segNo = 1;
+    updateSeg();
     mark();
     startWatchdog();
     micBtn.classList.add('rec');
@@ -712,184 +746,6 @@
       localMode.checked = false;
       showWarn('먼저 인식 모델을 설치해야 합니다. 옆의 모델 설치 버튼을 눌러 주세요.');
     }
-  });
-
-  /* ---------- 용어 사전 기반 교정 ---------- */
-  // Web Speech API에는 용어 힌트를 넣을 수 없어서, 인식된 뒤에 사전으로 바로잡는다.
-  // 한글은 자모로 분해해 비교해야 발음이 뭉개진 경우를 잡을 수 있다.
-  const CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-  const JUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
-  const JONG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-  const TAIL = /^(은|는|이|가|을|를|와|과|에|에서|에게|으로|로|도|만|의|께|부터|까지|라도|이며|이고|입니다|이다|였다|한다|하고|해서|인데|지만)$/;
-
-  const dictText   = document.getElementById('dictText');
-  const dictCount  = document.getElementById('dictCount');
-  const autoFix    = document.getElementById('autoFix');
-  const strictness = document.getElementById('strictness');
-  const fixLog     = document.getElementById('fixLog');
-
-  function decompose(s) {
-    let o = '';
-    for (const ch of s) {
-      const c = ch.charCodeAt(0);
-      if (c >= 0xAC00 && c <= 0xD7A3) {
-        const b = c - 0xAC00;
-        o += CHO[Math.floor(b / 588)] + JUNG[Math.floor((b % 588) / 28)] + JONG[b % 28];
-      } else o += ch.toLowerCase();
-    }
-    return o;
-  }
-
-  function lev(a, b) {
-    const m = a.length, n = b.length;
-    if (!m) return n;
-    if (!n) return m;
-    let prev = Array.from({ length: n + 1 }, function (_, j) { return j; });
-    for (let i = 1; i <= m; i++) {
-      const cur = [i];
-      for (let j = 1; j <= n; j++) {
-        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-      }
-      prev = cur;
-    }
-    return prev[n];
-  }
-
-  function simil(a, b) {
-    const A = decompose(a), B = decompose(b);
-    const m = Math.max(A.length, B.length);
-    return m ? 1 - lev(A, B) / m : 0;
-  }
-
-  function parseDict() {
-    const rules = [], terms = [];
-    dictText.value.split('\n').forEach(function (line) {
-      const t = line.trim();
-      if (!t || t.charAt(0) === '#') return;
-      const m = t.split(/\s*(?:→|->|=>|=)\s*/);
-      if (m.length === 2 && m[0] && m[1]) { rules.push({ from: m[0], to: m[1] }); terms.push(m[1]); }
-      else terms.push(t);
-    });
-    const uniq = terms.filter(function (x, i, a) { return x && x.length >= 2 && a.indexOf(x) === i; });
-    dictCount.textContent = uniq.length;
-    return { rules: rules, terms: uniq };
-  }
-
-  function correct(text, dict, threshold) {
-    const changes = [];
-    let out = text;
-    if (!dict.terms.length && !dict.rules.length) return { text: out, changes: changes };
-
-    // 명시 규칙은 그대로 치환
-    dict.rules.forEach(function (r) {
-      const esc = r.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const re = new RegExp(esc, 'gi');
-      if (re.test(out)) { out = out.replace(re, r.to); changes.push(r.from + ' → ' + r.to); }
-    });
-
-    const TOKEN = /[가-힣A-Za-z0-9]+/g;
-    const toks = [];
-    let m;
-    while ((m = TOKEN.exec(out)) !== null) toks.push({ s: m.index, e: m.index + m[0].length, t: m[0] });
-
-    // 짧은 단어일수록 기준을 높인다. 두 글자는 사실상 정확히 일치할 때만 손댄다.
-    // (투자↔부자, 측정↔측면처럼 멀쩡한 말을 끌어다 고치는 것을 막는다)
-    function thrFor(term, base) {
-      const L = term.length;
-      if (L <= 2) return 0.99;
-      if (L === 3) return Math.min(base + 0.12, 0.95);
-      if (L === 4) return Math.min(base + 0.05, 0.93);
-      return base;
-    }
-
-    function best(str, minRatio, thr) {
-      let bt = null, bs = 0;
-      dict.terms.forEach(function (term) {
-        const lr = Math.min(str.length, term.length) / Math.max(str.length, term.length);
-        if (lr < minRatio) return;
-        const s = simil(str, term);
-        if (s < thrFor(term, thr)) return;
-        if (s > bs) { bs = s; bt = term; }
-      });
-      return bt ? { term: bt, score: bs } : null;
-    }
-
-    // 조사·어미를 떼어낸 해석을 먼저 본다 (신용보증기금은 → 은이 지워지지 않도록)
-    function matchCore(str, minRatio, thr) {
-      for (let k = 1; k <= 4 && k < str.length; k++) {
-        const tail = str.slice(str.length - k), core = str.slice(0, str.length - k);
-        if (!TAIL.test(tail)) continue;
-        const c2 = best(core, minRatio, thr);
-        if (c2) return core === c2.term ? null : { to: c2.term + tail, from: str };
-      }
-      const c = best(str, minRatio, thr);
-      if (c) return str === c.term ? null : { to: c.term, from: str };
-      return null;
-    }
-
-    const edits = [], used = {};
-    const termSet = {};
-    dict.terms.forEach(function (t) { termSet[t] = true; });
-    for (let i = 0; i < toks.length; i++) {
-      if (used[i]) continue;
-      const tk = toks[i];
-
-      // 인접 두 토큰이 한 용어로 붙는 경우 (신용 보증기금 → 신용보증기금)
-      if (i + 1 < toks.length && !used[i + 1]) {
-        const joined = out.slice(tk.s, toks[i + 1].e);
-        const merged = tk.t + toks[i + 1].t;
-
-        // 붙였더니 사전 용어와 정확히 일치하면, 짧은 용어라도 띄어쓰기를 바로잡는다
-        let exact = termSet[merged] ? merged : null;
-        if (!exact) {
-          for (let k = 1; k <= 4 && k < merged.length; k++) {
-            const tl = merged.slice(merged.length - k), cr = merged.slice(0, merged.length - k);
-            if (TAIL.test(tl) && termSet[cr]) { exact = cr + tl; break; }
-          }
-        }
-        if (exact && joined !== exact) {
-          edits.push({ s: tk.s, e: toks[i + 1].e, to: exact, from: joined });
-          used[i] = used[i + 1] = true;
-          continue;
-        }
-
-        const c = matchCore(joined, 0.6, threshold + 0.08) || matchCore(merged, 0.6, threshold + 0.08);
-        if (c) {
-          edits.push({ s: tk.s, e: toks[i + 1].e, to: c.to, from: joined });
-          used[i] = used[i + 1] = true;
-          continue;
-        }
-      }
-
-      const c = matchCore(tk.t, 0.6, threshold);
-      if (c) { edits.push({ s: tk.s, e: tk.e, to: c.to, from: tk.t }); used[i] = true; }
-    }
-
-    edits.filter(function (ed) { return ed.to !== ed.from; })
-         .sort(function (a, b) { return b.s - a.s; })
-         .forEach(function (ed) {
-            out = out.slice(0, ed.s) + ed.to + out.slice(ed.e);
-            changes.push(ed.from + ' → ' + ed.to);
-         });
-
-    return { text: out, changes: changes };
-  }
-
-  function showFixes(changes) {
-    if (!changes.length) { fixLog.classList.add('hidden'); return; }
-    fixLog.textContent = '교정 ' + changes.length + '건 · ' + changes.slice(-4).join(', ');
-    fixLog.classList.remove('hidden');
-  }
-
-  dictText.addEventListener('input', parseDict);
-
-  document.getElementById('fixAllBtn').addEventListener('click', function () {
-    if (!notepad.value.trim()) { toast('다듬을 내용이 없습니다'); return; }
-    const r = correct(notepad.value, parseDict(), parseFloat(strictness.value));
-    notepad.value = r.text;
-    updateCount();
-    showFixes(r.changes);
-    toast(r.changes.length ? r.changes.length + '건 교정했습니다' : '고칠 부분이 없습니다');
   });
 
   /* ---------- 복사 · 저장 · 초기화 ---------- */
@@ -960,13 +816,16 @@
     if (!notepad.value.trim() || confirm('작성된 내용을 모두 지웁니다. 계속할까요?')) {
       notepad.value = '';
       interimEl.textContent = '';
+      segChars = 0;
+      segNo = 1;
       updateCount();
+      updateSeg();
       notepad.focus();
     }
   });
 
   updateCount();
-  parseDict();
+  updateSeg();
   setStatus('idle');
 
   if (SR && (inIframe || insecure)) {
