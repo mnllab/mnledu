@@ -371,6 +371,17 @@ const TOOLS_DATA = [
     icon: 'dices',
     badge: 'NEW',
     tags: ['#게임', '#모임', '#랜덤', '#쉬는시간']
+  },
+
+  {
+    id: 'presentation-timer',
+    title: '스마트 발표 타이머',
+    category: 'PRODUCTIVITY',
+    desc: '발표와 Q&A를 이어서 재고 초과 시간을 세어 줍니다. 아젠다를 넣으면 남은 순서의 예상 시각을 다시 계산합니다.',
+    url: 'https://mnledu.com/productivity/presentation-timer.html',
+    icon: 'timer',
+    badge: 'NEW',
+    tags: ['#발표', '#타이머', '#회의', '#진행']
   }
 ];
 

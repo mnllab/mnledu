@@ -334,6 +334,17 @@ const TOOLS_DATA_EN = [
     icon: 'dices',
     badge: 'NEW',
     tags: ['#game', '#group', '#random', '#break']
+  },
+
+  {
+    id: 'presentation-timer',
+    title: 'Presentation Timer',
+    category: 'PRODUCTIVITY',
+    desc: 'Runs talk and Q&A as one flow, counts overtime, and recalculates the expected time for every remaining slot.',
+    url: 'https://mnledu.com/en/productivity/presentation-timer.html',
+    icon: 'timer',
+    badge: 'NEW',
+    tags: ['#presenting', '#timer', '#meetings', '#agenda']
   }
 ];
 

@@ -34,6 +34,17 @@ const END = '<!-- TOOLKIT:SEO_END -->';
 
 /* ── tools-data.js 읽기 ──────────────────────────────────── */
 
+const EN_BY_ID = (function () {
+  const file = path.join(ROOT, 'tools-data-en.js');
+  const map = {};
+  if (!fs.existsSync(file)) return map;
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(file, 'utf8'), sandbox);
+  (sandbox.window.TOOLS_DATA || []).forEach(function (t) { map[t.id] = t; });
+  return map;
+})();
+
 function loadTools() {
   const file = path.join(ROOT, 'tools-data.js');
   if (!fs.existsSync(file)) throw new Error('tools-data.js 를 찾을 수 없습니다.');
@@ -92,6 +103,7 @@ function categoryFolder(url) {
 /* ── SEO 블록 만들기 ─────────────────────────────────────── */
 
 function buildBlock(tool) {
+  const enUrl = (EN_BY_ID[tool.id] || {}).url || '';
   const url = tool.url;
   const title = buildTitle(tool);
   const desc = buildDescription(tool);
@@ -129,6 +141,9 @@ function buildBlock(tool) {
     '<meta name="author" content="Janggil Kim" />',
     '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />',
     '<link rel="canonical" href="' + esc(url) + '" />',
+    (enUrl ? '<link rel="alternate" hreflang="ko" href="' + esc(url) + '" />' : ''),
+    (enUrl ? '<link rel="alternate" hreflang="en" href="' + esc(enUrl) + '" />' : ''),
+    (enUrl ? '<link rel="alternate" hreflang="x-default" href="' + esc(url) + '" />' : ''),
     '',
     '<meta property="og:type" content="website" />',
     '<meta property="og:site_name" content="TOOLKIT" />',
