@@ -90,7 +90,7 @@
       "name": "Can I keep the timer on top of my slides?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Press the mini window button and a small always-on-top window opens. Place it over your slides or video call, and you can extend time, pause, and move between speakers from inside that window. It works in Chromium-based browsers."
+        "text": "Press the mini window button and a small always-on-top window opens. Place it over your slides or video call, and you can extend time, pause, and move between speakers from inside that window. It works in Chromium-based browsers, and if the page is embedded in another site you need to open it in a new tab first."
       }
     },
     {
@@ -223,6 +223,16 @@
   }
   #toast.show{ opacity:1; transform:translate(-50%,0); }
 
+  /* iframe 안일 때만 보이는 안내 배너 */
+  #frameNotice{
+    display:none; margin-bottom:12px; padding:14px 16px;
+    background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.35);
+    border-radius:14px;
+  }
+  #frameNotice .t{ font-size:13.5px; font-weight:700; margin:0 0 5px; }
+  #frameNotice .b{ font-size:12.5px; line-height:1.8; color:var(--dim); margin:0; word-break:keep-all; }
+  #frameNotice .b strong{ color:var(--accent); font-weight:700; }
+
   @media (max-width:640px){
     th,td{ padding:8px 7px; font-size:12px; }
     .hideSm{ display:none; }
@@ -245,6 +255,12 @@
 </header>
 
 <div class="mx-auto max-w-5xl px-4 py-4">
+
+  <div id="frameNotice">
+    <p class="t">📌 The mini window only opens in its own tab</p>
+    <p class="b">This view is embedded inside another page, so browser policy blocks the always-on-top mini window. Press <strong>“↗ Open in new tab” at the top right</strong> and it will work normally.</p>
+    <a id="newTabLink" href="https://mnledu.com/en/productivity/presentation-timer.html" target="_blank" rel="noopener noreferrer" hidden></a>
+  </div>
 
   <!-- 타이머 -->
   <div class="card" id="timerCard" style="padding:20px 18px; margin-bottom:12px">
@@ -342,7 +358,7 @@
   </div>
 
   <p class="text-[11px] mt-3" style="color:var(--dim); line-height:1.8">
-    The mini window uses the Document Picture-in-Picture API, available in Chromium-based browsers. Elsewhere the button shows a notice instead.
+    The mini window uses the Document Picture-in-Picture API in Chromium-based browsers. If this page is embedded inside another site, browser policy blocks it — use the button at the top to open the page in a new tab, where it works normally.
   </p>
 </div>
 
@@ -829,34 +845,44 @@
       '</div>';
   }
 
+  // iframe 안에서는 브라우저 정책상 항상 위 미니창을 열 수 없다.
+  // 억지로 팝업을 띄우기보다 새 탭에서 열도록 안내하는 편이 확실하다
+  function inFrame() {
+    try { return window.self !== window.top; } catch (e) { return true; }
+  }
+
+  function bindPipControls(d) {
+    d.getElementById('pPlus1').onclick = function () { extend(60); };
+    d.getElementById('pPlus3').onclick = function () { extend(180); };
+    d.getElementById('pPause').onclick = function () {
+      if (!running) { startTimer(); return; }
+      paused = !paused; lastTick = 0; paint();
+    };
+    d.getElementById('pPrev').onclick = function () { gotoIndex(cur - 1); };
+    d.getElementById('pNext').onclick = function () { gotoIndex(cur < 0 ? 0 : cur + 1); };
+  }
+
   async function openPip() {
-    if (!('documentPictureInPicture' in window)) {
-      toast('This browser does not support the mini window (try a Chromium-based browser)');
-      return;
-    }
+    // iframe 안에서는 버튼 자체를 감추므로 여기까지 오지 않는다.
+    // 혹시 모를 경우를 대비해 안내만 남긴다
+    if (inFrame()) { $('frameNotice').style.display = 'block'; toast('Open in a new tab to use the mini window'); return; }
+    if (!('documentPictureInPicture' in window)) { toast('This browser does not support the mini window (try a Chromium-based browser)'); return; }
+    if (pipWin && !pipWin.closed) { try { pipWin.focus(); } catch (e) {} return; }
+
     try {
-      if (pipWin && !pipWin.closed) { pipWin.focus(); return; }
-      pipWin = await window.documentPictureInPicture.requestWindow({ width: 320, height: 300 });
+      pipWin = await window.documentPictureInPicture.requestWindow({ width: 320, height: 320 });
       pipWin.document.body.innerHTML = pipMarkup();
-
-      const d = pipWin.document;
-      d.getElementById('pPlus1').onclick = function () { extend(60); };
-      d.getElementById('pPlus3').onclick = function () { extend(180); };
-      d.getElementById('pPause').onclick = function () {
-        if (!running) { startTimer(); return; }
-        paused = !paused; lastTick = 0; paint();
-      };
-      d.getElementById('pPrev').onclick = function () { gotoIndex(cur - 1); };
-      d.getElementById('pNext').onclick = function () { gotoIndex(cur < 0 ? 0 : cur + 1); };
-
+      bindPipControls(pipWin.document);
       pipWin.addEventListener('pagehide', function () { pipWin = null; });
       paint();
+      tickClock();
       toast('Mini window opened');
     } catch (e) {
-      toast('Could not open the mini window');
       pipWin = null;
+      toast('Could not open the mini window');
     }
   }
+
   $('pipBtn').addEventListener('click', openPip);
 
   function syncPip(st) {
@@ -914,13 +940,22 @@
   if (restored && agenda.length) {
     $('parseInfo').textContent = agenda.length + ' slots (saved agenda)';
   }
+  // 삽입된 화면이면 미니창 대신 새 탭 열기를 안내한다
+  if (inFrame()) {
+    // 헤더 버튼은 다른 도구와 같은 자리에 그대로 두고 역할만 바꾼다
+    $('frameNotice').style.display = 'block';
+    $('pipBtn').textContent = '↗ Open in new tab';
+    $('pipBtn').onclick = function () {
+      window.open($('newTabLink').href, '_blank', 'noopener');
+    };
+  }
+
   renderTable();
   paint();
   raf = requestAnimationFrame(loop);
 })();
 </script>
 
-<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
 <style>
 .tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
   font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
@@ -984,11 +1019,11 @@
 
 <h2>Frequently asked questions</h2><dl>
 <dt>Does it move to the next speaker automatically when time runs out?</dt><dd>No. It keeps counting the overtime and shows it on screen, but the session only advances when the host presses the button. This is deliberate, so the display never moves on while someone is still speaking.</dd>
-<dt>Can I keep the timer on top of my slides?</dt><dd>Press the mini window button and a small always-on-top window opens. Place it over your slides or video call, and you can extend time, pause, and move between speakers from inside that window. It works in Chromium-based browsers.</dd>
+<dt>Can I keep the timer on top of my slides?</dt><dd>Press the mini window button and a small always-on-top window opens. Place it over your slides or video call, and you can extend time, pause, and move between speakers from inside that window. It works in Chromium-based browsers, and if the page is embedded in another site you need to open it in a new tab first.</dd>
 <dt>How is the delay calculated?</dt><dd>It compares the clock time when the host pressed next speaker against the originally scheduled time. Later means running behind, earlier means running ahead, and the expected start time for every remaining slot is recalculated.</dd>
 <dt>What format should the agenda be in?</dt><dd>One line per slot, separated by commas: session, affiliation, speaker, topic, notes. Add a number at the end of a line to give that slot its own length, which is handy for short items like a break or opening remarks. You can also drop a CSV file onto the box.</dd>
 <dt>Is my agenda sent to a server?</dt><dd>No. Everything runs inside your browser, and the agenda and settings are stored only on the device you are using.</dd>
-<dt>The mini window will not open</dt><dd>It relies on the browser's Document Picture-in-Picture API, which is available in Chromium-based browsers. Elsewhere you will see a notice instead, and the timer on the main page works as normal.</dd>
+<dt>The mini window will not open</dt><dd>If this page is embedded inside another site, browser policy blocks it. Use the <strong>Open in new tab</strong> button near the top to open the page on its own and it will work. The feature is also limited to Chromium-based browsers.</dd>
 <dt>Will my agenda survive a refresh?</dt><dd>Yes. What you enter is saved on your device and will still be there when you come back.</dd>
 <dt>Can I skip ahead to a specific slot?</dt><dd>Press the Start button on any row of the table to jump straight to it. That moment is recorded too.</dd>
 </dl>
@@ -1005,7 +1040,6 @@
 </ul></div>
 <a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
 </div></section>
-<!-- TOOLKIT:GUIDE_END -->
 
 </body>
 </html>
