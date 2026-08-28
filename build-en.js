@@ -77,8 +77,7 @@ const STR = [
   ['도구', 'Tool'],
 
   /* 후원 */
-  ['class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-500 px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"',
-   'class="tk-coffee tk-coffee-sm shrink-0"'],
+  ['class="tk-tube tk-tube-sm shrink-0"', 'class="tk-coffee tk-coffee-sm shrink-0"'],
   ['<p class="font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>',
    '<p class="font-mono text-[11px] font-bold uppercase tracking-widest text-amber-500">Support</p>'],
   ['<p class="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>',
@@ -271,7 +270,7 @@ const SUPPORT_EN = `      <a href="https://buymeacoffee.com/mnledu" target="_bla
       </a>
 
       <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-        class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+        class="tk-tube tk-tube-full mt-2">
         <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
       </a>`;
 
@@ -288,8 +287,7 @@ const FOOTER_SUPPORT_EN = `        <div class="flex shrink-0 flex-col gap-2 sm:m
           <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee">
             <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
           </a>
-          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer" class="tk-tube">
             <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
           </a>
         </div>`;
@@ -387,7 +385,9 @@ function buildIndex() {
   html = html.replace(/^.*naver-site-verification.*\n/m, '');
 
   // 자료 파일과 내부 링크
-  html = html.replace('src="./tools-data.js"', 'src="../tools-data-en.js"');
+  // 한국어 원본이 상대경로든 절대주소든 모두 영문 데이터로 바꾼다
+  html = html.replace('src="./tools-data.js"', 'src="' + SITE + '/tools-data-en.js"');
+  html = html.replace('src="' + SITE + '/tools-data.js"', 'src="' + SITE + '/tools-data-en.js"');
   html = html.split('href="/about.html"').join('href="/en/about.html"');
   html = html.split('href="/contact.html"').join('href="/en/contact.html"');
   html = html.split('href="/privacy.html"').join('href="/en/privacy.html"');

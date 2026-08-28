@@ -804,6 +804,35 @@
   .tk-coffee:focus-visible{ outline:2px solid #B98405; outline-offset:2px; }
   .tk-coffee-full{ width:100%; padding-top:13px; padding-bottom:13px; }
   .tk-coffee-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
+
+  .tk-tube{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:12px;
+    font-size:13px; font-weight:700; letter-spacing:.01em;
+    color:#fff; text-decoration:none; white-space:nowrap;
+    background:linear-gradient(180deg,#FB6A72 0%,#E11D48 100%);
+    border:1px solid #BE123C;
+    box-shadow:0 1px 0 rgba(255,255,255,.35) inset,
+               0 2px 0 #9F1239,
+               0 4px 10px rgba(159,18,57,.30);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .tk-tube:hover{
+    filter:brightness(1.05);
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset,
+               0 3px 0 #9F1239,
+               0 7px 16px rgba(159,18,57,.36);
+    transform:translateY(-1px);
+  }
+  .tk-tube:active{
+    transform:translateY(2px);
+    box-shadow:0 1px 0 rgba(255,255,255,.25) inset,
+               0 0 0 #9F1239,
+               0 2px 5px rgba(159,18,57,.30);
+  }
+  .tk-tube:focus-visible{ outline:2px solid #9F1239; outline-offset:2px; }
+  .tk-tube-full{ width:100%; padding-top:13px; padding-bottom:13px; }
+  .tk-tube-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
 </style>
 </head>
 
@@ -853,6 +882,10 @@
 
           
 
+          
+
+          
+
           <!-- TOOLKIT:LANG_START -->
           <a href="https://mnledu.com/en/" title="View in English" hreflang="en"
             class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
@@ -861,7 +894,7 @@
         <!-- TOOLKIT:LANG_END -->
 
           <button id="support-btn" type="button" title="응원하기"
-            class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-500 px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
+            class="tk-tube tk-tube-sm shrink-0">
             <i data-lucide="heart" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">응원하기</span>
           </button>
 
@@ -1149,8 +1182,7 @@
         </div>
         <!-- TOOLKIT:FOOTER_SUPPORT_START -->
         <div class="flex shrink-0 flex-col gap-2 sm:ml-auto sm:flex-row">
-          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 py-3 text-[13px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer" class="tk-tube">
             <i data-lucide="heart" class="h-4 w-4"></i>유튜브에서 응원하기
           </a>
           <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee">
@@ -1222,8 +1254,7 @@
       </p>
 
       <!-- TOOLKIT:SUPPORT_LINKS_START -->
-      <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-        class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 py-3.5 text-[13px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
+      <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer" class="tk-tube tk-tube-full mt-6">
         <i data-lucide="youtube" class="h-4 w-4"></i>유튜브 채널로 이동
       </a>
 

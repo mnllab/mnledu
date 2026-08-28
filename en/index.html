@@ -813,6 +813,35 @@
   .tk-coffee:focus-visible{ outline:2px solid #B98405; outline-offset:2px; }
   .tk-coffee-full{ width:100%; padding-top:13px; padding-bottom:13px; }
   .tk-coffee-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
+
+  .tk-tube{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:12px;
+    font-size:13px; font-weight:700; letter-spacing:.01em;
+    color:#fff; text-decoration:none; white-space:nowrap;
+    background:linear-gradient(180deg,#FB6A72 0%,#E11D48 100%);
+    border:1px solid #BE123C;
+    box-shadow:0 1px 0 rgba(255,255,255,.35) inset,
+               0 2px 0 #9F1239,
+               0 4px 10px rgba(159,18,57,.30);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .tk-tube:hover{
+    filter:brightness(1.05);
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset,
+               0 3px 0 #9F1239,
+               0 7px 16px rgba(159,18,57,.36);
+    transform:translateY(-1px);
+  }
+  .tk-tube:active{
+    transform:translateY(2px);
+    box-shadow:0 1px 0 rgba(255,255,255,.25) inset,
+               0 0 0 #9F1239,
+               0 2px 5px rgba(159,18,57,.30);
+  }
+  .tk-tube:focus-visible{ outline:2px solid #9F1239; outline-offset:2px; }
+  .tk-tube-full{ width:100%; padding-top:13px; padding-bottom:13px; }
+  .tk-tube-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
 </style>
 </head>
 
@@ -836,6 +865,10 @@
         <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
 
           <!-- Support : 안내창을 연다 -->
+          
+
+          
+
           
 
           
@@ -1171,8 +1204,7 @@
           <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee">
             <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
           </a>
-          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer" class="tk-tube">
             <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
           </a>
         </div>
@@ -1247,7 +1279,7 @@
       </a>
 
       <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-        class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+        class="tk-tube tk-tube-full mt-2">
         <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
       </a>
       <!-- TOOLKIT:SUPPORT_LINKS_END -->
@@ -1285,7 +1317,7 @@
   </nav>
 
   <!-- DATA SCRIPT & CORE ENGINE -->
-  <script src="https://mnledu.com/tools-data.js"></script>
+  <script src="https://mnledu.com/tools-data-en.js"></script>
   <script>
   (function () {
     'use strict';
