@@ -179,9 +179,9 @@
   .ball{
     width:44px; height:44px; border-radius:50%; flex:none;
     display:flex; align-items:center; justify-content:center;
-    font-family:'JetBrains Mono',monospace; font-size:16.5px; font-weight:700; color:#fff;
+    font-family:'JetBrains Mono',monospace; font-size:17.5px; font-weight:700; color:#fff;
     position:relative; transform-origin:50% 100%;
-    letter-spacing:.02em;
+    letter-spacing:0;
   }
   /* 숫자는 항상 광택 위에 오도록 별도 레이어로 띄운다. 안 그러면 0이 8처럼 보인다 */
   .ball .n{
@@ -238,7 +238,7 @@
   }
   .balls{ display:flex; gap:7px; flex-wrap:wrap; }
   @media (max-width:430px){
-    .ball{ width:39px; height:39px; font-size:14.5px; }
+    .ball{ width:39px; height:39px; font-size:15.5px; }
     .balls{ gap:5px; }
     .setRow{ gap:7px; padding:11px 10px; }
   }
@@ -586,7 +586,7 @@
       seq.forEach(function (n) {
         const b = document.createElement('span');
         b.className = 'ball ' + colorOf(n) + (luckyUsed.indexOf(n) !== -1 ? ' lucky' : '');
-        b.innerHTML = '<span class="n">' + String(n).padStart(2, '0') + '</span>';
+        b.innerHTML = '<span class="n">' + n + '</span>';
         if (animate) {
           b.style.opacity = '0';
           const d = delay;
@@ -609,7 +609,7 @@
 
         const b = document.createElement('span');
         b.className = 'ball bonus';
-        b.innerHTML = '<span class="n">' + String(set.bonus).padStart(2, '0') + '</span>';
+        b.innerHTML = '<span class="n">' + set.bonus + '</span>';
         b.title = G().bonus.nm;
         if (animate) {
           b.style.opacity = '0';
@@ -644,9 +644,9 @@
     const lines = ['🍀 ' + g.nm + ' 5세트'];
     sets.forEach(function (s, i) {
       let line = '[' + LETTERS[i] + '] ' +
-        s.main.map(function (n) { return String(n).padStart(2, '0'); }).join(', ');
+        s.main.join(', ');
       if (s.bonus !== null && s.bonus !== undefined) {
-        line += '  + ' + g.bonus.nm + ' ' + String(s.bonus).padStart(2, '0');
+        line += '  + ' + g.bonus.nm + ' ' + s.bonus;
       }
       lines.push(line);
     });
