@@ -77,6 +77,19 @@ const STR = [
   ['도구', 'Tool'],
 
   /* 후원 */
+  ['<i data-lucide="heart" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">응원하기</span>',
+   '<i data-lucide="coffee" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">Buy me a coffee</span>'],
+  ['그래도 도움이 되셨다면 유튜브 채널의',
+   'If these tools saved you time, you can support the work through'],
+  ['또는 <span class="font-semibold text-slate-700">Buy Me a Coffee</span>로 응원해 주세요.',
+   'or <span class="font-semibold text-slate-700">Buy Me a Coffee</span>.'],
+  ['Buy Me a Coffee는 해외 결제 수단이 필요합니다',
+   'Buy Me a Coffee accepts card and PayPal'],
+  ['<i data-lucide="heart" class="h-5 w-5"></i>', '<i data-lucide="coffee" class="h-5 w-5"></i>'],
+  ['<i data-lucide="heart" class="h-4 w-4"></i>유튜브에서 응원하기',
+   '<i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee'],
+  ['href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"\n          class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-rose-500',
+   'href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"\n          class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#FFDD00] !text-slate-900'],
   ['여기 있는 도구는 모두 무료입니다', 'Every tool here is free'],
   ['로그인도, 설치도, 결제도 없습니다. 앞으로도 그럴 예정입니다.',
    'No sign up, no install, no payment. That is not going to change.'],
@@ -243,6 +256,26 @@ function insertLangButton(html, target, label, title) {
   return html.slice(0, at) + block + html.slice(at);
 }
 
+
+/* ── 영문판 후원 링크 : BMC 우선 ────────────────────────── */
+const SUPPORT_EN = `      <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"
+        class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FFDD00] px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-900 shadow-sm hover:bg-[#f5d400] active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2">
+        <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
+      </a>
+
+      <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
+        class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+        <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
+      </a>`;
+
+function swapSupport(html) {
+  const a = '<!-- TOOLKIT:SUPPORT_LINKS_START -->';
+  const b = '<!-- TOOLKIT:SUPPORT_LINKS_END -->';
+  const s = html.indexOf(a), e = html.indexOf(b);
+  if (s === -1 || e === -1) return html;
+  return html.slice(0, s) + a + '\n' + SUPPORT_EN + '\n      ' + html.slice(e);
+}
+
 /* ── 영문 index.html 생성 ───────────────────────────────── */
 function buildIndex() {
   let html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
@@ -295,6 +328,7 @@ function buildIndex() {
   html = html.split('href="/privacy.html"').join('href="/en/privacy.html"');
   html = html.split('href="/terms.html"').join('href="/en/terms.html"');
 
+  html = swapSupport(html);
   html = insertLangButton(html, '/', '한국어', '한국어로 보기');
 
   fs.mkdirSync(path.join(ROOT, 'en'), { recursive: true });

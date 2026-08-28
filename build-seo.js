@@ -171,7 +171,7 @@ function buildIndex(tools, target) {
   const itemList = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'TOOLKIT 웹 유틸리티 목록',
+    name: (target && target.indexOf('en') === 0) ? 'TOOLKIT web tools' : 'TOOLKIT 웹 유틸리티 목록',
     numberOfItems: tools.length,
     itemListElement: tools.map((t, i) => ({
       '@type': 'ListItem',
