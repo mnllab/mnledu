@@ -314,6 +314,24 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://mnledu.com/lifestyle/kstartup-board.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/kstartup-board.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/kstartup-board.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/kstartup-board.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/kstartup-board.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/kstartup-board.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/kstartup-board.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/kstartup-board.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://mnledu.com/lifestyle/youtubenote.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/youtubenote.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/youtubenote.html"/>

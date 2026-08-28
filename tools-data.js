@@ -183,6 +183,16 @@ const TOOLS_DATA = [
   // 3. LIFESTYLE (라이프스타일)
   // ---------------------------------------------------------
   {
+    id: 'kstartup-board',
+    title: '이번 주 창업지원사업',
+    category: 'LIFESTYLE',
+    desc: '이번 주 K-Startup 공고를 마감 임박순으로 모아 봅니다. 지역과 대상으로 걸러 필요한 것만 골라낼 수 있습니다.',
+    url: 'https://mnledu.com/lifestyle/kstartup-board.html',
+    icon: 'layout-dashboard',
+    badge: 'NEW',
+    tags: ['#창업', '#지원사업', '#공고', '#마감']
+  },
+  {
     id: 'youtubenote',
     title: '유튜브 타임스탬프 노트',
     category: 'LIFESTYLE',

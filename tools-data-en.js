@@ -152,6 +152,16 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ LIFESTYLE ═══════════════ */
   {
+    id: 'kstartup-board',
+    title: 'This Week in K-Startup Funding',
+    category: 'LIFESTYLE',
+    desc: 'Korea-specific. This week\'s Korean government startup funding calls, sorted by closing date and filterable by region.',
+    url: 'https://mnledu.com/en/lifestyle/kstartup-board.html',
+    icon: 'layout-dashboard',
+    badge: 'NEW',
+    tags: ['#korea', '#startup', '#funding', '#deadlines']
+  },
+  {
     id: 'youtubenote',
     title: 'YouTube Timestamp Notes',
     category: 'LIFESTYLE',

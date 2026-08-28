@@ -77,3 +77,21 @@ node fix-paths.js                 # 마지막에 항상
 
 `patch-tool-pages.js` 는 이제 한국어 도구 페이지에도 hreflang 을 넣는다
 (tools-data-en.js 에 같은 id 가 있을 때만).
+
+
+## kstartup-board (2026-08-28 추가)
+
+LIFESTYLE 최상단. 한국어·영문 완성본을 직접 받아 배치했으므로
+presentation-timer 와 마찬가지로 guides 항목이 없다.
+원본 파일의 canonical 이 /productivity/ 였으나 카테고리에 맞춰 /lifestyle/ 로 정정.
+
+## 카드 UI 변경 (2026-08-28)
+
+- 카드 안 해시태그는 표시 전용 span 으로 바꿨다.
+  모바일에서 태그를 누르면 카드 링크가 함께 눌리는 문제 때문.
+  태그로 거르려면 목록 위쪽 TAGS 줄을 쓴다.
+- 뷰어 iframe 은 열 때마다 새 요소로 교체한다 (swapFrame).
+  같은 iframe 에 src 를 다시 넣으면 그 이동이 브라우저 기록에 쌓여
+  뒤로 가기에서 빈 화면이 나왔다.
+- 뒤로 가기 버튼은 목록을 거쳐 들어온 경우에만 history.back() 을 쓴다
+  (openedFromList). 주소로 바로 들어오면 목록 주소로 바꾼다.
