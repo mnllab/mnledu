@@ -230,8 +230,12 @@
     border-radius:14px;
   }
   #frameNotice .t{ font-size:13.5px; font-weight:700; margin:0 0 5px; }
-  #frameNotice .b{ font-size:12.5px; line-height:1.8; color:var(--dim); margin:0; word-break:keep-all; }
-  #frameNotice .b strong{ color:var(--accent); font-weight:700; }
+  #frameNotice .b{ font-size:12.5px; line-height:1.8; color:var(--dim); margin:0 0 11px; word-break:keep-all; }
+  #frameNotice a{
+    display:inline-block; padding:10px 15px; border-radius:10px;
+    background:var(--accent); color:#06283A; font-size:13.5px; font-weight:700;
+    text-decoration:none;
+  }
 
   @media (max-width:640px){
     th,td{ padding:8px 7px; font-size:12px; }
@@ -257,9 +261,9 @@
 <div class="mx-auto max-w-5xl px-4 py-4">
 
   <div id="frameNotice">
-    <p class="t">📌 The mini window only opens in its own tab</p>
-    <p class="b">This view is embedded inside another page, so browser policy blocks the always-on-top mini window. Press <strong>“↗ Open in new tab” at the top right</strong> and it will work normally.</p>
-    <a id="newTabLink" href="https://mnledu.com/en/productivity/presentation-timer.html" target="_blank" rel="noopener noreferrer" hidden></a>
+    <p class="t">📌 The mini window did not open</p>
+    <p class="b">When this view is embedded inside another page, browser policy blocks the always-on-top mini window. Open it in a new tab with the button below and it will work.</p>
+    <a id="newTabLink" href="https://mnledu.com/en/productivity/presentation-timer.html" target="_blank" rel="noopener noreferrer">Open in a new tab and retry ↗</a>
   </div>
 
   <!-- 타이머 -->
@@ -336,6 +340,7 @@
 
     <div class="flex flex-wrap gap-2 mt-3">
       <button class="btn" id="fileBtn">Open CSV / TXT</button>
+      <button class="btn" id="clearBtn">Clear</button>
       <button class="btn" id="sampleBtn">Fill sample</button>
       <input type="file" id="picker" accept=".csv,.txt,text/plain" class="hidden">
       <button class="btn p" id="applyBtn" style="margin-left:auto">Apply agenda</button>
@@ -358,7 +363,7 @@
   </div>
 
   <p class="text-[11px] mt-3" style="color:var(--dim); line-height:1.8">
-    The mini window uses the Document Picture-in-Picture API in Chromium-based browsers. If this page is embedded inside another site, browser policy blocks it — use the button at the top to open the page in a new tab, where it works normally.
+    The mini window uses the Document Picture-in-Picture API in Chromium-based browsers. When the page is embedded inside another one, browser policy blocks it — a notice appears with a button to reopen the page in a new tab and try again.
   </p>
 </div>
 
@@ -697,6 +702,19 @@
   }
   $('applyBtn').addEventListener('click', apply);
 
+  // 아젠다와 진행 기록을 한 번에 비운다
+  $('clearBtn').addEventListener('click', function () {
+    if (!window.confirm('Clear the agenda and all progress?')) return;
+    $('raw').value = '';
+    agenda = []; cur = -1; actualStart = {};
+    elapsed = 0; bonusPres = 0; bonusQa = 0;
+    running = false; paused = false;
+    $('parseInfo').textContent = '';
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    renderTable(); paint();
+    toast('Agenda cleared');
+  });
+
   ['presMin', 'qaMin', 'startAt'].forEach(function (id) {
     $(id).addEventListener('input', function () { readSettings(); renderTable(); paint(); save(); });
   });
@@ -819,6 +837,7 @@
       '#pPhase{font-size:11px;color:#94A3B8;text-align:center}' +
       '#pBadge{text-align:center;font-size:11px;font-weight:700;min-height:15px}' +
       '#pClock{text-align:center;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;color:#64748B;letter-spacing:.02em}' +
+      '#pPlan{text-align:center;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;color:#64748B;letter-spacing:.02em;min-height:14px}' +
       '.row{display:grid;gap:5px}' +
       '.r3{grid-template-columns:1fr 1fr 1fr}.r2{grid-template-columns:1fr 1fr}' +
       'button{border:1px solid #334155;background:#243449;color:#F8FAFC;border-radius:8px;' +
@@ -833,6 +852,7 @@
         '<div id="pPhase">Ready</div>' +
         '<div id="pBadge"></div>' +
         '<div id="pClock">—</div>' +
+        '<div id="pPlan">—</div>' +
         '<div class="row r3">' +
           '<button id="pPlus1">+1 min</button>' +
           '<button id="pPlus3">+3 min</button>' +
@@ -845,8 +865,6 @@
       '</div>';
   }
 
-  // iframe 안에서는 브라우저 정책상 항상 위 미니창을 열 수 없다.
-  // 억지로 팝업을 띄우기보다 새 탭에서 열도록 안내하는 편이 확실하다
   function inFrame() {
     try { return window.self !== window.top; } catch (e) { return true; }
   }
@@ -862,24 +880,35 @@
     d.getElementById('pNext').onclick = function () { gotoIndex(cur < 0 ? 0 : cur + 1); };
   }
 
-  async function openPip() {
-    // iframe 안에서는 버튼 자체를 감추므로 여기까지 오지 않는다.
-    // 혹시 모를 경우를 대비해 안내만 남긴다
-    if (inFrame()) { $('frameNotice').style.display = 'block'; toast('Open in a new tab to use the mini window'); return; }
-    if (!('documentPictureInPicture' in window)) { toast('This browser does not support the mini window (try a Chromium-based browser)'); return; }
-    if (pipWin && !pipWin.closed) { try { pipWin.focus(); } catch (e) {} return; }
+  // 열리지 않았을 때만 새 탭 안내를 띄운다
+  function pipFailed() {
+    const n = $('frameNotice');
+    n.style.display = 'block';
+    try { n.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    toast('The mini window did not open · try again in a new tab');
+  }
 
+  async function openPip() {
+    if (pipWin && !pipWin.closed) { try { pipWin.focus(); } catch (e) {} return; }
+    if (!('documentPictureInPicture' in window)) {
+      toast('This browser does not support the mini window (try a Chromium-based browser)');
+      if (inFrame()) pipFailed();
+      return;
+    }
+
+    // 일단 열어 본다. 막혀 있으면 예외가 나므로 그때 안내한다
     try {
-      pipWin = await window.documentPictureInPicture.requestWindow({ width: 320, height: 320 });
+      pipWin = await window.documentPictureInPicture.requestWindow({ width: 320, height: 340 });
       pipWin.document.body.innerHTML = pipMarkup();
       bindPipControls(pipWin.document);
       pipWin.addEventListener('pagehide', function () { pipWin = null; });
+      $('frameNotice').style.display = 'none';
       paint();
       tickClock();
       toast('Mini window opened');
     } catch (e) {
       pipWin = null;
-      toast('Could not open the mini window');
+      pipFailed();
     }
   }
 
@@ -907,6 +936,16 @@
     else if (dl.diff > 0) { bd.textContent = '⚠️ ' + dl.diff + ' min behind'; bd.style.color = '#EF4444'; }
     else if (dl.diff < 0) { bd.textContent = '⚡ ' + (-dl.diff) + ' min ahead'; bd.style.color = '#10B981'; }
     else { bd.textContent = 'On time'; bd.style.color = '#94A3B8'; }
+
+    // 원래 예정 시각을 참고용으로 함께 보여 준다
+    const pl = d.getElementById('pPlan');
+    if (pl) {
+      if (cur >= 0 && agenda.length) {
+        const tl = timeline();
+        const p0 = tl[cur];
+        pl.textContent = 'Planned ' + hm(p0.planned) + ' ~ ' + hm(p0.planned + p0.dur);
+      } else pl.textContent = '';
+    }
 
     // 초과 시 미니창도 함께 점멸
     d.body.classList.toggle('over', st.key === 'over' && blinkOn);
@@ -940,16 +979,6 @@
   if (restored && agenda.length) {
     $('parseInfo').textContent = agenda.length + ' slots (saved agenda)';
   }
-  // 삽입된 화면이면 미니창 대신 새 탭 열기를 안내한다
-  if (inFrame()) {
-    // 헤더 버튼은 다른 도구와 같은 자리에 그대로 두고 역할만 바꾼다
-    $('frameNotice').style.display = 'block';
-    $('pipBtn').textContent = '↗ Open in new tab';
-    $('pipBtn').onclick = function () {
-      window.open($('newTabLink').href, '_blank', 'noopener');
-    };
-  }
-
   renderTable();
   paint();
   raf = requestAnimationFrame(loop);
@@ -1023,7 +1052,7 @@
 <dt>How is the delay calculated?</dt><dd>It compares the clock time when the host pressed next speaker against the originally scheduled time. Later means running behind, earlier means running ahead, and the expected start time for every remaining slot is recalculated.</dd>
 <dt>What format should the agenda be in?</dt><dd>One line per slot, separated by commas: session, affiliation, speaker, topic, notes. Add a number at the end of a line to give that slot its own length, which is handy for short items like a break or opening remarks. You can also drop a CSV file onto the box.</dd>
 <dt>Is my agenda sent to a server?</dt><dd>No. Everything runs inside your browser, and the agenda and settings are stored only on the device you are using.</dd>
-<dt>The mini window will not open</dt><dd>If this page is embedded inside another site, browser policy blocks it. Use the <strong>Open in new tab</strong> button near the top to open the page on its own and it will work. The feature is also limited to Chromium-based browsers.</dd>
+<dt>The mini window will not open</dt><dd>When the page is embedded inside another one, browser policy blocks it. A notice appears with an <strong>Open in a new tab and retry</strong> button — use it to open the page on its own. The feature is also limited to Chromium-based browsers.</dd>
 <dt>Will my agenda survive a refresh?</dt><dd>Yes. What you enter is saved on your device and will still be there when you come back.</dd>
 <dt>Can I skip ahead to a specific slot?</dt><dd>Press the Start button on any row of the table to jump straight to it. That moment is recorded too.</dd>
 </dl>
