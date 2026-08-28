@@ -62,6 +62,78 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://mnledu.com/productivity/pdf-signature.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdf-signature.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-signature.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdf-signature.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/pdf-signature.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdf-signature.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-signature.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdf-signature.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/productivity/qr-studio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/qr-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/qr-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/qr-studio.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/qr-studio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/qr-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/qr-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/qr-studio.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/productivity/meeting-minutes.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/meeting-minutes.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/meeting-minutes.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/meeting-minutes.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/meeting-minutes.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/meeting-minutes.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/meeting-minutes.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/meeting-minutes.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/productivity/slot-coordinator.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/slot-coordinator.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/slot-coordinator.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/slot-coordinator.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/slot-coordinator.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/slot-coordinator.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/slot-coordinator.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/slot-coordinator.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://mnledu.com/productivity/notepad.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/notepad.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/notepad.html"/>

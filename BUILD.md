@@ -95,3 +95,22 @@ presentation-timer 와 마찬가지로 guides 항목이 없다.
   뒤로 가기에서 빈 화면이 나왔다.
 - 뒤로 가기 버튼은 목록을 거쳐 들어온 경우에만 history.back() 을 쓴다
   (openedFromList). 주소로 바로 들어오면 목록 주소로 바꾼다.
+
+
+## 2026-08-28 추가 4종 (PRODUCTIVITY)
+
+pdf-signature · qr-studio · meeting-minutes · slot-coordinator
+
+완성본을 직접 받아 배치했으므로 guides 항목이 없다.
+build-guides.js 는 "안내문없음" 으로 건너뛴다 (정상).
+안내문을 고치려면 각 HTML 의 TOOLKIT:GUIDE 마커 사이를 직접 수정한다.
+
+현재 guides 항목 없이 안내문이 파일에 박혀 있는 도구
+  presentation-timer, kstartup-board,
+  pdf-signature, qr-studio, meeting-minutes, slot-coordinator
+
+## assets 폴더
+
+kstartup-board 가 assets/01_엠엔엘뉴스.xlsx 를 참조한다.
+파일명이 한글이므로 압축·해제 과정에서 깨지지 않는지 확인할 것.
+HTML 안에서는 퍼센트 인코딩된 경로로 참조한다.

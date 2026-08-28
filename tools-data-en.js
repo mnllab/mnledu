@@ -8,6 +8,46 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'pdf-signature',
+    title: 'PDF Signature Stamp',
+    category: 'PRODUCTIVITY',
+    desc: 'Strip the white background from a photo of your signature and stamp it onto any page of a PDF.',
+    url: 'https://mnledu.com/en/productivity/pdf-signature.html',
+    icon: 'signature',
+    badge: 'NEW',
+    tags: ['#PDF', '#signature', '#documents', '#image']
+  },
+  {
+    id: 'qr-studio',
+    title: 'Custom QR Code Generator',
+    category: 'PRODUCTIVITY',
+    desc: 'Build print-ready QR codes in your own colours and sizes. Export transparent PNG or vector SVG.',
+    url: 'https://mnledu.com/en/productivity/qr-studio.html',
+    icon: 'qr-code',
+    badge: 'NEW',
+    tags: ['#QR', '#print', '#design', '#offline']
+  },
+  {
+    id: 'meeting-minutes',
+    title: 'Smart Meeting Minutes',
+    category: 'PRODUCTIVITY',
+    desc: 'Capture questions and answers, then copy the minutes in plain text, Word, Slack or Markdown.',
+    url: 'https://mnledu.com/en/productivity/meeting-minutes.html',
+    icon: 'clipboard-list',
+    badge: 'NEW',
+    tags: ['#meetings', '#writing', '#copy', '#markdown']
+  },
+  {
+    id: 'slot-coordinator',
+    title: 'Smart Schedule Coordinator',
+    category: 'PRODUCTIVITY',
+    desc: 'Paste a calendar screenshot and it works out when you are free, buffers and lunch removed.',
+    url: 'https://mnledu.com/en/productivity/slot-coordinator.html',
+    icon: 'calendar-clock',
+    badge: 'NEW',
+    tags: ['#scheduling', '#meetings', '#timezone', '#automation']
+  },
+  {
     id: 'notepad',
     title: 'Rich Text Notepad',
     category: 'PRODUCTIVITY',

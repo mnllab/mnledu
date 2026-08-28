@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F7">
+<title>Smart Meeting Minutes · Paste-Ready Formats | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Capture questions and answers, then copy the minutes in the exact format your destination needs — plain text, Word, Slack or Markdown. Tables never break, and open questions are collected separately." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/meeting-minutes.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/meeting-minutes.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/meeting-minutes.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/meeting-minutes.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/meeting-minutes.html" />
+<meta property="og:title" content="Smart Meeting Minutes · Paste-Ready Formats | TOOLKIT" />
+<meta property="og:description" content="Capture questions and answers, then copy the minutes in the exact format your destination needs — plain text, Word, Slack or Markdown. Tables never break, and open questions are collected separately." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Smart Meeting Minutes · Paste-Ready Formats | TOOLKIT" />
+<meta name="twitter:description" content="Capture questions and answers, then copy the minutes in the exact format your destination needs — plain text, Word, Slack or Markdown. Tables never break, and open questions are collected separately." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Smart Meeting Minutes",
+  "description": "Records meetings around questions and answers, then copies them in the format each destination expects.",
+  "url": "https://mnledu.com/en/productivity/meeting-minutes.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+  "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+  "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+    { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+    { "@type": "ListItem", "position": 3, "name": "Smart Meeting Minutes", "item": "https://mnledu.com/en/productivity/meeting-minutes.html" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Will the layout break when I paste into a plain text editor?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Columns are aligned with spaces based on each character's actual display width rather than tabs. CJK characters occupy two columns where Latin letters take one, and that difference is what throws tab-aligned text out of line — it is accounted for here." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does table formatting survive a paste into Word?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. The Word copy places rich content on the clipboard — tables, bold text and colours intact — so a plain paste lands fully formatted, with no cleanup needed." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will I lose my work if the tab closes?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Everything is saved to your device as you type, so reopening the page restores what you had. Use the backup button to download a file if you want to carry the notes to another machine." }
+    },
+    {
+      "@type": "Question",
+      "name": "How are unanswered questions handled?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Mark a question as needing follow-up and it turns amber on screen. Every export also gathers those questions into a list at the end, so nothing outstanding gets buried in the body of the notes." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is anything I type sent to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. All processing happens inside your browser and the notes stay on the device you are using." }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#FAF9F7; --card:#FFFFFF; --line:#E2E8F0; --ink:#1E293B; --dim:#64748B;
+    --accent:#2563EB; --soft:#EFF6FF;
+    --q:#2563EB; --a:#15803D; --warn:#D97706; --warnBg:#FFFBEB;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; }
+
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:10px; font-size:13px; font-weight:600; padding:10px 12px; cursor:pointer;
+    min-height:42px; transition:border-color .12s, background .12s, transform .06s;
+  }
+  .btn:hover{ border-color:#CBD5E1; }
+  .btn:active{ transform:translateY(1px); }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .btn.sm{ padding:7px 10px; min-height:34px; font-size:12px; border-radius:8px; }
+  .btn.danger{ color:#B91C1C; }
+
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:9px; background:#fff;
+    padding:9px 11px; font-size:13.5px; color:var(--ink); outline:none; min-height:40px;
+    font-family:inherit;
+  }
+  .fld:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+  textarea.fld{ min-height:70px; resize:vertical; line-height:1.65; }
+  .lab{ display:block; font-size:11.5px; color:var(--dim); margin-bottom:5px; }
+
+  .sect{ padding:15px; border-bottom:1px solid var(--line); }
+  .sect:last-child{ border-bottom:0; }
+  .sectTitle{ font-size:13px; font-weight:700; margin:0 0 11px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+
+  /* 항목 카드 */
+  .item{
+    border:1px solid var(--line); border-radius:11px; padding:11px; margin-bottom:8px;
+    background:#FCFCFB;
+  }
+  .item:last-child{ margin-bottom:0; }
+  .badge{
+    display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px;
+    border-radius:999px; border:1px solid currentColor; white-space:nowrap;
+  }
+  .badge.q{ color:var(--q); background:#EFF6FF; }
+  .badge.a{ color:var(--a); background:#F0FDF4; }
+  .badge.done{ color:var(--a); background:#F0FDF4; }
+  .badge.pending{ color:var(--warn); background:var(--warnBg); }
+  .badge.review{ color:#7326B0; background:#F5F1FA; }
+
+  .item.pending{ border-color:#FDE68A; background:var(--warnBg); }
+
+  /* 미리보기 */
+  #preview{
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:20px; font-size:13.5px; line-height:1.75; overflow:auto; max-height:66vh;
+  }
+  #preview h1{ font-size:19px; font-weight:800; margin:0 0 4px; }
+  #preview h2{ font-size:14px; font-weight:700; margin:20px 0 8px; padding-bottom:5px; border-bottom:2px solid var(--line); }
+  #preview table{ width:100%; border-collapse:collapse; margin:8px 0; font-size:12.5px; }
+  #preview th,#preview td{ border:1px solid var(--line); padding:7px 9px; text-align:left; vertical-align:top; }
+  #preview th{ background:#F8FAFC; font-weight:600; }
+  #preview .meta{ font-size:12.5px; color:var(--dim); }
+  #preview .qa{ margin:0 0 12px; padding-left:11px; border-left:3px solid var(--line); }
+  #preview .qa.pending{ border-left-color:var(--warn); }
+  #preview ul{ margin:6px 0; padding-left:20px; }
+  #preview li{ margin:4px 0; }
+
+  /* 탭 (모바일) */
+  #tabs{ display:none; gap:6px; margin-bottom:12px; }
+  #tabs button{
+    flex:1; padding:11px; border-radius:10px; border:1px solid var(--line);
+    background:#fff; color:var(--dim); font-size:13px; font-weight:600; cursor:pointer; min-height:44px;
+  }
+  #tabs button.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  @media(max-width:900px){
+    #tabs{ display:flex; }
+    #left.hide, #right.hide{ display:none; }
+    #preview{ max-height:none; }
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:10px;
+    padding:10px 16px; font-size:13px; z-index:60;
+    pointer-events:none; transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-7xl px-4 py-5 sm:py-7">
+
+  <header class="mb-4 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h1 class="text-[21px] font-bold tracking-tight" style="margin:0">📋 Smart Meeting Minutes</h1>
+      <p class="text-[12.5px] mt-1" style="color:var(--dim); margin:0">
+        Write once, copy it in the format each destination expects
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn sm" id="jsonInBtn">📂 Load</button>
+      <button class="btn sm" id="jsonOutBtn">💾 Backup</button>
+      <button class="btn sm danger" id="resetBtn">Reset</button>
+      <input type="file" id="jsonFile" accept=".json,application/json" class="hidden">
+    </div>
+  </header>
+
+  <div id="tabs">
+    <button data-tab="left" class="on">✍️ Write</button>
+    <button data-tab="right">📄 Preview</button>
+  </div>
+
+  <div class="grid gap-4" id="split" style="grid-template-columns:1fr">
+
+    <!-- 좌측 : 입력 -->
+    <div id="left">
+      <div class="card">
+
+        <div class="sect">
+          <p class="sectTitle">Meeting details</p>
+          <label class="lab" for="mTitle">Title</label>
+          <input class="fld" id="mTitle" placeholder="e.g. Q3 Technology Commercialisation Review">
+
+          <div class="grid gap-2 mt-2.5" style="grid-template-columns:1fr auto">
+            <div>
+              <label class="lab" for="mDate">Date &amp; time</label>
+              <input class="fld" id="mDate" placeholder="2026-08-28 14:00">
+            </div>
+            <div style="display:flex; align-items:flex-end">
+              <button class="btn sm" id="nowBtn" style="white-space:nowrap">Now</button>
+            </div>
+          </div>
+
+          <label class="lab mt-2.5" for="mPlace" style="margin-top:10px">Location / link</label>
+          <input class="fld" id="mPlace" placeholder="e.g. Room 301 / https://meet...">
+
+          <label class="lab mt-2.5" for="mMembers" style="margin-top:10px">Attendees</label>
+          <textarea class="fld" id="mMembers" style="min-height:56px" placeholder="Comma separated · e.g. Janggil Kim, Younghee Lee"></textarea>
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">
+            <span>💬 Questions &amp; answers</span>
+            <button class="btn sm" id="addQa">+ Add</button>
+          </p>
+          <div id="qaList"></div>
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">
+            <span>📌 Requests</span>
+            <button class="btn sm" id="addAct">+ Add</button>
+          </p>
+          <div id="actList"></div>
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">
+            <span>📅 Next meeting</span>
+            <span class="text-[11px]" style="color:var(--dim); font-weight:400">optional</span>
+          </p>
+          <div class="grid gap-2" style="grid-template-columns:1fr 1fr">
+            <div>
+              <label class="lab" for="nextDate">Date</label>
+              <input class="fld" id="nextDate" type="date">
+            </div>
+            <div>
+              <label class="lab" for="nextTime">Time</label>
+              <input class="fld" id="nextTime" type="time">
+            </div>
+          </div>
+          <label class="lab" for="nextNote" style="margin-top:10px">Note</label>
+          <input class="fld" id="nextNote" placeholder="e.g. Budget review, Room 301">
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">📝 Other notes</p>
+          <textarea class="fld" id="mNote" style="min-height:80px" placeholder="Anything else worth recording"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 우측 : 미리보기 · 내보내기 -->
+    <div id="right" class="hide">
+      <div class="card" style="padding:15px; margin-bottom:12px">
+        <p class="sectTitle" style="margin-bottom:9px">
+          <span>Copy in format</span>
+          <span class="mono text-[11px]" id="statInfo" style="color:var(--dim); font-weight:400"></span>
+        </p>
+        <div class="grid gap-2" style="grid-template-columns:1fr 1fr">
+          <button class="btn" data-copy="txt">📝 Plain text</button>
+          <button class="btn" data-copy="html">📄 Word</button>
+          <button class="btn" data-copy="chat">💬 Slack · chat</button>
+          <button class="btn" data-copy="md">📓 Markdown</button>
+        </div>
+
+        <div class="grid gap-2 mt-2" style="grid-template-columns:1fr 1fr">
+          <button class="btn sm" id="dlTxt">💾 Save .txt</button>
+          <button class="btn sm" id="dlHtml">🌐 Save .html</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:15px">
+        <p class="sectTitle" style="margin-bottom:9px">Preview</p>
+        <div id="preview"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = function (id) { return document.getElementById(id); };
+
+  const STATUS = {
+    done:    { label: 'Answered',   cls: 'done',    emoji: '✅' },
+    pending: { label: 'Follow-up',  cls: 'pending', emoji: '⚠️' },
+    review:  { label: 'Reviewing',  cls: 'review',  emoji: '🔍' }
+  };
+
+  let data = blank();
+  let saveTimer = null;
+
+  function blank() {
+    return { title: '', date: '', place: '', members: '', note: '',
+             nextDate: '', nextTime: '', nextNote: '', qa: [], act: [] };
+  }
+  function uid() { return Math.random().toString(36).slice(2, 9); }
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  /* ---------- 저장 ---------- */
+  const KEY = 'smart-minutes-v1';
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+    }, 400);
+  }
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (d && typeof d === 'object') {
+        data = Object.assign(blank(), d);
+        ['qa', 'act'].forEach(function (k) { if (!Array.isArray(data[k])) data[k] = []; });
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  /* ---------- 입력 그리기 ---------- */
+  function bindField(id, key) {
+    $(id).addEventListener('input', function () {
+      data[key] = $(id).value;
+      save(); renderPreview();
+    });
+  }
+  ['mTitle:title', 'mDate:date', 'mPlace:place', 'mMembers:members', 'mNote:note',
+   'nextDate:nextDate', 'nextTime:nextTime', 'nextNote:nextNote'].forEach(function (p) {
+    const s = p.split(':');
+    bindField(s[0], s[1]);
+  });
+
+  $('nowBtn').addEventListener('click', function () {
+    const d = new Date();
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    const wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    $('mDate').value = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+                       '(' + wd + ') ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    data.date = $('mDate').value;
+    save(); renderPreview();
+  });
+
+  // 질의응답
+  function renderQa() {
+    const box = $('qaList');
+    box.innerHTML = '';
+    if (!data.qa.length) {
+      box.innerHTML = '<p class="text-[12.5px]" style="color:var(--dim); margin:0">Press + to record a question</p>';
+      return;
+    }
+    data.qa.forEach(function (it, i) {
+      const el = document.createElement('div');
+      el.className = 'item' + (it.status === 'pending' ? ' pending' : '');
+      el.innerHTML =
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px">' +
+          '<span class="badge q">Q' + (i + 1) + '</span>' +
+          '<select class="fld f" data-f="status" style="flex:1; max-width:160px; min-height:34px; padding:5px 8px; font-size:12px">' +
+            Object.keys(STATUS).map(function (k) {
+              return '<option value="' + k + '"' + (it.status === k ? ' selected' : '') + '>' +
+                STATUS[k].emoji + ' ' + STATUS[k].label + '</option>';
+            }).join('') +
+          '</select>' +
+          '<button class="btn sm danger del" style="min-height:28px; padding:4px 8px">Delete</button>' +
+        '</div>' +
+        '<textarea class="fld f" data-f="question" placeholder="Question">' + esc(it.question) + '</textarea>' +
+        '<div style="display:flex; align-items:center; gap:6px; margin-top:9px">' +
+          '<span class="badge a">A</span>' +
+          '<span class="text-[11.5px]" style="color:var(--dim)">Answer</span>' +
+        '</div>' +
+        '<textarea class="fld f" data-f="answer" placeholder="Answer" style="margin-top:6px">' + esc(it.answer) + '</textarea>';
+
+      bindItem(el, it, renderQa);
+      el.querySelector('.del').addEventListener('click', function () {
+        data.qa.splice(i, 1); save(); renderQa(); renderPreview();
+      });
+      box.appendChild(el);
+    });
+  }
+
+  // 항목 안의 입력들을 데이터에 연결한다
+  function bindItem(el, it, redraw) {
+    el.querySelectorAll('.f').forEach(function (f) {
+      const key = f.dataset.f;
+      const handler = function () {
+        it[key] = f.type === 'checkbox' ? f.checked : f.value;
+        save(); renderPreview();
+        // 상태가 바뀌면 뱃지 색이 달라지므로 다시 그린다
+        if (key === 'status' && redraw) redraw();
+      };
+      f.addEventListener('input', handler);
+      f.addEventListener('change', handler);
+    });
+  }
+
+  $('addQa').addEventListener('click', function () {
+    data.qa.push({ id: uid(), question: '', answer: '', status: 'done' });
+    save(); renderQa(); renderPreview();
+  });
+
+  // 요청사항
+  function renderAct() {
+    const box = $('actList');
+    box.innerHTML = '';
+    if (!data.act.length) {
+      box.innerHTML = '<p class="text-[12.5px]" style="color:var(--dim); margin:0">Press + to record a request</p>';
+      return;
+    }
+    data.act.forEach(function (it, i) {
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.innerHTML =
+        '<div style="display:flex; align-items:center; gap:8px">' +
+          '<label style="display:flex; align-items:center; gap:6px; font-size:12.5px; cursor:pointer; flex:none">' +
+            '<input type="checkbox" class="f" data-f="done" style="width:16px; height:16px; accent-color:var(--accent)">' +
+            'Done' +
+          '</label>' +
+          '<textarea class="fld f" data-f="text" placeholder="Request" style="min-height:40px; flex:1"></textarea>' +
+          '<button class="btn sm danger del" style="min-height:34px; padding:5px 8px; flex:none">Delete</button>' +
+        '</div>';
+      el.querySelector('[data-f="done"]').checked = !!it.done;
+      el.querySelector('[data-f="text"]').value = it.text || '';
+      bindItem(el, it);
+      el.querySelector('.del').addEventListener('click', function () {
+        data.act.splice(i, 1); save(); renderAct(); renderPreview();
+      });
+      box.appendChild(el);
+    });
+  }
+  $('addAct').addEventListener('click', function () {
+    data.act.push({ id: uid(), text: '', done: false });
+    save(); renderAct(); renderPreview();
+  });
+
+  /* ---------- 문자 폭 ---------- */
+  // 한글은 폭이 두 배라 탭으로 맞추면 밀린다. 표시 폭을 세어 공백으로 채운다
+  function vw(s) {
+    let n = 0;
+    for (const c of String(s == null ? '' : s)) {
+      n += /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF\u3040-\u30FF\uFF00-\uFFEF]/.test(c) ? 2 : 1;
+    }
+    return n;
+  }
+  function padTo(s, width) {
+    s = String(s == null ? '' : s);
+    return s + ' '.repeat(Math.max(0, width - vw(s)));
+  }
+  function rule(n) { return '-'.repeat(n); }
+
+  function textTable(rows) {
+    if (!rows.length) return '';
+    const cols = rows[0].length;
+    const w = [];
+    for (let c = 0; c < cols; c++) w[c] = Math.max.apply(null, rows.map(function (r) { return vw(r[c]); }));
+    const total = w.reduce(function (a, b) { return a + b + 2; }, 0) - 2;
+    const out = [rule(total)];
+    rows.forEach(function (r, i) {
+      out.push(r.map(function (c, j) { return padTo(c, w[j]); }).join('  ').replace(/\s+$/, ''));
+      if (i === 0) out.push(rule(total));
+    });
+    out.push(rule(total));
+    return out.join('\n');
+  }
+
+  /* ---------- 서식별 생성 ---------- */
+  function nonEmpty(arr, keys) {
+    return arr.filter(function (it) {
+      return keys.some(function (k) { return String(it[k] || '').trim(); });
+    });
+  }
+  // 다음 일정을 한 줄로 만든다. 비어 있으면 아무것도 내보내지 않는다
+  function nextLine() {
+    const d = (data.nextDate || '').trim();
+    const t = (data.nextTime || '').trim();
+    const n = (data.nextNote || '').trim();
+    if (!d && !t && !n) return '';
+    const when = [d, t].filter(Boolean).join(' ');
+    return [when, n].filter(Boolean).join('  ·  ');
+  }
+
+  function head() {
+    return {
+      title: data.title.trim() || 'Meeting minutes',
+      date: data.date.trim(),
+      place: data.place.trim(),
+      members: data.members.trim()
+    };
+  }
+
+  // 1) 메모장용 : 표 대신 공백 정렬과 가로선만 쓴다
+  function toTxt() {
+    const h = head();
+    const L = [];
+    L.push(rule(58));
+    L.push(h.title);
+    L.push(rule(58));
+    if (h.date) L.push('Date     : ' + h.date);
+    if (h.place) L.push('Location : ' + h.place);
+    if (h.members) L.push('Attendees: ' + h.members);
+    L.push('');
+
+    const qa = nonEmpty(data.qa, ['question', 'answer']);
+    if (qa.length) {
+      L.push('[ Q & A ]');
+      L.push(rule(58));
+      qa.forEach(function (it, i) {
+        const st = STATUS[it.status] || STATUS.done;
+        L.push('Q' + (i + 1) + '. ' + (it.question || '').trim());
+        L.push('    A. ' + (String(it.answer || '').trim() || '-'));
+        L.push('    Status: ' + st.label);
+        L.push('');
+      });
+    }
+
+    const act = nonEmpty(data.act, ['text']);
+    if (act.length) {
+      L.push('[ Requests ]');
+      L.push(rule(58));
+      act.forEach(function (it, i) {
+        L.push('[' + (it.done ? 'v' : ' ') + '] ' + it.text.trim());
+      });
+      L.push('');
+    }
+
+    if (data.note.trim()) {
+      L.push('[ Notes ]');
+      L.push(rule(58));
+      L.push(data.note.trim());
+      L.push('');
+    }
+
+    const nx = nextLine();
+    if (nx) {
+      L.push('[ Next meeting ]');
+      L.push(rule(58));
+      L.push(nx);
+      L.push('');
+    }
+
+    const pend = qa.filter(function (it) { return it.status === 'pending'; });
+    if (pend.length) {
+      L.push(rule(58));
+      L.push('* Follow-up needed: ' + pend.length);
+      pend.forEach(function (it, i) { L.push('   - ' + (it.question || '').trim()); });
+    }
+    return L.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  // 2) 한글·워드용 : 표와 서식을 살린 HTML
+  function toHtml(standalone) {
+    const h = head();
+    const F = 'font-family:Calibri,\'Segoe UI\',Arial,sans-serif;';
+    let b = '';
+
+    b += '<div style="' + F + 'font-size:11pt; color:#1a1a1a; line-height:1.7">';
+    b += '<h1 style="font-size:16pt; margin:0 0 10px; border-bottom:2px solid #333; padding-bottom:6px">' +
+         esc(h.title) + '</h1>';
+
+    const info = [];
+    if (h.date) info.push(['Date', h.date]);
+    if (h.place) info.push(['Location', h.place]);
+    if (h.members) info.push(['Attendees', h.members]);
+    if (info.length) {
+      b += '<table style="border-collapse:collapse; width:100%; margin:0 0 16px; font-size:10.5pt">';
+      info.forEach(function (r) {
+        b += '<tr>' +
+          '<td style="border:1px solid #bbb; padding:6px 9px; background:#f2f2f2; width:80px; font-weight:bold">' + esc(r[0]) + '</td>' +
+          '<td style="border:1px solid #bbb; padding:6px 9px">' + esc(r[1]) + '</td></tr>';
+      });
+      b += '</table>';
+    }
+
+    const qa = nonEmpty(data.qa, ['question', 'answer']);
+    if (qa.length) {
+      b += '<h2 style="font-size:12.5pt; margin:18px 0 8px; border-bottom:1px solid #999; padding-bottom:4px">Questions &amp; Answers</h2>';
+      qa.forEach(function (it, i) {
+        const st = STATUS[it.status] || STATUS.done;
+        const col = it.status === 'pending' ? '#D97706' : (it.status === 'review' ? '#7326B0' : '#15803D');
+        const bgc = it.status === 'pending' ? '#FFFBEB' : '#FFFFFF';
+        b += '<div style="margin:0 0 12px; padding:9px 11px; border-left:3px solid ' + col + '; background:' + bgc + '">';
+        b += '<p style="margin:0 0 5px"><b style="color:#2563EB">Q' + (i + 1) + '.</b> ' + esc(it.question) + '</p>';
+        b += '<p style="margin:0 0 5px"><b style="color:#15803D">A.</b> ' + esc(it.answer || '-') + '</p>';
+        b += '<p style="margin:0; font-size:9.5pt"><span style="color:' + col + '; font-weight:bold">' +
+             esc(st.label) + '</span></p>';
+        b += '</div>';
+      });
+    }
+
+    const act = nonEmpty(data.act, ['text']);
+    if (act.length) {
+      b += '<h2 style="font-size:12.5pt; margin:18px 0 8px; border-bottom:1px solid #999; padding-bottom:4px">Requests</h2>';
+      b += '<ul style="margin:0; padding-left:20px; list-style:none">';
+      act.forEach(function (it) {
+        b += '<li style="margin:5px 0">' + (it.done ? '☑' : '☐') + ' ' +
+             (it.done ? '<span style="color:#888">' + esc(it.text) + '</span>' : esc(it.text)) + '</li>';
+      });
+      b += '</ul>';
+    }
+
+    if (data.note.trim()) {
+      b += '<h2 style="font-size:12.5pt; margin:18px 0 8px; border-bottom:1px solid #999; padding-bottom:4px">Notes</h2>';
+      b += '<p style="margin:0; white-space:pre-wrap">' + esc(data.note.trim()) + '</p>';
+    }
+
+    const nx = nextLine();
+    if (nx) {
+      b += '<h2 style="font-size:12.5pt; margin:18px 0 8px; border-bottom:1px solid #999; padding-bottom:4px">Next Meeting</h2>';
+      b += '<p style="margin:0">' + esc(nx) + '</p>';
+    }
+
+    const pend = qa.filter(function (it) { return it.status === 'pending'; });
+    if (pend.length) {
+      b += '<div style="margin-top:18px; padding:10px 12px; border:1px solid #FDE68A; background:#FFFBEB">';
+      b += '<p style="margin:0 0 5px; font-weight:bold; color:#D97706">Follow-up needed: ' + pend.length + '</p>';
+      b += '<ul style="margin:0; padding-left:18px">';
+      pend.forEach(function (it) { b += '<li style="margin:3px 0">' + esc(it.question) + '</li>'; });
+      b += '</ul></div>';
+    }
+    b += '</div>';
+
+    if (!standalone) return b;
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' +
+      '<title>' + esc(h.title) + '</title>' +
+      '<style>body{margin:0;padding:32px;background:#fff}' +
+      '@media print{body{padding:0}}</style></head><body>' + b + '</body></html>';
+  }
+
+  // 3) 슬랙·카톡용 : 이모지와 줄바꿈 위주
+  function toChat() {
+    const h = head();
+    const L = [];
+    L.push('📋 ' + h.title);
+    if (h.date) L.push('🕐 ' + h.date);
+    if (h.place) L.push('📍 ' + h.place);
+    if (h.members) L.push('👥 ' + h.members);
+
+    const qa = nonEmpty(data.qa, ['question', 'answer']);
+    if (qa.length) {
+      L.push('');
+      L.push('💬 Q & A');
+      qa.forEach(function (it, i) {
+        const st = STATUS[it.status] || STATUS.done;
+        L.push('');
+        L.push('Q' + (i + 1) + '. ' + (it.question || '').trim());
+        L.push('→ ' + (String(it.answer || '').trim() || 'pending'));
+        if (it.status !== 'done') L.push(st.emoji + ' ' + st.label);
+      });
+    }
+
+    const act = nonEmpty(data.act, ['text']);
+    if (act.length) {
+      L.push('');
+      L.push('📌 Requests');
+      act.forEach(function (it) {
+        L.push((it.done ? '☑' : '☐') + ' ' + it.text.trim());
+      });
+    }
+
+    const nx = nextLine();
+    if (nx) {
+      L.push('');
+      L.push('📅 Next meeting');
+      L.push(nx);
+    }
+
+    const pend = qa.filter(function (it) { return it.status === 'pending'; });
+    if (pend.length) {
+      L.push('');
+      L.push('⚠️ Follow-up: ' + pend.length);
+      pend.forEach(function (it) { L.push('· ' + (it.question || '').trim()); });
+    }
+    return L.join('\n').trim();
+  }
+
+  // 4) 노션·마크다운
+  function toMd() {
+    const h = head();
+    const L = [];
+    L.push('# ' + h.title);
+    L.push('');
+    if (h.date) L.push('- **Date** : ' + h.date);
+    if (h.place) L.push('- **Location** : ' + h.place);
+    if (h.members) L.push('- **Attendees** : ' + h.members);
+
+    const qa = nonEmpty(data.qa, ['question', 'answer']);
+    if (qa.length) {
+      L.push('');
+      L.push('## Questions & Answers');
+      qa.forEach(function (it, i) {
+        const st = STATUS[it.status] || STATUS.done;
+        L.push('');
+        L.push('**Q' + (i + 1) + '.** ' + (it.question || '').trim());
+        L.push('');
+        L.push('> **A.** ' + (String(it.answer || '').trim() || '-'));
+        L.push('>');
+        L.push('> ' + st.emoji + ' ' + st.label);
+      });
+    }
+
+    const act = nonEmpty(data.act, ['text']);
+    if (act.length) {
+      L.push('');
+      L.push('## Requests');
+      act.forEach(function (it) {
+        L.push('- [' + (it.done ? 'x' : ' ') + '] ' + it.text.trim());
+      });
+    }
+
+    const nx = nextLine();
+    if (nx) {
+      L.push('');
+      L.push('## Next meeting');
+      L.push('');
+      L.push(nx);
+    }
+
+    if (data.note.trim()) {
+      L.push('');
+      L.push('## Notes');
+      L.push('');
+      L.push(data.note.trim());
+    }
+
+    const pend = qa.filter(function (it) { return it.status === 'pending'; });
+    if (pend.length) {
+      L.push('');
+      L.push('> ⚠️ **Follow-up needed: ' + pend.length + '**');
+      pend.forEach(function (it) { L.push('> - ' + (it.question || '').trim()); });
+    }
+    return L.join('\n').trim();
+  }
+
+  /* ---------- 미리보기 ---------- */
+  function renderPreview() {
+    $('preview').innerHTML = toHtml(false);
+    const qa = nonEmpty(data.qa, ['question', 'answer']);
+    const pend = qa.filter(function (it) { return it.status === 'pending'; });
+    const act = nonEmpty(data.act, ['text']);
+    const bits = [];
+    if (qa.length) bits.push('Q&A ' + qa.length);
+    if (act.length) bits.push('req ' + act.length);
+    if (pend.length) bits.push('open ' + pend.length);
+    $('statInfo').textContent = bits.join(' · ');
+  }
+
+  function renderAll() {
+    $('mTitle').value = data.title;
+    $('mDate').value = data.date;
+    $('mPlace').value = data.place;
+    $('mMembers').value = data.members;
+    $('mNote').value = data.note;
+    renderQa(); renderAct(); renderPreview();
+  }
+
+  /* ---------- 복사 ---------- */
+  async function copyPlain(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (e) {}
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  // 한글·워드는 서식이 살아야 하므로 text/html 로 넣는다
+  async function copyRich(html, plain) {
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([plain], { type: 'text/plain' })
+        })]);
+        return true;
+      }
+    } catch (e) {}
+    // 지원하지 않으면 선택 영역을 만들어 복사한다
+    try {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      div.style.position = 'fixed'; div.style.left = '-9999px'; div.style.top = '0';
+      document.body.appendChild(div);
+      const range = document.createRange();
+      range.selectNodeContents(div);
+      const sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      const ok = document.execCommand('copy');
+      sel.removeAllRanges();
+      document.body.removeChild(div);
+      return ok;
+    } catch (e) { return false; }
+  }
+
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', async function () {
+      const kind = b.dataset.copy;
+      if (!data.title.trim() && !data.qa.length && !data.act.length) {
+        toast('Enter something first'); return;
+      }
+      let ok = false, msg = '';
+      if (kind === 'txt') { ok = await copyPlain(toTxt()); msg = 'Copied as plain text'; }
+      else if (kind === 'chat') { ok = await copyPlain(toChat()); msg = 'Copied for chat'; }
+      else if (kind === 'md') { ok = await copyPlain(toMd()); msg = 'Copied as Markdown'; }
+      else { ok = await copyRich(toHtml(false), toTxt()); msg = 'Copied for Word'; }
+      toast(ok ? msg : 'Copy was blocked');
+    });
+  });
+
+  /* ---------- 파일 ---------- */
+  function stamp() {
+    const d = new Date();
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+  }
+  function download(content, name, type) {
+    try {
+      // 메모장에서 한글이 깨지지 않도록 BOM 을 붙인다
+      const parts = /text\/(plain|html)/.test(type) ? ['\uFEFF', content] : [content];
+      const blob = new Blob(parts, { type: type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  $('dlTxt').addEventListener('click', function () {
+    const ok = download(toTxt(), stamp() + '_minutes.txt', 'text/plain;charset=utf-8');
+    toast(ok ? 'Saved as .txt' : 'Save was blocked');
+  });
+  $('dlHtml').addEventListener('click', function () {
+    const ok = download(toHtml(true), stamp() + '_minutes.html', 'text/html;charset=utf-8');
+    toast(ok ? 'Saved as .html' : 'Save was blocked');
+  });
+  $('jsonOutBtn').addEventListener('click', function () {
+    const ok = download(JSON.stringify(data, null, 2), stamp() + '_minutes.json', 'application/json');
+    toast(ok ? 'Backup saved' : 'Save was blocked');
+  });
+
+  $('jsonInBtn').addEventListener('click', function () { $('jsonFile').click(); });
+  $('jsonFile').addEventListener('change', function (e) {
+    const f = e.target.files && e.target.files[0];
+    $('jsonFile').value = '';
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = function (ev) {
+      try {
+        const d = JSON.parse(String(ev.target.result));
+        if (!d || typeof d !== 'object') throw new Error('형식 오류');
+        data = Object.assign(blank(), d);
+        ['qa', 'act'].forEach(function (k) { if (!Array.isArray(data[k])) data[k] = []; });
+        save(); renderAll();
+        toast('Loaded');
+      } catch (err) { toast('Not a valid backup file'); }
+    };
+    r.onerror = function () { toast('Could not read the file'); };
+    r.readAsText(f, 'UTF-8');
+  });
+
+  $('resetBtn').addEventListener('click', function () {
+    if (!window.confirm('Clear everything you have written?')) return;
+    data = blank();
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    renderAll();
+    toast('Cleared');
+  });
+
+  /* ---------- 탭 · 레이아웃 ---------- */
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $('left').classList.toggle('hide', b.dataset.tab !== 'left');
+      $('right').classList.toggle('hide', b.dataset.tab !== 'right');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  function layout() {
+    const wide = window.innerWidth >= 900;
+    $('split').style.gridTemplateColumns = wide ? '1fr 1fr' : '1fr';
+    if (wide) { $('left').classList.remove('hide'); $('right').classList.remove('hide'); }
+    else {
+      const on = document.querySelector('#tabs button.on');
+      const t = on ? on.dataset.tab : 'left';
+      $('left').classList.toggle('hide', t !== 'left');
+      $('right').classList.toggle('hide', t !== 'right');
+    }
+  }
+  window.addEventListener('resize', layout);
+
+  /* ---------- 시작 ---------- */
+  load();
+  renderAll();
+  layout();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>What happens when minutes get pasted around</h2>
+<p>Minutes are rarely written once and left alone. They go out by email, get pasted into a chat channel, then dropped into a report. Formatting breaks at every step — tables lose their columns in a plain editor, and line breaks scramble in a messenger.</p>
+<p>So this writes once and exports four ways, each shaped for where it is going. Paste and move on, with no cleanup.</p>
+
+<h2>Who finds this useful</h2><dl>
+<dt>Q&amp;A-driven meetings</dt><dd>Reviews, advisory sessions and briefings where the questions are the record.</dd>
+<dt>Meetings that leave loose ends</dt><dd>When some questions could not be answered on the spot.</dd>
+<dt>Sharing across channels</dt><dd>When the same notes must land in email, chat and a report.</dd>
+<dt>Personal archiving</dt><dd>Moving notes into Notion or a Markdown repository.</dd>
+</dl>
+
+<h2>How to use it</h2><ol>
+<li>Enter the title and time. The <strong>Now</strong> button fills in the date with its weekday.</li>
+<li>Record what was asked under <strong>Questions &amp; answers</strong>, marking anything unresolved as <strong>Follow-up</strong>.</li>
+<li>Add anything that was asked of you under <strong>Requests</strong>.</li>
+<li>If another meeting is set, pick the date under <strong>Next meeting</strong>.</li>
+<li>Press the <strong>copy button</strong> matching where you are pasting.</li>
+</ol>
+
+<h2>The four export formats</h2><dl>
+<dt>📝 Plain text</dt><dd>Strips tables and tags, aligning columns with spaces. CJK characters take two columns to a Latin letter's one, so tab alignment falls apart — actual display width is measured instead.</dd>
+<dt>📄 Word</dt><dd>Carries tables, bold text and colour onto the clipboard. A plain paste arrives fully formatted.</dd>
+<dt>💬 Slack · chat</dt><dd>No tables at all, just emoji and line breaks. Readable on a narrow screen.</dd>
+<dt>📓 Markdown</dt><dd>Headings, block quotes and checkbox syntax. Pastes into Notion as native blocks.</dd>
+</dl>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Will the layout break when I paste into a plain text editor?</dt><dd>No. Columns are aligned with spaces based on each character's actual display width rather than tabs. CJK characters occupy two columns where Latin letters take one, and that difference is what throws tab-aligned text out of line — it is accounted for here.</dd>
+<dt>Does table formatting survive a paste into Word?</dt><dd>Yes. The Word copy places rich content on the clipboard — tables, bold text and colours intact — so a plain paste lands fully formatted, with no cleanup needed.</dd>
+<dt>Will I lose my work if the tab closes?</dt><dd>No. Everything is saved to your device as you type, so reopening the page restores what you had. Use the backup button to download a file if you want to carry the notes to another machine.</dd>
+<dt>How are unanswered questions handled?</dt><dd>Mark a question as needing follow-up and it turns amber on screen. Every export also gathers those questions into a list at the end, so nothing outstanding gets buried in the body of the notes.</dd>
+<dt>Is anything I type sent to a server?</dt><dd>No. All processing happens inside your browser and the notes stay on the device you are using.</dd>
+</dl>
+
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you write is transmitted, and the notes live only on the device you are using. Clearing browser data removes them, so download a backup file for anything you need to keep.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/presentation-timer.html">Presentation Timer</a></li>
+<li><a href="https://mnledu.com/en/productivity/pdf-signature.html">PDF Signature Stamp</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio.html">QR Code Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+<li><a href="https://mnledu.com/en/productivity/percent-calc.html">Smart Pricing Engine</a></li>
+<li><a href="https://mnledu.com/en/productivity/calculator.html">Smart Expression Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>

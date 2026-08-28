@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+<title>PDF Signature Stamp &amp; Background Remover | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Strip the white background from a photo of your signature and stamp it onto any page of a PDF. Position and size are remembered per page. Everything runs in your browser — no upload, no sign-in." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/pdf-signature.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdf-signature.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-signature.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdf-signature.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/pdf-signature.html" />
+<meta property="og:title" content="PDF Signature Stamp &amp; Background Remover | TOOLKIT" />
+<meta property="og:description" content="Strip the white background from a photo of your signature and stamp it onto any page of a PDF. Position and size are remembered per page. Everything runs in your browser — no upload, no sign-in." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="PDF Signature Stamp &amp; Background Remover | TOOLKIT" />
+<meta name="twitter:description" content="Strip the white background from a photo of your signature and stamp it onto any page of a PDF. Position and size are remembered per page. Everything runs in your browser — no upload, no sign-in." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PDF Signature Stamp",
+  "description": "Removes the white background from a signature image and stamps it onto a PDF, entirely in the browser.",
+  "url": "https://mnledu.com/en/productivity/pdf-signature.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+  "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+  "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+    { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+    { "@type": "ListItem", "position": 3, "name": "PDF Signature Stamp", "item": "https://mnledu.com/en/productivity/pdf-signature.html" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are my PDF and signature uploaded anywhere?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Reading the file, erasing the background, stamping the signature and saving the result all happen inside your browser. Nothing is sent to a server, and closing the page discards the work." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I just photograph a signature on paper?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Sign on white paper, photograph it in good light and upload it — the background is removed automatically. If the paper looks yellow or has a shadow, lower the transparency threshold until it clears." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I sign more than one page?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Move through the pages and drop a signature wherever you need one. Each page keeps its own position and size, and all of them are merged when you save." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will the signature shift position in the saved PDF?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The on-screen position is converted to the PDF's own coordinate system, with the Y axis flipped, and each page's scale is calculated separately so mixed page sizes stay accurate." }
+    },
+    {
+      "@type": "Question",
+      "name": "The background will not come off cleanly",
+      "acceptedAnswer": { "@type": "Answer", "text": "Lower the transparency threshold — the lower the value, the darker the pixels it will erase. If the strokes start disappearing, raise it again, and increase the edge softness if the outline looks jagged." }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --ink:#1E293B; --dim:#64748B;
+    --accent:#2563EB; --soft:#EFF6FF; --stage:#E2E8F0; --ok:#15803D; --warn:#C2410C;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  #app{ display:flex; flex-direction:column; height:100dvh; }
+  html,body{ height:auto; min-height:100%; overflow-y:auto; }
+
+  /* 툴바 */
+  #bar{
+    flex:none; background:var(--card); border-bottom:1px solid var(--line);
+    padding:9px 12px; display:flex; flex-wrap:wrap; gap:7px; align-items:center;
+  }
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:9px; font-size:13px; font-weight:600; padding:9px 12px; cursor:pointer;
+    min-height:40px; white-space:nowrap;
+    transition:border-color .12s, background .12s, transform .06s;
+  }
+  .btn:hover{ border-color:#CBD5E1; }
+  .btn:active{ transform:translateY(1px); }
+  .btn[disabled]{ opacity:.4; cursor:not-allowed; }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .btn.sm{ padding:7px 10px; min-height:34px; font-size:12px; border-radius:8px; }
+  .sep{ width:1px; height:26px; background:var(--line); margin:0 2px; }
+
+  .fld{
+    border:1px solid var(--line); border-radius:8px; background:#fff;
+    padding:7px 9px; font-size:13px; color:var(--ink); outline:none; min-height:34px;
+    font-family:'JetBrains Mono',monospace; text-align:center;
+  }
+  .fld:focus{ border-color:var(--accent); }
+
+  /* 본문 */
+  #main{ flex:1 1 auto; min-height:0; display:flex; }
+  #stage{
+    flex:1 1 auto; min-width:0; background:var(--stage);
+    overflow:auto; padding:20px; display:flex; align-items:flex-start; justify-content:center;
+  }
+  #paper{ position:relative; background:#fff; box-shadow:0 4px 24px rgba(15,23,42,.16); }
+  #pdfCanvas{ display:block; }
+
+  /* 서명 레이어 */
+  .sig{
+    position:absolute; cursor:move; touch-action:none;
+    border:1.5px dashed rgba(37,99,235,.55); background:rgba(37,99,235,.04);
+  }
+  .sig img{ width:100%; height:100%; display:block; pointer-events:none; user-select:none; }
+  .sig.sel{ border-color:var(--accent); border-style:solid; }
+  .sig .h{
+    position:absolute; width:13px; height:13px; border-radius:3px;
+    background:#fff; border:1.5px solid var(--accent); z-index:2;
+  }
+  .sig .h.br{ right:-7px; bottom:-7px; cursor:nwse-resize; }
+  .sig .del{
+    position:absolute; right:-9px; top:-9px; width:20px; height:20px; border-radius:999px;
+    background:#EF4444; color:#fff; border:0; font-size:12px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:3;
+  }
+
+  /* 우측 패널 */
+  #side{
+    flex:none; width:280px; background:var(--card); border-left:1px solid var(--line);
+    overflow:auto; padding:14px;
+  }
+  @media(max-width:860px){
+    #main{ flex-direction:column; }
+    #side{ width:auto; border-left:0; border-top:1px solid var(--line); max-height:44vh; }
+  }
+  .lab{ display:block; font-size:11.5px; color:var(--dim); margin-bottom:6px; }
+  .sect{ padding-bottom:14px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+  .sect:last-child{ border-bottom:0; margin-bottom:0; }
+
+  .switch{ position:relative; width:42px; height:23px; flex:none; }
+  .switch input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+  .track{ position:absolute; inset:0; border-radius:999px; background:#CBD5E1; transition:background .16s; pointer-events:none; }
+  .knob{ position:absolute; top:3px; left:3px; width:17px; height:17px; border-radius:999px; background:#fff;
+         box-shadow:0 1px 2px rgba(0,0,0,.2); transition:transform .16s; pointer-events:none; }
+  .switch input:checked ~ .track{ background:var(--accent); }
+  .switch input:checked ~ .knob{ transform:translateX(19px); }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height:4px;
+    border-radius:999px; background:var(--line); outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:17px; height:17px; border-radius:999px;
+    background:var(--accent); border:3px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.25);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:17px; height:17px; border-radius:999px; background:var(--accent); border:3px solid #fff;
+  }
+
+  #preview{
+    width:100%; height:110px; border:1px solid var(--line); border-radius:10px;
+    background:
+      linear-gradient(45deg,#F1F5F9 25%,transparent 25%,transparent 75%,#F1F5F9 75%),
+      linear-gradient(45deg,#F1F5F9 25%,#fff 25%,#fff 75%,#F1F5F9 75%);
+    background-size:14px 14px; background-position:0 0,7px 7px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  #preview img{ max-width:100%; max-height:100%; object-fit:contain; pointer-events:none; }
+  #preview.ready{ cursor:grab; border-color:var(--accent); }
+  #preview.ready:active{ cursor:grabbing; }
+  #preview.dragging{ opacity:.45; }
+
+  /* 끌고 다니는 동안 따라다니는 미리보기 */
+  #ghost{
+    position:fixed; z-index:90; pointer-events:none; opacity:.85; display:none;
+    filter:drop-shadow(0 6px 14px rgba(15,23,42,.35));
+  }
+  #ghost img{ display:block; }
+
+  /* 놓을 수 있는 상태임을 알린다 */
+  #paper.dropOk{ outline:3px solid rgba(37,99,235,.55); outline-offset:2px; }
+
+  #empty{
+    text-align:center; color:#64748B; font-size:14px; line-height:1.9;
+    background:#fff; border:1px dashed #CBD5E1; border-radius:16px; padding:44px 28px; max-width:420px;
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:10px;
+    padding:10px 16px; font-size:13px; z-index:80;
+    pointer-events:none; transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+
+  #busy{
+    position:fixed; inset:0; z-index:70; display:none;
+    align-items:center; justify-content:center; background:rgba(15,23,42,.5); backdrop-filter:blur(3px);
+  }
+  #busy.show{ display:flex; }
+  #busy .box{ background:#fff; border-radius:14px; padding:20px 26px; font-size:14px; font-weight:600; }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  <!-- 툴바 -->
+  <div id="bar">
+    <button class="btn" id="pdfBtn">📄 Open PDF</button>
+    <button class="btn" id="sigBtn">✍️ Signature</button>
+    <input type="file" id="pdfInput" accept="application/pdf,.pdf" class="hidden">
+    <input type="file" id="sigInput" accept="image/png,image/jpeg,image/webp" class="hidden">
+
+    <span class="sep"></span>
+
+    <button class="btn sm" id="prevBtn">◀ Prev</button>
+    <span class="mono" style="font-size:12.5px; color:var(--dim); white-space:nowrap">
+      <input class="fld" id="pageNum" type="number" min="1" value="1" style="width:56px"> /
+      <b id="pageTotal">0</b>
+    </span>
+    <button class="btn sm" id="nextBtn">Next ▶</button>
+    <button class="btn sm" id="gotoBtn">📄 Go</button>
+
+    <span class="sep"></span>
+
+    <button class="btn sm" id="zoomOut">−</button>
+    <span class="mono" id="zoomLabel" style="font-size:12px; color:var(--dim); min-width:42px; text-align:center">100%</span>
+    <button class="btn sm" id="zoomIn">+</button>
+
+    <button class="btn p" id="saveBtn" style="margin-left:auto">💾 Download signed PDF</button>
+  </div>
+
+  <div id="main">
+    <!-- 작업 화면 -->
+    <div id="stage">
+      <div id="empty">
+        <p style="margin:0 0 6px; font-size:16px; font-weight:700; color:var(--ink)">Open a PDF to begin</p>
+        <p style="margin:0">Your file never leaves this device —<br>everything runs in the browser</p>
+      </div>
+      <div id="paper" style="display:none"><canvas id="pdfCanvas"></canvas></div>
+    </div>
+
+    <!-- 우측 패널 -->
+    <div id="side">
+      <div class="sect">
+        <span class="lab">Signature preview</span>
+        <div id="preview" title="Drag onto the PDF">
+          <span style="font-size:12px; color:#94A3B8">Upload a signature below</span>
+        </div>
+        <p class="text-[11px]" id="dragHint" style="color:var(--dim); text-align:center; margin:7px 0 0; display:none">
+          ↑ Drag this onto the PDF
+        </p>
+
+        <button class="btn sm" id="sigBtn2" style="width:100%; margin-top:9px">✍️ Upload signature image</button>
+        <button class="btn sm p" id="addBtn" style="width:100%; margin-top:7px" disabled>Place on this page</button>
+      </div>
+
+      <div class="sect">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+          <span class="lab" style="margin:0">Remove background</span>
+          <span class="switch">
+            <input type="checkbox" id="bgOn" checked>
+            <span class="track"></span><span class="knob"></span>
+          </span>
+        </div>
+
+        <div style="margin-top:13px">
+          <div style="display:flex; align-items:center; justify-content:space-between">
+            <span class="lab" style="margin:0">Transparency threshold</span>
+            <span class="mono" id="thVal" style="font-size:12px; font-weight:700">240</span>
+          </div>
+          <input type="range" id="thRange" min="0" max="255" step="1" value="240" style="margin-top:9px">
+          <p class="text-[11px] mt-2" style="color:var(--dim); line-height:1.6; margin:8px 0 0">
+            A lower value erases more. Try lowering it if the paper is yellowed or shadowed.
+          </p>
+        </div>
+
+        <div style="margin-top:13px">
+          <div style="display:flex; align-items:center; justify-content:space-between">
+            <span class="lab" style="margin:0">Edge softness</span>
+            <span class="mono" id="fVal" style="font-size:12px; font-weight:700">24</span>
+          </div>
+          <input type="range" id="fRange" min="0" max="80" step="1" value="24" style="margin-top:9px">
+        </div>
+      </div>
+
+      <div class="sect">
+        <span class="lab">Placed signatures</span>
+        <div id="listBox" style="font-size:12.5px; color:var(--dim)">None yet</div>
+        <button class="btn sm" id="clearBtn" style="width:100%; margin-top:9px">Clear all</button>
+      </div>
+
+      <div class="sect">
+        <p class="text-[11px]" style="color:var(--dim); line-height:1.8; margin:0">
+          Drag the preview above onto the PDF, or use the place button.
+          A placed signature can be dragged again, and the corner handle resizes it.
+          Each page keeps its own layout as you move between pages.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ghost"><img alt=""></div>
+<div id="busy"><div class="box" id="busyMsg">Working…</div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = function (id) { return document.getElementById(id); };
+
+  let pdfDoc = null, pdfBytes = null, pageNo = 1, pageCount = 0, zoom = 1;
+  let baseViewport = null;                 // 현재 페이지의 scale=1 뷰포트 (pt 단위)
+  let sigRaw = null;                       // 원본 서명 이미지 (Image)
+  let sigURL = '';                         // 배경 제거를 거친 PNG dataURL
+  let stamps = [];                         // { page, x, y, w, h, el }  좌표는 화면 px
+  let selected = null, renderTask = null;
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+  function busy(on, msg) {
+    $('busyMsg').textContent = msg || 'Working…';
+    $('busy').classList.toggle('show', !!on);
+  }
+
+  /* ---------- 라이브러리 ---------- */
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  /* ---------- PDF 열기 ---------- */
+  $('pdfBtn').addEventListener('click', function () { $('pdfInput').click(); });
+  $('pdfInput').addEventListener('change', function (e) {
+    const f = e.target.files && e.target.files[0];
+    if (f) openPdf(f);
+    $('pdfInput').value = '';
+  });
+
+  async function openPdf(file) {
+    if (!window.pdfjsLib) { toast('Could not load the PDF library'); return; }
+    busy(true, 'Opening PDF…');
+    try {
+      const buf = await file.arrayBuffer();
+      pdfBytes = buf.slice(0);                  // pdf-lib 이 쓸 원본을 따로 보관한다
+      pdfDoc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+      pageCount = pdfDoc.numPages;
+      pageNo = 1;
+      stamps.forEach(function (s) { if (s.el) s.el.remove(); });
+      stamps = []; selected = null;
+      $('pageTotal').textContent = pageCount;
+      $('pageNum').max = pageCount;
+      $('empty').style.display = 'none';
+      $('paper').style.display = 'block';
+      await renderPage();
+      renderList();
+      toast(file.name + ' · ' + pageCount + ' pages');
+    } catch (e) {
+      toast('Could not open the PDF');
+    } finally { busy(false); }
+  }
+
+  // 화면에 그릴 배율. 기기 해상도를 반영해 또렷하게 그린다
+  function viewScale() {
+    if (!baseViewport) return zoom;
+    const box = $('stage').clientWidth - 44;
+    const fit = Math.min(1.6, Math.max(0.4, box / baseViewport.width));
+    return fit * zoom;
+  }
+
+  async function renderPage() {
+    if (!pdfDoc) return;
+    const page = await pdfDoc.getPage(pageNo);
+    baseViewport = page.getViewport({ scale: 1 });
+
+    const scale = viewScale();
+    const vp = page.getViewport({ scale: scale });
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+    const cv = $('pdfCanvas');
+    cv.width = Math.floor(vp.width * dpr);
+    cv.height = Math.floor(vp.height * dpr);
+    cv.style.width = Math.floor(vp.width) + 'px';
+    cv.style.height = Math.floor(vp.height) + 'px';
+    $('paper').style.width = Math.floor(vp.width) + 'px';
+    $('paper').style.height = Math.floor(vp.height) + 'px';
+
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, vp.width, vp.height);
+
+    if (renderTask) { try { renderTask.cancel(); } catch (e) {} }
+    renderTask = page.render({ canvasContext: ctx, viewport: vp });
+    try { await renderTask.promise; } catch (e) { /* 취소는 정상 흐름이다 */ }
+    renderTask = null;
+
+    $('pageNum').value = pageNo;
+    $('zoomLabel').textContent = Math.round(scale / (baseViewport ? 1 : 1) * 100 / 1) + '%';
+    $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+    showStamps();
+  }
+
+  /* ---------- 페이지 이동 ---------- */
+  function go(n) {
+    if (!pdfDoc) return;
+    const t = Math.max(1, Math.min(pageCount, n));
+    if (t === pageNo) return;
+    pageNo = t;
+    selected = null;
+    renderPage();
+  }
+  $('prevBtn').addEventListener('click', function () { go(pageNo - 1); });
+  $('nextBtn').addEventListener('click', function () { go(pageNo + 1); });
+  $('gotoBtn').addEventListener('click', function () { go(parseInt($('pageNum').value, 10) || 1); });
+  $('pageNum').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') go(parseInt($('pageNum').value, 10) || 1);
+  });
+  $('zoomIn').addEventListener('click', function () { zoom = Math.min(3, zoom + 0.2); reflow(); });
+  $('zoomOut').addEventListener('click', function () { zoom = Math.max(0.4, zoom - 0.2); reflow(); });
+
+  // 확대·축소하면 배치된 서명도 같은 비율로 따라가야 한다
+  async function reflow() {
+    if (!pdfDoc) return;
+    const before = viewScale();
+    await renderPage();
+    const after = viewScale();
+    const k = after / before;
+    if (k !== 1) {
+      stamps.forEach(function (s) {
+        // 지금 보고 있는 페이지의 서명만 화면 좌표가 바뀐다
+        if (s.page !== pageNo) return;
+        s.x *= k; s.y *= k; s.w *= k; s.h *= k; s.scale = after;
+      });
+      showStamps();
+    }
+  }
+
+  /* ---------- 서명 이미지 ---------- */
+  $('sigBtn').addEventListener('click', function () { $('sigInput').click(); });
+  $('sigBtn2').addEventListener('click', function () { $('sigInput').click(); });
+  $('sigInput').addEventListener('change', function (e) {
+    const f = e.target.files && e.target.files[0];
+    if (f) loadSig(f);
+    $('sigInput').value = '';
+  });
+
+  function loadSig(file) {
+    const r = new FileReader();
+    r.onload = function (ev) {
+      const img = new Image();
+      img.onload = function () {
+        sigRaw = img;
+        processSig();
+        $('addBtn').disabled = false;
+        $('preview').classList.add('ready');
+        $('dragHint').style.display = 'block';
+        toast('Signature loaded · drag the preview onto the PDF');
+      };
+      img.onerror = function () { toast('Could not read the image'); };
+      img.src = ev.target.result;
+    };
+    r.onerror = function () { toast('Could not read the file'); };
+    r.readAsDataURL(file);
+  }
+
+  // 밝은 픽셀을 투명하게 만든다. 문턱값 부근은 부드럽게 깎아 테두리가 딱딱해지지 않게 한다
+  function processSig() {
+    if (!sigRaw) return;
+    const cv = document.createElement('canvas');
+    cv.width = sigRaw.naturalWidth || sigRaw.width;
+    cv.height = sigRaw.naturalHeight || sigRaw.height;
+    const ctx = cv.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(sigRaw, 0, 0);
+
+    if ($('bgOn').checked) {
+      const th = parseInt($('thRange').value, 10);
+      const fe = Math.max(1, parseInt($('fRange').value, 10));
+      try {
+        const im = ctx.getImageData(0, 0, cv.width, cv.height);
+        const d = im.data;
+        for (let i = 0; i < d.length; i += 4) {
+          // 사람이 느끼는 밝기로 판단해야 색이 있는 잉크가 살아남는다
+          const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+          if (lum >= th) d[i + 3] = 0;
+          else if (lum >= th - fe) {
+            const t = (lum - (th - fe)) / fe;
+            d[i + 3] = Math.round(d[i + 3] * (1 - t));
+          }
+        }
+        ctx.putImageData(im, 0, 0);
+      } catch (e) { /* 다른 출처 이미지면 건너뛴다 */ }
+    }
+
+    sigURL = cv.toDataURL('image/png');
+    const pv = $('preview');
+    pv.innerHTML = '';
+    const im2 = new Image();
+    im2.src = sigURL;
+    pv.appendChild(im2);
+
+    // 이미 배치된 서명들도 함께 갱신한다
+    stamps.forEach(function (s) {
+      if (s.el) { const i = s.el.querySelector('img'); if (i) i.src = sigURL; }
+    });
+  }
+
+  ['bgOn', 'thRange', 'fRange'].forEach(function (id) {
+    $(id).addEventListener('input', function () {
+      $('thVal').textContent = $('thRange').value;
+      $('fVal').textContent = $('fRange').value;
+      processSig();
+    });
+    $(id).addEventListener('change', processSig);
+  });
+
+  /* ---------- 미리보기를 끌어다 놓기 ---------- */
+  // 실제 크기를 미리 계산해 두면 놓는 순간 바로 그 크기로 들어간다
+  function defaultSize() {
+    const pw = $('paper').clientWidth || 600;
+    const ratio = sigRaw ? ((sigRaw.naturalHeight || 1) / (sigRaw.naturalWidth || 1)) : 0.4;
+    const w = Math.min(220, pw * 0.3);
+    return { w: w, h: w * ratio };
+  }
+
+  (function () {
+    const pv = $('preview'), ghost = $('ghost'), gimg = ghost.querySelector('img');
+    let dragging = false, size = null;
+
+    pv.addEventListener('pointerdown', function (ev) {
+      if (!sigURL) { toast('Upload a signature image first'); return; }
+      if (!pdfDoc) { toast('Open a PDF first'); return; }
+      ev.preventDefault();
+
+      dragging = true;
+      size = defaultSize();
+      pv.classList.add('dragging');
+      pv.setPointerCapture(ev.pointerId);
+
+      gimg.src = sigURL;
+      gimg.style.width = size.w + 'px';
+      gimg.style.height = size.h + 'px';
+      ghost.style.display = 'block';
+      moveGhost(ev.clientX, ev.clientY);
+    });
+
+    pv.addEventListener('pointermove', function (ev) {
+      if (!dragging) return;
+      moveGhost(ev.clientX, ev.clientY);
+      $('paper').classList.toggle('dropOk', overPaper(ev.clientX, ev.clientY));
+    });
+
+    ['pointerup', 'pointercancel'].forEach(function (t) {
+      pv.addEventListener(t, function (ev) {
+        if (!dragging) return;
+        dragging = false;
+        pv.classList.remove('dragging');
+        ghost.style.display = 'none';
+        $('paper').classList.remove('dropOk');
+        if (t === 'pointerup' && overPaper(ev.clientX, ev.clientY)) {
+          dropAt(ev.clientX, ev.clientY, size);
+        }
+      });
+    });
+
+    function moveGhost(x, y) {
+      // 손끝이 서명 가운데에 오도록 맞춘다
+      ghost.style.left = (x - size.w / 2) + 'px';
+      ghost.style.top = (y - size.h / 2) + 'px';
+    }
+  })();
+
+  function overPaper(x, y) {
+    if (!pdfDoc) return false;
+    const r = $('paper').getBoundingClientRect();
+    return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+  }
+
+  // 놓은 자리에 서명을 만든다. 종이 밖으로 나가지 않게 안쪽으로 밀어 넣는다
+  function dropAt(clientX, clientY, size) {
+    const r = $('paper').getBoundingClientRect();
+    const pw = $('paper').clientWidth, ph = $('paper').clientHeight;
+    let x = clientX - r.left - size.w / 2;
+    let y = clientY - r.top - size.h / 2;
+    x = Math.max(0, Math.min(pw - size.w, x));
+    y = Math.max(0, Math.min(ph - size.h, y));
+
+    const s = { page: pageNo, x: x, y: y, w: size.w, h: size.h, scale: viewScale(), el: null };
+    stamps.push(s);
+    showStamps();
+    select(s);
+    renderList();
+    toast('Placed on page ' + pageNo);
+  }
+
+  /* ---------- 서명 배치 ---------- */
+  $('addBtn').addEventListener('click', function () {
+    if (!pdfDoc) { toast('Open a PDF first'); return; }
+    if (!sigURL) { toast('Upload a signature image first'); return; }
+
+    // 가운데 아래쪽에 놓는다. 끌어놓기와 같은 크기 계산을 쓴다
+    const pw = $('paper').clientWidth, ph = $('paper').clientHeight;
+    const sz = defaultSize();
+    const s = { page: pageNo, x: pw * 0.5 - sz.w / 2, y: ph * 0.72,
+                w: sz.w, h: sz.h, scale: viewScale(), el: null };
+    stamps.push(s);
+    showStamps();
+    select(s);
+    renderList();
+    toast('Placed in the middle of page ' + pageNo);
+  });
+
+  function showStamps() {
+    document.querySelectorAll('.sig').forEach(function (e) { e.remove(); });
+    stamps.filter(function (s) { return s.page === pageNo; }).forEach(function (s) {
+      const el = document.createElement('div');
+      el.className = 'sig' + (s === selected ? ' sel' : '');
+      el.style.left = s.x + 'px';
+      el.style.top = s.y + 'px';
+      el.style.width = s.w + 'px';
+      el.style.height = s.h + 'px';
+      el.innerHTML = '<img src="' + sigURL + '" alt="signature">' +
+                     '<span class="h br"></span>' +
+                     '<button class="del" title="Delete">×</button>';
+      s.el = el;
+      bindDrag(el, s);
+      $('paper').appendChild(el);
+    });
+  }
+
+  function select(s) {
+    selected = s;
+    document.querySelectorAll('.sig').forEach(function (e) { e.classList.remove('sel'); });
+    if (s && s.el) s.el.classList.add('sel');
+  }
+
+  // 끌어 옮기기와 크기 조절. 포인터 이벤트로 마우스와 터치를 함께 받는다
+  function bindDrag(el, s) {
+    let mode = null, sx = 0, sy = 0, ox = 0, oy = 0, ow = 0, oh = 0;
+
+    el.addEventListener('pointerdown', function (ev) {
+      if (ev.target.classList.contains('del')) return;
+      ev.preventDefault();
+      select(s);
+      mode = ev.target.classList.contains('br') ? 'resize' : 'move';
+      sx = ev.clientX; sy = ev.clientY;
+      ox = s.x; oy = s.y; ow = s.w; oh = s.h;
+      el.setPointerCapture(ev.pointerId);
+    });
+
+    el.addEventListener('pointermove', function (ev) {
+      if (!mode) return;
+      const dx = ev.clientX - sx, dy = ev.clientY - sy;
+      const pw = $('paper').clientWidth, ph = $('paper').clientHeight;
+
+      if (mode === 'move') {
+        s.x = Math.max(0, Math.min(pw - s.w, ox + dx));
+        s.y = Math.max(0, Math.min(ph - s.h, oy + dy));
+        el.style.left = s.x + 'px';
+        el.style.top = s.y + 'px';
+      } else {
+        // 가로세로 비율을 지키며 키운다
+        const ratio = oh / ow;
+        let w = Math.max(28, ow + dx);
+        w = Math.min(w, pw - s.x);
+        let h = w * ratio;
+        if (s.y + h > ph) { h = ph - s.y; w = h / ratio; }
+        s.w = w; s.h = h;
+        el.style.width = w + 'px';
+        el.style.height = h + 'px';
+      }
+    });
+
+    ['pointerup', 'pointercancel'].forEach(function (t) {
+      el.addEventListener(t, function () { if (mode) { mode = null; renderList(); } });
+    });
+
+    el.querySelector('.del').addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      const i = stamps.indexOf(s);
+      if (i >= 0) stamps.splice(i, 1);
+      if (selected === s) selected = null;
+      showStamps(); renderList();
+    });
+  }
+
+  function renderList() {
+    const box = $('listBox');
+    if (!stamps.length) { box.innerHTML = 'None yet'; return; }
+    const byPage = {};
+    stamps.forEach(function (s) { byPage[s.page] = (byPage[s.page] || 0) + 1; });
+    box.innerHTML = Object.keys(byPage).sort(function (a, b) { return a - b; })
+      .map(function (p) {
+        return '<div style="display:flex; justify-content:space-between; padding:4px 0">' +
+          '<span>Page ' + p + '</span><span class="mono">' + byPage[p] + '</span></div>';
+      }).join('') +
+      '<div style="border-top:1px solid var(--line); margin-top:6px; padding-top:6px; display:flex; justify-content:space-between">' +
+      '<b>Total</b><b class="mono">' + stamps.length + '</b></div>';
+  }
+
+  $('clearBtn').addEventListener('click', function () {
+    if (!stamps.length) return;
+    if (!window.confirm('Remove every placed signature?')) return;
+    stamps = []; selected = null;
+    showStamps(); renderList();
+    toast('All cleared');
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (!selected) return;
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+      e.preventDefault();
+      const i = stamps.indexOf(selected);
+      if (i >= 0) stamps.splice(i, 1);
+      selected = null; showStamps(); renderList();
+    }
+  });
+
+  /* ---------- 저장 ---------- */
+  $('saveBtn').addEventListener('click', save);
+
+  async function save() {
+    if (!pdfBytes) { toast('Open a PDF first'); return; }
+    if (!stamps.length) { toast('No signatures placed yet'); return; }
+    if (!window.PDFLib) { toast('Could not load the PDF writer'); return; }
+
+    busy(true, 'Building PDF…');
+    try {
+      const doc = await PDFLib.PDFDocument.load(pdfBytes.slice(0));
+
+      // dataURL 에서 바이트만 뽑아낸다
+      const b64 = sigURL.split(',')[1];
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const png = await doc.embedPng(bytes);
+
+      const pages = doc.getPages();
+
+      stamps.forEach(function (s) {
+        const pg = pages[s.page - 1];
+        if (!pg) return;
+        const size = pg.getSize();
+        // 그 서명을 배치할 때의 배율로 되돌려야 페이지 크기가 달라도 어긋나지 않는다
+        const scale = s.scale || viewScale();
+
+        const w = s.w / scale;
+        const h = s.h / scale;
+        const x = s.x / scale;
+        // 화면은 위쪽이 원점, PDF 는 아래쪽이 원점이라 Y 를 뒤집는다
+        const y = size.height - (s.y / scale) - h;
+
+        pg.drawImage(png, { x: x, y: y, width: w, height: h });
+      });
+
+      const out = await doc.save();
+      const blob = new Blob([out], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const d = new Date();
+      const p2 = function (v) { return String(v).padStart(2, '0'); };
+      a.href = url;
+      a.download = 'signed_' + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) +
+                   '_' + p2(d.getHours()) + p2(d.getMinutes()) + '.pdf';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      toast('Saved');
+    } catch (e) {
+      toast('Something went wrong while saving');
+    } finally { busy(false); }
+  }
+
+  /* ---------- 드래그 앤 드롭 ---------- */
+  const stage = $('stage');
+  ['dragover', 'drop'].forEach(function (t) {
+    stage.addEventListener(t, function (e) { e.preventDefault(); });
+  });
+  stage.addEventListener('drop', function (e) {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!f) return;
+    if (/pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)) openPdf(f);
+    else if (/^image\//.test(f.type)) loadSig(f);
+  });
+  window.addEventListener('dragover', function (e) { e.preventDefault(); });
+  window.addEventListener('drop', function (e) { e.preventDefault(); });
+
+  window.addEventListener('resize', function () { if (pdfDoc) reflow(); });
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>The trouble with signing one line</h2>
+<p>Adding a signature to a contract usually means printing it, signing it, and scanning it back in. That costs paper and time, and the result is invariably worse looking than the original.</p>
+<p>Photograph your signature once and you can reuse it whenever it is needed. This tool strips the white background from that photo, makes it transparent, and stamps it wherever you want on a PDF.</p>
+
+<h2>Where it helps</h2><dl>
+<dt>Contracts and agreements</dt><dd>Stamp the signature line and send the file straight back.</dd>
+<dt>Forms and submissions</dt><dd>When the same signature has to appear on several pages.</dd>
+<dt>Quotes and confirmations</dt><dd>Turning something around without a printer or scanner.</dd>
+<dt>Seals and stamps</dt><dd>A scanned company seal or personal stamp works exactly the same way.</dd>
+</dl>
+
+<h2>How to use it</h2><ol>
+<li>Open your document with <strong>Open PDF</strong>, or drag it onto the page.</li>
+<li>Use <strong>Upload signature image</strong> on the right. The white background is removed automatically.</li>
+<li>If the result looks patchy, adjust the <strong>transparency threshold</strong>.</li>
+<li><strong>Drag the preview onto the PDF</strong> where you want it, or press the place button.</li>
+<li>Drag the signature to fine-tune the position, and use the corner handle to resize it.</li>
+<li>Move to other pages and repeat wherever a signature is needed.</li>
+<li>Press <strong>Download signed PDF</strong> to save the merged file.</li>
+</ol>
+
+<h2>Getting a clean cut-out</h2><dl>
+<dt>Dark ink on white paper</dt><dd>The greater the contrast, the cleaner the result. A ballpoint or felt-tip beats a pencil.</dd>
+<dt>Photograph in good light</dt><dd>Shadows are not read as background. Shoot near a window or under even lighting.</dd>
+<dt>Transparency threshold</dt><dd>Lower values erase darker pixels too. Lower it if background remains, raise it if strokes vanish.</dd>
+<dt>Edge softness</dt><dd>Raise this when the outline of the signature looks jagged or stair-stepped.</dd>
+</dl>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Are my PDF and signature uploaded anywhere?</dt><dd>No. Reading the file, erasing the background, stamping the signature and saving the result all happen inside your browser. Nothing is sent to a server, and closing the page discards the work.</dd>
+<dt>Can I just photograph a signature on paper?</dt><dd>Yes. Sign on white paper, photograph it in good light and upload it — the background is removed automatically. If the paper looks yellow or has a shadow, lower the transparency threshold until it clears.</dd>
+<dt>Can I sign more than one page?</dt><dd>Yes. Move through the pages and drop a signature wherever you need one. Each page keeps its own position and size, and all of them are merged when you save.</dd>
+<dt>Will the signature shift position in the saved PDF?</dt><dd>No. The on-screen position is converted to the PDF's own coordinate system, with the Y axis flipped, and each page's scale is calculated separately so mixed page sizes stay accurate.</dd>
+<dt>The background will not come off cleanly</dt><dd>Lower the transparency threshold — the lower the value, the darker the pixels it will erase. If the strokes start disappearing, raise it again, and increase the edge softness if the outline looks jagged.</dd>
+</dl>
+
+<p class="tk-guide-note">This tool runs entirely inside your browser. Files you open are never transmitted or stored anywhere. Note that the legal standing of an image-based signature varies by document and jurisdiction — for formal contracts, confirm in advance that the other party accepts this form of signing.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/presentation-timer.html">Presentation Timer</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+<li><a href="https://mnledu.com/en/productivity/percent-calc.html">Smart Pricing Engine</a></li>
+<li><a href="https://mnledu.com/en/productivity/unit-converter.html">Universal Unit Converter</a></li>
+<li><a href="https://mnledu.com/en/productivity/timezone-dial.html">Global Time Zone Dial</a></li>
+<li><a href="https://mnledu.com/en/productivity/calculator.html">Smart Expression Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>

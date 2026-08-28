@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+<title>Smart Schedule Coordinator · Find Free Slots | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Paste a screenshot of your calendar and it works out when you are actually free — buffers and lunch removed, local times for the other side included, and the message written for you." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/slot-coordinator.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/slot-coordinator.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/slot-coordinator.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/slot-coordinator.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/slot-coordinator.html" />
+<meta property="og:title" content="Smart Schedule Coordinator · Find Free Slots | TOOLKIT" />
+<meta property="og:description" content="Paste a screenshot of your calendar and it works out when you are actually free — buffers and lunch removed, local times for the other side included, and the message written for you." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Smart Schedule Coordinator · Find Free Slots | TOOLKIT" />
+<meta name="twitter:description" content="Paste a screenshot of your calendar and it works out when you are actually free — buffers and lunch removed, local times for the other side included, and the message written for you." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Smart Schedule Coordinator",
+  "description": "Reads a calendar screenshot, works out the free slots and drafts the message to send.",
+  "url": "https://mnledu.com/en/productivity/slot-coordinator.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+  "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+  "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+    { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+    { "@type": "ListItem", "position": 3, "name": "Smart Schedule Coordinator", "item": "https://mnledu.com/en/productivity/slot-coordinator.html" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What kinds of calendar screenshots can it read?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Both the weekly grid view and the agenda list view. It handles 9 AM and 09:00 as well as Korean forms such as 오전 9시. All-day entries are skipped, since they do not actually block any time." }
+    },
+    {
+      "@type": "Question",
+      "name": "My calendar is too tall to capture in one shot",
+      "acceptedAnswer": { "@type": "Answer", "text": "Paste up to three images. Capture the screen in sections and drop them in one after another — entries accumulate, and anything that overlaps between shots is reconciled automatically." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the buffer for?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Travel or preparation time held clear on either side of a meeting. Set it to 30 minutes and a slot ending at 10:00 leaves you free from 10:30, so nothing gets booked back to back." }
+    },
+    {
+      "@type": "Question",
+      "name": "How are time zones handled?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Pick the other party's region and their local time appears alongside yours. Where a slot starts on one date and ends on another in their zone, both dates are spelled out so there is no ambiguity." }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the screenshot is read incorrectly?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Drag across the timetable on the right to add an entry, and drag over an existing one to remove it. Recognition does not have to be perfect — you can correct it by hand in seconds." }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#D8DEE6; --ink:#0B0D10; --dim:#4A5560;
+    --accent:#2563EB; --soft:#EFF6FF;
+    --busy:#B9C6D4; --buf:#E4E9EE; --lunch:#EFE0C4; --fix:#D6CDE8; --free:#FFFFFF;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; }
+
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:10px; font-size:14px; font-weight:600; padding:9px 12px; cursor:pointer;
+    min-height:40px; transition:border-color .12s, background .12s, transform .06s;
+  }
+  .btn:hover{ border-color:#CBD5E1; }
+  .btn:active{ transform:translateY(1px); }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .btn.sm{ padding:7px 10px; min-height:34px; font-size:13px; border-radius:8px; }
+  .btn.danger{ color:#B91C1C; }
+
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:9px; background:#fff;
+    padding:9px 11px; font-size:14px; color:var(--ink); outline:none; min-height:38px;
+  }
+  .fld:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+  select.fld{ appearance:none; padding-right:26px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+    background-position:calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
+  .lab{ display:block; font-size:12.5px; font-weight:600; color:#3A4652; margin-bottom:6px; }
+
+  .sect{ padding:14px; border-bottom:1px solid var(--line); }
+  .sect:last-child{ border-bottom:0; }
+  .sectTitle{ font-size:14.5px; font-weight:800; margin:0 0 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+
+  /* 타임 그리드 */
+  #grid{ display:grid; grid-template-columns:54px repeat(7,1fr); gap:1px; background:#EDEFF2;
+         border:1px solid var(--line); border-radius:10px; overflow:hidden; user-select:none; }
+  #grid .hd{ background:#F1F4F7; padding:8px 2px; text-align:center; font-size:13px; font-weight:800; color:#0B0D10; }
+  #grid .tm{ background:#F4F6F8; padding:2px; text-align:right; padding-right:6px;
+             font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+             color:#0B0D10; line-height:1; }
+  #grid .cell{ background:#fff; height:17px; cursor:crosshair; position:relative; }
+  #grid .cell.busy{ background:var(--busy); }
+  #grid .cell.buf{ background:var(--buf); }
+  #grid .cell.lunch{ background:var(--lunch); }
+  #grid .cell.fix{ background:var(--fix); }
+  #grid .cell.free{ background:#FFFFFF; }
+  #grid .cell.free.hourTop{ box-shadow:inset 0 1px 0 rgba(11,13,16,.20); }
+  #grid .cell.off{ background:#EDEFF2; cursor:default; }
+  /* 같은 색이 이어질 때 경계가 보이도록 옅은 선을 넣는다 */
+  #grid .cell.hourTop{ box-shadow:inset 0 1px 0 rgba(11,13,16,.20); }
+
+  .legend{ display:flex; flex-wrap:wrap; gap:12px; font-size:12.5px; font-weight:600; color:#0B0D10; margin-top:11px; }
+  .legend i{ display:inline-block; width:13px; height:13px; border-radius:3px; margin-right:5px; vertical-align:-2px; border:1px solid rgba(11,13,16,.25); }
+
+  /* 결과 */
+  .slot{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:9px 11px; border:1px solid var(--line); border-radius:10px; margin-bottom:6px;
+    cursor:pointer; transition:border-color .12s, background .12s;
+  }
+  .slot:hover{ border-color:var(--accent); background:var(--soft); }
+  .slot.on{ border-color:var(--accent); background:var(--soft); }
+  .slot .t{ font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; color:#0B0D10; }
+  .slot .tz{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#3A4652; margin-top:2px; }
+  .slot .d{ font-size:13px; font-weight:600; color:#3A4652; }
+
+  #out{
+    width:100%; border:1px solid var(--line); border-radius:10px; background:#F8FAFC;
+    padding:12px; font-size:13.5px; line-height:1.8; min-height:150px; color:#0B0D10; resize:vertical;
+    font-family:'JetBrains Mono',ui-monospace,monospace; color:var(--ink);
+  }
+
+  /* 캘린더에서 읽어낸 색 */
+  .dot{ display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px;
+        vertical-align:-1px; border:1px solid rgba(100,116,139,.25); }
+
+  .item{ border:1px solid var(--line); border-radius:9px; padding:10px; margin-bottom:7px; background:#FBFCFD;
+         display:flex; align-items:center; gap:8px; font-size:14px; color:#0B0D10; }
+
+  #tabs{ display:none; gap:6px; margin-bottom:12px; }
+  #tabs button{ flex:1; padding:12px; border-radius:10px; border:1px solid var(--line);
+    background:#fff; color:#3A4652; font-size:14.5px; font-weight:700; cursor:pointer; min-height:44px; }
+  #tabs button.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  @media(max-width:960px){
+    #tabs{ display:flex; }
+    #left.hide, #right.hide{ display:none; }
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:10px; padding:10px 16px; font-size:13px; z-index:60;
+    pointer-events:none; transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-7xl px-4 py-5 sm:py-7">
+
+  <header class="mb-4 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h1 class="text-[21px] font-bold tracking-tight" style="margin:0">🗓 Smart Schedule Coordinator</h1>
+      <p class="text-[12.5px] mt-1" style="color:var(--dim); margin:0">
+        Mark your commitments and it finds the free slots, then writes the message
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn sm" id="loadBtn">📂 Restore</button>
+      <button class="btn sm" id="backupBtn">💾 Backup</button>
+      <button class="btn sm danger" id="resetAll">↺ Reset all</button>
+      <input type="file" id="backupFile" accept=".json,application/json" class="hidden">
+    </div>
+  </header>
+
+  <div id="tabs">
+    <button data-tab="left" class="on">⚙️ Setup</button>
+    <button data-tab="right">📤 Free slots</button>
+  </div>
+
+  <div class="grid gap-4" id="split" style="grid-template-columns:1fr">
+
+    <!-- 좌측 -->
+    <div id="left">
+      <div class="card">
+        <div class="sect">
+          <p class="sectTitle">Working hours</p>
+          <div class="grid gap-2" style="grid-template-columns:1fr 1fr">
+            <div><label class="lab" for="wStart">From</label><input class="fld" id="wStart" type="time" value="09:00"></div>
+            <div><label class="lab" for="wEnd">To</label><input class="fld" id="wEnd" type="time" value="18:00"></div>
+          </div>
+          <label style="display:flex; align-items:center; gap:7px; margin-top:10px; font-size:12.5px; cursor:pointer">
+            <input type="checkbox" id="lunchOn" checked style="width:16px; height:16px; accent-color:var(--accent)">
+            Exclude lunch
+          </label>
+          <div class="grid gap-2 mt-2" style="grid-template-columns:1fr 1fr" id="lunchRow">
+            <input class="fld" id="lStart" type="time" value="12:00">
+            <input class="fld" id="lEnd" type="time" value="13:00">
+          </div>
+
+          <div class="grid gap-2 mt-3" style="grid-template-columns:1fr 1fr; margin-top:12px">
+            <div>
+              <label class="lab" for="buffer">Buffer</label>
+              <select class="fld" id="buffer">
+                <option value="0">None</option>
+                <option value="15">15 min</option>
+                <option value="30" selected>30 min</option>
+                <option value="60">60 min</option>
+              </select>
+            </div>
+            <div>
+              <label class="lab" for="minSlot">Min length</label>
+              <select class="fld" id="minSlot">
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60" selected>60 min</option>
+                <option value="90">90 min</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="lab" style="margin-top:12px" for="weekStart">Start date</label>
+          <div class="grid gap-2" style="grid-template-columns:1fr auto">
+            <input class="fld" id="weekStart" type="date">
+            <button class="btn" id="todayBtn" style="white-space:nowrap">Today</button>
+          </div>
+          <p class="text-[11px]" style="color:var(--dim); margin:6px 0 0; line-height:1.6">
+            Defaults to 7 days from today, extending up to two weeks to fit what you enter.
+          </p>
+
+          <label style="display:flex; align-items:center; gap:7px; margin-top:10px; font-size:12.5px; cursor:pointer">
+            <input type="checkbox" id="weekendOn" checked style="width:16px; height:16px; accent-color:var(--accent)">
+            Include weekend
+          </label>
+          <p class="text-[11px]" style="color:var(--dim); margin:6px 0 0; line-height:1.6">
+            Turn off to hide Saturday and Sunday.
+          </p>
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">
+            <span>🔁 Recurring meetings</span>
+            <button class="btn sm" id="addFix">+ Add</button>
+          </p>
+          <div id="fixList"></div>
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">
+            <span>📅 Confirmed</span>
+            <button class="btn sm danger" id="clearEv">Clear</button>
+          </p>
+          <p class="text-[11.5px]" style="color:var(--dim); margin:0 0 9px; line-height:1.6">
+            Drag across the grid to add an entry. Drag over one to remove it.
+          </p>
+          <div id="evList" style="max-height:170px; overflow:auto"></div>
+        </div>
+
+        <div class="sect">
+          <p class="sectTitle">📋 Paste your schedule</p>
+          <p class="text-[11.5px]" style="color:var(--dim); margin:0 0 9px; line-height:1.7">
+            Select the agenda list in your calendar, copy it and paste it in.
+            <b class="mono">Ctrl</b>+<b class="mono">V</b> works anywhere on the page.
+          </p>
+          <textarea class="fld" id="pasteText" style="min-height:120px; font-family:'JetBrains Mono',monospace; font-size:11.5px; line-height:1.6"
+            placeholder="31&#10;Aug, Mon&#10;10:30~12:00&#10;Robotics weekly&#10;13:00~14:00&#10;Review&#10;1&#10;Sep, Tue&#10;14:00~18:00&#10;Client meeting"></textarea>
+          <div class="grid gap-2" style="grid-template-columns:1fr auto; margin-top:7px">
+            <button class="btn p" id="applyText">Add entries</button>
+            <button class="btn" id="clearText" style="white-space:nowrap">Clear box</button>
+          </div>
+          <p class="mono text-[11px]" id="ocrInfo" style="color:var(--dim); margin:8px 0 0; line-height:1.6"></p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 우측 -->
+    <div id="right" class="hide">
+      <div class="card" style="padding:14px; margin-bottom:12px">
+        <p class="sectTitle">
+          <span>Timetable</span>
+          <span class="mono text-[11px]" id="weekLabel" style="color:var(--dim); font-weight:400"></span>
+        </p>
+        <div id="grid"></div>
+        <div class="legend">
+          <span><i style="background:var(--busy)"></i>Busy</span>
+          <span><i style="background:var(--buf)"></i>Buffer</span>
+          <span><i style="background:var(--lunch)"></i>Lunch</span>
+          <span><i style="background:var(--fix)"></i>Recurring</span>
+          <span><i style="background:var(--free)"></i>Free</span>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px; margin-bottom:12px">
+        <p class="sectTitle">
+          <span>✅ Free slots</span>
+          <span class="mono text-[11px]" id="slotCount" style="color:var(--dim); font-weight:400"></span>
+        </p>
+        <div class="grid gap-2 mb-3" style="grid-template-columns:1fr 1fr">
+          <div>
+            <label class="lab" for="tz">Their time zone</label>
+            <select class="fld" id="tz">
+              <option value="">None</option>
+              <option value="JST">JST Japan</option>
+              <option value="UTC">UTC</option>
+              <option value="CET">CET Europe</option>
+              <option value="EST">EST US East</option>
+              <option value="PST">PST US West</option>
+              <option value="IST">IST India</option>
+              <option value="SGT">SGT Singapore</option>
+              <option value="AEST">AEST Australia</option>
+            </select>
+          </div>
+          <div style="display:flex; align-items:flex-end">
+            <button class="btn" id="toggleAll" style="width:100%">Select / clear all</button>
+          </div>
+        </div>
+        <div id="slotList" style="max-height:230px; overflow:auto"></div>
+      </div>
+
+      <div class="card" style="padding:14px">
+        <p class="sectTitle">📤 Draft a message</p>
+        <div class="grid gap-2" style="grid-template-columns:1fr 1fr 1fr">
+          <button class="btn sm" data-tpl="chat">💬 Chat</button>
+          <button class="btn sm" data-tpl="mail">✉️ Email</button>
+          <button class="btn sm" data-tpl="en">🌐 English</button>
+        </div>
+        <textarea id="out" class="mt-3" style="margin-top:10px" readonly placeholder="Press a button above to draft the message"></textarea>
+        <div class="grid gap-2 mt-2" style="grid-template-columns:1fr 1fr">
+          <button class="btn p" id="copyBtn">📋 Copy</button>
+          <button class="btn" id="icsBtn">💾 Save .ics</button>
+        </div>
+        <button class="btn" id="gcalBtn" style="width:100%; margin-top:8px">📅 Add to Google Calendar</button>
+        <p class="text-[11px]" id="pickInfo" style="color:var(--dim); margin:8px 0 0; line-height:1.6">
+          Check exactly one slot to enable calendar export
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = function (id) { return document.getElementById(id); };
+
+  const DAY_KO = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const DAY_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  // Include weekend이면 일~토 7칸, 아니면 월~금 5칸
+  function cols() { return $('weekendOn').checked ? [0,1,2,3,4,5,6] : [1,2,3,4,5]; }
+  function DAYS(i) { return DAY_KO[i]; }
+  function DAYS_ENG(i) { return DAY_EN[i]; }
+  const STEP = 15;                       // 그리드 한 칸 15분
+  // 서머타임을 쓰지 않는 고정 오프셋 기준으로 환산한다
+  const TZ = { KST: 9, JST: 9, UTC: 0, CET: 1, EST: -5, PST: -8, IST: 5.5, SGT: 8, AEST: 10 };
+
+  let events = [];        // [{k:'YYYY-MM-DD', s, e, t}] 날짜키·분·제목
+  let viewStart = null, viewDays = 7;   // 표시 기간
+  let fixed = [];         // 매주 반복
+  let picked = null;
+  let dragging = null;
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function toMin(hhmm) {
+    const m = String(hhmm || '').match(/(\d{1,2}):(\d{2})/);
+    return m ? (+m[1]) * 60 + (+m[2]) : 0;
+  }
+  function fmt(v) {
+    const t = ((v % 1440) + 1440) % 1440;
+    return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+  }
+
+  /* ---------- 저장 ---------- */
+  const KEY = 'slot-coord-v1';
+  let saveTimer = null;
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          fixed: fixed, events: events,
+          wStart: $('wStart').value, wEnd: $('wEnd').value,
+          lunchOn: $('lunchOn').checked, lStart: $('lStart').value, lEnd: $('lEnd').value,
+          buffer: $('buffer').value, minSlot: $('minSlot').value,
+          weekStart: dkey(viewStart || today0()), viewDays: viewDays,
+          tz: $('tz').value, weekendOn: $('weekendOn').checked
+        }));
+      } catch (e) {}
+    }, 350);
+  }
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (!d) return;
+      if (Array.isArray(d.fixed)) fixed = d.fixed;
+      if (Array.isArray(d.events)) events = d.events;
+      ['wStart', 'wEnd', 'lStart', 'lEnd', 'buffer', 'minSlot', 'weekStart', 'tz'].forEach(function (k) {
+        if (d[k] && $(k)) $(k).value = d[k];
+      });
+      if (typeof d.lunchOn === 'boolean') $('lunchOn').checked = d.lunchOn;
+      if (typeof d.weekendOn === 'boolean') $('weekendOn').checked = d.weekendOn;
+      if (d.weekStart) viewStart = fromKey(d.weekStart);
+      if (d.viewDays) viewDays = Math.max(7, Math.min(14, +d.viewDays));
+    } catch (e) {}
+  }
+
+  /* ---------- 기준 주 ---------- */
+  function dkey(d) {
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function fromKey(k) {
+    const a = String(k).split('-');
+    return new Date(+a[0], +a[1] - 1, +a[2]);
+  }
+  function today0() {
+    const d = new Date(); d.setHours(0, 0, 0, 0); return d;
+  }
+  // 표시할 날짜들을 만든다. 주말을 뺄지도 여기서 정한다
+  function viewDates() {
+    const base = viewStart ? new Date(viewStart) : today0();
+    const out = [];
+    for (let i = 0; i < viewDays; i++) {
+      const d = new Date(base);
+      d.setDate(d.getDate() + i);
+      if (!$('weekendOn').checked && (d.getDay() === 0 || d.getDay() === 6)) continue;
+      out.push(d);
+    }
+    return out;
+  }
+  // 입력된 일정에 맞춰 기간을 다시 잡는다. 최소 7일, 최대 2주
+  function refitRange(keys) {
+    const t0 = today0();
+    if (!keys || !keys.length) {
+      viewStart = t0; viewDays = 7;
+      return;
+    }
+    const ds = keys.map(fromKey).filter(function (d) { return !isNaN(d.getTime()); });
+    if (!ds.length) { viewStart = t0; viewDays = 7; return; }
+    let min = new Date(Math.min.apply(null, ds));
+    let max = new Date(Math.max.apply(null, ds));
+    min.setHours(0, 0, 0, 0); max.setHours(0, 0, 0, 0);
+    const start = min < t0 ? min : t0;
+    let days = Math.round((max - start) / 86400000) + 1;
+    if (days < 7) days = 7;
+    if (days > 14) days = 14;
+    viewStart = start; viewDays = days;
+  }
+
+  // 기준 주의 첫날(Include weekend이면 일요일, 아니면 월요일)
+  function weekHead() {
+    const v = $('weekStart').value;
+    let d;
+    if (v) {
+      const p = v.split('-');
+      d = new Date(+p[0], +p[1] - 1, +p[2]);
+    } else d = new Date();
+    d.setHours(0, 0, 0, 0);
+    // 그 주의 일요일로 맞춘다
+    d.setDate(d.getDate() - d.getDay());
+    return d;
+  }
+  function monday() {
+    const d = weekHead();
+    d.setDate(d.getDate() + 1);
+    return d;
+  }
+  // dow 는 실제 요일 (0=일 ~ 6=토)
+  function dayDate(dow) {
+    const d = weekHead();
+    d.setDate(d.getDate() + dow);
+    return d;
+  }
+  function ymd(d) {
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function md(d) {
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    return p(d.getMonth() + 1) + '/' + p(d.getDate());
+  }
+
+  /* ---------- 구간 연산 ---------- */
+  // 일과시간에서 바쁜 구간을 모두 빼낸다
+  function subtract(free, busy) {
+    const out = [];
+    free.forEach(function (f) {
+      let parts = [f];
+      busy.forEach(function (b) {
+        const next = [];
+        parts.forEach(function (p) {
+          if (b.e <= p.s || b.s >= p.e) { next.push(p); return; }
+          if (b.s > p.s) next.push({ s: p.s, e: b.s });
+          if (b.e < p.e) next.push({ s: b.e, e: p.e });
+        });
+        parts = next;
+      });
+      out.push.apply(out, parts);
+    });
+    return out.sort(function (a, b) { return a.s - b.s; });
+  }
+  function merge(list) {
+    const s = list.slice().sort(function (a, b) { return a.s - b.s; });
+    const out = [];
+    s.forEach(function (v) {
+      const last = out[out.length - 1];
+      if (last && v.s <= last.e) last.e = Math.max(last.e, v.e);
+      else out.push({ s: v.s, e: v.e });
+    });
+    return out;
+  }
+
+  function conf() {
+    return {
+      ws: toMin($('wStart').value), we: toMin($('wEnd').value),
+      lunchOn: $('lunchOn').checked, ls: toMin($('lStart').value), le: toMin($('lEnd').value),
+      buf: parseInt($('buffer').value, 10), min: parseInt($('minSlot').value, 10),
+      tz: $('tz').value
+    };
+  }
+
+  // 그 날짜의 바쁜 구간을 모은다
+  function busyOf(date) {
+    const c = conf();
+    const k = dkey(date), dow = date.getDay();
+    const b = [];
+    if (c.lunchOn && c.le > c.ls) b.push({ s: c.ls, e: c.le, kind: 'lunch' });
+    // 매주 고정 회의는 요일로 걸린다
+    fixed.filter(function (f) { return f.d === dow; }).forEach(function (f) {
+      b.push({ s: f.s, e: f.e, kind: 'fix' });
+      if (c.buf) { b.push({ s: f.s - c.buf, e: f.s, kind: 'buf' }); b.push({ s: f.e, e: f.e + c.buf, kind: 'buf' }); }
+    });
+    events.filter(function (e) { return e.k === k; }).forEach(function (e) {
+      b.push({ s: e.s, e: e.e, kind: 'busy' });
+      if (c.buf) { b.push({ s: e.s - c.buf, e: e.s, kind: 'buf' }); b.push({ s: e.e, e: e.e + c.buf, kind: 'buf' }); }
+    });
+    return b;
+  }
+
+  function freeOf(date) {
+    const c = conf();
+    if (c.we <= c.ws) return [];
+    const busy = merge(busyOf(date).map(function (b) { return { s: b.s, e: b.e }; }));
+    return subtract([{ s: c.ws, e: c.we }], busy)
+      .filter(function (f) { return f.e - f.s >= c.min; });
+  }
+
+  function allSlots() {
+    const out = [];
+    const now = new Date();
+    const nowKey = dkey(now), nowMin = now.getHours() * 60 + now.getMinutes();
+    viewDates().forEach(function (d) {
+      const k = dkey(d);
+      freeOf(d).forEach(function (f) {
+        // 오늘은 이미 지난 시간을 빼고 보여 준다
+        let s0 = f.s;
+        if (k === nowKey) {
+          if (f.e <= nowMin) return;
+          if (s0 < nowMin) s0 = Math.ceil(nowMin / 15) * 15;
+          if (f.e - s0 < conf().min) return;
+        }
+        out.push({ k: k, s: s0, e: f.e });
+      });
+    });
+    return out;
+  }
+
+  /* ---------- 타임존 ---------- */
+  // 한국 시각을 상대 지역 시각으로 옮긴다. 날짜가 넘어가는 경우도 표시한다
+  function convert(base, minutes, tz) {
+    const utcMs = Date.UTC(base.getFullYear(), base.getMonth(), base.getDate(), 0, minutes)
+                  - TZ.KST * 3600000;
+    const t = new Date(utcMs + TZ[tz] * 3600000);
+    const sameDay = t.getUTCDate() === base.getDate() && t.getUTCMonth() === base.getMonth();
+    let shift = 0;
+    if (!sameDay) {
+      const a = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate());
+      const b = Date.UTC(base.getFullYear(), base.getMonth(), base.getDate());
+      shift = Math.round((a - b) / 86400000);
+    }
+    return {
+      time: String(t.getUTCHours()).padStart(2, '0') + ':' + String(t.getUTCMinutes()).padStart(2, '0'),
+      shift: shift
+    };
+  }
+  // 상대 지역 날짜를 mm/dd 로 만든다
+  function tzDate(base, shift) {
+    const d = new Date(base);
+    d.setDate(d.getDate() + shift);
+    return md(d);
+  }
+  function tzTag(base, s, e, tz) {
+    if (!tz) return '';
+    const a = convert(base, s, tz), b = convert(base, e, tz);
+    // 시작과 종료가 서로 다른 날이면 양쪽 모두 날짜를 붙여야 오해가 없다
+    if (a.shift !== b.shift) {
+      return tz + ' ' + tzDate(base, a.shift) + ' ' + a.time +
+             ' ~ ' + tzDate(base, b.shift) + ' ' + b.time;
+    }
+    const note = a.shift < 0 ? ' (prev day)' : a.shift > 0 ? ' (next day)' : '';
+    return tz + ' ' + a.time + '~' + b.time + note;
+  }
+  function tzTagEn(base, s, e, tz) {
+    if (!tz) return '';
+    const a = convert(base, s, tz), b = convert(base, e, tz);
+    if (a.shift !== b.shift) {
+      return tz + ' ' + tzDate(base, a.shift) + ' ' + a.time +
+             ' - ' + tzDate(base, b.shift) + ' ' + b.time;
+    }
+    const note = a.shift < 0 ? ' (prev day)' : a.shift > 0 ? ' (next day)' : '';
+    return tz + ' ' + a.time + '-' + b.time + note;
+  }
+
+  /* ---------- 그리드 ---------- */
+  function buildGrid() {
+    const c = conf();
+    const g = $('grid');
+    g.innerHTML = '';
+
+    const list = viewDates();
+    g.style.gridTemplateColumns = '54px repeat(' + list.length + ',1fr)';
+
+    const corner = document.createElement('div');
+    corner.className = 'hd';
+    g.appendChild(corner);
+
+    const tk = dkey(today0());
+    list.forEach(function (d) {
+      const h = document.createElement('div');
+      h.className = 'hd';
+      const dow = d.getDay();
+      const tone = dow === 0 ? '#B04A3E' : (dow === 6 ? '#3A5AA8' : '#0B0D10');
+      const isToday = dkey(d) === tk;
+      h.innerHTML = '<span style="color:' + tone + '">' + DAY_KO[dow] + '</span>' +
+        '<br><span class="mono" style="font-size:10.5px; font-weight:700; color:' +
+        (isToday ? 'var(--accent)' : '#3A4652') + '">' + md(d) + (isToday ? ' •' : '') + '</span>';
+      g.appendChild(h);
+    });
+
+    const from = Math.min(c.ws, 8 * 60), to = Math.max(c.we, 19 * 60);
+    for (let t = from; t < to; t += STEP) {
+      const tm = document.createElement('div');
+      tm.className = 'tm';
+      tm.textContent = (t % 60 === 0) ? fmt(t) : '';
+      g.appendChild(tm);
+
+      list.forEach(function (d) {
+        const cell = document.createElement('div');
+        cell.className = 'cell' + (t % 60 === 0 ? ' hourTop' : '');
+        cell.dataset.k = dkey(d);
+        cell.dataset.t = t;
+        if (t < c.ws || t >= c.we) cell.classList.add('off');
+        g.appendChild(cell);
+      });
+    }
+    paintGrid();
+    bindDrag();
+  }
+
+  function paintGrid() {
+    const c = conf();
+    const freeBy = {};
+    viewDates().forEach(function (d) { freeBy[dkey(d)] = freeOf(d); });
+
+    document.querySelectorAll('#grid .cell').forEach(function (cell) {
+      const k = cell.dataset.k, t = +cell.dataset.t;
+      cell.className = 'cell' + (t % 60 === 0 ? ' hourTop' : '');
+      cell.style.background = '';
+      cell.title = '';
+      if (t < c.ws || t >= c.we) { cell.classList.add('off'); return; }
+
+      const date = fromKey(k);
+      const b = busyOf(date);
+      const hit = function (kind) {
+        return b.some(function (x) { return x.kind === kind && t >= x.s && t < x.e; });
+      };
+      if (hit('busy')) {
+        cell.classList.add('busy');
+        const ev = events.find(function (v) { return v.k === k && t >= v.s && t < v.e; });
+        if (ev && ev.t) cell.title = ev.t;
+      }
+      else if (hit('fix')) cell.classList.add('fix');
+      else if (hit('lunch')) cell.classList.add('lunch');
+      else if (hit('buf')) cell.classList.add('buf');
+      else if ((freeBy[k] || []).some(function (f) { return t >= f.s && t < f.e; })) cell.classList.add('free');
+    });
+  }
+
+  // 끌어서 칠하면 일정, 이미 칠해진 곳을 끌면 지운다
+  function bindDrag() {
+    const g = $('grid');
+    g.addEventListener('pointerdown', function (ev) {
+      const cell = ev.target.closest('.cell');
+      if (!cell || cell.classList.contains('off')) return;
+      ev.preventDefault();
+      const k = cell.dataset.k, t = +cell.dataset.t;
+      const inside = events.some(function (e) { return e.k === k && t >= e.s && t < e.e; });
+      dragging = { k: k, from: t, to: t, remove: inside };
+      // 일부 환경에는 이 기능이 없으므로 감싸 둔다
+      try { if (g.setPointerCapture) g.setPointerCapture(ev.pointerId); } catch (e) {}
+      applyDrag(true);
+    });
+    g.addEventListener('pointermove', function (ev) {
+      if (!dragging) return;
+      const el = document.elementFromPoint(ev.clientX, ev.clientY);
+      const cell = el && el.closest ? el.closest('.cell') : null;
+      if (!cell || cell.dataset.k !== dragging.k) return;
+      dragging.to = +cell.dataset.t;
+      applyDrag(true);
+    });
+    ['pointerup', 'pointercancel'].forEach(function (t) {
+      g.addEventListener(t, function () {
+        if (!dragging) return;
+        applyDrag(false);
+        dragging = null;
+        save(); renderAll();
+      });
+    });
+  }
+
+  function applyDrag(preview) {
+    const k = dragging.k;
+    const s = Math.min(dragging.from, dragging.to);
+    const e = Math.max(dragging.from, dragging.to) + STEP;
+
+    if (dragging.remove) {
+      const kept = [];
+      events.forEach(function (v) {
+        if (v.k !== k || e <= v.s || s >= v.e) { kept.push(v); return; }
+        if (v.s < s) kept.push({ k: k, s: v.s, e: s, t: v.t || '' });
+        if (v.e > e) kept.push({ k: k, s: e, e: v.e, t: v.t || '' });
+      });
+      events = kept;
+    } else {
+      events = events.filter(function (v) { return !(v.k === k && v.s >= s && v.e <= e); });
+      events.push({ k: k, s: s, e: e, t: '' });
+      const same = events.filter(function (v) { return v.k === k; });
+      const rest = events.filter(function (v) { return v.k !== k; });
+      events = rest.concat(merge(same).map(function (v) {
+        const src = same.find(function (x) { return x.s < v.e && x.e > v.s && x.t; });
+        return { k: k, s: v.s, e: v.e, t: src ? src.t : '' };
+      }));
+    }
+    paintGrid();
+    if (!preview) renderEvents();
+  }
+
+  // 원본 색이 진하면 눈이 아프므로 흰색을 섞어 파스텔로 만든다
+  function soften(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || ''));
+    if (!m) return '';
+    const n = parseInt(m[1], 16);
+    const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    const mix = function (v) { return Math.round(v * 0.42 + 255 * 0.58); };
+    return 'rgb(' + mix(r) + ',' + mix(g) + ',' + mix(b) + ')';
+  }
+
+  /* ---------- 목록 ---------- */
+  function renderEvents() {
+    const box = $('evList');
+    box.innerHTML = '';
+    const list = events.slice().sort(function (a, b) {
+      return a.k < b.k ? -1 : a.k > b.k ? 1 : a.s - b.s;
+    });
+    if (!list.length) {
+      box.innerHTML = '<p class="text-[12px]" style="color:var(--dim); margin:0">Nothing marked yet</p>';
+      return;
+    }
+    list.forEach(function (e, i) {
+      const dt = fromKey(e.k);
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.style.alignItems = 'flex-start';
+      el.innerHTML =
+        '<b class="mono" style="width:56px; flex:none; font-size:12.5px">' +
+          md(dt) + '<br><span style="font-weight:600; color:#3A4652">(' + DAY_KO[dt.getDay()] + ')</span></b>' +
+        '<span style="flex:1; min-width:0">' +
+          '<span class="mono" style="font-weight:700">' + fmt(e.s) + ' ~ ' + fmt(e.e) + '</span>' +
+          (e.t ? '<br><span style="font-size:12.5px; color:#3A4652">' + esc(e.t) + '</span>' : '') +
+        '</span>' +
+        '<button class="btn sm danger del" style="min-height:26px; padding:3px 7px; flex:none">Del</button>';
+      el.querySelector('.del').addEventListener('click', function () {
+        events.splice(events.indexOf(e), 1);
+        save(); renderAll();
+      });
+      box.appendChild(el);
+    });
+  }
+
+  function renderFixed() {
+    const box = $('fixList');
+    box.innerHTML = '';
+    if (!fixed.length) {
+      box.innerHTML = '<p class="text-[12px]" style="color:var(--dim); margin:0">Add meetings that repeat weekly</p>';
+      return;
+    }
+    fixed.forEach(function (f, i) {
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.innerHTML =
+        '<select class="fld ff" data-f="d" style="width:62px; min-height:32px; padding:4px 6px; font-size:12px">' +
+          DAYS.map(function (d, j) { return '<option value="' + j + '"' + (f.d === j ? ' selected' : '') + '>' + d + '</option>'; }).join('') +
+        '</select>' +
+        '<input class="fld ff" data-f="s" type="time" style="min-height:32px; padding:4px 6px; font-size:12px">' +
+        '<input class="fld ff" data-f="e" type="time" style="min-height:32px; padding:4px 6px; font-size:12px">' +
+        '<button class="btn sm danger del" style="min-height:26px; padding:3px 7px">Del</button>';
+      el.querySelector('[data-f="s"]').value = fmt(f.s);
+      el.querySelector('[data-f="e"]').value = fmt(f.e);
+      el.querySelectorAll('.ff').forEach(function (x) {
+        x.addEventListener('change', function () {
+          if (x.dataset.f === 'd') f.d = +x.value;
+          else f[x.dataset.f] = toMin(x.value);
+          save(); renderAll();
+        });
+      });
+      el.querySelector('.del').addEventListener('click', function () {
+        fixed.splice(i, 1); save(); renderAll();
+      });
+      box.appendChild(el);
+    });
+  }
+  $('addFix').addEventListener('click', function () {
+    fixed.push({ d: 0, s: 10 * 60, e: 11 * 60 });
+    save(); renderAll();
+  });
+
+  let chosen = {};       // 체크한 빈 시간
+  let noAuto = false;    // 사용자가 일부러 모두 해제한 상태
+  function slotId(f) { return f.k + '@' + f.s + '-' + f.e; }
+
+  function renderSlots() {
+    const c = conf();
+    const list = allSlots();
+    const box = $('slotList');
+    box.innerHTML = '';
+
+    // 사라진 구간의 체크는 버리고, 처음이면 전부 체크해 둔다
+    const ids = {};
+    list.forEach(function (f) { ids[slotId(f)] = 1; });
+    Object.keys(chosen).forEach(function (id) { if (!ids[id]) delete chosen[id]; });
+    if (!noAuto && !Object.keys(chosen).length && list.length) {
+      list.forEach(function (f) { chosen[slotId(f)] = true; });
+    }
+
+    if (!list.length) {
+      box.innerHTML = '<p class="text-[12.5px]" style="color:var(--dim); margin:0">No slots match these settings</p>';
+      updateCount();
+      return;
+    }
+
+    list.forEach(function (f) {
+      const id = slotId(f);
+      const dt = fromKey(f.k);
+      const el = document.createElement('div');
+      el.className = 'slot' + (chosen[id] ? ' on' : '');
+      const tag = tzTag(dt, f.s, f.e, c.tz);
+      el.innerHTML =
+        '<input type="checkbox"' + (chosen[id] ? ' checked' : '') + '>' +
+        '<div class="body">' +
+          '<div class="t">' + md(dt) + '(' + DAY_KO[dt.getDay()] + ') ' +
+            fmt(f.s) + ' ~ ' + fmt(f.e) + '</div>' +
+          (tag ? '<div class="tz">' + esc(tag) + '</div>' : '') +
+        '</div>' +
+        '<span class="d">' + Math.round((f.e - f.s) / 60 * 10) / 10 + ' h</span>';
+
+      const cb = el.querySelector('input');
+      const flip = function () {
+        if (cb.checked) { chosen[id] = true; noAuto = false; } else delete chosen[id];
+        el.classList.toggle('on', cb.checked);
+        updateCount();
+      };
+      cb.addEventListener('click', function (ev) { ev.stopPropagation(); });
+      cb.addEventListener('change', flip);
+      // 줄 아무 데나 눌러도 켜지고 꺼진다
+      el.addEventListener('click', function () { cb.checked = !cb.checked; flip(); });
+      box.appendChild(el);
+    });
+    updateCount();
+  }
+
+  // 체크 상태를 화면에 반영한다. 하나만 골랐을 때 캘린더 등록을 쓸 수 있다
+  function updateCount() {
+    const list = allSlots();
+    const on = list.filter(function (f) { return chosen[slotId(f)]; });
+    $('slotCount').textContent = list.length ? on.length + ' / ' + list.length + ' selected' : '';
+    picked = on.length === 1 ? on[0] : null;
+    $('pickInfo').textContent = !list.length ? ''
+      : on.length === 1
+        ? 'Calendar export: ' + md(fromKey(on[0].k)) + ' ' + fmt(on[0].s) + '~' + fmt(on[0].e)
+        : on.length
+          ? 'Check exactly one slot for calendar export'
+          : 'Check at least one slot to send';
+  }
+
+  $('toggleAll').addEventListener('click', function () {
+    const list = allSlots();
+    const allOn = list.length && list.every(function (f) { return chosen[slotId(f)]; });
+    chosen = {};
+    // 전부 켜져 있었으면 모두 끄고, 아니면 모두 켠다
+    noAuto = allOn;
+    if (!allOn) list.forEach(function (f) { chosen[slotId(f)] = true; });
+    renderSlots();
+  });
+
+
+
+  /* ---------- 문장 ---------- */
+  function topSlots() {
+    return allSlots().filter(function (f) { return chosen[slotId(f)]; });
+  }
+  function makeText(kind) {
+    const c = conf();
+    const list = topSlots();
+    if (!list.length) return '';
+
+    if (kind === 'chat') {
+      const L = ['📅 Times I have available'];
+      if (c.tz) L.push('(local time in ' + c.tz + ' shown too)');
+      L.push('');
+      list.forEach(function (f) {
+        const dt = fromKey(f.k);
+        const tag = tzTag(dt, f.s, f.e, c.tz);
+        L.push('· ' + md(dt) + '(' + DAY_KO[dt.getDay()] + ') ' + fmt(f.s) + '~' + fmt(f.e) +
+               (tag ? '  [' + tag + ']' : ''));
+      });
+      L.push('');
+      L.push('Let me know which works and I will confirm 🙏');
+      return L.join('\n');
+    }
+
+    if (kind === 'mail') {
+      const L = [];
+      L.push('Hello,');
+      L.push('');
+      L.push('Here are the times I have available for a meeting.');
+      L.push('');
+      list.forEach(function (f, i) {
+        const dt = fromKey(f.k);
+        const tag = tzTag(dt, f.s, f.e, c.tz);
+        L.push((i + 1) + '. ' + md(dt) + '(' + DAY_KO[dt.getDay()] + ') ' +
+               fmt(f.s) + ' ~ ' + fmt(f.e) + (tag ? '  /  ' + tag : ''));
+      });
+      L.push('');
+      L.push('Reply with whichever suits you and I will prepare accordingly.');
+      L.push('If none of these work, let me know your availability and I will check again.');
+      L.push('');
+      L.push('Thank you.');
+      return L.join('\n');
+    }
+
+    const L = [];
+    L.push('Hello,');
+    L.push('');
+    L.push('Please find below the time slots I have available for a meeting.');
+    L.push('');
+    list.forEach(function (f, i) {
+      const d = fromKey(f.k);
+      const p = function (v) { return String(v).padStart(2, '0'); };
+      const tag = tzTagEn(d, f.s, f.e, c.tz);
+      L.push((i + 1) + '. ' + DAY_EN[d.getDay()] + ' ' + p(d.getMonth() + 1) + '/' + p(d.getDate()) + '  ' +
+             fmt(f.s) + '-' + fmt(f.e) + ' KST' + (tag ? '  /  ' + tag : ''));
+    });
+    L.push('');
+    L.push('Let me know which of these works best for you and I will send an invitation.');
+    L.push('If none of them suit your schedule, please suggest a time that does.');
+    L.push('');
+    L.push('Best regards,');
+    return L.join('\n');
+  }
+
+  document.querySelectorAll('[data-tpl]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      const t = makeText(b.dataset.tpl);
+      if (!t) { toast('No slots selected'); return; }
+      $('out').value = t;
+      toast('Message drafted');
+    });
+  });
+
+  $('copyBtn').addEventListener('click', async function () {
+    const t = $('out').value;
+    if (!t) { toast('Draft a message first'); return; }
+    let ok = false;
+    try {
+      if (navigator.clipboard) { await navigator.clipboard.writeText(t); ok = true; }
+      else throw new Error('x');
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) {}
+      document.body.removeChild(ta);
+    }
+    toast(ok ? 'Copied' : 'Copy was blocked');
+  });
+
+  /* ---------- 캘린더 등록 ---------- */
+  function pickedTimes() {
+    if (!picked) return null;
+    const d = fromKey(picked.k);
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    const mk = function (min) {
+      // KST 기준 시각을 UTC 로 바꿔 캘린더 형식에 맞춘다
+      const utc = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, min) - TZ.KST * 3600000);
+      return utc.getUTCFullYear() + p(utc.getUTCMonth() + 1) + p(utc.getUTCDate()) + 'T' +
+             p(utc.getUTCHours()) + p(utc.getUTCMinutes()) + '00Z';
+    };
+    return { start: mk(picked.s), end: mk(picked.e), label: md(d) + ' ' + fmt(picked.s) + '~' + fmt(picked.e) };
+  }
+
+  $('gcalBtn').addEventListener('click', function () {
+    const t = pickedTimes();
+    if (!t) { toast('Check exactly one slot first'); return; }
+    const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent('Meeting') +
+      '&dates=' + t.start + '/' + t.end +
+      '&details=' + encodeURIComponent('Scheduled with Slot Coordinator');
+    window.open(url, '_blank', 'noopener');
+  });
+
+  $('icsBtn').addEventListener('click', function () {
+    const t = pickedTimes();
+    if (!t) { toast('Check exactly one slot first'); return; }
+    const now = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//TOOLKIT//Slot Coordinator//KO',
+      'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
+      'UID:' + Date.now() + '@toolkit', 'DTSTAMP:' + now,
+      'DTSTART:' + t.start, 'DTEND:' + t.end,
+      'SUMMARY:Meeting', 'DESCRIPTION:Scheduled with Slot Coordinator',
+      'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+    try {
+      const blob = new Blob(['\uFEFF' + ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'meeting_' + dkey(fromKey(picked.k)) + '.ics';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      toast('Calendar file saved');
+    } catch (e) { toast('Save was blocked'); }
+  });
+
+  /* ---------- 시간 표기 읽기 ---------- */
+  function setOcr(msg) { $('ocrInfo').textContent = msg || ''; }
+
+  // 시·분·오전오후를 분으로 바꾼다
+  function hmToMin(h, m, ap) {
+    h = +h; m = m ? +m : 0;
+    const a = String(ap || '').toLowerCase();
+    if (a === '오후' || a === 'pm') { if (h < 12) h += 12; }
+    else if (a === '오전' || a === 'am') { if (h === 12) h = 0; }
+    return h * 60 + m;
+  }
+
+  // 시간 구간 : 오전 9:30~ 10:30 · 오후 1시~ 6시 · 10:30~12:00 · 9 AM - 5 PM
+  const PART = '(?:(오전|오후)\\s*)?(\\d{1,2})\\s*(?::\\s*(\\d{2})|시)?';
+  const RANGE_RE = new RegExp(PART + '\\s*[~\\-–—]\\s*' + PART);
+
+  function rangeToMin(t) {
+    const s = String(t).replace(/\s+/g, ' ').trim();
+    const m = RANGE_RE.exec(s);
+    if (!m) return null;
+    const ap1 = m[1] || '';
+    const ap2 = m[4] || ap1;          // 뒤에 표기가 없으면 앞을 따른다
+    const a = hmToMin(m[2], m[3], ap1);
+    let b = hmToMin(m[5], m[6], ap2);
+    // 오전 10시~11시 처럼 뒤가 앞보다 작으면 오후로 넘어간 것으로 본다
+    if (b <= a && !m[4]) b += 720;
+    if (b <= a) return null;
+    return { s: a, e: b };
+  }
+
+  // 여러 번 넣어 겹친 일정을 정리한다
+  function dedupe(list) {
+    const byDay = {};
+    list.forEach(function (v) { (byDay[v.k] = byDay[v.k] || []).push(v); });
+    const out = [];
+    Object.keys(byDay).forEach(function (k) {
+      const arr = byDay[k].slice().sort(function (a, b) { return a.s - b.s || a.e - b.e; });
+      const kept = [];
+      arr.forEach(function (v) {
+        const dup = kept.find(function (k) {
+          return Math.abs(k.s - v.s) <= 15 && Math.abs(k.e - v.e) <= 15;
+        });
+        if (dup) {
+          dup.s = Math.min(dup.s, v.s); dup.e = Math.max(dup.e, v.e);
+          if (!dup.t && v.t) dup.t = v.t;
+          return;
+        }
+        const inside = kept.find(function (x) { return v.s >= x.s && v.e <= x.e; });
+        if (inside) { if (!inside.t && v.t) inside.t = v.t; return; }
+        kept.push({ k: k, s: v.s, e: v.e, t: v.t || '' });
+      });
+      const merged = [];
+      kept.sort(function (a, b) { return a.s - b.s; }).forEach(function (v) {
+        const last = merged[merged.length - 1];
+        if (last && v.s <= last.e) {
+          last.e = Math.max(last.e, v.e);
+          // 합쳐진 일정은 이름을 이어 붙인다
+          if (v.t && last.t && last.t.indexOf(v.t) === -1) last.t += ' / ' + v.t;
+          else if (v.t && !last.t) last.t = v.t;
+        } else merged.push(v);
+      });
+      out.push.apply(out, merged);
+    });
+    return out;
+  }
+
+  // 0=일 ~ 6=토. 한글 한 글자 요일은 \b 가 통하지 않아 앞뒤 문맥으로 가른다
+  const DAY_RE = [
+    /\b(sun|sunday)\b|일요일|\(일\)|(^|[\s\d/.\-,])일(?=[\s\d(])/i,
+    /\b(mon|monday)\b|월요일|\(월\)|(^|[\s\d/.\-,])월(?=[\s\d(])/i,
+    /\b(tue|tues|tuesday)\b|화요일|\(화\)|(^|[\s\d/.\-,])화(?=[\s\d(])/i,
+    /\b(wed|weds|wednesday)\b|수요일|\(수\)|(^|[\s\d/.\-,])수(?=[\s\d(])/i,
+    /\b(thu|thur|thurs|thursday)\b|목요일|\(목\)|(^|[\s\d/.\-,])목(?=[\s\d(])/i,
+    /\b(fri|friday)\b|금요일|\(금\)|(^|[\s\d/.\-,])금(?=[\s\d(])/i,
+    /\b(sat|saturday)\b|토요일|\(토\)|(^|[\s\d/.\-,])토(?=[\s\d(])/i
+  ];
+
+  function parseOne(line, day) {
+    const out = [];
+    const rg = rangeToMin(line);
+    if (rg) out.push({ d: day < 0 ? 1 : day, s: rg.s, e: rg.e, guessed: day < 0 });
+    return out;
+  }
+
+  // 구글 캘린더 '일정' 목록 뷰. 복사하면 날짜와 요일이 서로 다른 줄로 쪼개진다
+  //   31
+  //   8월, 월
+  //   오후 1시~ 2시
+  //   정기회의
+  // 구글 캘린더 '일정' 목록. 복사하면 날짜와 요일이 서로 다른 줄로 쪼개진다
+  //   31
+  //   8월, 월
+  //   13:00~14:00
+  //   정기회의
+  const L_BOTH   = /^(\d{1,2})\s+(\d{1,2})월[,\s]*([일월화수목금토])/;
+  const L_DAY    = /^(\d{1,2})$/;
+  const L_MONDOW = /^(\d{1,2})월[,\s]*([일월화수목금토])/;
+  const DOW_MAP  = { '일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6 };
+
+  function parseAgendaList(text) {
+    const lines = String(text).split(/\r?\n/)
+      .map(function (l) { return l.trim(); })
+      .filter(function (l) { return l; });
+
+    const rows = [];
+    let cur = null, pendingDay = null, heads = 0, skipTitle = false;
+
+    lines.forEach(function (line) {
+      let m;
+      if ((m = L_BOTH.exec(line))) {
+        cur = { day: +m[1], mon: +m[2], dow: DOW_MAP[m[3]] };
+        pendingDay = null; heads++; skipTitle = false;
+        return;
+      }
+      if ((m = L_DAY.exec(line))) { pendingDay = +m[1]; return; }
+      if ((m = L_MONDOW.exec(line))) {
+        if (pendingDay !== null) {
+          cur = { day: pendingDay, mon: +m[1], dow: DOW_MAP[m[2]] };
+          pendingDay = null; heads++; skipTitle = false;
+        }
+        return;
+      }
+      if (!cur) return;
+      // 종일 일정은 특정 시간을 막지 않으므로 건너뛴다
+      if (/^(종일|all\s*day)$/i.test(line)) { skipTitle = true; return; }
+      const rg = rangeToMin(line);
+      if (rg) {
+        rows.push({ mon: cur.mon, day: cur.day, dow: cur.dow, s: rg.s, e: rg.e, t: '' });
+        skipTitle = false;
+        return;
+      }
+      // 시간 다음 줄은 그 일정의 이름으로 본다
+      if (skipTitle) { skipTitle = false; return; }
+      const last = rows[rows.length - 1];
+      if (last && !last.t) last.t = line;
+    });
+
+    if (heads < 2 || !rows.length) return null;
+    return { rows: rows, first: rows[0] };
+  }
+
+  // 목록의 첫 날짜로 기준 주를 맞춘다. 그 날짜가 실제로 무슨 요일인지도 함께 확인한다
+  function applyAgendaWeek(ag) {
+    const f = ag.first;
+    if (!f || !f.mon || !f.day) return '';
+    const dt = new Date(guessYear(f.mon), f.mon - 1, f.day);
+    if (isNaN(dt.getTime())) return '';
+
+    // 적힌 요일과 실제 요일이 어긋나면 앞뒤 해를 살펴 맞는 쪽을 고른다
+    if (dt.getDay() !== f.d) {
+      let fixed = null;
+      [-1, 1].forEach(function (off) {
+        if (fixed) return;
+        const alt = new Date(dt.getFullYear() + off, f.mon - 1, f.day);
+        if (alt.getDay() === f.d) fixed = alt;
+      });
+      if (fixed) dt.setTime(fixed.getTime());
+    }
+
+    dt.setHours(0, 0, 0, 0);
+    dt.setDate(dt.getDate() - dt.getDay());     // 그 주의 일요일
+    const after = ymd(dt);
+    if ($('weekStart').value === after) return '';
+    $('weekStart').value = after;
+    buildGrid();
+    return ' 기준 주를 ' + md(dt) + ' 주간으로 맞췄습니다.';
+  }
+
+  // 목록에 적힌 달을 보고 연도를 정한다. 12월 다음 1월이면 해가 바뀐 것으로 본다
+  function guessYear(mon) {
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth() + 1;
+    if (m === 12 && mon <= 2) return y + 1;
+    if (m <= 2 && mon >= 11) return y - 1;
+    return y;
+  }
+
+  // 캡처에 적힌 날짜를 찾아 그 주의 월요일을 구한다
+  function findWeek(text) {
+    const t = String(text);
+    const cands = [];
+    const thisYear = new Date().getFullYear();
+    let m;
+    const r1 = /(20\d{2})[.\-/년\s]+(\d{1,2})[.\-/월\s]+(\d{1,2})/g;
+    while ((m = r1.exec(t))) cands.push({ y: +m[1], mo: +m[2], d: +m[3] });
+    const r2 = /(?:^|[^\d])(\d{1,2})\s*[./월]\s*(\d{1,2})\s*일?(?![\d:])/g;
+    while ((m = r2.exec(t))) {
+      const mo = +m[1], d = +m[2];
+      if (mo >= 1 && mo <= 12 && d >= 1 && d <= 31) cands.push({ y: thisYear, mo: mo, d: d });
+    }
+    if (!cands.length) return null;
+    cands.sort(function (a, b) { return new Date(a.y, a.mo - 1, a.d) - new Date(b.y, b.mo - 1, b.d); });
+    const c = cands[0];
+    const dt = new Date(c.y, c.mo - 1, c.d);
+    if (isNaN(dt.getTime())) return null;
+    dt.setDate(dt.getDate() - ((dt.getDay() + 6) % 7));
+    dt.setHours(0, 0, 0, 0);
+    return dt;
+  }
+
+  function parseTimes(text) {
+    const out = [];
+    let cur = -1;
+    String(text).split(/\n+/).forEach(function (line) {
+      let day = -1;
+      for (let i = 0; i < 7; i++) { if (DAY_RE[i].test(line)) { day = i; break; } }
+      if (day >= 0) cur = day; else day = cur;
+      out.push.apply(out, parseOne(line, day));
+    });
+    return out;
+  }
+
+  /* ---------- 텍스트로 넣기 ---------- */
+  $('applyText').addEventListener('click', function () {
+    const t = $('pasteText').value;
+    if (!t.trim()) { toast('Paste some schedule text first'); return; }
+
+    const ag = parseAgendaList(t);
+    if (!ag) {
+      toast('일정 형태를 알아보지 못했습니다');
+      setOcr('날짜와 시간이 함께 있어야 읽을 수 있습니다. 예) 31 / 8월, 월 / 13:00~14:00');
+      return;
+    }
+
+    // 적힌 달로 연도를 정하고 날짜키를 만든다
+    ag.rows.forEach(function (r) {
+      const y = guessYear(r.mon);
+      let dt = new Date(y, r.mon - 1, r.day);
+      // 적힌 요일과 실제 요일이 어긋나면 앞뒤 해를 살펴 맞는 쪽을 고른다
+      if (!isNaN(dt.getTime()) && dt.getDay() !== r.dow) {
+        [-1, 1].forEach(function (off) {
+          const alt = new Date(y + off, r.mon - 1, r.day);
+          if (alt.getDay() === r.dow) dt = alt;
+        });
+      }
+      r.k = dkey(dt);
+    });
+
+    ag.rows.forEach(function (r) {
+      events.push({ k: r.k, s: r.s, e: r.e, t: r.t || '' });
+    });
+    events = dedupe(events);
+
+    // 넣은 일정에 맞춰 보이는 기간을 다시 잡는다
+    refitRange(events.map(function (v) { return v.k; }));
+    // 새로 넣었으니 체크는 다시 전부 켠 상태로 시작한다
+    chosen = {}; noAuto = false;
+    buildGrid(); renderAll();
+
+    const a = viewDates();
+    setOcr(ag.rows.length + ' entries · ' +
+      md(a[0]) + ' ~ ' + md(a[a.length - 1]) + ' (' + viewDays + ' days) applied.');
+    toast(ag.rows.length + '건을 넣었습니다');
+  });
+
+  $('clearText').addEventListener('click', function () {
+    $('pasteText').value = '';
+    setOcr('');
+    $('pasteText').focus();
+  });
+
+  // 화면 어디서든 붙여넣으면 일정 텍스트로 받는다
+  document.addEventListener('paste', function (ev) {
+    if (ev.target === $('pasteText')) return;      // 입력칸에 직접 붙일 때는 그대로 둔다
+    const cd = ev.clipboardData;
+    if (!cd || !cd.getData) return;
+    const txt = cd.getData('text/plain');
+    if (!txt || !/\d{1,2}\s*[:시]/.test(txt)) return;
+    ev.preventDefault();
+    $('pasteText').value = txt;
+    $('applyText').click();
+  });
+
+  /* ---------- 백업 · 복원 ---------- */
+  function snapshot() {
+    return {
+      v: 1,
+      fixed: fixed, events: events,
+      wStart: $('wStart').value, wEnd: $('wEnd').value,
+      lunchOn: $('lunchOn').checked, lStart: $('lStart').value, lEnd: $('lEnd').value,
+      buffer: $('buffer').value, minSlot: $('minSlot').value,
+      weekStart: $('weekStart').value, tz: $('tz').value,
+      weekendOn: $('weekendOn').checked
+    };
+  }
+
+  function restore(d) {
+    if (!d || typeof d !== 'object') throw new Error('bad format');
+    fixed = Array.isArray(d.fixed) ? d.fixed : [];
+    events = Array.isArray(d.events) ? d.events : [];
+    ['wStart', 'wEnd', 'lStart', 'lEnd', 'buffer', 'minSlot', 'weekStart', 'tz'].forEach(function (k) {
+      if (d[k] !== undefined && $(k)) $(k).value = d[k];
+    });
+    if (typeof d.lunchOn === 'boolean') $('lunchOn').checked = d.lunchOn;
+    if (typeof d.weekendOn === 'boolean') $('weekendOn').checked = d.weekendOn;
+    if (d.weekStart) { viewStart = fromKey(d.weekStart); $('weekStart').value = d.weekStart; }
+    if (d.viewDays) viewDays = Math.max(7, Math.min(14, +d.viewDays));
+    chosen = {};
+    $('lunchRow').style.opacity = $('lunchOn').checked ? '1' : '.4';
+    $('lStart').disabled = !$('lunchOn').checked;
+    $('lEnd').disabled = !$('lunchOn').checked;
+    picked = null;
+    save(); buildGrid(); renderAll();
+  }
+
+  $('backupBtn').addEventListener('click', function () {
+    try {
+      const blob = new Blob([JSON.stringify(snapshot(), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'slot_' + ymd(monday()) + '.json';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      toast('Settings and entries backed up');
+    } catch (e) { toast('Backup was blocked'); }
+  });
+
+  $('loadBtn').addEventListener('click', function () { $('backupFile').click(); });
+  $('backupFile').addEventListener('change', function (ev) {
+    const f = ev.target.files && ev.target.files[0];
+    $('backupFile').value = '';
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = function (e) {
+      try {
+        restore(JSON.parse(String(e.target.result)));
+        toast('Restored');
+      } catch (err) { toast('Not a valid backup file'); }
+    };
+    r.onerror = function () { toast('Could not read the file'); };
+    r.readAsText(f, 'UTF-8');
+  });
+
+  $('todayBtn').addEventListener('click', function () {
+    viewStart = today0(); viewDays = 7;
+    $('weekStart').value = dkey(viewStart);
+    chosen = {};
+    save(); buildGrid(); renderAll();
+  });
+
+  $('resetAll').addEventListener('click', function () {
+    if (!window.confirm('Reset every entry and setting?')) return;
+    events = []; fixed = []; picked = null;
+    $('pasteText').value = '';
+    $('wStart').value = '09:00'; $('wEnd').value = '18:00';
+    $('lunchOn').checked = true; $('lStart').value = '12:00'; $('lEnd').value = '13:00';
+    $('buffer').value = '30'; $('minSlot').value = '60';
+    $('weekendOn').checked = true; $('tz').value = '';
+    chosen = {}; noAuto = false; viewStart = null; viewDays = 7;
+    $('weekStart').value = dkey(today0());
+    $('lStart').disabled = false; $('lEnd').disabled = false;
+    $('lunchRow').style.opacity = '1';
+    setOcr('');
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    buildGrid(); renderAll();
+    toast('Everything reset');
+  });
+
+  /* ---------- 조작 ---------- */
+  ['wStart', 'wEnd', 'lStart', 'lEnd', 'buffer', 'minSlot', 'weekStart', 'tz', 'lunchOn', 'weekendOn'].forEach(function (id) {
+    $(id).addEventListener('change', function () {
+      save();
+      if (id === 'weekStart') {
+        const v = $('weekStart').value;
+        if (v) { viewStart = fromKey(v); }
+        chosen = {};
+      }
+      if (id === 'wStart' || id === 'wEnd' || id === 'weekStart' || id === 'weekendOn') buildGrid();
+      renderAll();
+    });
+    $(id).addEventListener('input', function () {
+      if (id === 'tz') { save(); renderSlots(); }
+    });
+  });
+  $('lunchOn').addEventListener('change', function () {
+    $('lunchRow').style.opacity = $('lunchOn').checked ? '1' : '.4';
+    $('lStart').disabled = !$('lunchOn').checked;
+    $('lEnd').disabled = !$('lunchOn').checked;
+  });
+
+  $('clearEv').addEventListener('click', function () {
+    if (!events.length) return;
+    if (!window.confirm('Clear every entry?')) return;
+    events = []; picked = null;
+    save(); renderAll();
+    toast('Entries cleared');
+  });
+
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $('left').classList.toggle('hide', b.dataset.tab !== 'left');
+      $('right').classList.toggle('hide', b.dataset.tab !== 'right');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  function layout() {
+    const wide = window.innerWidth >= 960;
+    $('split').style.gridTemplateColumns = wide ? '360px 1fr' : '1fr';
+    if (wide) { $('left').classList.remove('hide'); $('right').classList.remove('hide'); }
+    else {
+      const on = document.querySelector('#tabs button.on');
+      const t = on ? on.dataset.tab : 'left';
+      $('left').classList.toggle('hide', t !== 'left');
+      $('right').classList.toggle('hide', t !== 'right');
+    }
+  }
+  window.addEventListener('resize', layout);
+
+  function renderAll() {
+    const list = viewDates();
+    if (list.length) {
+      $('weekLabel').textContent = md(list[0]) + ' ~ ' + md(list[list.length - 1]) +
+        ' · ' + viewDays + ' days';
+    }
+    paintGrid(); renderEvents(); renderFixed(); renderSlots();
+  }
+
+  /* ---------- 시작 ---------- */
+  load();
+  if (!viewStart) viewStart = today0();
+  if (events.length) refitRange(events.map(function (v) { return v.k; }));
+  $('weekStart').value = dkey(viewStart);
+  $('lunchRow').style.opacity = $('lunchOn').checked ? '1' : '.4';
+  buildGrid();
+  renderAll();
+  layout();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>The "when are you free?" problem</h2>
+<p>A meeting request arrives and you open your calendar to scan for gaps. Factoring in travel either side takes longer than it should, and half the time you send options only to remember a clash afterwards.</p>
+<p>Paste your calendar screen instead. It reads the entries, subtracts your buffers and lunch, and gives you the slots that are genuinely free — along with the message to send.</p>
+
+<h2>Where it helps</h2><dl>
+<dt>External meetings</dt><dd>When you need to offer a few workable times.</dd>
+<dt>Scheduling across time zones</dt><dd>When the other side needs their local time spelled out.</dd>
+<dt>Avoiding back-to-back days</dt><dd>When travel time between commitments matters.</dd>
+<dt>Weeks with standing meetings</dt><dd>Recurring slots stay blocked without re-entering them.</dd>
+</dl>
+
+<h2>How to use it</h2><ol>
+<li>Set your working hours, <strong>buffer</strong> and minimum meeting length.</li>
+<li><strong>Paste a screenshot</strong> of your calendar — Ctrl+V works anywhere on the page.</li>
+<li>If anything reads wrong, <strong>drag on the grid</strong> to fix it.</li>
+<li>Pick the other party's region to show their local time.</li>
+<li>Press the <strong>message button</strong> for wherever you are sending it.</li>
+</ol>
+
+<h2>How screenshots are read</h2><dl>
+<dt>Weekly grid view</dt><dd>The time axis down the left and the day headers across the top give the coordinates, which are converted back into times. Entry colours are picked up too and shown faintly on the grid.</dd>
+<dt>Agenda list view</dt><dd>Date headers with entries listed underneath. All-day items are skipped, since they do not block a specific time.</dd>
+<dt>Multiple images</dt><dd>If the calendar is too tall for one capture, paste up to three. Overlapping entries are reconciled automatically.</dd>
+<dt>Plain text</dt><dd>You can paste the schedule text directly instead of an image.</dd>
+</dl>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>What kinds of calendar screenshots can it read?</dt><dd>Both the weekly grid view and the agenda list view. It handles 9 AM and 09:00 as well as Korean forms such as 오전 9시. All-day entries are skipped, since they do not actually block any time.</dd>
+<dt>My calendar is too tall to capture in one shot</dt><dd>Paste up to three images. Capture the screen in sections and drop them in one after another — entries accumulate, and anything that overlaps between shots is reconciled automatically.</dd>
+<dt>What is the buffer for?</dt><dd>Travel or preparation time held clear on either side of a meeting. Set it to 30 minutes and a slot ending at 10:00 leaves you free from 10:30, so nothing gets booked back to back.</dd>
+<dt>How are time zones handled?</dt><dd>Pick the other party's region and their local time appears alongside yours. Where a slot starts on one date and ends on another in their zone, both dates are spelled out so there is no ambiguity.</dd>
+<dt>What if the screenshot is read incorrectly?</dt><dd>Drag across the timetable on the right to add an entry, and drag over an existing one to remove it. Recognition does not have to be perfect — you can correct it by hand in seconds.</dd>
+</dl>
+
+<p class="tk-guide-note">This tool runs entirely inside your browser. Screenshots you paste and schedules you type are never transmitted. Text recognition depends on the quality of the capture, so glance over the grid before sending times to anyone.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/meeting-minutes.html">Smart Meeting Minutes</a></li>
+<li><a href="https://mnledu.com/en/productivity/presentation-timer.html">Presentation Timer</a></li>
+<li><a href="https://mnledu.com/en/productivity/timezone-dial.html">Global Time Zone Dial</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio.html">QR Code Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/pdf-signature.html">PDF Signature Stamp</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>

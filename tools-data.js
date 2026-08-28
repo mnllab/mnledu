@@ -34,6 +34,46 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'pdf-signature',
+    title: 'PDF 서명 스탬프',
+    category: 'PRODUCTIVITY',
+    desc: '서명 사진의 흰 배경을 지우고 PDF 원하는 자리에 올려 저장합니다. 파일은 브라우저 밖으로 나가지 않습니다.',
+    url: 'https://mnledu.com/productivity/pdf-signature.html',
+    icon: 'signature',
+    badge: 'NEW',
+    tags: ['#PDF', '#서명', '#문서', '#이미지']
+  },
+  {
+    id: 'qr-studio',
+    title: '맞춤형 QR코드 생성기',
+    category: 'PRODUCTIVITY',
+    desc: '색과 크기를 정해 인쇄용 고화질 QR코드를 만듭니다. 투명 배경 PNG와 벡터 SVG로 저장됩니다.',
+    url: 'https://mnledu.com/productivity/qr-studio.html',
+    icon: 'qr-code',
+    badge: 'NEW',
+    tags: ['#QR', '#인쇄', '#디자인', '#오프라인']
+  },
+  {
+    id: 'meeting-minutes',
+    title: '스마트 회의록',
+    category: 'PRODUCTIVITY',
+    desc: '질문과 답변을 적으면 한글·워드·슬랙·노션 서식에 맞춰 복사합니다. 미결 항목은 따로 모아 보여줍니다.',
+    url: 'https://mnledu.com/productivity/meeting-minutes.html',
+    icon: 'clipboard-list',
+    badge: 'NEW',
+    tags: ['#회의', '#문서작성', '#복사', '#마크다운']
+  },
+  {
+    id: 'slot-coordinator',
+    title: '스마트 일정 코디네이터',
+    category: 'PRODUCTIVITY',
+    desc: '캘린더 캡처를 붙여넣으면 빈 시간을 뽑아 줍니다. 버퍼와 점심을 빼고 보낼 문장까지 만듭니다.',
+    url: 'https://mnledu.com/productivity/slot-coordinator.html',
+    icon: 'calendar-clock',
+    badge: 'NEW',
+    tags: ['#일정', '#미팅', '#시차', '#자동정리']
+  },
+  {
     id: 'notepad',
     title: '나만의 웹 메모장',
     category: 'PRODUCTIVITY',
