@@ -271,7 +271,7 @@ const SUPPORT_EN = `      <a href="https://buymeacoffee.com/mnledu" target="_bla
 
       <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
         class="tk-tube tk-tube-full mt-2">
-        <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4.5"/><path d="m10.2 9.1 5 2.9-5 2.9z" fill="currentColor" stroke="none"/></svg>Support on YouTube
       </a>`;
 
 function swapSupport(html) {
@@ -288,7 +288,7 @@ const FOOTER_SUPPORT_EN = `        <div class="flex shrink-0 flex-col gap-2 sm:m
             <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
           </a>
           <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer" class="tk-tube">
-            <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4.5"/><path d="m10.2 9.1 5 2.9-5 2.9z" fill="currentColor" stroke="none"/></svg>Support on YouTube
           </a>
         </div>`;
 
