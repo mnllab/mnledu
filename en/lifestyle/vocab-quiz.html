@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F7F6F3">
+<title>Flashcards &amp; Quiz | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Turn your own word list into flashcards and multiple choice quest… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/lifestyle/vocab-quiz.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/vocab-quiz.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/vocab-quiz.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/vocab-quiz.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/lifestyle/vocab-quiz.html" />
+<meta property="og:title" content="Flashcards &amp; Quiz · study · flashcards | TOOLKIT" />
+<meta property="og:description" content="Turn your own word list into flashcards and multiple choice quest… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Flashcards &amp; Quiz · study · flashcards | TOOLKIT" />
+<meta name="twitter:description" content="Turn your own word list into flashcards and multiple choice quest… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Flashcards & Quiz",
+  "description": "Turn your own word list into flashcards and multiple choice questions, both directions.",
+  "url": "https://mnledu.com/en/lifestyle/vocab-quiz.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root[data-theme="light"]{
+    --bg:#F7F6F3; --panel:#FFFFFF; --line:#E7E4DE; --ink:#2E3B4E; --dim:#6B7C8F;
+    --accent:#4A7C9E; --soft:#EDF3F7; --ok:#2E7D5B; --okBg:#E6F4EC;
+    --no:#C0563F; --noBg:#FBEDE9; --card:#FFFFFF;
+  }
+  :root[data-theme="dark"]{
+    --bg:#12161C; --panel:#1A2029; --line:#2A323D; --ink:#E9EDF2; --dim:#93A1B0;
+    --accent:#6FA8CC; --soft:#222B36; --ok:#5DD39E; --okBg:#1C3A2E;
+    --no:#E8836B; --noBg:#3A241E; --card:#1A2029;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:14px; }
+
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--ink);
+    border-radius:10px; font-size:13.5px; padding:11px 15px; cursor:pointer;
+    transition:background .12s, border-color .12s, transform .06s;
+  }
+  .btn:hover{ border-color:var(--accent); }
+  .btn:active{ transform:scale(.98); }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+  .btn[disabled]{ opacity:.4; cursor:not-allowed; }
+
+  .pick{
+    padding:12px 13px; border-radius:10px; border:1px solid var(--line);
+    background:var(--panel); color:var(--ink); font-size:13px; cursor:pointer;
+    text-align:left; transition:all .12s;
+  }
+  .pick:hover{ border-color:var(--accent); }
+  .pick.on{ border-color:var(--accent); background:var(--soft); }
+  .pick .s{ display:block; font-size:11px; color:var(--dim); margin-top:3px; line-height:1.5; }
+
+  textarea, .fld{
+    width:100%; border:1px solid var(--line); border-radius:11px; background:var(--panel);
+    padding:13px 14px; font-size:14px; color:var(--ink); outline:none; line-height:1.8;
+  }
+  textarea:focus, .fld:focus{ border-color:var(--accent); }
+  textarea{ resize:vertical; min-height:230px; font-family:'JetBrains Mono',ui-monospace,monospace; font-size:13.5px; }
+
+  #drop{ transition:border-color .14s, background .14s; }
+  #drop.over{ border-color:var(--accent); background:var(--soft); }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height:4px;
+    border-radius:999px; background:var(--line); outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:999px;
+    background:var(--accent); border:3px solid var(--panel); cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:999px; background:var(--accent);
+    border:3px solid var(--panel); cursor:pointer;
+  }
+
+  /* Flashcards */
+  #flipWrap{ perspective:1400px; }
+  #flip{
+    position:relative; width:100%; transform-style:preserve-3d;
+    transition:transform .6s cubic-bezier(.2,.9,.3,1); cursor:pointer;
+  }
+  #flip.flipped{ transform:rotateY(180deg); }
+  #flip .side{
+    position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    border:1px solid var(--line); border-radius:16px; background:var(--card); padding:24px;
+    text-align:center; word-break:keep-all;
+  }
+  #flip .side.b{ transform:rotateY(180deg); background:var(--soft); }
+  .sideTag{ font-size:11px; letter-spacing:.14em; color:var(--dim); }
+
+  /* 퀴즈 */
+  .choice{
+    width:100%; text-align:left; padding:15px 16px; border-radius:12px;
+    border:1px solid var(--line); background:var(--panel); color:var(--ink);
+    cursor:pointer; transition:all .14s; word-break:keep-all;
+  }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.ok{ background:var(--okBg); border-color:var(--ok); color:var(--ok); font-weight:700; }
+  .choice.no{ background:var(--noBg); border-color:var(--no); color:var(--no); font-weight:700; }
+  .choice .n{ display:inline-block; width:22px; color:var(--dim); font-family:'JetBrains Mono',monospace; }
+
+  #bar{ height:4px; border-radius:999px; background:var(--line); overflow:hidden; }
+  #barFill{ height:100%; width:0; background:var(--accent); transition:width .3s ease; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th,td{ padding:10px 12px; text-align:left; vertical-align:top; word-break:keep-all; }
+  thead th{ background:var(--soft); color:var(--dim); font-weight:500; font-size:11.5px; }
+  tbody tr{ border-bottom:1px solid var(--line); }
+
+  .listRow{
+    display:flex; gap:14px; align-items:baseline; padding:11px 13px;
+    border-bottom:1px solid var(--line);
+  }
+  .listRow .q{ flex:1; font-weight:600; word-break:keep-all; }
+  .listRow .a{ flex:1; color:var(--dim); word-break:keep-all; }
+  .listRow.hidden .a{ filter:blur(5px); cursor:pointer; }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:var(--bg); border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-3xl px-4 py-6 sm:py-9">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">Flashcards &amp; Quiz</h1>
+      <p class="mt-1 text-[12.5px]" style="color:var(--dim)">Two-way practice built from your own list</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn" id="themeBtn" style="padding:8px 12px; font-size:12.5px">Dark</button>
+      <button class="btn" id="homeBtn" style="padding:8px 12px; font-size:12.5px; display:none">Start over</button>
+    </div>
+  </header>
+
+  <!-- STEP 1 -->
+  <section id="step1">
+    <div class="panel" style="padding:16px">
+      <p class="text-[13px] leading-relaxed" style="margin:0 0 10px">
+        One entry per line, with the term and its meaning separated by a slash.
+      </p>
+      <p class="mono text-[12px] leading-relaxed" style="color:var(--dim); margin:0 0 12px">
+        For example<br>ubiquitous / present everywhere<br>mitigate / make less severe
+      </p>
+
+      <div id="drop" style="border:2px dashed var(--line); border-radius:12px; padding:10px">
+        <textarea id="raw" placeholder="ubiquitous / present everywhere&#10;mitigate / make less severe&#10;prudent / showing care for the future" spellcheck="false"></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2" style="margin-top:11px">
+        <button class="btn" id="fileBtn">Open a txt file</button>
+        <button class="btn" id="sampleBtn">Load a sample</button>
+        <input type="file" id="picker" accept=".txt,.csv,text/plain" class="hidden">
+        <span class="text-[12px] mono" id="parseInfo" style="color:var(--dim); margin-left:auto"></span>
+      </div>
+      <p class="text-[11.5px] mt-2" style="color:var(--dim)">
+        You can also drop a file here · comma and tab separated lines are recognised too
+      </p>
+    </div>
+
+    <button class="btn p w-full mt-3" id="toStep2" style="padding:14px">Next · study settings</button>
+  </section>
+
+  <!-- STEP 2 -->
+  <section id="step2" style="display:none">
+    <div class="panel" style="padding:16px">
+      <p class="text-[12px] font-medium tracking-wide mb-2.5" style="color:var(--dim)">Direction</p>
+      <div class="grid gap-2 sm:grid-cols-3" id="dirSeg">
+        <button class="pick on" data-dir="ab">Term → meaning<span class="s">See the term, recall the meaning</span></button>
+        <button class="pick" data-dir="ba">Meaning → term<span class="s">See the meaning, recall the term</span></button>
+        <button class="pick" data-dir="rand">Mixed<span class="s">Random each question</span></button>
+      </div>
+
+      <p class="text-[12px] font-medium tracking-wide mb-2.5 mt-4" style="color:var(--dim)">Study mode</p>
+      <div class="grid gap-2 sm:grid-cols-2" id="modeSeg">
+        <button class="pick on" data-mode="list">List<span class="s">Everything visible at once</span></button>
+        <button class="pick" data-mode="flash">Flashcards<span class="s">Tap to flip</span></button>
+        <button class="pick" data-mode="mcq">Multiple choice<span class="s">Choose from four</span></button>
+        <button class="pick" data-mode="short">Type the answer<span class="s">Write it out</span></button>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 mt-4">
+        <div>
+          <label class="text-[12px]" style="color:var(--dim)" for="count">Questions</label>
+          <input class="fld mono mt-1.5" id="count" type="number" inputmode="numeric" style="text-align:right">
+          <p class="text-[11px] mt-1.5" style="color:var(--dim)">Drawn at random from <b id="totalCnt" class="mono">0</b> entries</p>
+        </div>
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-[12px]" style="color:var(--dim)">Text size</span>
+            <span class="mono text-[12px]" id="fsVal">20px</span>
+          </div>
+          <input type="range" id="fsRange" min="14" max="46" step="1" value="20" style="margin-top:12px">
+          <p class="text-[11px] mt-2" style="color:var(--dim)">You can change this while studying</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-2 sm:grid-cols-2 mt-3">
+      <button class="btn" id="backTo1" style="padding:14px">Back · edit the list</button>
+      <button class="btn p" id="startBtn" style="padding:14px">Start</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section id="step3" style="display:none">
+    <div class="panel" style="padding:14px 16px; margin-bottom:12px">
+      <div class="flex items-center justify-between gap-3 mb-2.5">
+        <span class="mono text-[13px]" id="progress">0 / 0</span>
+        <div class="flex items-center gap-2" style="flex:1; max-width:200px">
+          <span class="text-[11px]" style="color:var(--dim)">A</span>
+          <input type="range" id="fsRange2" min="14" max="46" step="1" value="20">
+          <span class="text-[15px]" style="color:var(--dim)">A</span>
+        </div>
+      </div>
+      <div id="bar"><div id="barFill"></div></div>
+    </div>
+
+    <div id="stage"></div>
+
+    <div class="grid gap-2 sm:grid-cols-2 mt-3" id="navBtns"></div>
+  </section>
+
+  <!-- 결과 -->
+  <section id="result" style="display:none">
+    <div class="panel" style="padding:22px 18px; text-align:center">
+      <p class="text-[12px]" style="color:var(--dim)">Final score</p>
+      <p class="mono" id="score" style="font-size:38px; font-weight:700; line-height:1.2; margin:6px 0 4px">0 / 0</p>
+      <p class="text-[13px]" id="scoreSub" style="color:var(--dim); margin:0"></p>
+    </div>
+
+    <div class="panel mt-3" id="wrongPanel" style="overflow:hidden">
+      <p class="text-[12px] font-medium tracking-wide" style="color:var(--dim); padding:13px 14px 0">Missed questions</p>
+      <div style="overflow:auto; max-height:48vh">
+        <table>
+          <thead><tr><th>Question</th><th>Your answer</th><th>Correct</th></tr></thead>
+          <tbody id="wrongBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid gap-2 sm:grid-cols-3 mt-3">
+      <button class="btn p" id="againBtn" style="padding:14px">Try again</button>
+      <button class="btn" id="wrongOnlyBtn" style="padding:14px">Retry the missed ones</button>
+      <button class="btn" id="homeBtn2" style="padding:14px">Start over</button>
+    </div>
+  </section>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $ = function (id) { return document.getElementById(id); };
+
+  let pairs = [];        // { a, b }
+  let dir = 'ab', mode = 'list';
+  let quiz = [], idx = 0, score = 0, wrong = [], answered = false;
+  let fontSize = 20, listRevealed = true;
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1700);
+  }
+
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* ---------- 파싱 ---------- */
+  // 슬래시가 기본이고, 없으면 탭이나 쉼표도 받아 준다. 슬래시가 여러 개면 첫 번째만 구분자로 본다
+  function parse(text) {
+    const out = [], bad = [];
+    String(text).replace(/\r\n?/g, '\n').split('\n').forEach(function (line, i) {
+      const t = line.trim();
+      if (!t || t.charAt(0) === '#') return;
+
+      let sep = -1, ch = '';
+      if (t.indexOf('/') !== -1) { sep = t.indexOf('/'); ch = '/'; }
+      else if (t.indexOf('\t') !== -1) { sep = t.indexOf('\t'); ch = '\t'; }
+      else if (t.indexOf(',') !== -1) { sep = t.indexOf(','); ch = ','; }
+
+      if (sep < 0) { bad.push(i + 1); return; }
+      const a = t.slice(0, sep).trim();
+      const b = t.slice(sep + ch.length).trim();
+      if (!a || !b) { bad.push(i + 1); return; }
+      out.push({ a: a, b: b });
+    });
+    return { pairs: out, bad: bad };
+  }
+
+  function refreshParse() {
+    const r = parse($('raw').value);
+    pairs = r.pairs;
+    $('parseInfo').textContent = pairs.length
+      ? pairs.length + ' entries' + (r.bad.length ? ' · ' + r.bad.length + ' lines skipped' : '')
+      : '';
+    $('totalCnt').textContent = pairs.length;
+    return r;
+  }
+
+  $('raw').addEventListener('input', refreshParse);
+
+  /* ---------- 파일 ---------- */
+  const drop = $('drop');
+  $('fileBtn').addEventListener('click', function () { $('picker').click(); });
+  $('picker').addEventListener('change', function (ev) {
+    if (ev.target.files && ev.target.files[0]) readFile(ev.target.files[0]);
+    $('picker').value = '';
+  });
+  function readFile(f) {
+    const r = new FileReader();
+    r.onload = function (e) {
+      $('raw').value = String(e.target.result);
+      refreshParse();
+      toast(f.name + ' loaded');
+    };
+    r.onerror = function () { toast('That file could not be read'); };
+    r.readAsText(f, 'UTF-8');
+  }
+  ['dragenter', 'dragover'].forEach(function (t) {
+    drop.addEventListener(t, function (ev) { ev.preventDefault(); drop.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    drop.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && drop.contains(ev.relatedTarget)) return;
+      drop.classList.remove('over');
+    });
+  });
+  drop.addEventListener('drop', function (ev) {
+    const f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) { if (!drop.contains(ev.target)) ev.preventDefault(); });
+  });
+
+  $('sampleBtn').addEventListener('click', function () {
+    $('raw').value =
+      'ubiquitous / present everywhere\nmitigate / make less severe\n' +
+      'prudent / showing care for the future\ncandid / honest and direct\n' +
+      'resilient / able to recover quickly\nambiguous / open to more than one meaning\n' +
+      'concise / brief but complete\nviable / able to work successfully\n' +
+      'redundant / no longer needed\ncoherent / logical and consistent';
+    refreshParse();
+  });
+
+  /* ---------- 화면 전환 ---------- */
+  function go(step) {
+    ['step1', 'step2', 'step3', 'result'].forEach(function (s) {
+      $(s).style.display = (s === step) ? 'block' : 'none';
+    });
+    $('homeBtn').style.display = step === 'step1' ? 'none' : 'inline-block';
+    window.scrollTo(0, 0);
+  }
+
+  $('toStep2').addEventListener('click', function () {
+    const r = refreshParse();
+    if (!pairs.length) { toast('Enter at least one line'); return; }
+    if (r.bad.length) toast(r.bad.length + ' lines had no separator and were skipped');
+    $('count').value = pairs.length;
+    $('count').max = pairs.length;
+    go('step2');
+  });
+  $('backTo1').addEventListener('click', function () { go('step1'); });
+  $('homeBtn').addEventListener('click', function () { go('step1'); });
+  $('homeBtn2').addEventListener('click', function () { go('step1'); });
+
+  document.querySelectorAll('#dirSeg .pick').forEach(function (b) {
+    b.addEventListener('click', function () {
+      dir = b.dataset.dir;
+      document.querySelectorAll('#dirSeg .pick').forEach(function (x) { x.classList.toggle('on', x === b); });
+    });
+  });
+  document.querySelectorAll('#modeSeg .pick').forEach(function (b) {
+    b.addEventListener('click', function () {
+      mode = b.dataset.mode;
+      document.querySelectorAll('#modeSeg .pick').forEach(function (x) { x.classList.toggle('on', x === b); });
+    });
+  });
+
+  function syncFont(v) {
+    fontSize = v;
+    $('fsRange').value = v; $('fsRange2').value = v;
+    $('fsVal').textContent = v + 'px';
+    applyFont();
+  }
+  function applyFont() {
+    document.querySelectorAll('[data-fs]').forEach(function (el) {
+      const scale = parseFloat(el.dataset.fs);
+      el.style.fontSize = Math.round(fontSize * scale) + 'px';
+    });
+    const fw = $('flip');
+    if (fw) fw.style.height = Math.max(200, fontSize * 8) + 'px';
+  }
+  $('fsRange').addEventListener('input', function () { syncFont(parseInt(this.value, 10)); });
+  $('fsRange2').addEventListener('input', function () { syncFont(parseInt(this.value, 10)); });
+
+  /* ---------- 문제 만들기 ---------- */
+  // 방향에 따라 문제와 정답을 정한다. 랜덤이면 문항마다 동전을 던진다
+  function buildQuiz(source) {
+    const base = source || pairs;
+    let n = parseInt($('count').value, 10);
+    if (isNaN(n) || n <= 0) n = base.length;
+    n = Math.min(n, base.length);
+
+    const picked = shuffle(base.slice()).slice(0, n);
+    return picked.map(function (p) {
+      const ab = dir === 'rand' ? (Math.random() < 0.5) : (dir === 'ab');
+      return {
+        q: ab ? p.a : p.b,
+        ans: ab ? p.b : p.a,
+        side: ab ? 'A→B' : 'B→A',
+        pair: p
+      };
+    });
+  }
+
+  $('startBtn').addEventListener('click', function () {
+    if (!pairs.length) { toast('There are no entries'); return; }
+    quiz = buildQuiz();
+    if (!quiz.length) { toast('Check the number of questions'); return; }
+    idx = 0; score = 0; wrong = []; answered = false; listRevealed = true;
+    go('step3');
+    render();
+  });
+
+  /* ---------- 진행 표시 ---------- */
+  function setProgress() {
+    const total = quiz.length;
+    const cur = Math.min(idx + 1, total);
+    $('progress').textContent = (mode === 'list' ? total + ' entries' : cur + ' / ' + total);
+    $('barFill').style.width = (mode === 'list' ? 100 : (idx / total) * 100) + '%';
+  }
+
+  /* ---------- 렌더링 ---------- */
+  function render() {
+    setProgress();
+    const stage = $('stage'), nav = $('navBtns');
+    stage.innerHTML = ''; nav.innerHTML = '';
+
+    if (mode === 'list') return renderList(stage, nav);
+    if (mode === 'flash') return renderFlash(stage, nav);
+    return renderQuiz(stage, nav);
+  }
+
+  function renderList(stage, nav) {
+    const box = document.createElement('div');
+    box.className = 'panel';
+    box.style.overflow = 'hidden';
+
+    quiz.forEach(function (item, i) {
+      const row = document.createElement('div');
+      row.className = 'listRow' + (listRevealed ? '' : ' hidden');
+      row.innerHTML =
+        '<span class="mono" style="color:var(--dim); font-size:11px; width:26px; flex:none">' + (i + 1) + '</span>' +
+        '<span class="q" data-fs="1">' + esc(item.q) + '</span>' +
+        '<span class="a" data-fs="0.95">' + esc(item.ans) + '</span>';
+      // 가려진 상태에서 누르면 그 줄만 보여 준다
+      row.addEventListener('click', function () { row.classList.remove('hidden'); });
+      box.appendChild(row);
+    });
+    stage.appendChild(box);
+
+    const b1 = document.createElement('button');
+    b1.className = 'btn';
+    b1.style.padding = '14px';
+    b1.textContent = listRevealed ? 'Hide meanings' : 'Show all meanings';
+    b1.addEventListener('click', function () { listRevealed = !listRevealed; render(); });
+
+    const b2 = document.createElement('button');
+    b2.className = 'btn';
+    b2.style.padding = '14px';
+    b2.textContent = 'Shuffle';
+    b2.addEventListener('click', function () { shuffle(quiz); render(); });
+
+    nav.appendChild(b1); nav.appendChild(b2);
+    applyFont();
+  }
+
+  function renderFlash(stage, nav) {
+    const item = quiz[idx];
+    const wrap = document.createElement('div');
+    wrap.id = 'flipWrap';
+
+    const card = document.createElement('div');
+    card.id = 'flip';
+    card.innerHTML =
+      '<div class="side a"><span class="sideTag">QUESTION</span>' +
+        '<div data-fs="1.35" style="font-weight:700">' + esc(item.q) + '</div>' +
+        '<span class="sideTag" style="opacity:.7">Tap to flip</span></div>' +
+      '<div class="side b"><span class="sideTag">ANSWER</span>' +
+        '<div data-fs="1.35" style="font-weight:700; color:var(--accent)">' + esc(item.ans) + '</div>' +
+        '<span class="sideTag" style="opacity:.7">' + item.side + '</span></div>';
+    card.addEventListener('click', function () { card.classList.toggle('flipped'); });
+
+    wrap.appendChild(card);
+    stage.appendChild(wrap);
+
+    const prev = document.createElement('button');
+    prev.className = 'btn'; prev.style.padding = '14px'; prev.textContent = '← Previous';
+    prev.disabled = idx === 0;
+    prev.addEventListener('click', function () { if (idx > 0) { idx--; render(); } });
+
+    const next = document.createElement('button');
+    next.className = 'btn p'; next.style.padding = '14px';
+    next.textContent = idx === quiz.length - 1 ? 'Back to the start' : 'Next →';
+    next.addEventListener('click', function () {
+      if (idx < quiz.length - 1) { idx++; render(); }
+      else { idx = 0; render(); toast('That is the full set'); }
+    });
+
+    nav.appendChild(prev); nav.appendChild(next);
+    applyFont();
+  }
+
+  function renderQuiz(stage, nav) {
+    const item = quiz[idx];
+    answered = false;
+
+    const qBox = document.createElement('div');
+    qBox.className = 'panel';
+    qBox.style.cssText = 'padding:26px 20px; text-align:center; margin-bottom:12px';
+    qBox.innerHTML =
+      '<span class="sideTag" style="font-size:11px; color:var(--dim)">' + item.side + '</span>' +
+      '<div data-fs="1.3" style="font-weight:700; margin-top:8px; word-break:keep-all">' + esc(item.q) + '</div>';
+    stage.appendChild(qBox);
+
+    if (mode === 'mcq') buildChoices(stage, item);
+    else buildInput(stage, item);
+
+    const skip = document.createElement('button');
+    skip.className = 'btn'; skip.style.padding = '14px'; skip.textContent = 'Not sure · show the answer';
+    skip.addEventListener('click', function () { judge(item, '', null, true); });
+    nav.appendChild(skip);
+    applyFont();
+  }
+
+  // 오답 보기는 같은 방향의 다른 정답들에서 가져온다
+  function buildChoices(stage, item) {
+    const pool = quiz.filter(function (x) { return x.ans !== item.ans; })
+                     .map(function (x) { return x.ans; });
+    const extra = pairs.map(function (p) { return item.side === 'A→B' ? p.b : p.a; })
+                       .filter(function (v) { return v !== item.ans; });
+    const cand = shuffle(pool.concat(extra).filter(function (v, i, arr) { return arr.indexOf(v) === i; }));
+    const opts = shuffle([item.ans].concat(cand.slice(0, 3)));
+
+    const box = document.createElement('div');
+    box.style.cssText = 'display:grid; gap:9px';
+    opts.forEach(function (o, i) {
+      const b = document.createElement('button');
+      b.className = 'choice';
+      b.dataset.v = o;
+      b.innerHTML = '<span class="n">' + (i + 1) + '</span><span data-fs="0.85">' + esc(o) + '</span>';
+      b.addEventListener('click', function () { judge(item, o, b); });
+      box.appendChild(b);
+    });
+    stage.appendChild(box);
+  }
+
+  function buildInput(stage, item) {
+    const box = document.createElement('div');
+    box.style.cssText = 'display:flex; gap:8px';
+    const inp = document.createElement('input');
+    inp.className = 'fld';
+    inp.id = 'shortInput';
+    inp.placeholder = 'Type the answer and press Enter';
+    inp.autocomplete = 'off';
+    inp.style.flex = '1';
+    inp.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); judge(item, inp.value, null); }
+    });
+
+    const b = document.createElement('button');
+    b.className = 'btn p'; b.style.padding = '0 20px'; b.textContent = 'Check';
+    b.addEventListener('click', function () { judge(item, inp.value, null); });
+
+    box.appendChild(inp); box.appendChild(b);
+    stage.appendChild(box);
+
+    const fb = document.createElement('p');
+    fb.id = 'shortFb';
+    fb.style.cssText = 'margin:12px 0 0; text-align:center; font-size:14px; min-height:22px';
+    stage.appendChild(fb);
+
+    setTimeout(function () { inp.focus(); }, 30);
+  }
+
+  // 채점은 공백·대소문자·괄호 안 설명을 무시하고 비교한다. 쉼표로 나눈 여러 답도 인정한다
+  function norm(s) {
+    return String(s).toLowerCase()
+      .replace(/\([^)]*\)/g, '')
+      .replace(/[\s.,!?~·'"]/g, '')
+      .trim();
+  }
+  function isRight(input, answer) {
+    const a = norm(input);
+    if (!a) return false;
+    if (a === norm(answer)) return true;
+    return String(answer).split(/[,/]/).some(function (alt) { return norm(alt) === a; });
+  }
+
+  function judge(item, value, btn, skipped) {
+    if (answered) return;
+    answered = true;
+
+    const ok = !skipped && isRight(value, item.ans);
+    if (ok) score++;
+    else wrong.push({ q: item.q, my: skipped ? '(skipped)' : (String(value).trim() || '(blank)'), ans: item.ans });
+
+    if (mode === 'mcq') {
+      document.querySelectorAll('.choice').forEach(function (c) {
+        if (c.dataset.v === item.ans) c.classList.add('ok');
+        else if (btn && c === btn) c.classList.add('no');
+        c.style.pointerEvents = 'none';
+      });
+    } else {
+      const fb = $('shortFb'), inp = $('shortInput');
+      if (inp) { inp.disabled = true; inp.style.borderColor = ok ? 'var(--ok)' : 'var(--no)'; }
+      if (fb) {
+        fb.style.color = ok ? 'var(--ok)' : 'var(--no)';
+        fb.textContent = ok ? 'Correct' : 'Answer · ' + item.ans;
+      }
+    }
+
+    setTimeout(function () {
+      idx++;
+      if (idx >= quiz.length) finish();
+      else render();
+    }, ok ? 700 : 1200);
+  }
+
+  /* ---------- 결과 ---------- */
+  function finish() {
+    go('result');
+    $('score').textContent = score + ' / ' + quiz.length;
+    const rate = quiz.length ? Math.round(score / quiz.length * 100) : 0;
+    $('score').style.color = rate >= 80 ? 'var(--ok)' : rate >= 50 ? 'var(--ink)' : 'var(--no)';
+    $('scoreSub').textContent = rate + '% correct · ' +
+      (rate === 100 ? 'All correct' : 'review the ' + wrong.length + ' you missed');
+
+    const body = $('wrongBody');
+    body.innerHTML = '';
+    $('wrongPanel').style.display = wrong.length ? 'block' : 'none';
+    $('wrongOnlyBtn').style.display = wrong.length ? 'block' : 'none';
+
+    wrong.forEach(function (w) {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td style="font-weight:600">' + esc(w.q) + '</td>' +
+        '<td style="color:var(--no)">' + esc(w.my) + '</td>' +
+        '<td style="color:var(--ok); font-weight:600">' + esc(w.ans) + '</td>';
+      body.appendChild(tr);
+    });
+  }
+
+  $('againBtn').addEventListener('click', function () {
+    quiz = buildQuiz();
+    idx = 0; score = 0; wrong = [];
+    go('step3'); render();
+  });
+
+  $('wrongOnlyBtn').addEventListener('click', function () {
+    if (!wrong.length) return;
+    // 틀린 문제의 원래 짝만 모아 다시 낸다
+    const set = {};
+    wrong.forEach(function (w) { set[w.q + '||' + w.ans] = true; });
+    const subset = quiz.filter(function (q) { return set[q.q + '||' + q.ans]; })
+                       .map(function (q) { return q.pair; });
+    const uniq = subset.filter(function (v, i, arr) { return arr.indexOf(v) === i; });
+    if (!uniq.length) return;
+
+    const keep = $('count').value;
+    $('count').value = uniq.length;
+    quiz = buildQuiz(uniq);
+    $('count').value = keep;
+
+    idx = 0; score = 0; wrong = [];
+    go('step3'); render();
+    toast('Retrying the ones you missed');
+  });
+
+  $('themeBtn').addEventListener('click', function () {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    this.textContent = next === 'light' ? 'Dark' : 'Light';
+  });
+
+  // 객관식은 1~4 숫자키로도 고를 수 있다
+  document.addEventListener('keydown', function (ev) {
+    if ($('step3').style.display === 'none') return;
+    if (mode !== 'mcq' || answered) return;
+    if (ev.key >= '1' && ev.key <= '4') {
+      const list = document.querySelectorAll('.choice');
+      const b = list[parseInt(ev.key, 10) - 1];
+      if (b) b.click();
+    }
+  });
+
+  refreshParse();
+  syncFont(20);
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Recognising something is not the same as knowing it</h2>
+<p>Read a vocabulary list enough times and it starts to feel familiar. Then you try to recall a meaning and nothing comes. Familiarity and retrieval are different skills, and only one of them is what you need in an exam or a conversation.</p>
+<p>What fixes it is pulling the answer out yourself. This tool takes a list you have written and turns it into cards to flip or questions to answer, in either direction, so you practise recall rather than recognition.</p>
+<h2>When to use it</h2><dl>
+<dt>Exam vocabulary</dt><dd>Language tests and professional certifications where a fixed body of terms has to be memorised.</dd>
+<dt>A new field</dt><dd>Building the vocabulary of a domain you have just started working in.</dd>
+<dt>Course revision</dt><dd>Turning the key concepts from a lecture into question and answer form.</dd>
+<dt>Helping a child study</dt><dd>Load their word list and work through it together. The text size can be increased.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Enter your list as <strong>term / meaning</strong>, one per line.</li>
+<li>Choose a study mode: list, flashcards, multiple choice or typed answers.</li>
+<li>Pick a direction: term to meaning, meaning to term, or mixed.</li>
+<li>Set the number of questions and start.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Direction</dt><dd>Practising one direction only leaves the reverse weak. Once the material is familiar, mixed is the more useful setting.</dd>
+<dt>Study mode</dt><dd>Flashcards suit first exposure, multiple choice checks recognition, and typing the answer is the hardest and the most effective.</dd>
+<dt>Shuffle and question count</dt><dd>Stops you memorising the order and keeps each session to a manageable size.</dd>
+<dt>Text size and theme</dt><dd>Adjustable at any point, including mid-session.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>How do I format the list</dt><dd>One per line as "term / meaning". Comma and tab separated lines are recognised too, so pasting two columns from a spreadsheet works.</dd>
+<dt>Is my list saved</dt><dd>It stays in your browser, so it is there when you come back on the same device. Clearing browser data removes it, so keep a copy of anything important.</dd>
+<dt>Can I import from a spreadsheet</dt><dd>Copy the two columns and paste them in. Tab separated text is recognised directly, so no reformatting is needed.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/lifestyle/youtubenote.html">YouTube Timestamp Notes</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/date-calc.html">Date &amp; Age Calculator</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/unit-converter.html">Universal Unit Converter</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/calculator.html">Smart Formula Calculator</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/timezone-dial.html">Time Zone Dial</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I format the list",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One per line as \"term / meaning\". Comma and tab separated lines are recognised too, so pasting two columns from a spreadsheet works."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my list saved",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It stays in your browser, so it is there when you come back on the same device. Clearing browser data removes it, so keep a copy of anything important."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I import from a spreadsheet",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copy the two columns and paste them in. Tab separated text is recognised directly, so no reformatting is needed."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+</body>
+</html>

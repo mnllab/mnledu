@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Merge &amp; Split | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Combine PDFs or pull out selected pages without uploading anythin… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/pdfmerge.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdfmerge.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdfmerge.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdfmerge.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/pdfmerge.html" />
+<meta property="og:title" content="PDF Merge &amp; Split · PDF · documents | TOOLKIT" />
+<meta property="og:description" content="Combine PDFs or pull out selected pages without uploading anythin… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="PDF Merge &amp; Split · PDF · documents | TOOLKIT" />
+<meta name="twitter:description" content="Combine PDFs or pull out selected pages without uploading anythin… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PDF Merge & Split",
+  "description": "Combine PDFs or pull out selected pages without uploading anything anywhere.",
+  "url": "https://mnledu.com/en/productivity/pdfmerge.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover:not([disabled]){ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+
+  .tab{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:6px; font-size:13.5px; line-height:1; padding:10px 16px;
+    cursor:pointer; transition:all .12s;
+  }
+  .tab:hover{ color:var(--ink); border-color:#C3CCD6; }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .tab:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  .drop{
+    border:2px dashed #CBD4DE; border-radius:12px; background:#fff;
+    padding:40px 24px; text-align:center; cursor:pointer;
+    transition:border-color .14s, background .14s;
+  }
+  .drop:hover{ border-color:var(--steel); background:#FAFCFD; }
+  .drop.over{ border-color:var(--steel); background:#EDF4FA; }
+  .drop:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+
+  /* 파일 행 */
+  .row{
+    display:flex; align-items:center; gap:12px;
+    border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:11px 13px; transition:border-color .12s, box-shadow .12s, opacity .12s;
+  }
+  .row.dragging{ opacity:.4; }
+  .row.dropTarget{ border-color:var(--steel); box-shadow:0 0 0 2px rgba(44,107,160,.12); }
+  .row .grip{ cursor:grab; color:#B0BAC5; flex:none; }
+  .row .grip:active{ cursor:grabbing; }
+  .row .nm{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13.5px; }
+  .row .meta{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px; color:var(--muted); }
+  .iconBtn{
+    width:26px; height:26px; border-radius:5px; border:1px solid var(--hair);
+    background:#fff; color:var(--muted); font-size:12px; line-height:1; cursor:pointer; flex:none;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .iconBtn:hover:not([disabled]){ border-color:var(--steel); color:var(--steel); }
+  .iconBtn[disabled]{ opacity:.3; cursor:not-allowed; }
+  .iconBtn.del:hover{ border-color:var(--alert); color:#fff; background:var(--alert); }
+
+  .fld{
+    border:1px solid var(--hair); border-radius:6px; background:#fff;
+    padding:10px 12px; font-size:14px; color:var(--ink); outline:none; width:100%;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    transition:border-color .12s;
+  }
+  .fld:focus{ border-color:var(--steel); }
+
+  .opt{ display:inline-flex; align-items:center; gap:7px; cursor:pointer; user-select:none; font-size:13px; }
+  .opt input{ accent-color:var(--steel); width:15px; height:15px; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-5">
+    <h1 class="text-[19px] font-semibold tracking-tight">PDF Merge &amp; Split</h1>
+    <p class="mt-1 text-[13px] text-muted">Files are handled inside your browser and never uploaded · no size limit</p>
+  </header>
+
+  <!-- 탭 -->
+  <div class="mb-4 flex flex-wrap gap-2">
+    <button class="tab on" data-tab="merge">Merge</button>
+    <button class="tab" data-tab="split">Extract</button>
+  </div>
+
+  <!-- 병합 -->
+  <section id="tabMerge">
+    <div id="dropMerge" class="drop" tabindex="0" role="button" aria-label="Add PDF files">
+      <svg class="mx-auto mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </svg>
+      <p class="text-[14px] font-medium">Drop the PDFs you want to combine here, or click to add them</p>
+      <p class="mt-1.5 text-[12px] text-muted">You can add several at once</p>
+      <input type="file" id="pickMerge" accept="application/pdf,.pdf" multiple class="hidden">
+    </div>
+
+    <div id="listWrap" class="mt-4 hidden">
+      <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2 text-[12px] text-muted">
+        <span>Files <b id="fileCount" class="num text-ink">0</b> · <b id="pageTotal" class="num text-ink">0</b> pages</span>
+        <span>Drag a row or use the arrows to reorder</span>
+      </div>
+      <div id="fileList" class="grid gap-2"></div>
+
+      <div class="mt-4 flex flex-wrap items-center justify-end gap-2">
+        <button id="clearMerge" class="btn">Clear all</button>
+        <button id="mergeBtn" class="btn btn-primary">Merge and download</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 추출 -->
+  <section id="tabSplit" class="hidden">
+    <div id="dropSplit" class="drop" tabindex="0" role="button" aria-label="Choose a PDF file">
+      <svg class="mx-auto mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="9" y1="15" x2="15" y2="15"></line>
+      </svg>
+      <p class="text-[14px] font-medium">Add the PDF you want to take pages from</p>
+      <p class="mt-1.5 text-[12px] text-muted">Drop it here or click to choose</p>
+      <input type="file" id="pickSplit" accept="application/pdf,.pdf" class="hidden">
+    </div>
+
+    <div id="splitPanel" class="mt-4 hidden rounded-lg border border-hair bg-white px-5 py-4">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-hair pb-3">
+        <span id="splitName" class="text-[13.5px] font-medium"></span>
+        <span id="splitMeta" class="num text-[12px] text-muted"></span>
+      </div>
+
+      <label for="ranges" class="mb-1.5 block text-[12px] text-muted">Pages to extract</label>
+      <input id="ranges" class="fld" placeholder="e.g. 1-3, 5, 7-10" autocomplete="off">
+
+      <div class="mt-2 flex flex-wrap items-center gap-2">
+        <button class="btn px-2.5 py-1.5 text-[12px]" data-quick="all">All</button>
+        <button class="btn px-2.5 py-1.5 text-[12px]" data-quick="odd">Odd pages</button>
+        <button class="btn px-2.5 py-1.5 text-[12px]" data-quick="even">Even pages</button>
+        <button class="btn px-2.5 py-1.5 text-[12px]" data-quick="half1">First half</button>
+        <button class="btn px-2.5 py-1.5 text-[12px]" data-quick="half2">Second half</button>
+      </div>
+
+      <p id="rangeInfo" class="mt-2.5 text-[12.5px] text-muted"></p>
+
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-hair pt-4">
+        <label class="opt"><input type="checkbox" id="splitEach">Save each range as a separate file</label>
+        <div class="flex flex-wrap gap-2">
+          <button id="clearSplit" class="btn">Clear</button>
+          <button id="splitBtn" class="btn btn-primary">Extract and download</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p id="errBox" class="mt-4 hidden rounded-lg border border-hair bg-white px-5 py-3 text-[12.5px] leading-relaxed text-alert"></p>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const PDFLib = window.PDFLib;
+
+  const tabMerge  = document.getElementById('tabMerge');
+  const tabSplit  = document.getElementById('tabSplit');
+  const listWrap  = document.getElementById('listWrap');
+  const fileList  = document.getElementById('fileList');
+  const fileCount = document.getElementById('fileCount');
+  const pageTotal = document.getElementById('pageTotal');
+  const errBox    = document.getElementById('errBox');
+
+  const splitPanel= document.getElementById('splitPanel');
+  const splitName = document.getElementById('splitName');
+  const splitMeta = document.getElementById('splitMeta');
+  const rangesEl  = document.getElementById('ranges');
+  const rangeInfo = document.getElementById('rangeInfo');
+  const splitEach = document.getElementById('splitEach');
+
+  let files = [];        // { name, size, bytes, pages }
+  let splitDoc = null;   // { name, bytes, pages }
+
+  /* ---------- 토스트 · 오류 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2200);
+  }
+  function showErr(msg) { errBox.textContent = msg; errBox.classList.remove('hidden'); }
+  function clearErr() { errBox.textContent = ''; errBox.classList.add('hidden'); }
+
+  if (!PDFLib) {
+    showErr('The PDF library could not be loaded. Check your connection and reload. (pdf-lib is fetched from a CDN.)');
+  }
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1024 / 1024).toFixed(1) + ' MB';
+  }
+  function stamp() {
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes());
+  }
+  function download(bytes, name) {
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  }
+
+  // 암호가 걸린 PDF도 열어 본다. 열리지 않으면 파일별로 이유를 알린다
+  async function readPdf(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const doc = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+    return { bytes: bytes, pages: doc.getPageCount() };
+  }
+
+  /* ---------- 탭 ---------- */
+  document.querySelectorAll('.tab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('on', x === b); });
+      const merge = b.dataset.tab === 'merge';
+      tabMerge.classList.toggle('hidden', !merge);
+      tabSplit.classList.toggle('hidden', merge);
+      clearErr();
+    });
+  });
+
+  /* ---------- 공통 : 드롭존 ---------- */
+  function bindDrop(zone, picker, handler) {
+    zone.addEventListener('click', function () { picker.click(); });
+    zone.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+    });
+    picker.addEventListener('change', function (ev) {
+      if (ev.target.files && ev.target.files.length) handler(ev.target.files);
+      picker.value = '';
+    });
+    ['dragenter', 'dragover'].forEach(function (t) {
+      zone.addEventListener(t, function (ev) { ev.preventDefault(); zone.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (t) {
+      zone.addEventListener(t, function (ev) {
+        ev.preventDefault();
+        if (t === 'dragleave' && zone.contains(ev.relatedTarget)) return;
+        zone.classList.remove('over');
+      });
+    });
+    zone.addEventListener('drop', function (ev) {
+      if (ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files.length) handler(ev.dataTransfer.files);
+    });
+  }
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) {
+      if (ev.target.closest && ev.target.closest('.drop')) return;
+      ev.preventDefault();
+    });
+  });
+
+  function isPdf(f) {
+    return f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+  }
+
+  /* ---------- 병합 ---------- */
+  async function addMergeFiles(list) {
+    clearErr();
+    const arr = Array.from(list);
+    const bad = [];
+
+    for (let i = 0; i < arr.length; i++) {
+      const f = arr[i];
+      if (!isPdf(f)) { bad.push(f.name + ' (not a PDF)'); continue; }
+      try {
+        const info = await readPdf(f);
+        files.push({ name: f.name, size: f.size, bytes: info.bytes, pages: info.pages });
+      } catch (e) {
+        bad.push(f.name + ' (' + (e && e.message ? e.message.slice(0, 60) : 'could not be read') + ')');
+      }
+    }
+
+    renderList();
+    if (bad.length) showErr('These files could not be added: ' + bad.join(' · '));
+  }
+
+  function renderList() {
+    fileList.innerHTML = '';
+
+    files.forEach(function (f, i) {
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.draggable = true;
+      row.dataset.i = i;
+
+      const grip = document.createElement('span');
+      grip.className = 'grip';
+      grip.textContent = '⠿';
+      grip.title = 'Drag to reorder';
+
+      const idx = document.createElement('span');
+      idx.className = 'meta';
+      idx.style.flex = 'none';
+      idx.textContent = String(i + 1).padStart(2, '0');
+
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.style.flex = '1';
+      nm.textContent = f.name;
+      nm.title = f.name;
+
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.style.flex = 'none';
+      meta.textContent = f.pages + ' pages · ' + fmtSize(f.size);
+
+      const up = document.createElement('button');
+      up.className = 'iconBtn';
+      up.textContent = '↑';
+      up.disabled = i === 0;
+      up.title = 'Move up';
+      up.addEventListener('click', function () { move(i, i - 1); });
+
+      const down = document.createElement('button');
+      down.className = 'iconBtn';
+      down.textContent = '↓';
+      down.disabled = i === files.length - 1;
+      down.title = 'Move down';
+      down.addEventListener('click', function () { move(i, i + 1); });
+
+      const del = document.createElement('button');
+      del.className = 'iconBtn del';
+      del.textContent = '×';
+      del.title = 'Remove';
+      del.addEventListener('click', function () { files.splice(i, 1); renderList(); });
+
+      [grip, idx, nm, meta, up, down, del].forEach(function (el) { row.appendChild(el); });
+      fileList.appendChild(row);
+    });
+
+    listWrap.classList.toggle('hidden', files.length === 0);
+    fileCount.textContent = files.length;
+    pageTotal.textContent = files.reduce(function (s, f) { return s + f.pages; }, 0);
+  }
+
+  function move(from, to) {
+    if (to < 0 || to >= files.length) return;
+    const item = files.splice(from, 1)[0];
+    files.splice(to, 0, item);
+    renderList();
+  }
+
+  // 행 Drag to reorder
+  let dragIdx = null;
+  fileList.addEventListener('dragstart', function (ev) {
+    const row = ev.target.closest('.row');
+    if (!row) return;
+    dragIdx = parseInt(row.dataset.i, 10);
+    row.classList.add('dragging');
+    ev.dataTransfer.effectAllowed = 'move';
+    try { ev.dataTransfer.setData('text/plain', String(dragIdx)); } catch (e) {}
+  });
+  fileList.addEventListener('dragover', function (ev) {
+    ev.preventDefault();
+    const row = ev.target.closest('.row');
+    document.querySelectorAll('.row').forEach(function (r) { r.classList.remove('dropTarget'); });
+    if (row) row.classList.add('dropTarget');
+  });
+  fileList.addEventListener('drop', function (ev) {
+    ev.preventDefault();
+    const row = ev.target.closest('.row');
+    document.querySelectorAll('.row').forEach(function (r) { r.classList.remove('dropTarget', 'dragging'); });
+    if (!row || dragIdx === null) return;
+    const to = parseInt(row.dataset.i, 10);
+    if (to !== dragIdx) move(dragIdx, to);
+    dragIdx = null;
+  });
+  fileList.addEventListener('dragend', function () {
+    document.querySelectorAll('.row').forEach(function (r) { r.classList.remove('dropTarget', 'dragging'); });
+    dragIdx = null;
+  });
+
+  document.getElementById('mergeBtn').addEventListener('click', async function () {
+    if (!PDFLib) return;
+    if (files.length < 1) { toast('Add the files you want to combine'); return; }
+    if (files.length === 1 && !confirm('There is only one file. Save it as is?')) return;
+
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Merging…';
+    clearErr();
+
+    try {
+      const out = await PDFLib.PDFDocument.create();
+      for (let i = 0; i < files.length; i++) {
+        const src = await PDFLib.PDFDocument.load(files[i].bytes, { ignoreEncryption: true });
+        const pages = await out.copyPages(src, src.getPageIndices());
+        pages.forEach(function (p) { out.addPage(p); });
+      }
+      const bytes = await out.save();
+      download(bytes, 'merged_' + stamp() + '.pdf');
+      toast('Merged ' + files.length + ' files');
+    } catch (e) {
+      showErr('Merge failed: ' + (e && e.message ? e.message : 'unknown error'));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Merge and download';
+    }
+  });
+
+  document.getElementById('clearMerge').addEventListener('click', function () {
+    if (!files.length || confirm('This removes every file you added. Continue?')) {
+      files = [];
+      renderList();
+      clearErr();
+    }
+  });
+
+  bindDrop(document.getElementById('dropMerge'), document.getElementById('pickMerge'), addMergeFiles);
+
+  /* ---------- 추출 ---------- */
+  async function setSplitFile(list) {
+    clearErr();
+    const f = Array.from(list)[0];
+    if (!f) return;
+    if (!isPdf(f)) { showErr('Only PDF files can be added.'); return; }
+
+    try {
+      const info = await readPdf(f);
+      splitDoc = { name: f.name, bytes: info.bytes, pages: info.pages };
+      splitName.textContent = f.name;
+      splitMeta.textContent = info.pages + ' pages · ' + fmtSize(f.size);
+      splitPanel.classList.remove('hidden');
+      if (!rangesEl.value.trim()) rangesEl.value = '1-' + Math.min(info.pages, 3);
+      updateRangeInfo();
+      rangesEl.focus();
+    } catch (e) {
+      showErr('Could not read that PDF: ' + (e && e.message ? e.message : 'unknown error'));
+    }
+  }
+
+  bindDrop(document.getElementById('dropSplit'), document.getElementById('pickSplit'), setSplitFile);
+
+  // "1-3, 5, 7-10" 형태를 페이지 번호 목록으로. 5- 는 끝까지, -3 은 처음부터
+  function parseRanges(input, max) {
+    const groups = [], bad = [], over = [];
+
+    String(input).split(/[,\n;]/).forEach(function (tok) {
+      const t = tok.trim();
+      if (!t) return;
+      let m;
+      if ((m = t.match(/^(\d+)\s*[-~–]\s*(\d+)$/))) {
+        let a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+        if (a > b) { const s = a; a = b; b = s; }
+        groups.push({ from: a, to: b, label: t });
+      } else if ((m = t.match(/^(\d+)\s*[-~–]$/))) {
+        groups.push({ from: parseInt(m[1], 10), to: max, label: t });
+      } else if ((m = t.match(/^[-~–]\s*(\d+)$/))) {
+        groups.push({ from: 1, to: parseInt(m[1], 10), label: t });
+      } else if (/^\d+$/.test(t)) {
+        const n = parseInt(t, 10);
+        groups.push({ from: n, to: n, label: t });
+      } else if (/^(all|전체)$/i.test(t)) {
+        groups.push({ from: 1, to: max, label: t });
+      } else {
+        bad.push(t);
+      }
+    });
+
+    const clean = [], flat = [];
+    groups.forEach(function (g) {
+      if (g.from < 1 || g.to > max || g.from > max) over.push(g.label);
+      const from = Math.max(1, g.from), to = Math.min(max, g.to);
+      if (from > to) return;
+      const pages = [];
+      for (let i = from; i <= to; i++) { pages.push(i); flat.push(i); }
+      clean.push({ label: g.label, pages: pages });
+    });
+
+    return { groups: clean, pages: flat, bad: bad, over: over };
+  }
+
+  function updateRangeInfo() {
+    if (!splitDoc) { rangeInfo.textContent = ''; return; }
+    const r = parseRanges(rangesEl.value, splitDoc.pages);
+    const msgs = [];
+
+    if (r.pages.length) msgs.push(r.pages.length + ' pages selected');
+    else msgs.push('No pages selected');
+    if (r.bad.length) msgs.push('Not understood: ' + r.bad.join(', '));
+    if (r.over.length) msgs.push('Out of range: ' + r.over.join(', ') + ' (this document has ' + splitDoc.pages + ' pages)');
+
+    rangeInfo.textContent = msgs.join(' · ');
+    rangeInfo.style.color = (r.bad.length || r.over.length || !r.pages.length) ? 'var(--alert)' : 'var(--muted)';
+  }
+
+  rangesEl.addEventListener('input', updateRangeInfo);
+  splitEach.addEventListener('change', updateRangeInfo);
+
+  document.querySelectorAll('[data-quick]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (!splitDoc) return;
+      const n = splitDoc.pages;
+      const k = b.dataset.quick;
+      if (k === 'all') rangesEl.value = '1-' + n;
+      else if (k === 'half1') rangesEl.value = '1-' + Math.ceil(n / 2);
+      else if (k === 'half2') rangesEl.value = (Math.ceil(n / 2) + 1) + '-' + n;
+      else {
+        const arr = [];
+        for (let i = (k === 'odd' ? 1 : 2); i <= n; i += 2) arr.push(i);
+        rangesEl.value = arr.join(', ');
+      }
+      updateRangeInfo();
+    });
+  });
+
+  document.getElementById('splitBtn').addEventListener('click', async function () {
+    if (!PDFLib || !splitDoc) { toast('Add a PDF first'); return; }
+
+    const r = parseRanges(rangesEl.value, splitDoc.pages);
+    if (!r.pages.length) { toast('Enter the pages you want to extract'); return; }
+
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Extracting…';
+    clearErr();
+
+    try {
+      const src = await PDFLib.PDFDocument.load(splitDoc.bytes, { ignoreEncryption: true });
+      const base = splitDoc.name.replace(/\.pdf$/i, '');
+
+      if (splitEach.checked && r.groups.length > 1) {
+        // 범위마다 별도 파일로
+        for (let g = 0; g < r.groups.length; g++) {
+          const grp = r.groups[g];
+          const out = await PDFLib.PDFDocument.create();
+          const copied = await out.copyPages(src, grp.pages.map(function (p) { return p - 1; }));
+          copied.forEach(function (p) { out.addPage(p); });
+          const bytes = await out.save();
+          download(bytes, base + '_' + grp.label.replace(/\s/g, '') + '.pdf');
+        }
+        toast('Saved as ' + r.groups.length + ' files');
+      } else {
+        const out = await PDFLib.PDFDocument.create();
+        const copied = await out.copyPages(src, r.pages.map(function (p) { return p - 1; }));
+        copied.forEach(function (p) { out.addPage(p); });
+        const bytes = await out.save();
+        download(bytes, base + '_extract_' + stamp() + '.pdf');
+        toast('Extracted ' + r.pages.length + ' pages');
+      }
+    } catch (e) {
+      showErr('Extraction failed: ' + (e && e.message ? e.message : 'unknown error'));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Extract and download';
+    }
+  });
+
+  document.getElementById('clearSplit').addEventListener('click', function () {
+    splitDoc = null;
+    splitPanel.classList.add('hidden');
+    rangesEl.value = '';
+    rangeInfo.textContent = '';
+    clearErr();
+  });
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Combining PDFs without installing anything</h2>
+<p>Applications usually want several supporting documents bundled into a single PDF. The reverse happens too: a long report where only a few pages need to go to someone else.</p>
+<p>The usual answers are a paid desktop application or an unfamiliar website that wants you to upload the file. That second option is worth pausing over, because these documents tend to be exactly the ones you would not want to hand over: bank details, registration certificates, signed contracts. This tool runs in your browser, so the file never leaves your machine.</p>
+<h2>When to use it</h2><dl>
+<dt>Bundling application documents</dt><dd>Combining a registration certificate, bank details and other evidence into one submission file.</dd>
+<dt>Pulling out a few pages</dt><dd>Sending one chapter of a long report rather than the whole thing.</dd>
+<dt>Fixing duplex scans</dt><dd>When a double sided scan came out as separate odd and even files, the odd and even buttons sort it out.</dd>
+<dt>Splitting for email</dt><dd>Halving a PDF that is over an attachment size limit.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Choose <strong>Merge</strong> or <strong>Extract</strong>.</li>
+<li>Drop your files in, or click to select them. For merging, drag the rows to set the order.</li>
+<li>For extraction, type the page range, for example <strong>1-3, 5, 7-10</strong>.</li>
+<li>Press the download button.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>All, odd and even pages</dt><dd>One click shortcuts for common ranges. The odd and even buttons are what you want for a duplex scan that came out in two files.</dd>
+<dt>First half and second half</dt><dd>Splits the document down the middle, usually because of an attachment size limit.</dd>
+<dt>Save each range as a separate file</dt><dd>With several ranges entered, choose whether to get one combined file or one file per range.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Where do my files go</dt><dd>Nowhere. Your browser reads the file, does the work and hands you the result directly. Nothing is uploaded, which is the point when the document contains sensitive material.</dd>
+<dt>Do password protected PDFs work</dt><dd>No. A file with an open password cannot be processed. Remove the password first.</dd>
+<dt>How do I write a page range</dt><dd>Separate entries with commas and use a hyphen for a span. So 1-3, 5, 7-10 means pages 1, 2, 3, 5, 7, 8, 9 and 10.</dd>
+<dt>Is there a file size limit</dt><dd>No fixed limit, since there is no upload. Very large files depend on the memory available to your browser.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/notepad.html">Rich Text Notepad</a></li>
+<li><a href="https://mnledu.com/en/productivity/emailgen.html">Bulk Email Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/templatemerger.html">Template Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/promptmerger.html">AI Prompt Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/listformat.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/textclean.html">Text Cleaner</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where do my files go",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nowhere. Your browser reads the file, does the work and hands you the result directly. Nothing is uploaded, which is the point when the document contains sensitive material."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do password protected PDFs work",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. A file with an open password cannot be processed. Remove the password first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I write a page range",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Separate entries with commas and use a hyphen for a span. So 1-3, 5, 7-10 means pages 1, 2, 3, 5, 7, 8, 9 and 10."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a file size limit",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No fixed limit, since there is no upload. Very large files depend on the memory available to your browser."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+</body>
+</html>

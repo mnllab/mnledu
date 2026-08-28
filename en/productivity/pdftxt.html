@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Line Break Fixer | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Rejoin text copied from a PDF so paragraphs read as paragraphs ag… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/pdftxt.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdftxt.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdftxt.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdftxt.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/pdftxt.html" />
+<meta property="og:title" content="PDF Line Break Fixer · PDF · text | TOOLKIT" />
+<meta property="og:description" content="Rejoin text copied from a PDF so paragraphs read as paragraphs ag… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="PDF Line Break Fixer · PDF · text | TOOLKIT" />
+<meta name="twitter:description" content="Rejoin text copied from a PDF so paragraphs read as paragraphs ag… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PDF Line Break Fixer",
+  "description": "Rejoin text copied from a PDF so paragraphs read as paragraphs again.",
+  "url": "https://mnledu.com/en/productivity/pdftxt.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E5E2DC',
+          canvas: '#F5F4F1'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E5E2DC; --canvas:#F5F4F1;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:inherit; font-size:15px; line-height:1.8;
+    min-height:clamp(300px, 52vh, 620px);
+  }
+  textarea::placeholder{ color:#A8A49D; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#CFC9C0; background:#FCFBFA; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{
+    border:1px solid var(--ink); background:var(--ink); color:#fff;
+  }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+
+  .opt{ display:inline-flex; align-items:center; gap:7px; cursor:pointer; user-select:none; }
+  .opt input{ accent-color:var(--steel); width:15px; height:15px; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">PDF Line Break Fixer</h1>
+      <p class="mt-1 text-[13px] text-muted">Rebuilds broken PDF lines back into paragraphs · nothing is stored</p>
+    </div>
+    <div class="flex shrink-0 items-center gap-2">
+      <button id="sampleBtn" class="btn">Sample</button>
+      <button id="resetBtn" class="btn">Reset</button>
+      <button id="copyBtn" class="btn btn-primary">Copy result</button>
+    </div>
+  </header>
+
+  <!-- 옵션 -->
+  <div class="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-hair bg-white px-5 py-3 text-[13px]">
+    <label class="opt"><input type="checkbox" id="optKo" checked>Join CJK lines without a space</label>
+    <label class="opt"><input type="checkbox" id="optList" checked>Keep line breaks on list and numbered lines</label>
+    <span class="ml-auto flex items-center gap-2 text-muted">
+      <label for="copyFmt">Copy format</label>
+      <select id="copyFmt" class="btn py-1.5 text-[13px]">
+        <option value="blank" selected>Keep a blank line between paragraphs</option>
+        <option value="tight">Paragraphs, no blank lines</option>
+        <option value="single">Everything as one paragraph</option>
+      </select>
+    </span>
+  </div>
+
+  <!-- 본문 -->
+  <div class="grid gap-4 md:grid-cols-2">
+
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">Input</span>
+        <button id="clearInput" class="btn px-2.5 py-1.5 text-[12px]">Clear</button>
+      </div>
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="input" placeholder="Paste the text you copied from a PDF" spellcheck="false"></textarea>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <span>Characters <b id="inChars" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span>Lines <b id="inLines" class="num ml-0.5 font-medium text-ink">0</b></span>
+      </div>
+    </section>
+
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">Result</span>
+        <button id="copyPanel" class="btn btn-primary px-2.5 py-1.5 text-[12px]">Copy</button>
+      </div>
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="output" readonly spellcheck="false" placeholder="The rebuilt text appears here"></textarea>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <span>Characters <b id="outChars" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span>Paragraphs <b id="outParas" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span id="fixInfo" class="num"></span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const input    = document.getElementById('input');
+  const output   = document.getElementById('output');
+  const optKo    = document.getElementById('optKo');
+  const optList  = document.getElementById('optList');
+  const inChars  = document.getElementById('inChars');
+  const inLines  = document.getElementById('inLines');
+  const outChars = document.getElementById('outChars');
+  const outParas = document.getElementById('outParas');
+  const fixInfo  = document.getElementById('fixInfo');
+
+  // 목록·번호로 시작하는 줄 : 이런 줄은 앞줄과 이어 붙이면 안 된다
+  const LIST_HEAD = /^\s*(?:[□■○●◇◆▪·•\-*]|\(?\d{1,2}[.)]|[①-⑳]|[가-힣]\.|[a-zA-Z][.)])\s/;
+
+  const CJK = '\\u3131-\\u318E\\uAC00-\\uD7A3\\u4E00-\\u9FFF';
+
+  function restore(src) {
+    const stats = { hyphen: 0, joined: 0 };
+
+    let text = src.replace(/\r\n?/g, '\n');
+
+    // 3단계 : 빈 줄이 두 번 이상이면 진짜 Paragraphs 경계이므로 블록으로 잘라 따로 처리
+    const blocks = text.split(/\n{2,}/);
+
+    const done = blocks.map(function (block) {
+      let b = block;
+
+      // 1단계 : 줄 끝 하이픈으로 잘린 단어를 붙인다
+      // 영문 소문자로 이어지는 경우만 처리해서 '2026-\n2027' 같은 표기는 건드리지 않는다
+      b = b.replace(/([A-Za-z])[-‐–]\n[ \t]*([a-z])/g, function (m, a, c) {
+        stats.hyphen++;
+        return a + c;
+      });
+
+      // 2단계 : 문장 중간에서 끊긴 단일 줄바꿈을 잇는다
+      b = b.replace(/\n[ \t]*/g, function (m, offset, whole) {
+        const before = whole.slice(0, offset);
+        const after = whole.slice(offset + m.length);
+
+        // 목록·번호로 시작하는 줄은 그대로 줄을 유지한다
+        if (optList.checked && LIST_HEAD.test(after)) return '\n';
+
+        const prev = before.slice(-1);
+        const next = after.slice(0, 1);
+        if (!prev || !next) return '\n';
+
+        stats.joined++;
+
+        // 한글끼리 이어지는 줄은 공백 없이 붙인다 (PDF 한글은 원래 붙어 있던 문장)
+        if (optKo.checked) {
+          const cjkPrev = new RegExp('[' + CJK + ']').test(prev);
+          const cjkNext = new RegExp('[' + CJK + ']').test(next);
+          if (cjkPrev && cjkNext) return '';
+        }
+        return ' ';
+      });
+
+      // 4단계 : 이 과정에서 생긴 연속 공백을 한 칸으로 정리
+      b = b.replace(/[ \t]{2,}/g, ' ');
+      b = b.replace(/[ \t]+$/gm, '').replace(/^[ \t]+/gm, '');
+
+      return b.trim();
+    }).filter(function (b) { return b.length > 0; });
+
+    return { text: done.join('\n\n'), stats: stats, paras: done.length };
+  }
+
+  function fmt(n) { return n.toLocaleString('ko-KR'); }
+
+  function run() {
+    const src = input.value;
+    const r = restore(src);
+    output.value = r.text;
+
+    inChars.textContent = fmt(Array.from(src.replace(/\n/g, '')).length);
+    inLines.textContent = fmt(src ? src.split('\n').length : 0);
+    outChars.textContent = fmt(Array.from(r.text.replace(/\n/g, '')).length);
+    outParas.textContent = fmt(r.paras);
+
+    const parts = [];
+    if (r.stats.joined) parts.push(fmt(r.stats.joined) + ' lines joined');
+    if (r.stats.hyphen) parts.push(fmt(r.stats.hyphen) + ' hyphens merged');
+    fixInfo.textContent = parts.join(' · ');
+    fixInfo.className = 'num text-muted';
+  }
+
+  input.addEventListener('input', run);
+  optKo.addEventListener('change', run);
+  optList.addEventListener('change', run);
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 복사 ---------- */
+  // 워드·한글은 CRLF를 Paragraphs 구분으로 읽는다.
+  // LF 하나만 넘기면 Paragraphs이 통째로 붙거나, 빈 줄이 빈 Paragraphs으로 남아 한 줄이 더 생긴다.
+  function forClipboard(text) {
+    if (!text) return '';
+    const mode = document.getElementById('copyFmt').value;
+    const paras = text.split(/\n{2,}/).map(function (p) { return p.trim(); }).filter(Boolean);
+
+    if (mode === 'single') {
+      // Paragraphs 구분 없이 한 덩어리로 (표 셀이나 한 칸 입력란에 넣을 때)
+      return paras.join(' ').replace(/\n[ \t]*/g, ' ').replace(/[ \t]{2,}/g, ' ');
+    }
+
+    const sep = mode === 'tight' ? '\r\n' : '\r\n\r\n';
+    return paras.map(function (p) { return p.replace(/\n/g, '\r\n'); }).join(sep);
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  async function doCopy() {
+    if (!output.value.trim()) { toast('Nothing to copy'); return; }
+    const text = forClipboard(output.value);
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('Copied, cleanly');
+    } catch (e) {
+      if (legacyCopy(text)) toast('Copied, cleanly');
+      else toast('The browser blocked copying. Select the text instead.');
+    }
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', doCopy);
+  document.getElementById('copyPanel').addEventListener('click', doCopy);
+
+  document.getElementById('clearInput').addEventListener('click', function () {
+    input.value = '';
+    run();
+    input.focus();
+  });
+
+  /* ---------- Reset · Sample ---------- */
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    input.value = '';
+    output.value = '';
+    run();
+    input.focus();
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    input.value =
+      'Recent advances in precision engineering have enabled sub-\n' +
+      'micron positioning accuracy in industrial actuators. The infor-\n' +
+      'mation obtained from these measurements is used to compen-\n' +
+      'sate thermal drift.\n' +
+      '\n' +
+      'This study addresses thermal deformation compensation in precision\n' +
+      'stages. Correction values are derived in real time from the measured\n' +
+      'temperature field, reducing positioning error against prior methods.\n' +
+      '\n' +
+      '□ Funding : up to $40,000\n' +
+      '○ Applications : 1 Sep 2026 - 30 Sep 2026\n' +
+      '① Business plan ② Certificate of registration';
+    run();
+    input.focus();
+  });
+
+  run();
+  input.focus();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Why copying from a PDF breaks every line</h2>
+<p>A PDF does not store sentences the way a word processor does. It places each visible line of glyphs at a set of coordinates on the page. What looks like a flowing paragraph is, inside the file, a stack of separate lines.</p>
+<p>So when you copy and paste, the line breaks you could see come with it. Pull a paragraph out of a paper or a report and it arrives split across four or five lines, and often with words hyphenated across the break.</p>
+<h2>When to use it</h2><dl>
+<dt>Quoting papers and reports</dt><dd>Moving a passage from a PDF into a document. Cleaning up the breaks by hand takes longer than the quote itself.</dd>
+<dt>Feeding text to an AI model</dt><dd>Line breaks waste tokens and fragment the context. A clean paragraph gets a better answer.</dd>
+<dt>Extracting from funding calls</dt><dd>Pulling eligibility criteria or funding details out of a PDF notice and into a table or a note.</dd>
+<dt>Machine translation</dt><dd>Translation engines treat a line break as the end of a sentence. Fragmented input produces noticeably worse output.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Copy the section you want from the PDF and paste it into <strong>Input</strong>.</li>
+<li>The rebuilt paragraphs appear on the right straight away.</li>
+<li>Pick a copy format and press <strong>Copy</strong>.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Join CJK lines without a space</dt><dd>English needs a space between words, but Chinese, Japanese and Korean do not. With this on, CJK lines are joined directly instead of gaining a gap in the middle of a word.</dd>
+<dt>Keep line breaks on list and numbered lines</dt><dd>Lines starting with a bullet, a number or a marker carry meaning in their line break, so they are left alone.</dd>
+<dt>Copy format</dt><dd>Choose whether to keep a blank line between paragraphs, separate them without blank lines, or collapse everything into a single paragraph.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Is anything uploaded</dt><dd>No. The text you paste is handled inside your browser and is never transmitted.</dd>
+<dt>What about tables</dt><dd>In a table the line breaks are the data structure, so this tool is the wrong fit. Use it for body text.</dd>
+<dt>Can I drop in a PDF file directly</dt><dd>This tool works on text you have already copied. For a scanned PDF where the text cannot be selected, use the image to text tool instead.</dd>
+<dt>What happens to hyphenated words</dt><dd>Words broken across a line with a hyphen are rejoined, and the count of merged hyphens is shown so you can spot anything that was joined incorrectly.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/notepad.html">Rich Text Notepad</a></li>
+<li><a href="https://mnledu.com/en/productivity/emailgen.html">Bulk Email Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/templatemerger.html">Template Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/promptmerger.html">AI Prompt Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/listformat.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/textclean.html">Text Cleaner</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is anything uploaded",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The text you paste is handled inside your browser and is never transmitted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What about tables",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In a table the line breaks are the data structure, so this tool is the wrong fit. Use it for body text."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I drop in a PDF file directly",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This tool works on text you have already copied. For a scanned PDF where the text cannot be selected, use the image to text tool instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens to hyphenated words",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Words broken across a line with a hyphen are rejoined, and the count of merged hyphens is shown so you can spot anything that was joined incorrectly."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+</body>
+</html>

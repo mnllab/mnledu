@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F1420">
+<title>Time Zone Dial | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Line up several cities and scrub through the day to find a time t… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/lifestyle/timezone-dial.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/timezone-dial.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/timezone-dial.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/timezone-dial.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/lifestyle/timezone-dial.html" />
+<meta property="og:title" content="Time Zone Dial · timezone · scheduling | TOOLKIT" />
+<meta property="og:description" content="Line up several cities and scrub through the day to find a time t… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Time Zone Dial · timezone · scheduling | TOOLKIT" />
+<meta name="twitter:description" content="Line up several cities and scrub through the day to find a time t… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Time Zone Dial",
+  "description": "Line up several cities and scrub through the day to find a time that works for everyone.",
+  "url": "https://mnledu.com/en/lifestyle/timezone-dial.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/utc.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/timezone.js"></script>
+
+<style>
+  :root{
+    --bg:#0F1420; --panel:#18202E; --line:#27313F; --fg:#E8EDF3; --dim:#8A97A6;
+    --accent:#5AB0E8; --day:#FDF6E6; --dayInk:#3A2E18; --night:#161F35; --nightInk:#D6E0F0;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--fg);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:14px; }
+
+  /* 슬라이더 */
+  #slider{
+    -webkit-appearance:none; appearance:none; width:100%; height:8px;
+    border-radius:999px; outline:none; touch-action:none;
+    background:linear-gradient(90deg,
+      #1B2537 0%, #1B2537 22%, #F5D97A 27%, #FDF3D8 50%, #F5A25A 71%, #1B2537 78%, #1B2537 100%);
+  }
+  #slider::-webkit-slider-thumb{
+    -webkit-appearance:none; width:30px; height:30px; border-radius:999px;
+    background:#fff; border:4px solid var(--accent); cursor:grab;
+    box-shadow:0 3px 12px rgba(0,0,0,.45);
+  }
+  #slider::-webkit-slider-thumb:active{ cursor:grabbing; }
+  #slider::-moz-range-thumb{
+    width:26px; height:26px; border-radius:999px; background:#fff;
+    border:4px solid var(--accent); cursor:grab;
+  }
+  .ticks{ display:flex; justify-content:space-between; font-size:10px; color:var(--dim); margin-top:6px; }
+
+  /* 도시 카드 */
+  .city{
+    border-radius:13px; padding:15px 16px; border:1px solid var(--line);
+    display:flex; align-items:center; gap:14px;
+    transition:background .35s ease, color .35s ease, border-color .35s ease;
+  }
+  .city.dayC{ background:var(--day); color:var(--dayInk); border-color:#E6D9B8; }
+  .city.nightC{ background:var(--night); color:var(--nightInk); border-color:#2A3550; }
+  .city .ic{ font-size:26px; flex:none; }
+  .city .nm{ font-size:14.5px; font-weight:600; }
+  .city .zone{ font-size:10.5px; opacity:.6; margin-top:1px; }
+  .city .tm{ font-family:'JetBrains Mono',monospace; font-size:27px; font-weight:700; line-height:1.1; letter-spacing:-.02em; }
+  .city .dt{ font-size:11.5px; opacity:.72; margin-top:2px; font-family:'JetBrains Mono',monospace; }
+  .badge{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    border:1px solid currentColor; opacity:.75; border-radius:999px; padding:2px 8px;
+  }
+  .rm{
+    width:26px; height:26px; border-radius:7px; border:1px solid currentColor;
+    background:transparent; color:inherit; opacity:.45; cursor:pointer; flex:none;
+    font-size:14px; line-height:1;
+  }
+  .rm:hover{ opacity:1; }
+
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--fg);
+    border-radius:9px; font-size:13px; padding:10px 13px; cursor:pointer;
+  }
+  .btn:active{ background:#212B3A; }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#0F1420; font-weight:600; }
+  select.btn{ padding-right:28px; }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--panel); border:1px solid var(--line); color:var(--fg); border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-3xl px-4 py-6 sm:py-9">
+
+  <header class="mb-4 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-[18px] font-semibold tracking-tight">Global Time Zone Dial</h1>
+      <p class="mt-1 text-[12.5px]" style="color:var(--dim)">Move the slider and every clock moves together</p>
+    </div>
+    <button class="btn" id="nowBtn">Jump to now</button>
+  </header>
+
+  <!-- 슬라이더 -->
+  <div class="panel" style="padding:16px 18px 13px; margin-bottom:14px">
+    <div class="flex items-baseline justify-between gap-3" style="margin-bottom:12px">
+      <div>
+        <p class="text-[11px]" style="color:var(--dim)">Base · <span id="baseZone">—</span></p>
+        <p class="mono" id="baseTime" style="font-size:30px; font-weight:700; line-height:1.15; margin:2px 0 0">--:--</p>
+        <p class="mono text-[12px]" id="baseDate" style="color:var(--dim); margin:2px 0 0"></p>
+      </div>
+      <div class="mono" id="offsetLabel" style="font-size:13px; color:var(--accent)">Reference time</div>
+    </div>
+
+    <input type="range" id="slider" min="-1440" max="1440" step="15" value="0">
+    <div class="ticks">
+      <span>−24h</span><span>−12</span><span>now</span><span>+12</span><span>+24h</span>
+    </div>
+  </div>
+
+  <!-- Add a city -->
+  <div class="flex flex-wrap gap-2" style="margin-bottom:14px">
+    <select class="btn" id="citySel" style="flex:1; min-width:180px"></select>
+    <button class="btn p" id="addBtn">Add a city</button>
+  </div>
+
+  <div id="list" class="grid gap-2.5"></div>
+  <p id="empty" class="text-[12.5px]" style="color:var(--dim)">Add a city and its clock appears here</p>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const CITIES = [
+    { id: 'America/New_York',    ko: 'New York',     flag: '🇺🇸' },
+    { id: 'America/Chicago',     ko: 'Chicago',      flag: '🇺🇸' },
+    { id: 'America/Denver',      ko: 'Denver',       flag: '🇺🇸' },
+    { id: 'America/Los_Angeles', ko: 'Los Angeles',  flag: '🇺🇸' },
+    { id: 'Europe/London',       ko: 'London',       flag: '🇬🇧' },
+    { id: 'Europe/Paris',        ko: 'Paris',        flag: '🇫🇷' },
+    { id: 'Europe/Berlin',       ko: 'Berlin',       flag: '🇩🇪' },
+    { id: 'Europe/Moscow',       ko: 'Moscow',       flag: '🇷🇺' },
+    { id: 'Asia/Dubai',          ko: 'Dubai',        flag: '🇦🇪' },
+    { id: 'Asia/Kolkata',        ko: 'New Delhi',    flag: '🇮🇳' },
+    { id: 'Asia/Singapore',      ko: 'Singapore',    flag: '🇸🇬' },
+    { id: 'Asia/Hong_Kong',      ko: 'Hong Kong',    flag: '🇭🇰' },
+    { id: 'Asia/Shanghai',       ko: 'Shanghai',     flag: '🇨🇳' },
+    { id: 'Asia/Tokyo',          ko: 'Tokyo',        flag: '🇯🇵' },
+    { id: 'Asia/Seoul',          ko: 'Seoul',        flag: '🇰🇷' },
+    { id: 'Asia/Bangkok',        ko: 'Bangkok',      flag: '🇹🇭' },
+    { id: 'America/Sao_Paulo',   ko: 'São Paulo',    flag: '🇧🇷' },
+    { id: 'Pacific/Honolulu',    ko: 'Honolulu',     flag: '🇺🇸' },
+    { id: 'Australia/Sydney',    ko: 'Sydney',       flag: '🇦🇺' },
+    { id: 'Pacific/Auckland',    ko: 'Auckland',     flag: '🇳🇿' }
+  ];
+  const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const KEY = 'tzdial-v1';
+
+  let list = [], offsetMin = 0, anchor = new Date();
+  let localZone = 'Asia/Seoul';
+
+  const toastEl = document.getElementById('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  function ready() { return !!(window.dayjs && dayjs.tz); }
+
+  /* ---------- 저장 ---------- */
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (d && Array.isArray(d.list) && d.list.length) list = d.list;
+    } catch (e) {}
+    if (!list.length) list = ['Asia/Seoul', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify({ list: list })); } catch (e) {}
+  }
+
+  function info(id) {
+    for (let i = 0; i < CITIES.length; i++) if (CITIES[i].id === id) return CITIES[i];
+    return { id: id, ko: id.split('/').pop().replace(/_/g, ' '), flag: '🏳️' };
+  }
+
+  // Reference time = 고정한 시점 + 슬라이더로 민 분
+  function baseMoment() {
+    return dayjs(anchor).add(offsetMin, 'minute');
+  }
+
+  /* ---------- 그리기 ---------- */
+  function buildSelect() {
+    const sel = document.getElementById('citySel');
+    sel.innerHTML = '';
+    CITIES.forEach(function (c) {
+      const o = document.createElement('option');
+      o.value = c.id;
+      o.textContent = c.flag + '  ' + c.ko;
+      sel.appendChild(o);
+    });
+  }
+
+  function buildList() {
+    const wrap = document.getElementById('list');
+    wrap.innerHTML = '';
+    document.getElementById('empty').style.display = list.length ? 'none' : 'block';
+
+    list.forEach(function (id) {
+      const c = info(id);
+      const el = document.createElement('div');
+      el.className = 'city';
+      el.dataset.id = id;
+      el.innerHTML =
+        '<span class="ic" data-role="ic">🌙</span>' +
+        '<div style="flex:1; min-width:0">' +
+          '<div class="nm">' + c.flag + ' ' + c.ko + '</div>' +
+          '<div class="zone">' + id + '</div>' +
+        '</div>' +
+        '<div style="text-align:right">' +
+          '<div class="tm" data-role="tm">--:--</div>' +
+          '<div class="dt" data-role="dt"></div>' +
+          '<div style="margin-top:5px"><span class="badge" data-role="bd"></span></div>' +
+        '</div>';
+
+      const rm = document.createElement('button');
+      rm.className = 'rm';
+      rm.textContent = '×';
+      rm.title = 'Remove';
+      rm.addEventListener('click', function () {
+        list = list.filter(function (x) { return x !== id; });
+        save(); buildList(); tick();
+        toast(c.ko + ' removed');
+      });
+      el.appendChild(rm);
+      wrap.appendChild(el);
+    });
+  }
+
+  // 여러 도시를 한 번에 갱신한다. DOM을 새로 만들지 않고 글자만 바꿔 버벅임을 없앴다
+  function tick() {
+    if (!ready()) return;
+    const base = baseMoment();
+
+    document.getElementById('baseZone').textContent = info(localZone).ko + ' · ' + localZone;
+    const bl = base.tz(localZone);
+    document.getElementById('baseTime').textContent = bl.format('HH:mm');
+    document.getElementById('baseDate').textContent = bl.format('YYYY-MM-DD') + ' (' + DOW[bl.day()] + ')';
+
+    const h = Math.floor(Math.abs(offsetMin) / 60), m = Math.abs(offsetMin) % 60;
+    document.getElementById('offsetLabel').textContent =
+      offsetMin === 0 ? 'right now' :
+      (offsetMin > 0 ? '+' : '−') + h + 'h' + (m ? ' ' + m + 'm' : '');
+
+    const localOff = bl.utcOffset();
+
+    document.querySelectorAll('.city').forEach(function (el) {
+      const id = el.dataset.id;
+      const t = base.tz(id);
+      const hh = t.hour();
+      const isDay = hh >= 6 && hh < 18;
+
+      el.classList.toggle('dayC', isDay);
+      el.classList.toggle('nightC', !isDay);
+      el.querySelector('[data-role="ic"]').textContent = isDay ? '☀️' : '🌙';
+      el.querySelector('[data-role="tm"]').textContent = t.format('HH:mm');
+
+      const sameDay = t.format('YYYY-MM-DD') === bl.format('YYYY-MM-DD');
+      el.querySelector('[data-role="dt"]').textContent =
+        t.format('MM-DD') + ' (' + DOW[t.day()] + ')' +
+        (sameDay ? '' : (t.isAfter(bl, 'day') ? ' next day' : ' previous day'));
+
+      const diff = (t.utcOffset() - localOff) / 60;
+      const dh = Math.floor(Math.abs(diff)), dm = Math.round((Math.abs(diff) - dh) * 60);
+      el.querySelector('[data-role="bd"]').textContent =
+        diff === 0 ? 'same time'
+        : (diff > 0 ? '+' : '−') + dh + (dm ? ':' + String(dm).padStart(2, '0') : '') + 'h';
+    });
+  }
+
+  /* ---------- 조작 ---------- */
+  const slider = document.getElementById('slider');
+  // 슬라이더는 자주 움직이므로 프레임마다 한 번씩만 다시 그린다
+  let pending = false;
+  slider.addEventListener('input', function () {
+    offsetMin = parseInt(slider.value, 10);
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; tick(); });
+  });
+
+  document.getElementById('nowBtn').addEventListener('click', function () {
+    anchor = new Date();
+    offsetMin = 0;
+    slider.value = 0;
+    tick();
+    toast('Set to the current time');
+  });
+
+  document.getElementById('addBtn').addEventListener('click', function () {
+    const id = document.getElementById('citySel').value;
+    if (list.indexOf(id) !== -1) { toast('That city is already on the list'); return; }
+    if (list.length >= 12) { toast('You can add up to 12 cities'); return; }
+    list.push(id);
+    save(); buildList(); tick();
+    toast(info(id).ko + ' added');
+  });
+
+  /* ---------- 시작 ---------- */
+  function start() {
+    // 플러그인을 먼저 등록해야 dayjs.tz 가 생긴다. 순서를 바꾸면 항상 실패한다
+    if (!window.dayjs || !window.dayjs_plugin_utc || !window.dayjs_plugin_timezone) {
+      document.getElementById('empty').textContent =
+        'The time zone library could not be loaded. Check your connection and reload.';
+      return;
+    }
+    dayjs.extend(window.dayjs_plugin_utc);
+    dayjs.extend(window.dayjs_plugin_timezone);
+    if (!ready()) {
+      document.getElementById('empty').textContent = 'Time zone features are unavailable.';
+      return;
+    }
+
+    try { localZone = dayjs.tz.guess() || 'Asia/Seoul'; } catch (e) { localZone = 'Asia/Seoul'; }
+
+    load();
+    // 내 시간대가 목록에 없으면 맨 앞에 넣어 준다
+    if (list.indexOf(localZone) === -1) {
+      const known = CITIES.some(function (c) { return c.id === localZone; });
+      if (known) list.unshift(localZone);
+    }
+
+    buildSelect();
+    document.getElementById('citySel').value =
+      CITIES.some(function (c) { return c.id === localZone; }) ? localZone : 'America/New_York';
+
+    buildList();
+    tick();
+
+    // 슬라이더가 0일 때는 실제 시간이 흐르도록 매초 갱신한다
+    setInterval(function () {
+      if (offsetMin === 0) { anchor = new Date(); tick(); }
+    }, 1000);
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(start, 0);
+  else window.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Why time zone arithmetic keeps catching people out</h2>
+<p>Learning that New York is thirteen hours behind Seoul works until summer, when it becomes fourteen. Daylight saving shifts the gap, the start dates differ by country, and between March and November the arithmetic quietly stops matching.</p>
+<p>This tool sidesteps the calculation. Put the cities side by side and drag the dial: every clock moves together, so you read the answer instead of working it out.</p>
+<h2>When to use it</h2><dl>
+<dt>Scheduling across time zones</dt><dd>Checking what time it is for the other side, and whether it falls inside their working day.</dd>
+<dt>Joining an overseas event</dt><dd>Converting a webinar or conference start time into your local time.</dd>
+<dt>Planning travel</dt><dd>Seeing departure and arrival times together while you build an itinerary.</dd>
+<dt>Calling family abroad</dt><dd>A quick look before you dial.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Use <strong>Add a city</strong> to bring in the places you care about.</li>
+<li>Set a reference time, or press <strong>Jump to now</strong>.</li>
+<li>Drag the dial and every clock moves with it.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Reference time</dt><dd>Which city the dial is anchored to.</dd>
+<dt>±24 hours</dt><dd>Move forwards or backwards through the day to find a slot that is reasonable for everyone.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Is daylight saving handled</dt><dd>Each city follows its own time zone rules, including daylight saving. Rules do change occasionally, so confirm anything critical with the other party.</dd>
+<dt>How should I write a time in an invitation</dt><dd>Give both sides, for example "3pm New York (8pm London)". Time zone abbreviations alone are ambiguous once daylight saving is in play.</dd>
+<dt>Are my chosen cities remembered</dt><dd>They persist in your browser for the session. Nothing is sent to a server.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/lifestyle/youtubenote.html">YouTube Timestamp Notes</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/date-calc.html">Date &amp; Age Calculator</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/unit-converter.html">Universal Unit Converter</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/calculator.html">Smart Formula Calculator</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/vocab-quiz.html">Flashcards &amp; Quiz</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is daylight saving handled",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each city follows its own time zone rules, including daylight saving. Rules do change occasionally, so confirm anything critical with the other party."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should I write a time in an invitation",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Give both sides, for example \"3pm New York (8pm London)\". Time zone abbreviations alone are ambiguous once daylight saving is in play."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my chosen cities remembered",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They persist in your browser for the session. Nothing is sent to a server."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+</body>
+</html>

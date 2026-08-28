@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAGR Calculator | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Work out compound annual growth rate and project a year by year f… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/data-analytics/cagrcal.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/cagrcal.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/cagrcal.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/cagrcal.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/data-analytics/cagrcal.html" />
+<meta property="og:title" content="CAGR Calculator · startup · businessplan | TOOLKIT" />
+<meta property="og:description" content="Work out compound annual growth rate and project a year by year f… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="CAGR Calculator · startup · businessplan | TOOLKIT" />
+<meta name="twitter:description" content="Work out compound annual growth rate and project a year by year f… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CAGR Calculator",
+  "description": "Work out compound annual growth rate and project a year by year forecast table.",
+  "url": "https://mnledu.com/en/data-analytics/cagrcal.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7',
+          alert:  '#A34A3C',
+          gain:   '#2C6BA0',
+          loss:   '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1; padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s, color .12s;
+  }
+  .btn:hover:not([disabled]){ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  .fld{
+    width:100%; border:1px solid var(--hair); border-radius:6px; background:#fff;
+    padding:9px 11px; font-size:14px; color:var(--ink); outline:none;
+    font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums;
+    transition:border-color .12s;
+  }
+  .fld:focus{ border-color:var(--steel); }
+  .fld.bad{ border-color:var(--alert); background:#FDF6F5; }
+  .lab{ display:block; margin-bottom:6px; font-size:11px; color:var(--muted); }
+
+  /* 라디오 세그먼트 */
+  .seg{ display:inline-flex; border:1px solid var(--hair); border-radius:6px; overflow:hidden; background:#fff; }
+  .seg label{
+    padding:8px 14px; font-size:13px; cursor:pointer; color:var(--muted);
+    transition:background .12s, color .12s;
+  }
+  .seg label:has(input:checked){ background:var(--ink); color:#fff; }
+  .seg input{ position:absolute; opacity:0; width:0; height:0; }
+  .seg label:hover{ color:var(--ink); }
+  .seg label:has(input:checked):hover{ color:#fff; }
+
+  /* 결과 카드 */
+  #cagrCard{
+    border:1px solid var(--hair); border-radius:10px; background:#fff;
+    padding:20px 22px;
+  }
+  #cagrVal{
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:40px; font-weight:600; line-height:1.1; letter-spacing:-.02em;
+  }
+
+  /* 표 */
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th, td{ padding:9px 12px; text-align:right; white-space:nowrap; }
+  th:first-child, td:first-child{ text-align:left; }
+  thead th{
+    position:sticky; top:0; z-index:1;
+    background:#26384B; color:#fff; font-weight:500; font-size:12px;
+  }
+  tbody tr{ border-bottom:1px solid var(--hair); }
+  tbody tr:hover{ background:#FAFBFC; }
+  tbody tr.anchor{ background:#F2F7FB; }
+  tbody tr.anchor:hover{ background:#EAF2F9; }
+  .tag{
+    font-family:'JetBrains Mono',ui-monospace,monospace; font-size:10px;
+    border:1px solid var(--hair); border-radius:4px; padding:1px 5px; color:var(--muted);
+    margin-left:6px;
+  }
+  tbody tr.anchor .tag{ border-color:var(--steel); color:var(--steel); }
+  #tableWrap{ max-height:56vh; overflow:auto; border:1px solid var(--hair); border-radius:8px; background:#fff; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease; pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">CAGR Projection Calculator</h1>
+      <p class="mt-1 text-[13px] text-muted">Work out compound annual growth from two points and project it year by year · nothing is stored</p>
+    </div>
+    <button id="sampleBtn" class="btn shrink-0">Sample</button>
+  </header>
+
+  <div class="grid gap-4 lg:grid-cols-[340px_1fr]">
+
+    <!-- 좌 : 입력 -->
+    <section class="space-y-4">
+
+      <div class="rounded-lg border border-hair bg-white px-5 py-4">
+        <p class="mb-3 text-[12px] font-medium tracking-wide text-muted">Base figures</p>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="lab" for="sy">Start year</label>
+            <input id="sy" class="fld" type="number" step="1" value="2020">
+          </div>
+          <div>
+            <label class="lab" for="sv">Start value</label>
+            <input id="sv" class="fld" type="text" inputmode="decimal" value="1000">
+          </div>
+          <div>
+            <label class="lab" for="ey">End year</label>
+            <input id="ey" class="fld" type="number" step="1" value="2024">
+          </div>
+          <div>
+            <label class="lab" for="ev">End value</label>
+            <input id="ev" class="fld" type="text" inputmode="decimal" value="2000">
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-lg border border-hair bg-white px-5 py-4">
+        <p class="mb-3 text-[12px] font-medium tracking-wide text-muted">Projection range</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="lab" for="fy">Start year</label>
+            <input id="fy" class="fld" type="number" step="1" value="2020">
+          </div>
+          <div>
+            <label class="lab" for="ty">End year</label>
+            <input id="ty" class="fld" type="number" step="1" value="2029">
+          </div>
+        </div>
+        <button id="resetSpan" class="btn mt-3 w-full py-2 text-[12px]">Reset to the base period plus five years</button>
+      </div>
+
+      <div class="rounded-lg border border-hair bg-white px-5 py-4">
+        <p class="mb-3 text-[12px] font-medium tracking-wide text-muted">Number handling</p>
+
+        <label class="lab">Rounding</label>
+        <div class="seg mb-4">
+          <label><input type="radio" name="rmode" value="round" checked>Round</label>
+          <label><input type="radio" name="rmode" value="floor">Round down</label>
+          <label><input type="radio" name="rmode" value="ceil">Round up</label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="lab" for="dp">Decimal places</label>
+            <select id="dp" class="btn w-full py-2.5 text-[13px]">
+              <option value="0">0 (whole numbers)</option>
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div>
+            <label class="lab" for="unit">Unit (optional)</label>
+            <input id="unit" class="fld" type="text" placeholder="$M" autocomplete="off">
+          </div>
+        </div>
+
+        <label class="mt-3 flex cursor-pointer select-none items-center gap-2 text-[13px]">
+          <input type="checkbox" id="comma" checked style="accent-color:var(--steel);width:15px;height:15px;">
+          Show thousands separators on screen
+        </label>
+      </div>
+
+      <p id="errBox" class="hidden rounded-lg border border-hair bg-white px-5 py-3 text-[12.5px] leading-relaxed text-alert"></p>
+    </section>
+
+    <!-- 우 : 결과 -->
+    <section class="space-y-4">
+
+      <div id="cagrCard">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-[12px] font-medium tracking-wide text-muted">Compound annual growth rate</p>
+            <p id="cagrVal" class="mt-1.5">—</p>
+            <p id="cagrDesc" class="mt-2 text-[12.5px] text-muted"></p>
+          </div>
+          <div class="grid gap-1.5 text-right text-[12px] text-muted">
+            <span>Period <b id="spanYears" class="num ml-1 text-[14px] font-medium text-ink">—</b></span>
+            <span>Total growth <b id="totalRate" class="num ml-1 text-[14px] font-medium text-ink">—</b></span>
+            <span>Multiple <b id="multiple" class="num ml-1 text-[14px] font-medium text-ink">—</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th id="thValue">Projected value</th>
+              <th>Change on the year</th>
+              <th>Growth</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="rounded-lg border border-hair bg-white px-5 py-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="mr-1 text-[12px] font-medium tracking-wide text-muted">Export</span>
+          <button id="txtBtn" class="btn">Copy text</button>
+          <button id="mdBtn" class="btn">Copy markdown</button>
+          <button id="richBtn" class="btn btn-primary">Copy table for Excel or Word</button>
+          <button id="csvBtn" class="btn">Download CSV</button>
+          <button id="xlsBtn" class="btn">Download spreadsheet</button>
+          <span id="rowInfo" class="num ml-auto text-[12px] text-muted"></span>
+        </div>
+        <p class="mt-2.5 text-[11.5px] leading-relaxed text-muted">
+          CSV and spreadsheet exports contain plain numbers without separators, so formulas work immediately.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const $ = function (id) { return document.getElementById(id); };
+  const syEl = $('sy'), svEl = $('sv'), eyEl = $('ey'), evEl = $('ev');
+  const fyEl = $('fy'), tyEl = $('ty'), dpEl = $('dp'), unitEl = $('unit'), commaEl = $('comma');
+  const tbody = $('tbody'), errBox = $('errBox');
+
+  let rows = [];      // { year, value, diff, rate, anchor }
+  let cagr = null;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = $('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+  function showErr(m) { errBox.textContent = m; errBox.classList.remove('hidden'); }
+  function clearErr() { errBox.textContent = ''; errBox.classList.add('hidden'); }
+
+  /* ---------- 숫자 다루기 ---------- */
+  // 1,234 처럼 쉼표가 섞여 들어와도 읽는다
+  function parseNum(v) {
+    const t = String(v == null ? '' : v).replace(/[,\s]/g, '');
+    if (t === '' || isNaN(Number(t))) return NaN;
+    return Number(t);
+  }
+  function mode() {
+    const r = document.querySelector('input[name="rmode"]:checked');
+    return r ? r.value : 'round';
+  }
+  // 선택한 방식과 자릿수로 값을 다듬는다
+  function shape(v) {
+    const dp = parseInt(dpEl.value, 10);
+    const f = Math.pow(10, dp);
+    const m = mode();
+    const x = m === 'floor' ? Math.floor(v * f) / f
+            : m === 'ceil'  ? Math.ceil(v * f) / f
+            : Math.round(v * f) / f;
+    return x;
+  }
+  function fixed(v) {
+    const dp = parseInt(dpEl.value, 10);
+    return (v === null || isNaN(v)) ? '' : v.toFixed(dp);
+  }
+  function disp(v) {
+    if (v === null || isNaN(v)) return '';
+    const dp = parseInt(dpEl.value, 10);
+    return commaEl.checked
+      ? v.toLocaleString('ko-KR', { minimumFractionDigits: dp, maximumFractionDigits: dp })
+      : v.toFixed(dp);
+  }
+  function pct(v) { return (v === null || isNaN(v)) ? '' : (v * 100).toFixed(2) + '%'; }
+
+  /* ---------- 계산 ---------- */
+  function compute() {
+    clearErr();
+    [svEl, evEl, syEl, eyEl, fyEl, tyEl].forEach(function (el) { el.classList.remove('bad'); });
+
+    const sy = parseNum(syEl.value), ey = parseNum(eyEl.value);
+    const sv = parseNum(svEl.value), ev = parseNum(evEl.value);
+    let fy = parseNum(fyEl.value), ty = parseNum(tyEl.value);
+
+    const bad = [];
+    if (isNaN(sy) || isNaN(ey)) bad.push('Enter the years as numbers');
+    if (isNaN(sv) || isNaN(ev)) bad.push('Enter the values as numbers');
+    if (!isNaN(sy) && !isNaN(ey) && ey <= sy) { bad.push('The end year must come after the start year'); eyEl.classList.add('bad'); }
+    if (!isNaN(sv) && sv <= 0) { bad.push('The starting value must be greater than zero'); svEl.classList.add('bad'); }
+    if (!isNaN(ev) && ev <= 0) { bad.push('The ending value must be greater than zero'); evEl.classList.add('bad'); }
+
+    if (bad.length) {
+      cagr = null; rows = [];
+      showErr(bad.join(' · '));
+      return;
+    }
+
+    const n = ey - sy;
+    cagr = Math.pow(ev / sv, 1 / n) - 1;
+
+    if (isNaN(fy)) fy = sy;
+    if (isNaN(ty)) ty = ey + 5;
+    if (ty < fy) { const t = fy; fy = ty; ty = t; }
+    if (ty - fy > 200) { ty = fy + 200; showErr('The projection was capped at 200 years'); }
+
+    rows = [];
+    let prev = null;
+    for (let t = fy; t <= ty; t++) {
+      const raw = sv * Math.pow(1 + cagr, t - sy);
+      const v = shape(raw);
+      // 증감과 Growth은 화면에 보이는 값끼리 계산해 표와 어긋나지 않게 한다
+      const diff = prev === null ? null : v - prev;
+      const rate = (prev === null || prev === 0) ? null : (v - prev) / prev;
+      rows.push({ year: t, value: v, diff: diff, rate: rate, anchor: (t === sy || t === ey) });
+      prev = v;
+    }
+  }
+
+  /* ---------- 렌더링 ---------- */
+  function render() {
+    compute();
+
+    const unit = unitEl.value.trim();
+    $('thValue').textContent = unit ? 'Projected value (' + unit + ')' : 'Projected value';
+
+    // 요약 카드
+    if (cagr === null) {
+      $('cagrVal').textContent = '—';
+      $('cagrVal').style.color = 'var(--muted)';
+      $('cagrDesc').textContent = '';
+      $('spanYears').textContent = '—';
+      $('totalRate').textContent = '—';
+      $('multiple').textContent = '—';
+    } else {
+      const sy = parseNum(syEl.value), ey = parseNum(eyEl.value);
+      const sv = parseNum(svEl.value), ev = parseNum(evEl.value);
+      const n = ey - sy;
+
+      $('cagrVal').textContent = (cagr >= 0 ? '' : '') + (cagr * 100).toFixed(2) + '%';
+      $('cagrVal').style.color = cagr >= 0 ? 'var(--steel)' : 'var(--alert)';
+      $('cagrDesc').textContent = sy + ' ' + disp(shape(sv)) + ' → ' + ey + ' ' + disp(shape(ev)) +
+                                  (unit ? ' ' + unit : '') + '';
+      $('spanYears').textContent = n + ' years';
+      $('totalRate').textContent = ((ev / sv - 1) * 100).toFixed(2) + '%';
+      $('multiple').textContent = (ev / sv).toFixed(2) + '×';
+    }
+
+    // 표
+    tbody.innerHTML = '';
+    rows.forEach(function (r) {
+      const tr = document.createElement('tr');
+      if (r.anchor) tr.className = 'anchor';
+
+      const td1 = document.createElement('td');
+      td1.textContent = r.year;
+      if (r.anchor) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = 'base';
+        td1.appendChild(tag);
+      }
+
+      const td2 = document.createElement('td');
+      td2.className = 'num font-medium';
+      td2.textContent = disp(r.value);
+
+      const td3 = document.createElement('td');
+      td3.className = 'num';
+      if (r.diff === null) { td3.textContent = '—'; td3.style.color = 'var(--muted)'; }
+      else {
+        td3.textContent = (r.diff >= 0 ? '+' : '−') + disp(Math.abs(r.diff));
+        td3.style.color = r.diff >= 0 ? 'var(--steel)' : 'var(--alert)';
+      }
+
+      const td4 = document.createElement('td');
+      td4.className = 'num';
+      if (r.rate === null) { td4.textContent = '—'; td4.style.color = 'var(--muted)'; }
+      else {
+        td4.textContent = (r.rate >= 0 ? '+' : '−') + Math.abs(r.rate * 100).toFixed(2) + '%';
+        td4.style.color = r.rate >= 0 ? 'var(--steel)' : 'var(--alert)';
+      }
+
+      [td1, td2, td3, td4].forEach(function (td) { tr.appendChild(td); });
+      tbody.appendChild(tr);
+    });
+
+    $('rowInfo').textContent = rows.length ? rows.length + ' years' : '';
+  }
+
+  [syEl, svEl, eyEl, evEl, fyEl, tyEl, unitEl].forEach(function (el) { el.addEventListener('input', render); });
+  dpEl.addEventListener('change', render);
+  commaEl.addEventListener('change', render);
+  document.querySelectorAll('input[name="rmode"]').forEach(function (r) { r.addEventListener('change', render); });
+
+  $('resetSpan').addEventListener('click', function () {
+    const sy = parseNum(syEl.value), ey = parseNum(eyEl.value);
+    if (isNaN(sy) || isNaN(ey)) { toast('Enter the base years first'); return; }
+    fyEl.value = sy;
+    tyEl.value = ey + 5;
+    render();
+  });
+
+  $('sampleBtn').addEventListener('click', function () {
+    syEl.value = 2020; svEl.value = '1,000';
+    eyEl.value = 2024; evEl.value = '2,000';
+    fyEl.value = 2020; tyEl.value = 2029;
+    unitEl.value = '$M';
+    render();
+    toast('Sample values loaded');
+  });
+
+  /* ---------- Export ---------- */
+  function headers() {
+    const unit = unitEl.value.trim();
+    return ['Year', unit ? 'Projected value(' + unit + ')' : 'Projected value', 'Change on the year', 'Growth (%)'];
+  }
+  // raw=true 면 쉼표 없는 순수 숫자 (엑셀에서 계산에 바로 쓰도록)
+  function bodyRows(raw) {
+    return rows.map(function (r) {
+      return [
+        String(r.year),
+        raw ? fixed(r.value) : disp(r.value),
+        r.diff === null ? '' : (raw ? fixed(r.diff) : (r.diff >= 0 ? '+' : '-') + disp(Math.abs(r.diff))),
+        r.rate === null ? '' : (raw ? (r.rate * 100).toFixed(2) : (r.rate >= 0 ? '+' : '-') + Math.abs(r.rate * 100).toFixed(2) + '%')
+      ];
+    });
+  }
+  function summaryLines() {
+    if (cagr === null) return [];
+    const unit = unitEl.value.trim();
+    const m = { round: 'rounded', floor: 'rounded down', ceil: 'rounded up' }[mode()];
+    return [
+      'CAGR ' + (cagr * 100).toFixed(2) + '%  (' + syEl.value + ' ' + svEl.value + ' → ' + eyEl.value + ' ' + evEl.value + (unit ? ' ' + unit : '') + ')',
+      'Numbers ' + m + ' to ' + dpEl.value + ' decimal places'
+    ];
+  }
+
+  function toTxt() {
+    if (!rows.length) return '';
+    const lines = summaryLines();
+    lines.push('');
+    lines.push(headers().join('\t'));
+    bodyRows(false).forEach(function (r) { lines.push(r.join('\t')); });
+    return lines.join('\n');
+  }
+
+  function toMd() {
+    if (!rows.length) return '';
+    const h = headers();
+    const lines = summaryLines().map(function (l) { return '- ' + l; });
+    lines.push('');
+    lines.push('| ' + h.join(' | ') + ' |');
+    lines.push('|' + h.map(function (_, i) { return i === 0 ? ' --- ' : ' ---: '; }).join('|') + '|');
+    bodyRows(false).forEach(function (r) { lines.push('| ' + r.join(' | ') + ' |'); });
+    return lines.join('\n');
+  }
+
+  function toCsv() {
+    if (!rows.length) return '';
+    const esc = function (v) { return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    const lines = [headers().map(esc).join(',')];
+    bodyRows(true).forEach(function (r) { lines.push(r.map(esc).join(',')); });
+    return lines.join('\r\n');
+  }
+
+  function toHtmlTable() {
+    if (!rows.length) return '';
+    const h = headers();
+    let out = '<table border="1" style="border-collapse:collapse;font-family:Pretendard,sans-serif;font-size:13px">';
+    out += '<thead><tr>' + h.map(function (x) {
+      return '<th style="background:#26384B;color:#fff;padding:6px 10px;font-weight:500">' + x + '</th>';
+    }).join('') + '</tr></thead><tbody>';
+    bodyRows(true).forEach(function (r, i) {
+      out += '<tr>' + r.map(function (c, j) {
+        const align = j === 0 ? 'left' : 'right';
+        return '<td style="padding:5px 10px;text-align:' + align + '">' + c + '</td>';
+      }).join('') + '</tr>';
+    });
+    out += '</tbody></table>';
+    return out;
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  async function copyText(text, msg) {
+    if (!text || !text.trim()) { toast('There is no table to export'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast(msg);
+    } catch (e) {
+      if (legacyCopy(text)) toast(msg);
+      else toast('The browser blocked copying. Select the text instead.');
+    }
+  }
+
+  function download(text, name, mime, bom) {
+    try {
+      const blob = new Blob([(bom ? '\uFEFF' : '') + text], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('Saved');
+    } catch (e) {
+      toast('Your browser blocked the download');
+    }
+  }
+
+  function stamp() {
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes());
+  }
+
+  $('txtBtn').addEventListener('click', function () { copyText(toTxt(), 'Copied as tab separated text'); });
+  $('mdBtn').addEventListener('click', function () { copyText(toMd(), 'Copied as a markdown table'); });
+
+  $('richBtn').addEventListener('click', async function () {
+    if (!rows.length) { toast('There is no table to export'); return; }
+    const html = toHtmlTable();
+    const plain = toTxt();
+
+    // text/html을 함께 담아야 엑셀·워드에서 표 모양 그대로 들어간다
+    if (navigator.clipboard && window.ClipboardItem) {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([plain], { type: 'text/plain' })
+        })]);
+        toast('Copied with table formatting. Paste it straight into a spreadsheet.');
+        return;
+      } catch (e) { /* 아래 평문 복사로 넘어간다 */ }
+    }
+    copyText(plain, 'Copied as tab separated text, so it splits into columns in a spreadsheet');
+  });
+
+  $('csvBtn').addEventListener('click', function () {
+    if (!rows.length) { toast('There is no table to export'); return; }
+    // UTF-8 BOM : 엑셀에서 한글이 깨지지 않도록
+    download(toCsv(), 'CAGR_' + stamp() + '.csv', 'text/csv;charset=utf-8', true);
+  });
+
+  $('xlsBtn').addEventListener('click', function () {
+    if (!rows.length) { toast('There is no table to export'); return; }
+    const html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body>' +
+                 toHtmlTable() + '</body></html>';
+    download(html, 'CAGR_' + stamp() + '.xls', 'application/vnd.ms-excel;charset=utf-8', true);
+  });
+
+  render();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Why CAGR is not the average you first think of</h2>
+<p>If revenue went from $100M to $200M over three years, that is 100% total growth. Dividing by three to get 33% a year is wrong: growing 33% annually from $100M gives $236M after three years, not $200M.</p>
+<p>Compound annual growth rate works backwards from the two endpoints and asks what steady annual rate would produce that result. For the example above it is roughly 26%. This is the figure used in market sizing and revenue projections, because it compounds the way money actually does.</p>
+<h2>When to use it</h2><dl>
+<dt>Market sizing in a business plan</dt><dd>Writing "the market grows at X% annually to $Y by 2030". Two data points from a source report are enough to derive the rate between them.</dd>
+<dt>Revenue projections</dt><dd>Three to five year forecasts for a grant application or an investor deck. Set a defensible rate and get the year by year table.</dd>
+<dt>Checking someone else's claim</dt><dd>Testing whether a growth rate quoted in a pitch deck matches the underlying numbers.</dd>
+<dt>Comparing unlike businesses</dt><dd>Putting two operations of different sizes on the same footing by comparing rates rather than absolute figures.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Enter the start year and value, then the end year and value under <strong>Base figures</strong>.</li>
+<li>The growth rate, total growth and multiple appear immediately.</li>
+<li>Extend the <strong>projection range</strong> to build a year by year table on that rate.</li>
+<li>Export as text, markdown, a table for Word, CSV or a spreadsheet file.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Rounding and decimal places</dt><dd>Round, round down or round up, to your chosen precision. One decimal place usually reads best in a written document.</dd>
+<dt>Unit</dt><dd>Enter something like $M and it appears in the table headers and exports.</dd>
+<dt>Thousands separators</dt><dd>Affects the on-screen display only. CSV and spreadsheet exports always contain plain numbers so formulas keep working.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Does it handle a decline</dt><dd>Yes. A fall produces a negative rate, which is the correct way to express shrinkage on an annual basis.</dd>
+<dt>How is the period counted</dt><dd>From 2020 to 2025 is five years. It is the interval between the two points, not the number of years listed.</dd>
+<dt>Can I put this straight into a business plan</dt><dd>Use it as a starting point. Past growth does not guarantee future growth, and the first question a reviewer asks is why the rate should hold. Have the reasoning ready alongside the table.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/data-analytics/ocrextract.html">Image to Text (OCR)</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/gov-fund-calc.html">Korean Grant Cost Share Calculator</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/percent-calc.html">Margin &amp; VAT Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does it handle a decline",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. A fall produces a negative rate, which is the correct way to express shrinkage on an annual basis."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is the period counted",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "From 2020 to 2025 is five years. It is the interval between the two points, not the number of years listed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I put this straight into a business plan",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use it as a starting point. Past growth does not guarantee future growth, and the first question a reviewer asks is why the rate should hold. Have the reasoning ready alongside the table."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+</body>
+</html>

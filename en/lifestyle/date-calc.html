@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F4F5F7">
+<title>Date &amp; Age Calculator | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Count days between dates, add days to a date, and check age or ye… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/lifestyle/date-calc.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/date-calc.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/date-calc.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/date-calc.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/lifestyle/date-calc.html" />
+<meta property="og:title" content="Date &amp; Age Calculator · date · calculator | TOOLKIT" />
+<meta property="og:description" content="Count days between dates, add days to a date, and check age or ye… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Date &amp; Age Calculator · date · calculator | TOOLKIT" />
+<meta name="twitter:description" content="Count days between dates, add days to a date, and check age or ye… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Date & Age Calculator",
+  "description": "Count days between dates, add days to a date, and check age or years of service.",
+  "url": "https://mnledu.com/en/lifestyle/date-calc.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F4F5F7; --panel:#FFFFFF; --line:#E3E7EC; --ink:#26384B; --dim:#5F7488;
+    --accent:#2C6BA0; --soft:#EAF1F7; --ok:#2E7D5B; --warn:#A34A3C;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:13px; }
+
+  .tab{
+    flex:1; padding:11px 6px; border-radius:9px; border:1px solid var(--line);
+    background:#fff; color:var(--dim); font-size:13px; cursor:pointer; transition:all .12s;
+  }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:9px; background:#fff;
+    padding:11px 12px; font-size:15px; color:var(--ink); outline:none;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .fld:focus{ border-color:var(--accent); }
+  .lab{ display:block; font-size:11.5px; color:var(--dim); margin-bottom:5px; }
+
+  .opt{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none; font-size:13px; }
+  .opt input{ accent-color:var(--accent); width:16px; height:16px; }
+
+  .result{
+    background:linear-gradient(160deg, #26384B, #1B2836); color:#fff;
+    border-radius:13px; padding:20px 18px;
+  }
+  .result .big{ font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; line-height:1.15; letter-spacing:-.01em; }
+  .result .cap{ font-size:11.5px; opacity:.66; letter-spacing:.05em; }
+  .stat{
+    background:rgba(255,255,255,.09); border-radius:9px; padding:10px 12px;
+  }
+  .stat .k{ font-size:10.5px; opacity:.66; }
+  .stat .v{ font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; margin-top:2px; }
+
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:8px; font-size:12.5px; padding:8px 12px; cursor:pointer;
+  }
+  .btn:active{ background:var(--soft); }
+  .btn.p{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-2xl px-4 py-6 sm:py-9">
+
+  <header class="mb-5">
+    <h1 class="text-[18px] font-semibold tracking-tight">Date &amp; Age Calculator</h1>
+    <p class="mt-1 text-[12.5px]" style="color:var(--dim)">Adding, subtracting and counting dates in one place</p>
+  </header>
+
+  <div style="display:flex; gap:7px; margin-bottom:16px">
+    <button class="tab on" data-tab="add">Add days</button>
+    <button class="tab" data-tab="diff">Between dates</button>
+    <button class="tab" data-tab="age">Age &amp; service</button>
+  </div>
+
+  <!-- 1. Add days -->
+  <section id="tab-add">
+    <div class="panel" style="padding:16px">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <div>
+          <label class="lab" for="aBase">Reference date</label>
+          <input class="fld" id="aBase" type="date">
+        </div>
+        <div>
+          <label class="lab" for="aDays">Days (negative goes backwards)</label>
+          <input class="fld" id="aDays" type="number" inputmode="numeric" value="100">
+        </div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:14px; margin-top:13px">
+        <label class="opt"><input type="checkbox" id="aBiz">Business days only, excluding weekends</label>
+        <label class="opt"><input type="checkbox" id="aInc">Include the start day</label>
+      </div>
+      <div style="display:flex; gap:7px; margin-top:12px; flex-wrap:wrap">
+        <button class="btn" data-quick="7">+7 days</button>
+        <button class="btn" data-quick="30">+30 days</button>
+        <button class="btn" data-quick="100">+100 days</button>
+        <button class="btn" data-quick="365">+365 days</button>
+        <button class="btn" data-quick="-1">-1 day</button>
+      </div>
+    </div>
+    <div class="result mt-3" id="addRes"></div>
+  </section>
+
+  <!-- 2. Between dates -->
+  <section id="tab-diff" style="display:none">
+    <div class="panel" style="padding:16px">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <div>
+          <label class="lab" for="dFrom">Start date</label>
+          <input class="fld" id="dFrom" type="date">
+        </div>
+        <div>
+          <label class="lab" for="dTo">End date</label>
+          <input class="fld" id="dTo" type="date">
+        </div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:14px; margin-top:13px">
+        <label class="opt"><input type="checkbox" id="dInc" checked>Count the start day (Korean D-Day style)</label>
+      </div>
+    </div>
+    <div class="result mt-3" id="diffRes"></div>
+  </section>
+
+  <!-- 3. Age &amp; service -->
+  <section id="tab-age" style="display:none">
+    <div class="panel" style="padding:16px">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <div>
+          <label class="lab" for="gBirth">Date of birth or start date</label>
+          <input class="fld" id="gBirth" type="date">
+        </div>
+        <div>
+          <label class="lab" for="gBase">Reference date</label>
+          <input class="fld" id="gBase" type="date">
+        </div>
+      </div>
+      <p class="mt-3 text-[11.5px]" style="color:var(--dim)">
+        Age accounts for whether the birthday has passed this year. Length of service is broken down the same way into years, months and days.
+      </p>
+    </div>
+    <div class="result mt-3" id="ageRes"></div>
+  </section>
+
+  <div style="display:flex; gap:7px; margin-top:14px">
+    <button class="btn p" id="copyBtn" style="flex:1; padding:11px">Copy result</button>
+    <button class="btn" id="todayBtn" style="flex:1; padding:11px">Back to today</button>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let tab = 'add';
+
+  const toastEl = document.getElementById('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  function D(v) { return window.dayjs ? dayjs(v) : null; }
+  function todayStr() { return D(new Date()).format('YYYY-MM-DD'); }
+  function label(d) { return d.format('D MMMM YYYY') + ' (' + DOW[d.day()] + ')'; }
+  function iso(d) { return d.format('YYYY-MM-DD'); }
+  function n(v) { return v.toLocaleString('ko-KR'); }
+
+  /* ---------- 1. Add days ---------- */
+  // 영업일 계산은 주말을 건너뛰며 하루씩 세는 방식이라야 정확하다
+  function addBusiness(start, days) {
+    let d = start, left = Math.abs(days), step = days >= 0 ? 1 : -1;
+    while (left > 0) {
+      d = d.add(step, 'day');
+      const w = d.day();
+      if (w !== 0 && w !== 6) left--;
+    }
+    return d;
+  }
+
+  function calcAdd() {
+    const base = D(document.getElementById('aBase').value);
+    const raw = parseInt(document.getElementById('aDays').value, 10);
+    const box = document.getElementById('addRes');
+
+    if (!base || !base.isValid() || isNaN(raw)) {
+      box.innerHTML = '<p class="cap">Enter a date and a number of days</p>';
+      return '';
+    }
+
+    const biz = document.getElementById('aBiz').checked;
+    const inc = document.getElementById('aInc').checked;
+    // 초일 산입이면 Reference date이 1일째이므로 하루 덜 더한다
+    const days = inc ? (raw > 0 ? raw - 1 : raw + 1) : raw;
+    const target = biz ? addBusiness(base, days) : base.add(days, 'day');
+
+    const gap = target.diff(base, 'day');
+    box.innerHTML =
+      '<p class="cap">' + label(base) + ' plus ' + (raw >= 0 ? raw + ' days' : Math.abs(raw) + ' days earlier') +
+      (biz ? ' · business days' : '') + (inc ? ' · start day counted' : '') + '</p>' +
+      '<p class="big" style="margin:8px 0 4px">' + iso(target) + '</p>' +
+      '<p style="margin:0; font-size:14px; opacity:.85">' + label(target) + '</p>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px">' +
+        '<div class="stat"><div class="k">Days elapsed</div><div class="v">' + n(Math.abs(gap)) + '</div></div>' +
+        '<div class="stat"><div class="k">Weeks</div><div class="v">' + (Math.abs(gap) / 7).toFixed(1) + '</div></div>' +
+      '</div>';
+
+    return iso(base) + ' plus ' + raw + ' days → ' + iso(target) + ' (' + DOW[target.day()] + ')';
+  }
+
+  /* ---------- 2. Between dates ---------- */
+  function calcDiff() {
+    let a = D(document.getElementById('dFrom').value);
+    let b = D(document.getElementById('dTo').value);
+    const box = document.getElementById('diffRes');
+
+    if (!a || !b || !a.isValid() || !b.isValid()) {
+      box.innerHTML = '<p class="cap">Enter both dates</p>';
+      return '';
+    }
+    let swapped = false;
+    if (b.isBefore(a)) { const t = a; a = b; b = t; swapped = true; }
+
+    const inc = document.getElementById('dInc').checked;
+    const rawDays = b.diff(a, 'day');
+    const days = rawDays + (inc ? 1 : 0);
+
+    // 몇 년 몇 개월 며칠인지 단계별로 떼어낸다
+    let years = b.diff(a, 'year');
+    let after = a.add(years, 'year');
+    let months = b.diff(after, 'month');
+    after = after.add(months, 'month');
+    let rest = b.diff(after, 'day');
+
+    const totalMonths = b.diff(a, 'month');
+
+    box.innerHTML =
+      '<p class="cap">' + iso(a) + ' → ' + iso(b) + (swapped ? ' (dates swapped)' : '') +
+      (inc ? ' · start day counted' : '') + '</p>' +
+      '<p class="big" style="margin:8px 0 4px">' + n(days) + ' days</p>' +
+      '<p style="margin:0; font-size:14px; opacity:.85">' +
+        (years ? years + 'y ' : '') + (months ? months + 'm ' : '') + rest + 'd' + '</p>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px">' +
+        '<div class="stat"><div class="k">Months</div><div class="v">' + n(totalMonths) + '</div></div>' +
+        '<div class="stat"><div class="k">Weeks</div><div class="v">' + (rawDays / 7).toFixed(1) + '</div></div>' +
+        '<div class="stat"><div class="k">Hours</div><div class="v">' + n(rawDays * 24) + '</div></div>' +
+      '</div>';
+
+    return iso(a) + ' ~ ' + iso(b) + ' = ' + days + ' days (' +
+           (years ? years + 'y ' : '') + (months ? months + 'm ' : '') + rest + 'd)';
+  }
+
+  /* ---------- 3. Age &amp; service ---------- */
+  function calcAge() {
+    const b = D(document.getElementById('gBirth').value);
+    const base = D(document.getElementById('gBase').value);
+    const box = document.getElementById('ageRes');
+
+    if (!b || !base || !b.isValid() || !base.isValid()) {
+      box.innerHTML = '<p class="cap">Enter a date</p>';
+      return '';
+    }
+    if (b.isAfter(base)) {
+      box.innerHTML = '<p class="cap">The reference date falls before the start date</p>';
+      return '';
+    }
+
+    let years = base.diff(b, 'year');
+    let after = b.add(years, 'year');
+    let months = base.diff(after, 'month');
+    after = after.add(months, 'month');
+    const days = base.diff(after, 'day');
+
+    const totalDays = base.diff(b, 'day');
+    const korAge = base.year() - b.year() + 1;              // 세는나이
+    const yearAge = base.year() - b.year();                 // 연나이
+
+    // 다음 생일까지
+    let next = b.year(base.year());
+    if (next.isBefore(base, 'day')) next = next.add(1, 'year');
+    const toBirthday = next.diff(base, 'day');
+
+    box.innerHTML =
+      '<p class="cap">' + iso(b) + ' · as at ' + iso(base) + '</p>' +
+      '<p class="big" style="margin:8px 0 4px">' + years + '</p>' +
+      '<p style="margin:0; font-size:14px; opacity:.85">Service or elapsed ' +
+        years + 'y ' + months + 'm ' + days + 'd</p>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px">' +
+        '<div class="stat"><div class="k">Total days</div><div class="v">' + n(totalDays) + '</div></div>' +
+        '<div class="stat"><div class="k">Until the next anniversary</div><div class="v">' + (toBirthday === 0 ? 'today' : toBirthday + ' days') + '</div></div>' +
+        '<div class="stat"><div class="k">Korean age (KR)</div><div class="v">' + korAge + '</div></div>' +
+        '<div class="stat"><div class="k">Year age (KR)</div><div class="v">' + yearAge + '</div></div>' +
+      '</div>';
+
+    return iso(b) + ' → ' + iso(base) + ' : age ' + years + ' (' + years + 'y ' + months + 'm ' + days + 'd)';
+  }
+
+  /* ---------- 갱신 ---------- */
+  let lastText = '';
+  function update() {
+    if (!window.dayjs) return;
+    if (tab === 'add') lastText = calcAdd();
+    else if (tab === 'diff') lastText = calcDiff();
+    else lastText = calcAge();
+  }
+
+  document.querySelectorAll('.tab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      tab = b.dataset.tab;
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('on', x === b); });
+      ['add', 'diff', 'age'].forEach(function (k) {
+        document.getElementById('tab-' + k).style.display = (k === tab) ? 'block' : 'none';
+      });
+      update();
+    });
+  });
+
+  document.querySelectorAll('[data-quick]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.getElementById('aDays').value = b.dataset.quick;
+      update();
+    });
+  });
+
+  ['aBase','aDays','aBiz','aInc','dFrom','dTo','dInc','gBirth','gBase'].forEach(function (id) {
+    const el = document.getElementById(id);
+    el.addEventListener('input', update);
+    el.addEventListener('change', update);
+  });
+
+  document.getElementById('todayBtn').addEventListener('click', function () {
+    const t = todayStr();
+    if (tab === 'add') document.getElementById('aBase').value = t;
+    else if (tab === 'diff') { document.getElementById('dFrom').value = t; document.getElementById('dTo').value = t; }
+    else document.getElementById('gBase').value = t;
+    update();
+    toast('Set to today');
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    if (!lastText) { toast('Nothing to copy'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(lastText);
+      else throw new Error('no clipboard');
+      toast('Copied');
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = lastText; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+      document.body.removeChild(ta);
+      toast(ok ? 'Copied' : 'Copy was blocked');
+    }
+  });
+
+  /* ---------- 시작값 ---------- */
+  const t = todayStr();
+  document.getElementById('aBase').value = t;
+  document.getElementById('dFrom').value = t;
+  document.getElementById('dTo').value = window.dayjs ? dayjs().add(30, 'day').format('YYYY-MM-DD') : t;
+  document.getElementById('gBirth').value = '1990-01-01';
+  document.getElementById('gBase').value = t;
+  update();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Where date arithmetic loses a day</h2>
+<p>A condition reading "within 30 days of the application date" leaves a real question: does the application date count as day one, or does counting start the next day? Contracts and legislation distinguish between the two, and the deadline shifts by a day depending on which applies.</p>
+<p>Age has the same problem in reverse. There are several conventions, and different documents ask for different ones. This tool lets you pick the basis rather than assuming one.</p>
+<h2>When to use it</h2><dl>
+<dt>Working out a deadline</dt><dd>Turning "within 14 days of the notice" into an actual date.</dd>
+<dt>Contract periods</dt><dd>Counting the days between a start and end date, with the option to include or exclude the first day.</dd>
+<dt>Length of service</dt><dd>Years, months and days from a start date to a reference date.</dd>
+<dt>Age eligibility</dt><dd>Checking a condition like "under 40". Several age conventions are shown side by side.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Pick a mode: add days, count between dates, or age and service.</li>
+<li>Enter the dates.</li>
+<li>Read the result and use <strong>Copy result</strong>.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Include the start day</dt><dd>Whether the first day counts. Legal periods often exclude it, but call documents vary, so follow the wording in front of you.</dd>
+<dt>Business days only</dt><dd>Counts weekdays and skips weekends. Public holidays are not included, since they differ by country.</dd>
+<dt>Age conventions</dt><dd>International age is shown alongside two Korean conventions, marked KR: <strong>Korean age</strong>, which starts at one and increments at new year, and <strong>year age</strong>, which is simply the current year minus the birth year.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Should I include the start day or not</dt><dd>Follow the wording of the contract or notice. "Within 30 days of" usually starts counting the following day, but exceptions are common. Where an explicit deadline date is given, that takes precedence.</dd>
+<dt>Are public holidays taken into account</dt><dd>No. Business day counting excludes weekends only, because holiday calendars differ by country. Check separately if the deadline depends on them.</dd>
+<dt>What are the Korean age conventions</dt><dd>Korea historically used two systems alongside international age. Korean age starts at one at birth and increases every new year; year age is the current year minus the birth year. They are included because forms in Korea sometimes still ask for them.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/lifestyle/youtubenote.html">YouTube Timestamp Notes</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/unit-converter.html">Universal Unit Converter</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/calculator.html">Smart Formula Calculator</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/timezone-dial.html">Time Zone Dial</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/vocab-quiz.html">Flashcards &amp; Quiz</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Should I include the start day or not",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Follow the wording of the contract or notice. \"Within 30 days of\" usually starts counting the following day, but exceptions are common. Where an explicit deadline date is given, that takes precedence."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are public holidays taken into account",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Business day counting excludes weekends only, because holiday calendars differ by country. Check separately if the deadline depends on them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the Korean age conventions",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Korea historically used two systems alongside international age. Korean age starts at one at birth and increases every new year; year age is the current year minus the birth year. They are included because forms in Korea sometimes still ask for them."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+</body>
+</html>
