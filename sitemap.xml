@@ -1,224 +1,639 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://mnledu.com/</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mnledu.com/about.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://mnledu.com/contact.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://mnledu.com/privacy.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://mnledu.com/terms.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/about.html</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/contact.html</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/privacy.html</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/terms.html</loc>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/notepad.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/notepad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/notepad.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/notepad.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/notepad.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/notepad.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/notepad.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/notepad.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/emailgen.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/emailgen.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/emailgen.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/emailgen.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/emailgen.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/emailgen.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/emailgen.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/emailgen.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/templatemerger.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/templatemerger.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/templatemerger.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/templatemerger.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/templatemerger.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/templatemerger.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/templatemerger.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/templatemerger.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/promptmerger.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/promptmerger.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/promptmerger.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/promptmerger.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/promptmerger.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/promptmerger.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/promptmerger.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/promptmerger.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/listformat.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/listformat.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/listformat.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/listformat.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/listformat.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/listformat.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/listformat.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/listformat.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/textclean.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/textclean.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/textclean.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/textclean.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/textclean.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/textclean.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/textclean.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/textclean.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/anonymizer.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/anonymizer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/anonymizer.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/anonymizer.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/anonymizer.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/anonymizer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/anonymizer.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/anonymizer.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/pdftxt.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdftxt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdftxt.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdftxt.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/pdftxt.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdftxt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdftxt.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdftxt.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/pdfmerge.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdfmerge.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdfmerge.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdfmerge.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/pdfmerge.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/pdfmerge.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdfmerge.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/pdfmerge.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/productivity/voicenote.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/voicenote.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/voicenote.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/voicenote.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/voicenote.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/voicenote.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/voicenote.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/voicenote.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/data-analytics/cagrcal.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/cagrcal.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/cagrcal.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/cagrcal.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/data-analytics/cagrcal.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/cagrcal.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/cagrcal.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/cagrcal.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/data-analytics/ocrextract.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/ocrextract.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/ocrextract.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/ocrextract.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/data-analytics/ocrextract.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/ocrextract.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/ocrextract.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/ocrextract.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/data-analytics/gov-fund-calc.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/gov-fund-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/gov-fund-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/gov-fund-calc.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/data-analytics/gov-fund-calc.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/gov-fund-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/gov-fund-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/gov-fund-calc.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/data-analytics/percent-calc.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/percent-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/percent-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/percent-calc.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/data-analytics/percent-calc.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/data-analytics/percent-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/percent-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/data-analytics/percent-calc.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/lifestyle/youtubenote.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/youtubenote.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/youtubenote.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/youtubenote.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/youtubenote.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/youtubenote.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/youtubenote.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/youtubenote.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/lifestyle/date-calc.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/date-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/date-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/date-calc.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/date-calc.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/date-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/date-calc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/date-calc.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/lifestyle/unit-converter.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/unit-converter.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/unit-converter.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/unit-converter.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/unit-converter.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/unit-converter.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/unit-converter.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/unit-converter.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/lifestyle/calculator.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/calculator.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/calculator.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/calculator.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/calculator.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/calculator.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/calculator.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/calculator.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/lifestyle/timezone-dial.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/timezone-dial.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/timezone-dial.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/timezone-dial.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/timezone-dial.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/timezone-dial.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/timezone-dial.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/timezone-dial.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/lifestyle/vocab-quiz.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/vocab-quiz.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/vocab-quiz.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/vocab-quiz.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/lifestyle/vocab-quiz.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/lifestyle/vocab-quiz.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/vocab-quiz.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/lifestyle/vocab-quiz.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/design-media/screendeco.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/screendeco.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/screendeco.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/screendeco.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/design-media/screendeco.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/screendeco.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/screendeco.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/screendeco.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/design-media/mosaicmarker.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/mosaicmarker.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/mosaicmarker.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/mosaicmarker.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/design-media/mosaicmarker.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/mosaicmarker.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/mosaicmarker.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/mosaicmarker.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/design-media/teleprompter.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/teleprompter.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/teleprompter.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/teleprompter.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/design-media/teleprompter.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/teleprompter.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/teleprompter.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/teleprompter.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/tetris.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/tetris.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/tetris.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/tetris.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/tetris.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/tetris.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/tetris.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/tetris.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/sudoku.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/sudoku.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/sudoku.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/sudoku.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/sudoku.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/sudoku.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/sudoku.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/sudoku.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/snake.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/snake.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/snake.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/snake.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/snake.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/snake.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/snake.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/snake.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/minesweeper.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/minesweeper.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/minesweeper.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/minesweeper.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/minesweeper.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/minesweeper.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/minesweeper.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/minesweeper.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/tarot.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/tarot.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/tarot.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/tarot.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/tarot.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/tarot.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/tarot.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/tarot.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/neon-ladder.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/neon-ladder.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/neon-ladder.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/neon-ladder.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/neon-ladder.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/neon-ladder.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/neon-ladder.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/neon-ladder.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/horse-race.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/horse-race.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/horse-race.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/horse-race.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/horse-race.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/horse-race.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/horse-race.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/horse-race.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/lotto.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/lotto.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/lotto.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/lotto.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/lotto.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/lotto.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/lotto.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/lotto.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mnledu.com/entertainment/russian-roulette.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/russian-roulette.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/russian-roulette.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/russian-roulette.html"/>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/russian-roulette.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/russian-roulette.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/russian-roulette.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/russian-roulette.html"/>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

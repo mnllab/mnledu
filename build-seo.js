@@ -27,10 +27,24 @@ const STATIC_PAGES = [
   { loc: '/about.html',   priority: '0.5', changefreq: 'yearly'  },
   { loc: '/contact.html', priority: '0.5', changefreq: 'yearly'  },
   { loc: '/privacy.html', priority: '0.3', changefreq: 'yearly'  },
-  { loc: '/terms.html',   priority: '0.3', changefreq: 'yearly'  }
+  { loc: '/terms.html',   priority: '0.3', changefreq: 'yearly'  },
+  { loc: '/en/',             priority: '0.9', changefreq: 'weekly' },
+  { loc: '/en/about.html',   priority: '0.4', changefreq: 'yearly' },
+  { loc: '/en/contact.html', priority: '0.4', changefreq: 'yearly' },
+  { loc: '/en/privacy.html', priority: '0.3', changefreq: 'yearly' },
+  { loc: '/en/terms.html',   priority: '0.3', changefreq: 'yearly' }
 ];
 
 /* ── tools-data.js 읽기 ──────────────────────────────────── */
+
+function loadToolsEn() {
+  const file = path.join(ROOT, 'tools-data-en.js');
+  if (!fs.existsSync(file)) return [];
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(file, 'utf8'), sandbox);
+  return sandbox.window.TOOLS_DATA || [];
+}
 
 function loadTools() {
   const file = path.join(ROOT, 'tools-data.js');
@@ -70,8 +84,16 @@ function htmlEscape(s) {
 
 /* ── 1. sitemap.xml ──────────────────────────────────────── */
 
-function buildSitemap(tools) {
+function altLinks(koUrl, enUrl) {
+  return '    <xhtml:link rel="alternate" hreflang="ko" href="' + xmlEscape(koUrl) + '"/>\n' +
+         '    <xhtml:link rel="alternate" hreflang="en" href="' + xmlEscape(enUrl) + '"/>\n' +
+         '    <xhtml:link rel="alternate" hreflang="x-default" href="' + xmlEscape(koUrl) + '"/>\n';
+}
+
+function buildSitemap(tools, toolsEn) {
   const today = new Date().toISOString().slice(0, 10);
+  const enById = {};
+  toolsEn.forEach(t => { enById[t.id] = t; });
 
   const staticEntries = STATIC_PAGES.map(p =>
     '  <url>\n' +
@@ -82,23 +104,36 @@ function buildSitemap(tools) {
     '  </url>'
   );
 
-  const toolEntries = tools.map(t =>
-    '  <url>\n' +
-    '    <loc>' + xmlEscape(absolute(t.url)) + '</loc>\n' +
-    '    <lastmod>' + today + '</lastmod>\n' +
-    '    <changefreq>monthly</changefreq>\n' +
-    '    <priority>0.8</priority>\n' +
-    '  </url>'
-  );
+  const toolEntries = [];
+  tools.forEach(t => {
+    const en = enById[t.id];
+    const ko = absolute(t.url);
+    const alt = en ? altLinks(ko, absolute(en.url)) : '';
+    toolEntries.push('  <url>\n' +
+      '    <loc>' + xmlEscape(ko) + '</loc>\n' + alt +
+      '    <lastmod>' + today + '</lastmod>\n' +
+      '    <changefreq>monthly</changefreq>\n' +
+      '    <priority>0.8</priority>\n' +
+      '  </url>');
+    if (en) {
+      toolEntries.push('  <url>\n' +
+        '    <loc>' + xmlEscape(absolute(en.url)) + '</loc>\n' + altLinks(ko, absolute(en.url)) +
+        '    <lastmod>' + today + '</lastmod>\n' +
+        '    <changefreq>monthly</changefreq>\n' +
+        '    <priority>0.8</priority>\n' +
+        '  </url>');
+    }
+  });
 
   const xml =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
+    '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
     staticEntries.concat(toolEntries).join('\n') + '\n' +
     '</urlset>\n';
 
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), xml, 'utf8');
-  return STATIC_PAGES.length + tools.length;
+  return STATIC_PAGES.length + toolEntries.length;
 }
 
 /* ── 2·3. index.html 채우기 ──────────────────────────────── */
@@ -112,8 +147,9 @@ function fillBlock(html, startMark, endMark, content, label) {
   return html.slice(0, start + startMark.length) + '\n' + content + '\n            ' + html.slice(end);
 }
 
-function buildIndex(tools) {
-  const file = path.join(ROOT, 'index.html');
+function buildIndex(tools, target) {
+  const file = path.join(ROOT, target || 'index.html');
+  if (!fs.existsSync(file)) return;
   let html = fs.readFileSync(file, 'utf8');
 
   /* 도구 링크 목록 */
@@ -170,12 +206,15 @@ function buildIndex(tools) {
 
 try {
   const tools = loadTools();
-  const count = buildSitemap(tools);
-  buildIndex(tools);
+  const toolsEn = loadToolsEn();
+  const count = buildSitemap(tools, toolsEn);
+  buildIndex(tools, 'index.html');
+  if (toolsEn.length) buildIndex(toolsEn, path.join('en', 'index.html'));
 
-  console.log('도구 ' + tools.length + '개를 읽었습니다.');
+  console.log('도구 ' + tools.length + '개 (영문 ' + toolsEn.length + '개) 를 읽었습니다.');
   console.log('sitemap.xml : 주소 ' + count + '개');
   console.log('index.html  : 도구 링크와 구조화 데이터를 채웠습니다.');
+  if (toolsEn.length) console.log('en/index.html : 영문 도구 링크를 채웠습니다.');
 } catch (e) {
   console.error('실패 : ' + e.message);
   process.exit(1);

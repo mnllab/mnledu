@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>문의하기 · TOOLKIT</title>
-<meta name="description" content="TOOLKIT 도구 요청, 오류 신고, 제휴 문의는 contact@mnlbiz.com 으로 보내주세요." />
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}" />
 <meta name="author" content="Janggil Kim" />
 <meta name="robots" content="index, follow" />
-<link rel="canonical" href="https://mnledu.com/contact.html" />
+<link rel="canonical" href="https://mnledu.com/en/{{SLUG}}.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/{{KOSLUG}}.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/{{SLUG}}.html" />
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="TOOLKIT" />
-<meta property="og:locale" content="ko_KR" />
-<meta property="og:url" content="https://mnledu.com/contact.html" />
-<meta property="og:title" content="문의하기 · TOOLKIT" />
-<meta property="og:description" content="TOOLKIT 도구 요청, 오류 신고, 제휴 문의는 contact@mnlbiz.com 으로 보내주세요." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/{{SLUG}}.html" />
+<meta property="og:title" content="{{TITLE}}" />
+<meta property="og:description" content="{{DESC}}" />
 
 <meta name="theme-color" content="#f8fafc" />
 <meta name="format-detection" content="telephone=no" />
@@ -61,7 +63,7 @@
   <header class="backdrop-blur-xl bg-white/80 border-b border-slate-200/70 sticky top-0 z-50">
     <div class="mx-auto max-w-6xl px-4 sm:px-8">
       <div class="flex h-14 sm:h-16 items-center justify-between gap-3">
-        <a href="https://mnledu.com/" class="flex items-center gap-2.5 min-w-0 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 group">
+        <a href="/en/" class="flex items-center gap-2.5 min-w-0 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 group">
           <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-white shrink-0 group-hover:bg-indigo-600 transition-colors shadow-sm">
             <i data-lucide="layers" class="h-4 w-4"></i>
           </span>
@@ -71,9 +73,9 @@
         <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
             class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-500 px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
-            <i data-lucide="heart" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">응원하기</span>
+            <i data-lucide="heart" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">Support</span>
           </a>
-          <a href="https://mnledu.com/"
+          <a href="/en/"
             class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             <i data-lucide="home" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">HOME</span>
           </a>
@@ -84,90 +86,39 @@
 
   <main class="mx-auto max-w-3xl px-4 sm:px-8 py-12 sm:py-16">
 
-    <nav aria-label="현재 위치" class="mb-6 flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-400">
-      <a href="https://mnledu.com/" class="hover:text-indigo-600 transition-colors">HOME</a>
+    <nav aria-label="Breadcrumb" class="mb-6 flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-400">
+      <a href="/en/" class="hover:text-indigo-600 transition-colors">HOME</a>
       <i data-lucide="chevron-right" class="h-3 w-3"></i>
-      <span class="text-slate-600">CONTACT</span>
+      <span class="text-slate-600">{{CRUMB}}</span>
     </nav>
 
-    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 break-keep">문의하기</h1>
-    <p class="mt-3 text-sm leading-relaxed text-slate-500 break-keep">도구 요청, 오류 신고, 그 밖의 문의를 받습니다.</p>
+    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 break-keep">{{H1}}</h1>
+    <p class="mt-3 text-sm leading-relaxed text-slate-500 break-keep">{{LEAD}}</p>
 
     <div class="prose-doc mt-10 border-t border-slate-200/70 pt-8">
-
-      <h2>메일</h2>
-      <p>
-        <a href="mailto:contact@mnlbiz.com">contact@mnlbiz.com</a>
-      </p>
-      <p>
-        확인하는 대로 답신드립니다. 혼자 운영하고 있어 답변까지 며칠 걸릴 수 있는 점 양해 부탁드립니다.
-      </p>
-
-      <h2>유튜브</h2>
-      <p>
-        <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer">youtube.com/@mnl</a>
-      </p>
-      <p>
-        채널 댓글로 남겨주셔도 확인합니다.
-      </p>
-
-      <h2>어떤 내용을 보내주시면 되나요</h2>
-
-      <h3>도구가 동작하지 않을 때</h3>
-      <p>
-        아래 내용을 함께 적어주시면 원인을 찾기가 훨씬 수월합니다.
-      </p>
-      <ul>
-        <li>어떤 도구인지 (도구 이름 또는 주소)</li>
-        <li>어떤 값을 넣었을 때 문제가 생겼는지</li>
-        <li>기대한 결과와 실제로 나온 결과</li>
-        <li>사용 중인 브라우저와 기기 (예: 크롬 · 윈도우, 사파리 · 아이폰)</li>
-      </ul>
-      <p>
-        모든 처리가 브라우저 안에서 이루어지기 때문에 서버에 오류 기록이 남지 않습니다.
-        알려주시지 않으면 문제가 생긴 사실 자체를 알 수 없습니다.
-      </p>
-
-      <h3>새 도구 요청</h3>
-      <p>
-        어떤 작업이 번거로운지, 지금은 그 일을 어떻게 처리하고 계신지 적어주시면 좋습니다.
-        브라우저 안에서 처리할 수 있는 작업이라면 만들 수 있는 범위에서 검토합니다.
-      </p>
-
-      <h3>그 밖의 문의</h3>
-      <p>
-        제휴, 인용, 저작권 관련 문의도 같은 주소로 보내주세요.
-      </p>
-
-      <h2>운영자</h2>
-      <ul>
-        <li>운영자 : 김장길 (Janggil Kim)</li>
-        <li>사이트 : https://mnledu.com</li>
-        <li>메일 : contact@mnlbiz.com</li>
-      </ul>
-
+{{BODY}}
     </div>
 
   </main>
 
   <footer class="border-t border-slate-200/70 bg-white/60">
     <div class="mx-auto max-w-6xl px-4 sm:px-8 py-8">
-      <nav aria-label="사이트 정보" class="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 sm:justify-start">
-        <a href="https://mnledu.com/about.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">소개</a>
-        <a href="https://mnledu.com/contact.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">문의하기</a>
-        <a href="https://mnledu.com/privacy.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">개인정보처리방침</a>
-        <a href="https://mnledu.com/terms.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">이용약관</a>
-        <a href="https://mnledu.com/#about" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">자주 묻는 질문</a>
+      <nav aria-label="Site information" class="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 sm:justify-start">
+        <a href="/en/about.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">About</a>
+        <a href="/en/contact.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">Contact</a>
+        <a href="/en/privacy.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">Privacy Policy</a>
+        <a href="/en/terms.html" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">Terms of Use</a>
+        <a href="/en/#about" class="text-[12.5px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors">FAQ</a>
       </nav>
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
         <p class="font-mono text-[11px] font-bold tracking-widest text-slate-400 uppercase">TOOLKIT · Client-Side Utilities</p>
-        <p class="text-xs text-slate-500 font-medium text-center sm:text-right">모든 데이터 연산은 사용자의 브라우저 내에서 안전하게 처리됩니다.</p>
+        <p class="text-xs text-slate-500 font-medium text-center sm:text-right">Every calculation runs inside your browser.</p>
       </div>
 
       <div class="mt-6 pt-5 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p class="font-mono text-[11px] text-slate-400 tracking-wider">&copy; 2026 Janggil Kim. All rights reserved.</p>
-        <p class="text-[11px] text-slate-400 font-medium">무단 복제 및 재배포를 금지합니다</p>
+        <p class="text-[11px] text-slate-400 font-medium">Unauthorised copying and redistribution prohibited</p>
       </div>
     </div>
   </footer>
