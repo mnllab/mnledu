@@ -783,6 +783,37 @@
     }
   }
 </style>
+
+<style>
+  .tk-coffee{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:12px;
+    font-size:13px; font-weight:700; letter-spacing:.01em;
+    color:#3A2A05; text-decoration:none; white-space:nowrap;
+    background:linear-gradient(180deg,#FFD84D 0%,#F5B70A 100%);
+    border:1px solid #D99A06;
+    box-shadow:0 1px 0 rgba(255,255,255,.55) inset,
+               0 2px 0 #C98B05,
+               0 4px 10px rgba(180,120,0,.28);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .tk-coffee:hover{
+    filter:brightness(1.04);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,
+               0 3px 0 #C98B05,
+               0 7px 16px rgba(180,120,0,.34);
+    transform:translateY(-1px);
+  }
+  .tk-coffee:active{
+    transform:translateY(2px);
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset,
+               0 0 0 #C98B05,
+               0 2px 5px rgba(180,120,0,.28);
+  }
+  .tk-coffee:focus-visible{ outline:2px solid #B98405; outline-offset:2px; }
+  .tk-coffee-full{ width:100%; padding-top:13px; padding-bottom:13px; }
+  .tk-coffee-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
+</style>
 </head>
 
 <body class="bg-slate-50/70 font-sans text-slate-900 antialiased pb-20 md:pb-0 selection:bg-indigo-100 selection:text-indigo-900">
@@ -813,6 +844,24 @@
 
           
 
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
           <!-- TOOLKIT:LANG_START -->
           <a href="https://mnledu.com/" title="한국어로 보기" hreflang="ko"
             class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
@@ -821,7 +870,7 @@
         <!-- TOOLKIT:LANG_END -->
 
           <button id="support-btn" type="button" title="Support"
-            class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-500 px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
+            class="tk-coffee tk-coffee-sm shrink-0">
             <i data-lucide="coffee" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">Buy me a coffee</span>
           </button>
 
@@ -1111,17 +1160,23 @@
       <!-- 후원 안내 -->
       <div id="support" class="mb-7 flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white px-5 py-5 sm:flex-row sm:items-center sm:px-6">
         <div class="min-w-0">
-          <p class="font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>
+          <p class="font-mono text-[11px] font-bold uppercase tracking-widest text-amber-500">Support</p>
           <p class="mt-1.5 text-[15px] font-extrabold tracking-tight text-slate-900 break-keep">Every tool here is free</p>
           <p class="mt-1.5 text-[12.5px] leading-relaxed text-slate-500 break-keep">
-            If these tools saved you time, you can support the channel on YouTube with <span class="font-semibold text-slate-700">Super Thanks</span> or
-            <span class="font-semibold text-slate-700">membership</span>. It goes straight into building the next one.
+            If these tools saved you time, you can buy me a coffee, or support the channel on YouTube. It goes straight into building the next one.
           </p>
         </div>
-        <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"
-          class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#FFDD00] !text-slate-900 px-5 py-3 text-[13px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 sm:ml-auto">
-          <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
-        </a>
+        <!-- TOOLKIT:FOOTER_SUPPORT_START -->
+        <div class="flex shrink-0 flex-col gap-2 sm:ml-auto sm:flex-row">
+          <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee">
+            <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
+          </a>
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+            <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
+          </a>
+        </div>
+        <!-- TOOLKIT:FOOTER_SUPPORT_END -->
       </div>
 
       <!-- Site information 링크 -->
@@ -1164,11 +1219,11 @@
         <i data-lucide="x" class="h-4 w-4"></i>
       </button>
 
-      <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-500">
+      <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
         <i data-lucide="coffee" class="h-5 w-5"></i>
       </span>
 
-      <p class="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>
+      <p class="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-amber-500">Support</p>
 
       <h2 id="support-modal-title" class="mt-1.5 text-[19px] font-extrabold tracking-tight text-slate-900 break-keep">
         Every tool here is free
@@ -1187,7 +1242,7 @@
 
       <!-- TOOLKIT:SUPPORT_LINKS_START -->
       <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"
-        class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FFDD00] px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-900 shadow-sm hover:bg-[#f5d400] active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2">
+        class="tk-coffee tk-coffee-full mt-6">
         <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
       </a>
 

@@ -77,6 +77,14 @@ const STR = [
   ['도구', 'Tool'],
 
   /* 후원 */
+  ['class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-rose-500 px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"',
+   'class="tk-coffee tk-coffee-sm shrink-0"'],
+  ['<p class="font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>',
+   '<p class="font-mono text-[11px] font-bold uppercase tracking-widest text-amber-500">Support</p>'],
+  ['<p class="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>',
+   '<p class="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-amber-500">Support</p>'],
+  ['<span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-500">',
+   '<span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">'],
   ['<i data-lucide="heart" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">응원하기</span>',
    '<i data-lucide="coffee" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">Buy me a coffee</span>'],
   ['그래도 도움이 되셨다면 유튜브 채널의',
@@ -86,14 +94,13 @@ const STR = [
   ['Buy Me a Coffee는 해외 결제 수단이 필요합니다',
    'Buy Me a Coffee accepts card and PayPal'],
   ['<i data-lucide="heart" class="h-5 w-5"></i>', '<i data-lucide="coffee" class="h-5 w-5"></i>'],
-  ['<i data-lucide="heart" class="h-4 w-4"></i>유튜브에서 응원하기',
-   '<i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee'],
-  ['href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"\n          class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-rose-500',
-   'href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"\n          class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#FFDD00] !text-slate-900'],
+
   ['여기 있는 도구는 모두 무료입니다', 'Every tool here is free'],
   ['로그인도, 설치도, 결제도 없습니다. 앞으로도 그럴 예정입니다.',
    'No sign up, no install, no payment. That is not going to change.'],
   ['그래도 도움이 되셨다면 유튜브 채널에서', 'If these tools saved you time, you can support the channel on YouTube with'],
+  ['도움이 되셨다면 유튜브 채널의 <span class="font-semibold text-slate-700">Super Thanks</span>·<span class="font-semibold text-slate-700">멤버십</span>이나\n            <span class="font-semibold text-slate-700">Buy Me a Coffee</span>로 응원해 주세요. 다음 도구를 만드는 데 씁니다.',
+   'If these tools saved you time, you can buy me a coffee, or support the channel on YouTube. It goes straight into building the next one.'],
   ['도움이 되셨다면 유튜브 채널에서', 'If these tools saved you time, you can support the channel on YouTube with'],
   ['으로 응원해 주세요. 다음 도구를 만드는 데 씁니다.',
    '. It goes straight into building the next one.'],
@@ -259,7 +266,7 @@ function insertLangButton(html, target, label, title) {
 
 /* ── 영문판 후원 링크 : BMC 우선 ────────────────────────── */
 const SUPPORT_EN = `      <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"
-        class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FFDD00] px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-900 shadow-sm hover:bg-[#f5d400] active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2">
+        class="tk-coffee tk-coffee-full mt-6">
         <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
       </a>
 
@@ -274,6 +281,64 @@ function swapSupport(html) {
   const s = html.indexOf(a), e = html.indexOf(b);
   if (s === -1 || e === -1) return html;
   return html.slice(0, s) + a + '\n' + SUPPORT_EN + '\n      ' + html.slice(e);
+}
+
+
+const FOOTER_SUPPORT_EN = `        <div class="flex shrink-0 flex-col gap-2 sm:ml-auto sm:flex-row">
+          <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee">
+            <i data-lucide="coffee" class="h-4 w-4"></i>Buy me a coffee
+          </a>
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[13px] font-bold tracking-wide text-slate-700 hover:border-rose-300 hover:bg-rose-50 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2">
+            <i data-lucide="youtube" class="h-4 w-4"></i>Support on YouTube
+          </a>
+        </div>`;
+
+function swapFooterSupport(html) {
+  const a = '<!-- TOOLKIT:FOOTER_SUPPORT_START -->';
+  const b = '<!-- TOOLKIT:FOOTER_SUPPORT_END -->';
+  const s = html.indexOf(a), e = html.indexOf(b);
+  if (s === -1 || e === -1) return html;
+  return html.slice(0, s) + a + '\n' + FOOTER_SUPPORT_EN + '\n        ' + html.slice(e);
+}
+
+
+/* ── 후원 버튼 스타일 : 입체감 있는 앰버 ─────────────────── */
+const COFFEE_CSS = `
+<style>
+  .tk-coffee{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:12px;
+    font-size:13px; font-weight:700; letter-spacing:.01em;
+    color:#3A2A05; text-decoration:none; white-space:nowrap;
+    background:linear-gradient(180deg,#FFD84D 0%,#F5B70A 100%);
+    border:1px solid #D99A06;
+    box-shadow:0 1px 0 rgba(255,255,255,.55) inset,
+               0 2px 0 #C98B05,
+               0 4px 10px rgba(180,120,0,.28);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .tk-coffee:hover{
+    filter:brightness(1.04);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,
+               0 3px 0 #C98B05,
+               0 7px 16px rgba(180,120,0,.34);
+    transform:translateY(-1px);
+  }
+  .tk-coffee:active{
+    transform:translateY(2px);
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset,
+               0 0 0 #C98B05,
+               0 2px 5px rgba(180,120,0,.28);
+  }
+  .tk-coffee:focus-visible{ outline:2px solid #B98405; outline-offset:2px; }
+  .tk-coffee-full{ width:100%; padding-top:13px; padding-bottom:13px; }
+  .tk-coffee-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
+</style>`;
+
+function injectCoffeeStyle(html) {
+  if (html.indexOf('.tk-coffee{') !== -1) return html;
+  return html.replace('</head>', COFFEE_CSS + '\n</head>');
 }
 
 /* ── 영문 index.html 생성 ───────────────────────────────── */
@@ -328,7 +393,9 @@ function buildIndex() {
   html = html.split('href="/privacy.html"').join('href="/en/privacy.html"');
   html = html.split('href="/terms.html"').join('href="/en/terms.html"');
 
+  html = injectCoffeeStyle(html);
   html = swapSupport(html);
+  html = swapFooterSupport(html);
   html = insertLangButton(html, '/', '한국어', '한국어로 보기');
 
   fs.mkdirSync(path.join(ROOT, 'en'), { recursive: true });

@@ -35,7 +35,9 @@ module.exports = [
       <h3>Free, and staying that way</h3>
       <p>
         Every tool is free. There is no payment step and no usage limit, and no paid tier is planned.
-        Running costs are covered by advertising and by support on the YouTube channel.
+        Running costs are covered by advertising and by readers who
+        <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener">buy me a coffee</a>
+        or support the YouTube channel.
       </p>
 
       <h3>Small on purpose</h3>
@@ -73,8 +75,10 @@ module.exports = [
 
       <h2>Support</h2>
       <p>
-        If a tool saved you time, you can support the channel through Super Thanks or membership, and
-        that funding goes into building the next one. Every feature stays open either way.
+        If a tool saved you time, you can
+        <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener">buy me a coffee</a>,
+        or support the YouTube channel through Super Thanks or membership. Either way it goes into
+        building the next tool, and every feature stays open regardless.
       </p>
 `
 },

@@ -774,6 +774,37 @@
     }
   }
 </style>
+
+<style>
+  .tk-coffee{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:12px;
+    font-size:13px; font-weight:700; letter-spacing:.01em;
+    color:#3A2A05; text-decoration:none; white-space:nowrap;
+    background:linear-gradient(180deg,#FFD84D 0%,#F5B70A 100%);
+    border:1px solid #D99A06;
+    box-shadow:0 1px 0 rgba(255,255,255,.55) inset,
+               0 2px 0 #C98B05,
+               0 4px 10px rgba(180,120,0,.28);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .tk-coffee:hover{
+    filter:brightness(1.04);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,
+               0 3px 0 #C98B05,
+               0 7px 16px rgba(180,120,0,.34);
+    transform:translateY(-1px);
+  }
+  .tk-coffee:active{
+    transform:translateY(2px);
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset,
+               0 0 0 #C98B05,
+               0 2px 5px rgba(180,120,0,.28);
+  }
+  .tk-coffee:focus-visible{ outline:2px solid #B98405; outline-offset:2px; }
+  .tk-coffee-full{ width:100%; padding-top:13px; padding-bottom:13px; }
+  .tk-coffee-sm{ padding:6px 10px; font-size:11px; border-radius:9px; gap:6px; }
+</style>
 </head>
 
 <body class="bg-slate-50/70 font-sans text-slate-900 antialiased pb-20 md:pb-0 selection:bg-indigo-100 selection:text-indigo-900">
@@ -796,6 +827,24 @@
         <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
 
           <!-- 응원하기 : 안내창을 연다 -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
           
 
           
@@ -1094,14 +1143,21 @@
           <p class="font-mono text-[11px] font-bold uppercase tracking-widest text-rose-500">Support</p>
           <p class="mt-1.5 text-[15px] font-extrabold tracking-tight text-slate-900 break-keep">여기 있는 도구는 모두 무료입니다</p>
           <p class="mt-1.5 text-[12.5px] leading-relaxed text-slate-500 break-keep">
-            도움이 되셨다면 유튜브 채널에서 <span class="font-semibold text-slate-700">Super Thanks</span>나
-            <span class="font-semibold text-slate-700">멤버십</span>으로 응원해 주세요. 다음 도구를 만드는 데 씁니다.
+            도움이 되셨다면 유튜브 채널의 <span class="font-semibold text-slate-700">Super Thanks</span>·<span class="font-semibold text-slate-700">멤버십</span>이나
+            <span class="font-semibold text-slate-700">Buy Me a Coffee</span>로 응원해 주세요. 다음 도구를 만드는 데 씁니다.
           </p>
         </div>
-        <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
-          class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 py-3 text-[13px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 sm:ml-auto">
-          <i data-lucide="heart" class="h-4 w-4"></i>유튜브에서 응원하기
-        </a>
+        <!-- TOOLKIT:FOOTER_SUPPORT_START -->
+        <div class="flex shrink-0 flex-col gap-2 sm:ml-auto sm:flex-row">
+          <a href="https://youtube.com/@mnl" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 py-3 text-[13px] font-bold tracking-wide text-white shadow-sm shadow-rose-500/25 hover:bg-rose-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2">
+            <i data-lucide="heart" class="h-4 w-4"></i>유튜브에서 응원하기
+          </a>
+          <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee">
+            <i data-lucide="coffee" class="h-4 w-4"></i>Buy Me a Coffee
+          </a>
+        </div>
+        <!-- TOOLKIT:FOOTER_SUPPORT_END -->
       </div>
 
       <!-- 사이트 정보 링크 -->
@@ -1171,8 +1227,7 @@
         <i data-lucide="youtube" class="h-4 w-4"></i>유튜브 채널로 이동
       </a>
 
-      <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer"
-        class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-[13px] font-bold tracking-wide text-slate-700 hover:border-amber-300 hover:bg-amber-50 active:scale-[.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2">
+      <a href="https://buymeacoffee.com/mnledu" target="_blank" rel="noopener noreferrer" class="tk-coffee tk-coffee-full mt-2">
         <i data-lucide="coffee" class="h-4 w-4"></i>Buy Me a Coffee
       </a>
       <p class="mt-2 text-[11.5px] leading-relaxed text-slate-400 break-keep">
