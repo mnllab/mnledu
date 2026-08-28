@@ -206,13 +206,20 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
   .org{ font-size:12.5px; color:#5A6472; font-weight:500; }
+  /* 지원자격 : 담백한 일반체 검정 */
+  .elig{
+    font-size:12.5px; line-height:1.7; color:#1A1D21; font-weight:400;
+    word-break:keep-all;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  /* 지원내용(혜택) : 눈에 먼저 들어오도록 남색 볼드 */
   .desc{
-    font-size:12.5px; line-height:1.7; color:#525C6B; background:#F8FAFB;
-    border:1px solid #EAEFF3; border-radius:9px; padding:9px 11px;
+    font-size:13px; line-height:1.65; color:#12386E; font-weight:700;
+    background:#F2F6FC; border:1px solid #DCE6F5; border-radius:9px; padding:9px 11px;
     white-space:pre-line; word-break:keep-all;
     display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;
   }
-  .desc.empty{ color:#98A2AE; font-style:normal; }
+  .desc.empty{ color:#8E9AA8; font-weight:500; background:#F8FAFB; border-color:#EAEFF3; }
   .foot{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     margin-top:auto; padding-top:9px; border-top:1px solid var(--line);
@@ -338,16 +345,18 @@
   const FIELDS = {
     id:      ['연번', '번호', 'no', 'id', '순번', '#'],
     cat:     ['구분', '카테고리', '분류', '유형', 'category', 'type'],
-    title:   ['지원사업명', '사업명', '제목', 'title', 'name', '공고명'],
+    title:   ['지원사업명', '지원사업', '사업명', '제목', 'title', 'name', '공고명'],
     org:     ['주관기관', '기관명', '기관', '주관', '소관', 'organization', 'agency'],
-    content: ['지원내용', '지원사항', '내용', '상세', '설명', 'content', 'description'],
+    target:  ['지원자격', '신청자격', '자격', '지원대상', '대상', 'eligibility', 'target'],
+    content: ['지원내용', '지원사항', '혜택', '내용', '상세', '설명', 'content', 'description'],
     region:  ['지역요건', '지역', '소재지', 'region', 'area', '시도'],
     due:     ['마감일자', '마감일', '마감', '신청기간', '접수기간', 'due', 'deadline', '기한'],
     link:    ['원문링크', '바로가기', '링크', 'url', 'link', '상세링크', '주소'],
     grade:   ['등급', '평점', 'grade', 'rank', '점수']
   };
   const LABEL = {
-    id: '연번', cat: '구분', title: '지원사업명', org: '주관기관', content: '지원내용',
+    id: '연번', cat: '구분', title: '지원사업명', org: '주관기관',
+    target: '지원자격', content: '지원내용',
     region: '지역', due: '마감일자', link: '바로가기', grade: '등급'
   };
   function norm(s) { return String(s == null ? '' : s).replace(/[\s_\-()\[\]/]/g, '').toLowerCase(); }
@@ -387,7 +396,7 @@
       return {
         id: get(o, 'id') || String(i + 1),
         cat: get(o, 'cat'), title: get(o, 'title'), org: get(o, 'org'),
-        content: get(o, 'content'), region: get(o, 'region'),
+        target: get(o, 'target'), content: get(o, 'content'), region: get(o, 'region'),
         due: get(o, 'due'), link: get(o, 'link'), grade: get(o, 'grade'),
         _i: i
       };
@@ -582,7 +591,7 @@
       if (rg && r.region !== rg) return false;
       if (g && r.grade !== g) return false;
       if (!q) return true;
-      return (r.title + ' ' + r.org + ' ' + r.content + ' ' + r.cat + ' ' + r.region)
+      return (r.title + ' ' + r.org + ' ' + r.target + ' ' + r.content + ' ' + r.cat + ' ' + r.region)
         .toLowerCase().indexOf(q) !== -1;
     });
 
@@ -663,6 +672,7 @@
         '<div class="tags">' + (tags || '<span class="tag">구분 미기재</span>') + '</div>' +
         '<div class="ttl">' + (esc(r.title) || '제목 없음') + '</div>' +
         '<div class="org">' + (r.org ? esc(r.org) : '<span style="color:#98A2AE">주관기관 미기재</span>') + '</div>' +
+        (r.target ? '<div class="elig">' + esc(r.target) + '</div>' : '') +
         '<div class="desc' + (r.content ? '' : ' empty') + '">' +
           (r.content ? esc(r.content) : '공고문 확인') + '</div>' +
         '<div class="foot">' +
@@ -819,6 +829,8 @@
 <h2>Reading the cards</h2><dl>
 <dt>Coloured bar on the left</dt><dd>A personal priority marking added after reviewing the announcements, mirrored in the colour of the programme title. A stronger colour means it is worth a closer look. This is not an official rating.</dd>
 <dt>D-number next to the deadline</dt><dd>Days remaining, shown only when a deadline falls within two weeks. Past deadlines are marked as closed (마감).</dd>
+<dt>Eligibility line</dt><dd>The plain black line in the middle of each card, stating who may apply — company stage, sector or size as written in the original notice.</dd>
+<dt>Funding line</dt><dd>The navy bold box beneath it, showing what is actually on offer. It is set apart because the amount is usually the first thing anyone checks.</dd>
 <dt>공고문 확인</dt><dd>Literally "check the announcement". It appears when the source notice carries no summary of what is offered — open the card for the details.</dd>
 <dt>Empty fields</dt><dd>Where the source gives no region or funding summary, the badge is simply left off rather than filled with a placeholder.</dd>
 </dl>
