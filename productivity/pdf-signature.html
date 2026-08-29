@@ -7,7 +7,7 @@
 <title>PDF 서명 스탬프 · JPG 배경제거 | TOOLKIT</title>
 
 <!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
-<meta name="description" content="스캔하거나 찍은 서명의 흰 배경을 지우고 PDF 원하는 자리에 올려 저장합니다. 휴대폰에서도 두 손가락으로 확대해 정확히 놓을 수 있고, 파일은 서버로 전송되지 않습니다." />
+<meta name="description" content="스캔하거나 찍은 서명의 흰 배경을 지우고 여백까지 잘라내어 PDF 원하는 자리에 올립니다. 회전과 직접 자르기도 되고, 파일은 서버로 전송되지 않습니다." />
 <meta name="author" content="Janggil Kim" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <link rel="canonical" href="https://mnledu.com/productivity/pdf-signature.html" />
@@ -20,12 +20,12 @@
 <meta property="og:locale" content="ko_KR" />
 <meta property="og:url" content="https://mnledu.com/productivity/pdf-signature.html" />
 <meta property="og:title" content="PDF 서명 스탬프 · JPG 배경제거 | TOOLKIT" />
-<meta property="og:description" content="스캔하거나 찍은 서명의 흰 배경을 지우고 PDF 원하는 자리에 올려 저장합니다. 휴대폰에서도 두 손가락으로 확대해 정확히 놓을 수 있고, 파일은 서버로 전송되지 않습니다." />
+<meta property="og:description" content="스캔하거나 찍은 서명의 흰 배경을 지우고 여백까지 잘라내어 PDF 원하는 자리에 올립니다. 회전과 직접 자르기도 되고, 파일은 서버로 전송되지 않습니다." />
 <meta property="og:image" content="https://mnledu.com/og-image.png" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="PDF 서명 스탬프 · JPG 배경제거 | TOOLKIT" />
-<meta name="twitter:description" content="스캔하거나 찍은 서명의 흰 배경을 지우고 PDF 원하는 자리에 올려 저장합니다. 휴대폰에서도 두 손가락으로 확대해 정확히 놓을 수 있고, 파일은 서버로 전송되지 않습니다." />
+<meta name="twitter:description" content="스캔하거나 찍은 서명의 흰 배경을 지우고 여백까지 잘라내어 PDF 원하는 자리에 올립니다. 회전과 직접 자르기도 되고, 파일은 서버로 전송되지 않습니다." />
 <meta name="twitter:image" content="https://mnledu.com/og-image.png" />
 
 <script type="application/ld+json">
@@ -33,7 +33,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "PDF 서명 스탬프",
-  "description": "서명 이미지의 흰 배경을 지우고 PDF에 올려 저장합니다. 브라우저 안에서만 처리됩니다.",
+  "description": "서명 이미지의 배경과 여백을 정리해 PDF에 올려 저장합니다. 브라우저 안에서만 처리됩니다.",
   "url": "https://mnledu.com/productivity/pdf-signature.html",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
@@ -69,7 +69,12 @@
     {
       "@type": "Question",
       "name": "종이에 한 서명을 사진으로 찍어도 되나요",
-      "acceptedAnswer": { "@type": "Answer", "text": "됩니다. 흰 종이 위에 서명한 뒤 밝은 곳에서 찍어 올리면 배경이 자동으로 지워집니다. 휴대폰에서는 카메라 단추를 눌러 바로 찍을 수도 있습니다. 종이가 누렇거나 그림자가 졌다면 투명화 민감도를 낮춰 조절하시면 됩니다." }
+      "acceptedAnswer": { "@type": "Answer", "text": "됩니다. 흰 종이 위에 서명한 뒤 밝은 곳에서 찍어 올리면 배경이 지워지고 둘레의 빈 여백까지 자동으로 잘려 나갑니다. 휴대폰에서는 카메라 단추로 바로 찍을 수도 있습니다." }
+    },
+    {
+      "@type": "Question",
+      "name": "사진 주변 여백은 어떻게 정리하나요",
+      "acceptedAnswer": { "@type": "Answer", "text": "배경을 지운 뒤 획이 남아 있는 범위를 찾아 그 바깥을 자동으로 잘라냅니다. 직접 범위를 정하고 싶으시면 손으로 자르기를 눌러 남길 부분을 감싸시면 되고, 사진이 누워 있으면 회전 단추로 세울 수 있습니다." }
     },
     {
       "@type": "Question",
@@ -80,11 +85,6 @@
       "@type": "Question",
       "name": "여러 페이지에 서명을 넣을 수 있나요",
       "acceptedAnswer": { "@type": "Answer", "text": "넣을 수 있습니다. 페이지를 넘겨가며 원하는 자리에 놓으면 각 페이지의 위치와 크기가 따로 기억되고, 저장할 때 한 번에 합성됩니다." }
-    },
-    {
-      "@type": "Question",
-      "name": "서명 위치가 저장한 PDF에서 어긋나지 않나요",
-      "acceptedAnswer": { "@type": "Answer", "text": "어긋나지 않습니다. 화면에 놓은 자리를 PDF의 실제 좌표로 환산해 합성하며, 페이지마다 크기가 다른 문서에서도 각 페이지의 배율을 따로 계산합니다." }
     },
     {
       "@type": "Question",
@@ -326,6 +326,33 @@
   }
   #busy.show{ display:flex; }
   #busy .box{ background:#fff; border-radius:14px; padding:20px 26px; font-size:14px; font-weight:600; }
+  /* 손으로 자르는 화면 */
+  #cropWrap{
+    display:none; position:fixed; inset:0; z-index:80;
+    background:rgba(15,23,42,.55); padding:18px;
+    align-items:center; justify-content:center;
+  }
+  #cropWrap.on{ display:flex; }
+  #cropCard{
+    background:var(--card); border-radius:18px; padding:18px;
+    width:100%; max-width:560px; max-height:92vh; overflow:auto;
+  }
+  #cropStage{
+    position:relative; background:
+      linear-gradient(45deg,#EEF2F6 25%,transparent 25%,transparent 75%,#EEF2F6 75%),
+      linear-gradient(45deg,#EEF2F6 25%,#fff 25%,#fff 75%,#EEF2F6 75%);
+    background-size:14px 14px; background-position:0 0,7px 7px;
+    border:1px solid var(--line); border-radius:10px; overflow:hidden;
+    touch-action:none; cursor:crosshair;
+  }
+  #cropCv{ display:block; width:100%; height:auto; }
+  #cropSel{
+    position:absolute; display:none; pointer-events:none;
+    border:2px solid var(--accent); background:rgba(37,99,235,.12);
+    box-shadow:0 0 0 9999px rgba(15,23,42,.34);
+  }
+  #cropSel.on{ display:block; }
+
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
 
   /* iOS 사파리: 이중탭 확대와 길게 눌러 나오는 메뉴를 막아 조작이 어긋나지 않게 한다 */
@@ -382,6 +409,21 @@
 
     <div id="scrim"></div>
 
+  <!-- 손으로 자르는 화면 -->
+  <div id="cropWrap">
+    <div id="cropCard">
+      <p style="font-size:14px; font-weight:700; margin:0 0 4px">남길 부분만 감싸 주세요</p>
+      <p style="font-size:12px; color:var(--dim); margin:0 0 12px; line-height:1.6">
+        서명이 있는 곳을 네모로 감싸면 그 바깥은 잘려 나갑니다.
+      </p>
+      <div id="cropStage"><canvas id="cropCv"></canvas><div id="cropSel"></div></div>
+      <div class="grid gap-2" style="grid-template-columns:1fr 1fr; margin-top:12px">
+        <button class="btn" id="cropCancel">취소</button>
+        <button class="btn p" id="cropOk">이 범위로 자르기</button>
+      </div>
+    </div>
+  </div>
+
     <!-- 우측 패널 (모바일에서는 하단 시트) -->
     <div id="side">
       <!-- 모바일 전용 손잡이와 빠른 배치 바 -->
@@ -414,6 +456,28 @@
 
         <button class="btn sm" id="sigBtn2" style="width:100%; margin-top:9px">✍️ 서명 이미지 올리기</button>
         <button class="btn sm p" id="addBtn" style="width:100%; margin-top:7px" disabled>현재 페이지에 배치</button>
+      </div>
+
+      <div class="sect">
+        <span class="lab">회전 · 자르기</span>
+        <div class="grid gap-2" style="grid-template-columns:1fr 1fr">
+          <button class="btn sm" id="rotL">↺ 왼쪽</button>
+          <button class="btn sm" id="rotR">↻ 오른쪽</button>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px">
+          <span class="lab" style="margin:0">여백 자동 잘라내기</span>
+          <span class="switch">
+            <input type="checkbox" id="trimOn" checked>
+            <span class="track"></span><span class="knob"></span>
+          </span>
+        </div>
+        <p class="text-[11px]" style="color:var(--dim); line-height:1.6; margin:8px 0 0">
+          서명 둘레의 빈 종이를 알아서 걷어냅니다.
+        </p>
+        <div class="grid gap-2" style="grid-template-columns:1fr 1fr; margin-top:10px">
+          <button class="btn sm" id="cropBtn">✂️ 손으로 자르기</button>
+          <button class="btn sm" id="cropReset">자르기 해제</button>
+        </div>
       </div>
 
       <div class="sect">
@@ -646,6 +710,7 @@
         sigRaw = img;
         processSig();
         $('addBtn').disabled = false;
+        sigRot = 0; sigCrop = null;      // 새 그림이니 처음 상태로 둔다
         $('preview').classList.add('ready');
         $('dragHint').style.display = 'block';
         try { syncSheet(); } catch (e) {}
@@ -659,6 +724,10 @@
   }
 
   // 밝은 픽셀을 투명하게 만든다. 문턱값 부근은 부드럽게 깎아 테두리가 딱딱해지지 않게 한다
+  let sigSize = null;        // 처리를 마친 서명의 실제 크기
+  let sigRot = 0;            // 0 90 180 270
+  let sigCrop = null;        // 손으로 잡은 자르기 영역 (비율 0~1)
+
   function processSig() {
     if (!sigRaw) return;
     const ow = sigRaw.naturalWidth || sigRaw.width;
@@ -668,13 +737,25 @@
     // 긴 변을 1600px 로 줄여도 서명 품질에는 충분하다
     const MAX = 1600;
     const k = Math.min(1, MAX / Math.max(ow, oh));
+    const bw = Math.max(1, Math.round(ow * k));
+    const bh = Math.max(1, Math.round(oh * k));
 
+    // ① 회전을 먼저 걸어야 이후 여백 계산이 맞는다
+    const turned = (sigRot % 180 !== 0);
     const cv = document.createElement('canvas');
-    cv.width = Math.max(1, Math.round(ow * k));
-    cv.height = Math.max(1, Math.round(oh * k));
+    cv.width = turned ? bh : bw;
+    cv.height = turned ? bw : bh;
     const ctx = cv.getContext('2d', { willReadFrequently: true });
-    ctx.drawImage(sigRaw, 0, 0, cv.width, cv.height);
 
+    ctx.save();
+    if (sigRot === 90) { ctx.translate(bh, 0); ctx.rotate(Math.PI / 2); }
+    else if (sigRot === 180) { ctx.translate(bw, bh); ctx.rotate(Math.PI); }
+    else if (sigRot === 270) { ctx.translate(0, bw); ctx.rotate(-Math.PI / 2); }
+    ctx.drawImage(sigRaw, 0, 0, bw, bh);
+    ctx.restore();
+
+    // ② 배경 지우기
+    let hasAlpha = false;
     if ($('bgOn').checked) {
       const th = parseInt($('thRange').value, 10);
       const fe = Math.max(1, parseInt($('fRange').value, 10));
@@ -691,21 +772,175 @@
           }
         }
         ctx.putImageData(im, 0, 0);
+        hasAlpha = true;
       } catch (e) { /* 다른 출처 이미지면 건너뛴다 */ }
     }
 
-    sigURL = cv.toDataURL('image/png');
+    // ③ 자르기 — 손으로 잡은 영역이 있으면 그것을, 없으면 자동으로
+    let box = null;
+    if (sigCrop) {
+      box = {
+        x: Math.round(sigCrop.x * cv.width),
+        y: Math.round(sigCrop.y * cv.height),
+        w: Math.max(1, Math.round(sigCrop.w * cv.width)),
+        h: Math.max(1, Math.round(sigCrop.h * cv.height))
+      };
+    } else if ($('trimOn').checked && hasAlpha) {
+      box = autoBox(ctx, cv.width, cv.height);
+    }
+
+    let out = cv;
+    if (box && (box.w < cv.width || box.h < cv.height)) {
+      const c2 = document.createElement('canvas');
+      c2.width = box.w; c2.height = box.h;
+      c2.getContext('2d').drawImage(cv, box.x, box.y, box.w, box.h, 0, 0, box.w, box.h);
+      out = c2;
+    }
+
+    sigURL = out.toDataURL('image/png');
+    sigSize = { w: out.width, h: out.height };
+
     const pv = $('preview');
     pv.innerHTML = '';
     const im2 = new Image();
     im2.src = sigURL;
     pv.appendChild(im2);
+    try { syncSheet(); } catch (e) {}
 
     // 이미 배치된 서명들도 함께 갱신한다
     stamps.forEach(function (s) {
       if (s.el) { const i = s.el.querySelector('img'); if (i) i.src = sigURL; }
     });
   }
+
+  // 획이 있는 곳만 남기고 둘레의 빈 여백을 걷어낸다
+  function autoBox(ctx, w, h) {
+    let minX = w, minY = h, maxX = -1, maxY = -1;
+    try {
+      const d = ctx.getImageData(0, 0, w, h).data;
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          if (d[(y * w + x) * 4 + 3] > 8) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+    } catch (e) { return null; }
+    if (maxX < 0) return null;                 // 남은 획이 없다
+
+    // 너무 딱 붙지 않게 조금 남긴다
+    const pad = Math.round(Math.max(w, h) * 0.02);
+    minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad);
+    maxX = Math.min(w - 1, maxX + pad); maxY = Math.min(h - 1, maxY + pad);
+    return { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 };
+  }
+
+
+  /* ---------- 회전 ---------- */
+  $('rotL').addEventListener('click', function () {
+    if (!sigRaw) { toast('먼저 서명 이미지를 올려주세요'); return; }
+    sigRot = (sigRot + 270) % 360;
+    sigCrop = null;                 // 돌리면 잡아 둔 영역은 맞지 않는다
+    processSig();
+  });
+  $('rotR').addEventListener('click', function () {
+    if (!sigRaw) { toast('먼저 서명 이미지를 올려주세요'); return; }
+    sigRot = (sigRot + 90) % 360;
+    sigCrop = null;
+    processSig();
+  });
+
+  $('trimOn').addEventListener('change', function () { processSig(); });
+
+  $('cropReset').addEventListener('click', function () {
+    if (!sigCrop) { toast('손으로 자른 범위가 없습니다'); return; }
+    sigCrop = null;
+    processSig();
+    toast('자르기를 해제했습니다');
+  });
+
+  /* ---------- 손으로 자르기 ---------- */
+  (function () {
+    const wrap = $('cropWrap'), stage = $('cropStage'), cv = $('cropCv'), sel = $('cropSel');
+    let box = null, sx = 0, sy = 0, drawing = false;
+
+    function open() {
+      if (!sigRaw) { toast('먼저 서명 이미지를 올려주세요'); return; }
+      // 회전만 반영한 그림을 보여 준다. 자를 곳을 눈으로 고르게
+      const ow = sigRaw.naturalWidth || sigRaw.width;
+      const oh = sigRaw.naturalHeight || sigRaw.height;
+      const k = Math.min(1, 1200 / Math.max(ow, oh));
+      const bw = Math.round(ow * k), bh = Math.round(oh * k);
+      const turned = (sigRot % 180 !== 0);
+      cv.width = turned ? bh : bw;
+      cv.height = turned ? bw : bh;
+      const c = cv.getContext('2d');
+      c.clearRect(0, 0, cv.width, cv.height);
+      c.save();
+      if (sigRot === 90) { c.translate(bh, 0); c.rotate(Math.PI / 2); }
+      else if (sigRot === 180) { c.translate(bw, bh); c.rotate(Math.PI); }
+      else if (sigRot === 270) { c.translate(0, bw); c.rotate(-Math.PI / 2); }
+      c.drawImage(sigRaw, 0, 0, bw, bh);
+      c.restore();
+
+      box = null;
+      sel.classList.remove('on');
+      wrap.classList.add('on');
+    }
+
+    function rectOf(ev) {
+      const r = stage.getBoundingClientRect();
+      return {
+        x: Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)),
+        y: Math.max(0, Math.min(1, (ev.clientY - r.top) / r.height))
+      };
+    }
+    function paint() {
+      if (!box) { sel.classList.remove('on'); return; }
+      sel.classList.add('on');
+      sel.style.left = (box.x * 100) + '%';
+      sel.style.top = (box.y * 100) + '%';
+      sel.style.width = (box.w * 100) + '%';
+      sel.style.height = (box.h * 100) + '%';
+    }
+
+    stage.addEventListener('pointerdown', function (ev) {
+      ev.preventDefault();
+      const p2 = rectOf(ev);
+      sx = p2.x; sy = p2.y; drawing = true;
+      box = { x: sx, y: sy, w: 0, h: 0 };
+      try { stage.setPointerCapture(ev.pointerId); } catch (e) {}
+      paint();
+    });
+    stage.addEventListener('pointermove', function (ev) {
+      if (!drawing) return;
+      const p2 = rectOf(ev);
+      box = {
+        x: Math.min(sx, p2.x), y: Math.min(sy, p2.y),
+        w: Math.abs(p2.x - sx), h: Math.abs(p2.y - sy)
+      };
+      paint();
+    });
+    ['pointerup', 'pointercancel'].forEach(function (t) {
+      stage.addEventListener(t, function () { drawing = false; });
+    });
+
+    $('cropBtn').addEventListener('click', open);
+    $('cropCancel').addEventListener('click', function () { wrap.classList.remove('on'); });
+    wrap.addEventListener('click', function (ev) {
+      if (ev.target === wrap) wrap.classList.remove('on');
+    });
+    $('cropOk').addEventListener('click', function () {
+      if (!box || box.w < 0.02 || box.h < 0.02) { toast('먼저 남길 부분을 감싸 주세요'); return; }
+      sigCrop = { x: box.x, y: box.y, w: box.w, h: box.h };
+      wrap.classList.remove('on');
+      processSig();
+      toast('잘라냈습니다');
+    });
+  })();
 
   ['bgOn', 'thRange', 'fRange'].forEach(function (id) {
     $(id).addEventListener('input', function () {
@@ -720,7 +955,10 @@
   // 실제 크기를 미리 계산해 두면 놓는 순간 바로 그 크기로 들어간다
   function defaultSize() {
     const pw = $('paper').clientWidth || 600;
-    const ratio = sigRaw ? ((sigRaw.naturalHeight || 1) / (sigRaw.naturalWidth || 1)) : 0.4;
+    // 회전과 자르기를 거친 뒤의 실제 비율을 쓴다
+    const ratio = sigSize
+      ? (sigSize.h / sigSize.w)
+      : (sigRaw ? ((sigRaw.naturalHeight || 1) / (sigRaw.naturalWidth || 1)) : 0.4);
     const w = Math.min(220, pw * 0.3);
     return { w: w, h: w * ratio };
   }
@@ -1184,7 +1422,7 @@
 <section class="tk-guide"><div class="tk-guide-inner">
 <h2>서명 하나 넣자고 벌어지는 일</h2>
 <p>계약서에 서명을 넣으려면 보통 인쇄하고, 서명하고, 다시 스캔합니다. 종이도 시간도 들고 결과물은 원본보다 지저분해집니다.</p>
-<p>서명을 한 번만 찍어두면 그다음부터는 필요할 때 올려 쓰면 됩니다. 이 도구는 그 이미지의 흰 배경을 지워 투명하게 만들고, PDF 원하는 자리에 얹어 저장합니다.</p>
+<p>서명을 한 번만 찍어두면 그다음부터는 필요할 때 올려 쓰면 됩니다. 이 도구는 그 이미지의 흰 배경을 지워 투명하게 만들고, 둘레의 빈 여백까지 걷어낸 뒤 PDF 원하는 자리에 얹어 저장합니다.</p>
 
 <h2>이럴 때 씁니다</h2><dl>
 <dt>계약서·합의서</dt><dd>서명란에 도장처럼 얹어 그대로 회신할 때.</dd>
@@ -1196,15 +1434,22 @@
 
 <h2>사용 방법</h2><ol>
 <li><strong>PDF 열기</strong>로 문서를 엽니다. 화면에 끌어다 놓아도 됩니다.</li>
-<li><strong>서명 이미지 올리기</strong>로 서명 사진을 올립니다. 흰 배경이 자동으로 지워집니다.</li>
+<li><strong>서명 이미지 올리기</strong>로 서명 사진을 올립니다. 흰 배경이 지워지고 여백도 함께 잘려 나갑니다.</li>
+<li>사진이 누워 있으면 <strong>회전</strong> 단추로 세웁니다.</li>
 <li>배경이 깔끔하지 않으면 <strong>투명화 민감도</strong>를 조절합니다.</li>
 <li>미리보기를 <strong>PDF 위로 끌어다 놓습니다.</strong> 배치 단추를 눌러도 됩니다.</li>
 <li>서명을 끌어 위치를 잡고 오른쪽 아래 손잡이로 크기를 맞춥니다.</li>
-<li>다른 페이지에도 필요하면 페이지를 넘겨 같은 방식으로 놓습니다.</li>
 <li><strong>서명된 PDF 저장</strong>을 누르면 합성된 파일이 저장됩니다.</li>
 </ol>
 
 <p>휴대폰에서는 설정 패널이 화면 아래로 접혀 PDF가 화면을 다 씁니다. 손잡이를 끌어올리면 설정이 나오고, 두 손가락으로 벌리면 작은 서명란까지 확대됩니다. 미리보기를 끌어다 놓거나 <strong>여기에 놓기</strong>를 누르면 보고 있는 자리에 서명이 들어갑니다. 카메라 단추로 서명을 바로 찍을 수도 있습니다.</p>
+
+<h2>사진을 정리하는 방법</h2><dl>
+<dt>여백 자동 잘라내기</dt><dd>배경을 지운 뒤 획이 남아 있는 범위를 찾아 그 바깥을 걷어냅니다. 종이를 넓게 찍어도 서명만 남습니다. 원본 그대로 쓰고 싶으시면 꺼 두시면 됩니다.</dd>
+<dt>회전</dt><dd>왼쪽·오른쪽으로 90도씩 돌립니다. 세로로 찍힌 사진을 눕히거나 거꾸로 된 것을 바로 세울 때 씁니다.</dd>
+<dt>손으로 자르기</dt><dd>자동으로 자른 범위가 마음에 들지 않으면 직접 정할 수 있습니다. 원본 위에서 남길 부분을 감싸면 그 바깥이 잘려 나갑니다.</dd>
+<dt>자르기 해제</dt><dd>손으로 정한 범위를 지우고 자동 방식으로 돌아갑니다.</dd>
+</dl>
 
 <h2>배경 제거가 잘 되게 하려면</h2><dl>
 <dt>흰 종이에 검은 펜</dt><dd>대비가 클수록 깨끗하게 지워집니다. 연필보다 볼펜이나 사인펜이 낫습니다.</dd>
@@ -1215,10 +1460,10 @@
 
 <h2>자주 묻는 질문</h2><dl>
 <dt>올린 PDF나 서명이 서버로 전송되나요</dt><dd>전송되지 않습니다. 파일을 읽는 것부터 서명을 합성해 내려받는 것까지 모두 브라우저 안에서 처리됩니다. 페이지를 닫으면 작업 중이던 내용도 함께 사라집니다.</dd>
-<dt>종이에 한 서명을 사진으로 찍어도 되나요</dt><dd>됩니다. 흰 종이 위에 서명한 뒤 밝은 곳에서 찍어 올리면 배경이 자동으로 지워집니다. 휴대폰에서는 카메라 단추를 눌러 바로 찍을 수도 있습니다. 종이가 누렇거나 그림자가 졌다면 투명화 민감도를 낮춰 조절하시면 됩니다.</dd>
+<dt>종이에 한 서명을 사진으로 찍어도 되나요</dt><dd>됩니다. 흰 종이 위에 서명한 뒤 밝은 곳에서 찍어 올리면 배경이 지워지고 둘레의 빈 여백까지 자동으로 잘려 나갑니다. 휴대폰에서는 카메라 단추로 바로 찍을 수도 있습니다.</dd>
+<dt>사진 주변 여백은 어떻게 정리하나요</dt><dd>배경을 지운 뒤 획이 남아 있는 범위를 찾아 그 바깥을 자동으로 잘라냅니다. 직접 범위를 정하고 싶으시면 손으로 자르기를 눌러 남길 부분을 감싸시면 되고, 사진이 누워 있으면 회전 단추로 세울 수 있습니다.</dd>
 <dt>휴대폰에서도 쓸 수 있나요</dt><dd>쓸 수 있습니다. 설정 패널이 화면 아래로 접혀 PDF가 화면을 다 쓰고, 두 손가락으로 확대하면 작은 서명란도 정확히 맞출 수 있습니다. 미리보기를 끌어다 놓거나 배치 단추를 누르면 보고 있는 자리에 서명이 들어갑니다.</dd>
 <dt>여러 페이지에 서명을 넣을 수 있나요</dt><dd>넣을 수 있습니다. 페이지를 넘겨가며 원하는 자리에 놓으면 각 페이지의 위치와 크기가 따로 기억되고, 저장할 때 한 번에 합성됩니다.</dd>
-<dt>서명 위치가 저장한 PDF에서 어긋나지 않나요</dt><dd>어긋나지 않습니다. 화면에 놓은 자리를 PDF의 실제 좌표로 환산해 합성하며, 페이지마다 크기가 다른 문서에서도 각 페이지의 배율을 따로 계산합니다.</dd>
 <dt>배경이 깔끔하게 지워지지 않습니다</dt><dd>투명화 민감도를 낮춰 보세요. 값이 낮을수록 더 어두운 부분까지 지워집니다. 획까지 사라진다면 다시 높이고, 테두리가 거칠면 경계 부드럽게 값을 올리시면 됩니다.</dd>
 </dl>
 
@@ -1228,9 +1473,9 @@
 <li><a href="https://mnledu.com/productivity/slot-coordinator.html">스마트 일정 코디네이터</a></li>
 <li><a href="https://mnledu.com/productivity/meeting-minutes.html">스마트 회의록</a></li>
 <li><a href="https://mnledu.com/productivity/qr-studio.html">맞춤형 QR코드 생성기</a></li>
-<li><a href="https://mnledu.com/productivity/presentation-timer.html">스마트 발표 타이머</a></li>
 <li><a href="https://mnledu.com/productivity/date-calc.html">만능 날짜 계산기</a></li>
-<li><a href="https://mnledu.com/productivity/percent-calc.html">스마트 프라이싱 엔진</a></li>
+<li><a href="https://mnledu.com/lifestyle/biorhythm.html">힐링 바이오리듬</a></li>
+<li><a href="https://mnledu.com/lifestyle/food-picker.html">오늘 뭐 먹지</a></li>
 </ul></div>
 <a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
 </div></section>
