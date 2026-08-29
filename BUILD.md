@@ -114,3 +114,15 @@ build-guides.js 는 "안내문없음" 으로 건너뛴다 (정상).
 kstartup-board 가 assets/01_엠엔엘뉴스.xlsx 를 참조한다.
 파일명이 한글이므로 압축·해제 과정에서 깨지지 않는지 확인할 것.
 HTML 안에서는 퍼센트 인코딩된 경로로 참조한다.
+
+
+## 2026-08-28 추가 3종 (LIFESTYLE 상단)
+
+biorhythm · food-picker · saju-studio
+
+완성본을 직접 받아 배치. guides 항목 없음 (build-guides.js 가 건너뜀).
+
+guides 항목 없이 안내문이 파일에 박혀 있는 도구 (총 9개)
+  presentation-timer, kstartup-board,
+  pdf-signature, qr-studio, meeting-minutes, slot-coordinator,
+  biorhythm, food-picker, saju-studio

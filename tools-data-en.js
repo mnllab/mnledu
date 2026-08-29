@@ -192,6 +192,36 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ LIFESTYLE ═══════════════ */
   {
+    id: 'biorhythm',
+    title: 'Healing Biorhythm Tracker',
+    category: 'LIFESTYLE',
+    desc: 'Enter your birthday and see where your physical, emotional and intellectual rhythms sit today.',
+    url: 'https://mnledu.com/en/lifestyle/biorhythm.html',
+    icon: 'activity',
+    badge: 'NEW',
+    tags: ['#wellness', '#mood', '#rhythm', '#break']
+  },
+  {
+    id: 'food-picker',
+    title: 'What Should I Eat?',
+    category: 'LIFESTYLE',
+    desc: 'Weather, company, mood and what comes after the meal narrow 224 dishes down to seven.',
+    url: 'https://mnledu.com/en/lifestyle/food-picker.html',
+    icon: 'utensils',
+    badge: 'NEW',
+    tags: ['#food', '#picker', '#lunch', '#break']
+  },
+  {
+    id: 'saju-studio',
+    title: 'Four Pillars Reading',
+    category: 'LIFESTYLE',
+    desc: 'An East Asian Four Pillars reading built from your birth date and time, read for strengths.',
+    url: 'https://mnledu.com/en/lifestyle/saju-studio.html',
+    icon: 'compass',
+    badge: 'NEW',
+    tags: ['#fortune', '#eastasian', '#personality', '#break']
+  },
+  {
     id: 'kstartup-board',
     title: 'This Week in K-Startup Funding',
     category: 'LIFESTYLE',

@@ -223,6 +223,36 @@ const TOOLS_DATA = [
   // 3. LIFESTYLE (라이프스타일)
   // ---------------------------------------------------------
   {
+    id: 'biorhythm',
+    title: '힐링 바이오리듬',
+    category: 'LIFESTYLE',
+    desc: '생년월일만 넣으면 오늘의 신체·감성·지성 리듬을 곡선으로 보여 줍니다. 흐름에 맞는 하루 보내는 법도 함께 안내합니다.',
+    url: 'https://mnledu.com/lifestyle/biorhythm.html',
+    icon: 'activity',
+    badge: 'NEW',
+    tags: ['#웰니스', '#컨디션', '#리듬', '#쉬는시간']
+  },
+  {
+    id: 'food-picker',
+    title: '오늘 뭐 먹지',
+    category: 'LIFESTYLE',
+    desc: '날씨와 컨디션, 함께 먹는 사람, 식사 뒤 일정을 넣으면 메뉴 224가지 중에서 일곱 가지를 골라 줍니다.',
+    url: 'https://mnledu.com/lifestyle/food-picker.html',
+    icon: 'utensils',
+    badge: 'NEW',
+    tags: ['#메뉴', '#추천', '#점심', '#쉬는시간']
+  },
+  {
+    id: 'saju-studio',
+    title: '강점으로 읽는 만세력',
+    category: 'LIFESTYLE',
+    desc: '생년월일과 태어난 시각으로 사주 여덟 글자를 뽑고, 타고난 기운을 강점 중심으로 풀어 줍니다.',
+    url: 'https://mnledu.com/lifestyle/saju-studio.html',
+    icon: 'compass',
+    badge: 'NEW',
+    tags: ['#사주', '#만세력', '#성향', '#쉬는시간']
+  },
+  {
     id: 'kstartup-board',
     title: '이번 주 창업지원사업',
     category: 'LIFESTYLE',
