@@ -7,99 +7,12 @@
 
 <title>Receipt to Expense Sheet · Photo to Spreadsheet | TOOLKIT</title>
 
-<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
-<meta name="description" content="Reads the date, amount and merchant from a photo of a receipt and lays them out as an expense sheet. Stack several, fix any cell by clicking it, then paste into a spreadsheet or download as CSV. Your photos are never uploaded." />
-<meta name="author" content="Janggil Kim" />
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-<link rel="canonical" href="https://mnledu.com/en/productivity/receipt-to-excel.html" />
-<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/receipt-to-excel.html" />
-<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/receipt-to-excel.html" />
-<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/receipt-to-excel.html" />
 
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="TOOLKIT" />
-<meta property="og:locale" content="en_US" />
-<meta property="og:url" content="https://mnledu.com/en/productivity/receipt-to-excel.html" />
-<meta property="og:title" content="Receipt to Expense Sheet · Photo to Spreadsheet | TOOLKIT" />
-<meta property="og:description" content="Reads date, amount and merchant from a receipt photo and lays them out ready to paste into a spreadsheet." />
-<meta property="og:image" content="https://mnledu.com/og-image.png" />
-
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Receipt to Expense Sheet | TOOLKIT" />
-<meta name="twitter:description" content="Reads date, amount and merchant from a receipt photo, ready for your spreadsheet." />
-<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
-
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "SoftwareApplication",
- "name": "Receipt to Expense Sheet",
- "description": "Reads the date, amount and merchant from receipt photos and builds an expense sheet for export.",
- "url": "https://mnledu.com/en/productivity/receipt-to-excel.html",
- "applicationCategory": "BusinessApplication",
- "operatingSystem": "Web",
- "inLanguage": "en",
- "isAccessibleForFree": true,
- "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
- "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
- "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
- "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
-}
-</script>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "BreadcrumbList",
- "itemListElement": [
-  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
-  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
-  { "@type": "ListItem", "position": 3, "name": "Receipt to Expense Sheet", "item": "https://mnledu.com/en/productivity/receipt-to-excel.html" }
- ]
-}
-</script>
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {
-   "@type": "Question",
-   "name": "Are my receipt photos uploaded anywhere?",
-   "acceptedAnswer": { "@type": "Answer", "text": "No. Even the text recognition runs inside your browser; only the recognition data is fetched, once. The photo itself never leaves your device, and closing the page clears the work with it." }
-  },
-  {
-   "@type": "Question",
-   "name": "What if the reading is wrong?",
-   "acceptedAnswer": { "@type": "Answer", "text": "Click any cell in the table and edit it directly. Receipts print in every imaginable condition, so perfect recognition is not realistic. This tool is here to save the typing; checking and correcting is quicker done by hand." }
-  },
-  {
-   "@type": "Question",
-   "name": "What does it pull out?",
-   "acceptedAnswer": { "@type": "Answer", "text": "Three things: the date, the amount and the merchant. Dates come out as year-month-day whatever format they were printed in. Amounts are found near words like total or approved, while approval and registration numbers are filtered out. Merchants come from a labelled line or a company marker first, and from the top of the receipt otherwise." }
-  },
-  {
-   "@type": "Question",
-   "name": "Can I do several at once?",
-   "acceptedAnswer": { "@type": "Answer", "text": "They are read one at a time and stack up in the table. Select several photos and they are worked through in order, with a new row appearing as each finishes. Export the whole lot when you are done." }
-  },
-  {
-   "@type": "Question",
-   "name": "How do I get it into a spreadsheet?",
-   "acceptedAnswer": { "@type": "Answer", "text": "Copy for spreadsheet puts the table on your clipboard with tabs between the cells. Paste it into Excel or Sheets and every value lands in its own cell. To keep a file instead, use the CSV download." }
-  },
-  {
-   "@type": "Question",
-   "name": "How long does recognition take?",
-   "acceptedAnswer": { "@type": "Answer", "text": "The first run spends a while downloading the recognition data. After that a receipt usually takes a few seconds to a dozen or so, depending on your device and the size of the photo." }
-  }
- ]
-}
-</script>
-<!-- TOOLKIT:SEO_END -->
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<!-- Stable build: OpenCV removed. Perspective correction uses lightweight Canvas processing. -->
 
 <style>
   :root{
@@ -167,7 +80,7 @@
 
   /* ---------- 표 ---------- */
   #tblWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
-  table{width:100%;border-collapse:collapse;font-size:14px;min-width:920px}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:1240px}
   thead th{background:var(--th);text-align:left;padding:12px 11px;font-size:12.5px;font-weight:700;
     color:var(--ink2);border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;z-index:1}
   tbody td{padding:0;border-bottom:1px solid var(--line2);vertical-align:middle}
@@ -201,6 +114,89 @@
   .sec{padding:34px 0}
   .sec h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
   .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+
+
+  /* ---------- OCR 사진 편집 ---------- */
+  #editorWrap{display:none;margin-top:14px}
+  #editorWrap.on{display:block}
+  #editStage{position:relative;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:12px;
+    background:#E5E7EB;touch-action:none;user-select:none}
+  #editCanvas{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#E5E7EB}
+  #cropBox{position:absolute;border:2px solid var(--accent);background:rgba(29,78,216,.06);box-shadow:0 0 0 9999px rgba(15,23,42,.30);cursor:move;touch-action:none}
+  .cropHandle{position:absolute;width:24px;height:24px;border:3px solid #fff;background:var(--accent);border-radius:50%;
+    box-shadow:0 1px 5px rgba(15,23,42,.35);touch-action:none}
+  .cropHandle.tl{left:-12px;top:-12px;cursor:nwse-resize}.cropHandle.tr{right:-12px;top:-12px;cursor:nesw-resize}
+  .cropHandle.bl{left:-12px;bottom:-12px;cursor:nesw-resize}.cropHandle.br{right:-12px;bottom:-12px;cursor:nwse-resize}
+  #cropTag{position:absolute;left:8px;top:8px;background:var(--accent);color:#fff;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;pointer-events:none}
+  .editTools{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+  .toolBox{border:1px solid var(--line);border-radius:11px;padding:11px;background:#FCFCFB}
+  .toolBox.wide{grid-column:1/-1}
+  .toolRow{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+  .toolRow .btn{flex:1;min-width:90px}
+  .toolSelect{width:100%;min-height:42px;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;color:var(--ink);font:inherit}
+  .rangeRow{display:grid;grid-template-columns:82px 1fr 42px;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin-top:8px}
+  .rangeRow input{width:100%;accent-color:var(--accent)}
+  #qualityGuide{margin-top:12px;padding:12px 13px;border:1px solid #BFDBFE;background:#EFF6FF;border-radius:11px;font-size:12.5px;line-height:1.7;color:#334155}
+  #qualityGuide b{color:#1D4ED8}
+  #ocrBtn{width:100%;margin-top:12px}
+  #queueNote{margin-top:8px;font-size:12px;color:var(--muted)}
+
+  .uploadActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .uploadActions .btn{min-width:0}
+  .optGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;margin-top:10px}
+  .optCheck{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.45;color:var(--ink2);cursor:pointer}
+  .optCheck input{margin-top:2px;accent-color:var(--accent)}
+  #prepNote{margin-top:9px;padding:9px 10px;border-radius:9px;background:#F8FAFC;border:1px solid var(--line);font-size:11.8px;color:var(--muted);line-height:1.55}
+  .qualityTips{margin:7px 0 0;padding-left:17px}
+  .qualityTips li{margin-top:3px}
+
+
+  /* ---------- 모바일 ---------- */
+  @media(max-width:720px){
+    .wrap{padding-left:12px;padding-right:12px}
+    header.wrap{padding-top:28px!important}
+    #main{gap:12px}
+    #main>.card{padding:14px!important}
+    #drop{padding:25px 14px}
+    .editTools{grid-template-columns:1fr}
+    .uploadActions{grid-template-columns:1fr}
+    .optGrid{grid-template-columns:1fr}
+    .toolBox.wide{grid-column:auto}
+    .toolRow .btn{min-width:0}
+    #tblWrap{overflow:visible;border:0}
+    table{min-width:0;border-collapse:separate;border-spacing:0;width:100%}
+    thead{display:none}
+    tbody,tbody tr,tbody td{display:block;width:100%}
+    tbody tr{position:relative;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:#fff;padding:8px 10px 10px}
+    tbody tr.sel{background:var(--soft)}
+    tbody td{border:0!important;padding:0!important;display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;min-height:42px}
+    tbody td::before{font-size:11.5px;font-weight:700;color:var(--muted);padding:8px 7px 8px 0}
+    tbody td:nth-child(1){position:absolute;right:42px;top:7px;width:32px;display:block;min-height:32px}
+    tbody td:nth-child(1)::before{display:none}
+    tbody td:nth-child(2)::before{content:var(--lbl-date)}
+    tbody td:nth-child(3)::before{content:var(--lbl-store)}
+    tbody td:nth-child(4)::before{content:var(--lbl-item)}
+    tbody td:nth-child(5)::before{content:var(--lbl-unit)}
+    tbody td:nth-child(6)::before{content:var(--lbl-qty)}
+    tbody td:nth-child(7)::before{content:var(--lbl-amount)}
+    tbody td:nth-child(8)::before{content:var(--lbl-pay)}
+    tbody td:nth-child(9)::before{content:var(--lbl-acct)}
+    tbody td:nth-child(10)::before{content:var(--lbl-note)}
+    tbody td:nth-child(11){position:absolute;right:5px;top:3px;width:38px;display:block;min-height:36px}
+    tbody td:nth-child(11)::before{display:none}
+    .ed,select.cell{min-height:40px;padding:9px 8px;border-radius:7px;background:#F8FAFC}
+    .ed.num{text-align:left}
+    #emptyRow{border:1px solid var(--line);border-radius:12px}
+    #sumBar{gap:8px 15px;padding:12px}
+    #sumBar b{font-size:17px}
+    #tblWrap+ #sumBar{margin-top:12px}
+    #main>.card:last-child>div:last-of-type{grid-template-columns:1fr!important}
+    .cropHandle{width:28px;height:28px}
+    .cropHandle.tl{left:-14px;top:-14px}.cropHandle.tr{right:-14px;top:-14px}.cropHandle.bl{left:-14px;bottom:-14px}.cropHandle.br{right:-14px;bottom:-14px}
+  }
+
+  :root{--lbl-date:'Date';--lbl-store:'Merchant';--lbl-item:'Item';--lbl-unit:'Unit price';--lbl-qty:'Qty';--lbl-amount:'Amount';--lbl-pay:'Payment';--lbl-acct:'Category';--lbl-note:'Note';}
+
   @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -212,7 +208,7 @@
   <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Receipt to Excel</p>
   <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Receipt to Expense Sheet</h1>
   <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
-    Reads the date, amount and merchant from a receipt photo and lays them out as a row. Stack a few, then
+    Reads the date, merchant and amount from a receipt photo; itemised receipts are also split into line-item rows. Stack a few, then
     <b>paste straight into your spreadsheet</b>. Photos are never uploaded — everything runs in this browser.
   </p>
 </header>
@@ -220,7 +216,7 @@
 <div class="wrap" style="padding-top:22px">
 <div id="main">
 
-  <!-- 좌측 -->
+  <!-- Left -->
   <div class="card" style="padding:20px">
     <p class="lab" style="margin-bottom:12px">📷 Receipt image</p>
 
@@ -228,29 +224,58 @@
       <div class="ic">🧾</div>
       <p>Drop a receipt photo here
         <small>Click to browse · drag and drop · paste with <b class="mono">Ctrl</b>+<b class="mono">V</b></small>
-        <small>You can select several at once</small>
+        <small>If you choose several, you review and scan them one at a time</small>
       </p>
     </div>
     <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+    <div class="uploadActions"><button type="button" class="btn" id="browseBtn">🖼 Choose photos</button><button type="button" class="btn p" id="cameraBtn">📷 Take a photo</button></div>
 
-    <div id="pvWrap">
-      <img id="pv" alt="Receipt preview">
-      <p id="pvName" class="mono"></p>
-    </div>
+    <div id="qualityGuide"><b>Photo quality has a large effect on OCR.</b><ul class="qualityTips"><li>Keep all four receipt corners visible when possible</li><li>Fill the frame and hold still until the text is in focus</li><li>Avoid fingers, shadows and strong reflections</li><li>The app can straighten perspective, but a near-front-on photo is still best</li><li>For an <b>itemised receipt, keep each photo to roughly 10 line items or fewer</b>. For longer receipts, photograph the upper and lower sections separately and continue scanning.</li></ul></div>
 
-    <div id="prog">
-      <div id="progBar"><div id="progFill"></div></div>
-      <p id="progMsg"></p>
-    </div>
-
-    <div id="rawWrap">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px">
-        <span class="lab" style="margin:0">Recognised text</span>
-        <button class="btn sm" id="rawToggle">Hide</button>
+    <div id="editorWrap">
+      <div id="editStage">
+        <canvas id="editCanvas"></canvas>
+        <div id="cropBox"><span id="cropTag">OCR area</span><i class="cropHandle tl" data-h="tl"></i><i class="cropHandle tr" data-h="tr"></i><i class="cropHandle bl" data-h="bl"></i><i class="cropHandle br" data-h="br"></i></div>
       </div>
-      <pre id="raw"></pre>
-      <p class="hint">If something came out wrong, check against this and fix it in the table.</p>
+      <p id="pvName" class="mono"></p>
+      <p class="hint">Only the blue rectangle is read. Upload uses a lightweight estimate; precise perspective analysis runs only when you scan. Adjust the box around the printed text.</p>
+
+      <div class="editTools">
+        <div class="toolBox">
+          <label class="lab" for="langSel">Recognition language</label>
+          <select id="langSel" class="toolSelect"><option value="eng" selected>English · default</option><option value="kor">한국어</option><option value="kor+eng">Korean + English</option></select>
+        </div>
+        <div class="toolBox">
+          <label class="lab" for="receiptType">Receipt type</label>
+          <select id="receiptType" class="toolSelect"><option value="itemized" selected>Itemised · item / unit / qty / amount</option><option value="simple">Simple · one total row</option></select>
+        </div>
+        <div class="toolBox">
+          <label class="lab">Rotate</label>
+          <div class="toolRow"><button class="btn sm" id="rotL">↶ 90°</button><button class="btn sm" id="rotR">↷ 90°</button></div>
+        </div>
+        <div class="toolBox wide">
+          <label class="lab">Image cleanup</label>
+          <div class="toolRow"><button class="btn sm" id="autoCrop">Find receipt again</button><button class="btn sm" id="resetEdit">Reset</button></div>
+          <div class="rangeRow"><span>Straighten</span><input id="deskew" type="range" min="-5" max="5" step="0.2" value="0"><output id="deskewVal">0°</output></div>
+          <div class="rangeRow"><span>Brightness</span><input id="brightness" type="range" min="-40" max="40" step="2" value="0"><output id="brightVal">0</output></div>
+          <div class="rangeRow"><span>Contrast</span><input id="contrast" type="range" min="0" max="80" step="5" value="30"><output id="contrastVal">30</output></div>
+          <div class="optGrid">
+            <label class="optCheck"><input type="checkbox" id="perspectiveMode" checked><span><b>Light perspective correction</b><br>Compensates for top/bottom width differences without loading OpenCV.</span></label>
+            <label class="optCheck"><input type="checkbox" id="autoEnhance" checked><span><b>OCR enhancement</b><br>Uses the high-resolution original, then enlarges and sharpens it.</span></label>
+            <label class="optCheck"><input type="checkbox" id="grayMode"><span><b>Strong B&amp;W</b><br>Try this manually for badly faded thermal paper.</span></label>
+            <label class="optCheck"><input type="checkbox" id="precisionOcr" checked><span><b>Two-pass precision OCR · default</b><br>Runs a second layout pass and merges only the stronger words, rows and numeric fields.</span></label>
+            <label class="optCheck"><input type="checkbox" id="deepPrecisionOcr"><span><b>Third-pass recovery · optional</b><br>Use only when spacing is badly broken or faint text is still missing. It takes longer.</span></label>
+          </div>
+          <div id="prepNote"><b>Itemized receipts leave Merchant blank.</b> This avoids confusing manufacturers with the actual merchant when the header is missing. Spaces inside item names and notes are removed automatically.<br><b>Two-pass OCR is now the default.</b> The first result stays intact while the second pass contributes only stronger words, rows and numeric fields. <b>Third-pass recovery</b> is optional for faint or badly spaced receipts. Item names are stored without spaces to reduce OCR spacing noise.</div>
+        </div>
+      </div>
+      <button class="btn p" id="ocrBtn">🔍 Enhance &amp; read this area</button>
+      <p id="queueNote"></p>
     </div>
+
+    <div id="prog"><div id="progBar"><div id="progFill"></div></div><p id="progMsg"></p></div>
+    <div id="rawWrap"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px"><span class="lab" style="margin:0">Recognised text</span><button class="btn sm" id="rawToggle">Hide</button></div><pre id="raw"></pre><p class="hint">For itemised receipts, only rows with numeric columns count as product rows. Text left of the first numeric column becomes the item name; manufacturer/detail lines below are ignored, and split thousands such as 2, 500 are repaired as 2,500.</p></div>
   </div>
 
   <!-- 우측 -->
@@ -270,7 +295,10 @@
           <tr>
             <th style="width:42px"><input type="checkbox" id="chkAll" aria-label="Select all"></th>
             <th style="width:124px">Date</th>
-            <th style="min-width:170px">Merchant</th>
+            <th style="min-width:150px">Merchant</th>
+            <th style="min-width:190px">Item</th>
+            <th style="width:108px;text-align:right">Unit price</th>
+            <th style="width:72px;text-align:right">Qty</th>
             <th style="width:118px;text-align:right">Amount</th>
             <th style="width:132px">Payment</th>
             <th style="width:142px">Category</th>
@@ -319,7 +347,7 @@ function toast(m){
 }
 
 var PAY = ['Company card','Personal card','Cash','Bank transfer','Other'];
-var ACCT = ['Meals','Travel','Entertainment','Supplies','Books & printing','Telecom','Meetings','Staff welfare','Training','Other'];
+var ACCT = ['Meals','Meetings','Entertainment','Travel','Lodging','Vehicle','Consumables','Office supplies','Books & printing','Telecom','Pharmacy','Medical','Staff welfare','Training','Advertising','Software & subscriptions','Fees','Shipping','Repairs & maintenance','Rent','Insurance','Taxes & utilities','Utilities','R&D','Contract services','Other'];
 
 /* ============================================================
    영수증 텍스트에서 값을 뽑아내는 부분
@@ -387,19 +415,38 @@ function parseAmount(text){
 
 function parseStore(text){
   var lines = text.split(/\r?\n/).map(function(s){ return s.trim(); }).filter(Boolean);
-  /* 1) 상호명이라고 적힌 줄 */
+  /* Explicit merchant/store labels are the strongest evidence and may appear anywhere. */
   for (var i = 0; i < lines.length; i++){
-    var m = lines[i].match(/(?:상\s*호|가\s*맹\s*점|점\s*포|매\s*장)\s*(?:명)?\s*[:：]?\s*(.+)/);
+    var m = lines[i].match(/(?:상\s*호|가\s*맹\s*점|점\s*포|매\s*장|merchant|store|shop|vendor)\s*(?:명|name)?\s*[:：]?\s*(.+)/i);
     if (m && m[1].trim().length >= 2) return cleanStore(m[1]);
   }
-  /* 2) 법인 표기가 있는 줄 */
-  for (var k = 0; k < lines.length; k++){
-    if (/\(\s*[주유재사]\s*\)|주식회사/.test(lines[k])) return cleanStore(lines[k]);
+  /* Find the item-table header. A merchant should normally be above it, not inside the item body. */
+  var tableAt = -1;
+  for (var h = 0; h < lines.length; h++){
+    var z = lines[h].replace(/\s+/g,'');
+    if (/(상품명|품명|품목).*(단가|가격|수량|금액)|(?:item|description).*(?:price|qty|quantity|amount)/i.test(z)) { tableAt = h; break; }
   }
-  /* 3) 윗부분에서 그럴듯한 줄 */
-  for (var p = 0; p < Math.min(5, lines.length); p++){
+  var topLimit = tableAt >= 0 ? tableAt : Math.min(8, lines.length);
+  function normCorp(v){ return String(v||'').toLowerCase().replace(/\s+/g,'').replace(/[()㈜.,]/g,''); }
+  function detailLike(v){
+    v=String(v||'');
+    var nums=v.match(/\d[\d,.]*/g)||[];
+    return /^\s*\d{1,3}[.)-]?\s*[^0-9]/.test(v) || nums.length>=2 || metaRowText(v);
+  }
+  /* Count corporation-like lines in the whole OCR. Repeated ones in item rows are usually manufacturers. */
+  var corpCount={};
+  lines.forEach(function(v){ if (/(\(\s*[주유재사]\s*\)|주식회사|㈜|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(v)){var k=normCorp(v.replace(/\d[\d,.]*/g,''));if(k)corpCount[k]=(corpCount[k]||0)+1;} });
+  /* A corporation name is accepted as merchant only near the receipt header, never from a numeric item row. */
+  for (var k = 0; k < topLimit; k++){
+    var c=lines[k]; if(detailLike(c)) continue;
+    if (/(\(\s*[주유재사]\s*\)|주식회사|㈜|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(c)){
+      var nk=normCorp(c); if((corpCount[nk]||0)<=1) return cleanStore(c);
+    }
+  }
+  /* Last fallback: a plausible header line only. If the crop starts in the item table, leave merchant blank rather than inventing one. */
+  for (var p = 0; p < topLimit; p++){
     var s = lines[p];
-    if (/사업자|대표자|주소|전화|TEL|영수증|번호|\d{3}-\d{2}-\d{5}/i.test(s)) continue;
+    if (detailLike(s) || /사업자|대표자|주소|전화|TEL|영수증|번호|receipt|invoice|date|time|\d{3}-\d{2}-\d{5}/i.test(s)) continue;
     if (s.replace(/[^가-힣A-Za-z]/g,'').length >= 2) return cleanStore(s);
   }
   return '';
@@ -408,23 +455,44 @@ function cleanStore(s){
   return s.replace(/[:：]/g,' ').replace(/\s+/g,' ').trim().slice(0, 40);
 }
 
-/* 상호를 보고 계정과목을 짐작한다 */
-function guessAcct(store){
-  var s = String(store || '');
-  if (/coffee|cafe|caf\u00e9|starbucks|costa|pret|dunkin|tim hortons|\uCEE4\uD53C|\uCE74\uD398/i.test(s)) return 'Meals';
-  if (/restaurant|diner|kitchen|grill|burger|pizza|sushi|deli|bistro|mcdonald|subway|\uC2DD\uB2F9/i.test(s)) return 'Meals';
-  if (/taxi|uber|lyft|rail|train|airline|airways|parking|shell|bp |esso|fuel|gas station|\uD0DD\uC2DC/i.test(s)) return 'Travel';
-  if (/office|stationer|staples|depot|daiso|hardware/i.test(s)) return 'Supplies';
-  if (/book|print|copy shop|kinko|waterstones/i.test(s)) return 'Books & printing';
-  if (/telecom|mobile|vodafone|at&t|verizon|t-mobile/i.test(s)) return 'Telecom';
-  if (/mart|market|grocer|tesco|walmart|costco|seven|7-eleven|aldi|lidl/i.test(s)) return 'Supplies';
-  return 'Meals';
+/* Guess the category from merchant and OCR text. Specific industries are checked before broad retail patterns. */
+var ACCT_RULES = [
+  ['Pharmacy', /pharma|pharmacy|drug\s*store|chemist|walgreens|cvs|boots|rite\s*aid|medicine|medication|제약|약국/i],
+  ['Medical', /hospital|clinic|dental|dentist|medical\s*center|optician|ophthalm|dermat|health\s*check|병원|의원|치과/i],
+  ['Lodging', /hotel|motel|resort|hostel|guest\s*house|airbnb|agoda|booking\.com|marriott|hilton|hyatt|holiday\s*inn|숙박|호텔/i],
+  ['Vehicle', /gas\s*station|fuel|petrol|shell|bp\b|esso|exxon|chevron|car\s*wash|tyre|tire|auto\s*service|repair\s*garage|주유|세차|타이어/i],
+  ['Travel', /taxi|uber|lyft|rail|train|metro|subway|bus|airline|airways|airport|parking|toll|rent.?a.?car|hertz|avis|enterprise|택시|철도|항공|주차/i],
+  ['Shipping', /dhl|fedex|\bups\b|usps|royal\s*mail|courier|shipping|post\s*office|택배|우체국/i],
+  ['Telecom', /at&t|verizon|t-mobile|vodafone|telecom|mobile|broadband|internet|wifi|skt|kt\b|lg\s*u\+|통신/i],
+  ['Software & subscriptions', /adobe|microsoft|office\s*365|github|notion|slack|zoom|dropbox|google\s*workspace|canva|figma|openai|chatgpt|anthropic|claude|aws|amazon\s*web\s*services|azure|cloudflare|vercel|netlify|atlassian|jira|confluence|subscription|software/i],
+  ['Advertising', /google\s*ads|meta\s*ads|facebook\s*ads|instagram\s*ads|advertis|marketing|ad\s*agency/i],
+  ['Training', /udemy|coursera|academy|training|conference|seminar|course|\bclass\b|tuition|workshop|교육|학원|세미나/i],
+  ['Books & printing', /bookstore|books|waterstones|barnes|print|printing|copy\s*shop|kinko|교보|알라딘|인쇄/i],
+  ['Office supplies', /staples|office\s*depot|stationery|paper|toner|printer\s*ink|office\s*supply|문구|사무용품/i],
+  ['R&D', /thermo\s*fisher|sigma.?aldrich|merck|fisher\s*scientific|laboratory|\blab\b|reagent|scientific|genomics|research\s*material|시약|실험/i],
+  ['Repairs & maintenance', /repair|maintenance|service\s*center|fix\s|수리|수선/i],
+  ['Rent', /wework|regus|cowork|rent|rental|lease|office\s*space|임대|공유오피스/i],
+  ['Insurance', /insurance|allianz|axa|aig|state\s*farm|geico|보험/i],
+  ['Taxes & utilities', /tax|government|municipal|licen[cs]e\s*fee|permit|국세|지방세|과태료/i],
+  ['Utilities', /electricity|electric\s*bill|gas\s*bill|water\s*bill|utility|power\s*company|kepco|전기요금|수도요금/i],
+  ['Contract services', /freelance|consulting|consultant|agency|outsourc|contractor|fiverr|upwork|크몽|외주/i],
+  ['Staff welfare', /gym|fitness|wellness|gift\s*card|staff\s*welfare|benefit|복지/i],
+  ['Entertainment', /bar\b|pub\b|wine\s*bar|cocktail|nightclub|izakaya|주점|호프/i],
+  ['Meetings', /meeting\s*room|conference\s*room|business\s*center|coworking\s*day\s*pass|회의실/i],
+  ['Meals', /coffee|cafe|caf[eé]|starbucks|costa|pret|dunkin|tim\s*hortons|restaurant|diner|kitchen|grill|burger|pizza|sushi|deli|bistro|mcdonald|subway|bakery|doordash|uber\s*eats|deliveroo|식당|카페/i],
+  ['Consumables', /walmart|costco|tesco|aldi|lidl|target|7-eleven|convenience|supermarket|grocery|mart|daiso|hardware|마트|편의점/i],
+  ['Fees', /paypal|stripe|square|payment\s*fee|processing\s*fee|service\s*fee|commission|수수료/i]
+];
+function guessAcct(store, rawText){
+  var s = (String(store||'') + ' ' + String(rawText||'').slice(0,2500)).replace(/\s+/g,' ');
+  for (var i=0;i<ACCT_RULES.length;i++) if (ACCT_RULES[i][1].test(s)) return ACCT_RULES[i][0];
+  return 'Other';
 }
 
 /* ============================================================
    표
    ============================================================ */
-var rows = [];      /* {id, date, store, amount, pay, acct, memo} */
+var rows = [];      /* {id, date, store, item, unit, qty, amount, pay, acct, memo} */
 var seq = 1;
 
 function addRow(data, silent){
@@ -432,9 +500,12 @@ function addRow(data, silent){
     id: seq++,
     date: (data && data.date) || '',
     store: (data && data.store) || '',
+    item: (data && data.item) || '',
+    unit: (data && data.unit) || '',
+    qty: (data && data.qty) || '',
     amount: (data && data.amount) || '',
     pay: (data && data.pay) || PAY[0],
-    acct: (data && data.acct) || ACCT[0],
+    acct: (data && data.acct) || ACCT[ACCT.length-1],
     memo: (data && data.memo) || ''
   };
   rows.push(r);
@@ -447,6 +518,14 @@ function addRow(data, silent){
     }
   }
   return r;
+}
+function addRowsBatch(list){
+  if(!list || !list.length) return;
+  list.forEach(function(data){
+    rows.push({id:seq++,date:data.date||'',store:data.store||'',item:data.item||'',unit:data.unit||'',qty:data.qty||'',amount:data.amount||'',pay:data.pay||PAY[0],acct:data.acct||ACCT[ACCT.length-1],memo:data.memo||''});
+  });
+  render();
+  var tb=$('tbody'),last=tb.lastElementChild;if(last&&last.scrollIntoView){try{last.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}
 }
 
 function render(){
@@ -461,6 +540,9 @@ function render(){
         '<td class="ctr"><input type="checkbox" class="rc" aria-label="Select row"></td>' +
         '<td><div class="ed mono" contenteditable="true" data-f="date" data-ph="YYYY-MM-DD">' + esc(r.date) + '</div></td>' +
         '<td><div class="ed" contenteditable="true" data-f="store" data-ph="Merchant">' + esc(r.store) + '</div></td>' +
+        '<td><div class="ed" contenteditable="true" data-f="item" data-ph="Item">' + esc(r.item) + '</div></td>' +
+        '<td><div class="ed num" contenteditable="true" data-f="unit" data-ph="0">' + esc(r.unit) + '</div></td>' +
+        '<td><div class="ed num" contenteditable="true" data-f="qty" data-ph="1">' + esc(r.qty) + '</div></td>' +
         '<td><div class="ed num" contenteditable="true" data-f="amount" data-ph="0">' + esc(r.amount) + '</div></td>' +
         '<td>' + sel('pay', PAY, r.pay) + '</td>' +
         '<td>' + sel('acct', ACCT, r.acct) + '</td>' +
@@ -507,13 +589,18 @@ $('tbody').addEventListener('input', function(ev){
 /* 금액 칸은 편집이 끝날 때 콤마를 다시 찍는다 */
 $('tbody').addEventListener('focusout', function(ev){
   var ed = ev.target.closest('.ed');
-  if (!ed || ed.dataset.f !== 'amount') return;
+  if (!ed || ['amount','unit','qty'].indexOf(ed.dataset.f) < 0) return;
   var tr = ed.closest('tr');
   var r = rows.find(function(x){ return x.id === +tr.dataset.id; });
   if (!r) return;
-  var n = toNum(r.amount);
-  var t = n ? n.toLocaleString('en-US') : '';
-  r.amount = t; ed.textContent = t;
+  if (ed.dataset.f === 'qty'){
+    var q = Math.max(0, parseInt(String(r.qty||'').replace(/[^0-9]/g,''),10) || 0);
+    r.qty = q ? String(q) : ''; ed.textContent = r.qty;
+  } else {
+    var n = toNum(r[ed.dataset.f]);
+    var t = n ? n.toLocaleString('en-US') : '';
+    r[ed.dataset.f] = t; ed.textContent = t;
+  }
   updateSum();
 });
 $('tbody').addEventListener('change', function(ev){
@@ -569,154 +656,388 @@ $('clearAll').addEventListener('click', function(){
 });
 
 /* ============================================================
-   OCR
+   OCR + photo preprocessing
    ============================================================ */
-var worker = null, busy = false;
-var queue = [];
+var worker = null, workerLang = '', busy = false, queue = [], doneCount = 0;
+var currentFile = null, srcImg = new Image(), srcUrl = '', workBase = null, previewRAF = 0;
+var rot90 = 0, fineRot = 0, crop = {x:.04,y:.04,w:.92,h:.92};
+var dragCrop = null, dragStart = null;
 
 function setProg(on, pct, msg){
   $('prog').classList.toggle('on', !!on);
   if (typeof pct === 'number') $('progFill').style.width = Math.max(0, Math.min(100, pct)) + '%';
   if (msg) $('progMsg').textContent = msg;
 }
-
+function langCode(){ return $('langSel').value === 'kor+eng' ? ['kor','eng'] : [$('langSel').value]; }
 async function getWorker(){
-  if (worker) return worker;
-  if (typeof Tesseract === 'undefined') throw new Error('tesseract missing');
-  setProg(true, 4, 'Downloading recognition data \u00B7 one time only');
-  worker = await Tesseract.createWorker(['eng','kor'], 1, {
-    logger: function(m){
+  var code = $('langSel').value;
+  if (worker && workerLang === code) return worker;
+  if (worker){ try{ await worker.terminate(); }catch(e){} worker = null; }
+  if (typeof Tesseract === 'undefined') throw new Error('OCR engine could not be loaded');
+  setProg(true, 4, 'Downloading OCR language data · first time only');
+  worker = await Tesseract.createWorker(langCode(), 1, {
+    logger:function(m){
       if (!m || typeof m.progress !== 'number') return;
       var pct = Math.round(m.progress * 100);
-      if (m.status === 'recognizing text') setProg(true, pct, 'Reading the text \u00B7 ' + pct + '%');
-      else if (/load|initial|download/i.test(m.status || '')) setProg(true, Math.min(pct, 95), 'Preparing recognition data \u00B7 ' + pct + '%');
+      if (m.status === 'recognizing text') setProg(true, pct, 'Reading text · ' + pct + '%');
+      else if (/load|initial|download/i.test(m.status||'')) setProg(true, Math.min(pct,95), 'Preparing OCR data · ' + pct + '%');
     }
   });
+  workerLang = code;
   return worker;
 }
-
-function readFile(file){
-  return new Promise(function(res, rej){
-    var r = new FileReader();
-    r.onload = function(e){ res(e.target.result); };
-    r.onerror = function(){ rej(new Error('read failed')); };
-    r.readAsDataURL(file);
+function sleep(ms){ return new Promise(function(r){setTimeout(r,ms)}); }
+function cloneCanvas(c){ var o=document.createElement('canvas');o.width=c.width;o.height=c.height;o.getContext('2d').drawImage(c,0,0);return o; }
+function resetControls(){
+  rot90=0; fineRot=0; crop={x:.04,y:.04,w:.92,h:.92};
+  $('deskew').value=0; $('brightness').value=0; $('contrast').value=30; $('grayMode').checked=false;
+  if($('perspectiveMode')) $('perspectiveMode').checked=true;
+  if($('autoEnhance')) $('autoEnhance').checked=true;
+  if($('precisionOcr')) $('precisionOcr').checked=true;
+  if($('deepPrecisionOcr')) $('deepPrecisionOcr').checked=false;
+  syncVals();
+}
+function syncVals(){ $('deskewVal').value=(+fineRot).toFixed(1).replace('.0','')+'°'; $('brightVal').value=$('brightness').value; $('contrastVal').value=$('contrast').value; }
+function workingMaxSide(){var mobile=window.matchMedia&&window.matchMedia('(max-width: 760px)').matches;return mobile?1450:1750}
+function loadEditor(file){
+  currentFile=file; resetControls(); $('pvName').textContent=file.name||'camera photo'; workBase=null;
+  if(srcUrl) URL.revokeObjectURL(srcUrl); srcUrl=URL.createObjectURL(file); srcImg=new Image();
+  srcImg.onload=function(){
+    $('drop').style.display='none'; $('editorWrap').classList.add('on'); setProg(true,2,'Optimizing the photo for stable processing');
+    requestAnimationFrame(function(){setTimeout(function(){
+      try{
+        var w=srcImg.naturalWidth||1,h=srcImg.naturalHeight||1,max=workingMaxSide(),k=Math.min(1,max/Math.max(w,h));
+        workBase=document.createElement('canvas');workBase.width=Math.max(1,Math.round(w*k));workBase.height=Math.max(1,Math.round(h*k));
+        var bx=workBase.getContext('2d');bx.imageSmoothingEnabled=true;bx.imageSmoothingQuality='high';bx.drawImage(srcImg,0,0,workBase.width,workBase.height);
+        srcImg.src=''; if(srcUrl){URL.revokeObjectURL(srcUrl);srcUrl=''};
+        drawPreview(); setProg(false); setTimeout(function(){autoDetectReceipt(true)},40); updateQueueNote();
+      }catch(e){console.error(e);setProg(false);toast('Could not optimize the photo · try another image')}
+    },0)})
+  };
+  srcImg.onerror=function(){ setProg(false); toast('Could not read the photo'); }; srcImg.src=srcUrl;
+}
+function rotatedCanvas(maxSide){
+  if(!workBase||!workBase.width)return null;
+  var a=(rot90+fineRot)*Math.PI/180,w=workBase.width,h=workBase.height,ca=Math.abs(Math.cos(a)),sa=Math.abs(Math.sin(a)),bw=Math.ceil(w*ca+h*sa),bh=Math.ceil(w*sa+h*ca);
+  var scale=Math.min(1,(maxSide||workingMaxSide())/Math.max(bw,bh)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(bw*scale));c.height=Math.max(1,Math.round(bh*scale));
+  var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.save();x.translate(c.width/2,c.height/2);x.rotate(a);x.scale(scale,scale);x.drawImage(workBase,-w/2,-h/2);x.restore();return c;
+}
+function drawPreview(){
+  var src=rotatedCanvas(window.innerWidth<760?720:900);if(!src)return;var c=$('editCanvas');c.width=src.width;c.height=src.height;c.getContext('2d').drawImage(src,0,0);layoutCrop();
+}
+function schedulePreview(){if(previewRAF)cancelAnimationFrame(previewRAF);previewRAF=requestAnimationFrame(function(){previewRAF=0;drawPreview()})}
+function layoutCrop(){
+  var c=$('editCanvas'),b=$('cropBox');if(!c.width)return;var r=c.getBoundingClientRect(),stage=$('editStage').getBoundingClientRect(),ox=r.left-stage.left,oy=r.top-stage.top;
+  b.style.left=(ox+r.width*crop.x)+'px';b.style.top=(oy+r.height*crop.y)+'px';b.style.width=(r.width*crop.w)+'px';b.style.height=(r.height*crop.h)+'px';
+}
+window.addEventListener('resize',function(){if(currentFile)layoutCrop()});
+function autoDetectReceipt(showToast){
+  var c=$('editCanvas');if(!c.width)return;
+  var W=c.width,H=c.height,sw=Math.min(240,W),sh=Math.max(1,Math.round(H*sw/W)),t=document.createElement('canvas');t.width=sw;t.height=sh;
+  var x=t.getContext('2d');x.drawImage(c,0,0,sw,sh);var d=x.getImageData(0,0,sw,sh).data,cols=new Uint16Array(sw),rows2=new Uint16Array(sh),count=0;
+  for(var yy=0;yy<sh;yy++)for(var xx=0;xx<sw;xx++){var k=(yy*sw+xx)*4,r=d[k],g=d[k+1],b=d[k+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),lum=.2126*r+.7152*g+.0722*b;if(lum>135&&mx-mn<92){cols[xx]++;rows2[yy]++;count++}}
+  var x1=0,x2=sw-1,y1=0,y2=sh-1,ct=.15*sh,rt=.15*sw;while(x1<sw-1&&cols[x1]<ct)x1++;while(x2>x1&&cols[x2]<ct)x2--;while(y1<sh-1&&rows2[y1]<rt)y1++;while(y2>y1&&rows2[y2]<rt)y2--;
+  var found=count>sw*sh*.09&&x2-x1>sw*.22&&y2-y1>sh*.22;if(found){crop={x:Math.max(0,x1/sw-.03),y:Math.max(0,y1/sh-.025),w:Math.min(1,(x2-x1+1)/sw+.06),h:Math.min(1,(y2-y1+1)/sh+.05)};crop.w=Math.min(crop.w,1-crop.x);crop.h=Math.min(crop.h,1-crop.y)}else crop={x:.03,y:.03,w:.94,h:.94};layoutCrop();
+  if(showToast)toast(found?'Receipt area estimated quickly · check the blue box':'Could not find a clear receipt boundary, so almost the whole photo is selected')
+}
+function cropPoint(ev){var e=ev.touches?ev.touches[0]:ev,r=$('editCanvas').getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
+function cropStart(ev,handle){ev.preventDefault();dragCrop=handle||'move';dragStart={p:cropPoint(ev),c:{x:crop.x,y:crop.y,w:crop.w,h:crop.h}}}
+$('cropBox').addEventListener('mousedown',function(e){if(!e.target.dataset.h)cropStart(e,'move')});$('cropBox').addEventListener('touchstart',function(e){if(!e.target.dataset.h)cropStart(e,'move')},{passive:false});
+document.querySelectorAll('.cropHandle').forEach(function(h){h.addEventListener('mousedown',function(e){cropStart(e,this.dataset.h)});h.addEventListener('touchstart',function(e){cropStart(e,this.dataset.h)},{passive:false})});
+function cropMove(ev){if(!dragCrop)return;ev.preventDefault();var p=cropPoint(ev),dx=p.x-dragStart.p.x,dy=p.y-dragStart.p.y,c0=dragStart.c,n={x:c0.x,y:c0.y,w:c0.w,h:c0.h},min=.08;if(dragCrop==='move'){n.x=Math.max(0,Math.min(1-c0.w,c0.x+dx));n.y=Math.max(0,Math.min(1-c0.h,c0.y+dy))}else{var l=c0.x,t=c0.y,r=c0.x+c0.w,b=c0.y+c0.h;if(dragCrop.indexOf('l')>=0)l=Math.max(0,Math.min(r-min,c0.x+dx));if(dragCrop.indexOf('r')>=0)r=Math.min(1,Math.max(l+min,c0.x+c0.w+dx));if(dragCrop.indexOf('t')>=0)t=Math.max(0,Math.min(b-min,c0.y+dy));if(dragCrop.indexOf('b')>=0)b=Math.min(1,Math.max(t+min,c0.y+c0.h+dy));n={x:l,y:t,w:r-l,h:b-t}}crop=n;layoutCrop()}
+window.addEventListener('mousemove',cropMove);window.addEventListener('touchmove',cropMove,{passive:false});window.addEventListener('mouseup',function(){dragCrop=null});window.addEventListener('touchend',function(){dragCrop=null});
+function ocrMaxSide(){var mobile=window.matchMedia&&window.matchMedia('(max-width: 760px)').matches;return mobile?1350:1650}
+function cropHighRes(){
+  /* Rotate from a bounded source, crop first, then resize only if needed. */
+  var cap=ocrMaxSide()+420,src=rotatedCanvas(cap),sx=Math.round(src.width*crop.x),sy=Math.round(src.height*crop.y),sw=Math.max(1,Math.round(src.width*crop.w)),sh=Math.max(1,Math.round(src.height*crop.h)),out=document.createElement('canvas');
+  var maxSide=ocrMaxSide(),k=Math.min(1,maxSide/Math.max(sw,sh));out.width=Math.max(1,Math.round(sw*k));out.height=Math.max(1,Math.round(sh*k));var x=out.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(src,sx,sy,sw,sh,0,0,out.width,out.height);return out;
+}
+function median(a){if(!a.length)return 0;a=a.slice().sort(function(x,y){return x-y});var m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2}
+function lightPerspectiveCorrect(c){
+  if(!$('perspectiveMode').checked)return cloneCanvas(c);
+  var sw=Math.min(240,c.width),sh=Math.max(1,Math.round(c.height*sw/c.width)),t=document.createElement('canvas');t.width=sw;t.height=sh;var tx=t.getContext('2d');tx.drawImage(c,0,0,sw,sh);var d=tx.getImageData(0,0,sw,sh).data;
+  var left=[],right=[],ys=[];for(var y=2;y<sh-2;y+=2){var l=-1,r=-1;for(var x=0;x<sw;x++){var k=(y*sw+x)*4,rr=d[k],gg=d[k+1],bb=d[k+2],mx=Math.max(rr,gg,bb),mn=Math.min(rr,gg,bb),lum=.2126*rr+.7152*gg+.0722*bb;if(lum>132&&mx-mn<96){l=x;break}}for(var x2=sw-1;x2>=0;x2--){var k2=(y*sw+x2)*4,rr2=d[k2],gg2=d[k2+1],bb2=d[k2+2],mx2=Math.max(rr2,gg2,bb2),mn2=Math.min(rr2,gg2,bb2),lum2=.2126*rr2+.7152*gg2+.0722*bb2;if(lum2>132&&mx2-mn2<96){r=x2;break}}if(l>=0&&r-l>sw*.35){left.push(l);right.push(r);ys.push(y)}}
+  if(ys.length<Math.max(12,sh*.12))return cloneCanvas(c);var topL=[],topR=[],botL=[],botR=[];for(var i=0;i<ys.length;i++){var q=ys[i]/sh;if(q>.08&&q<.35){topL.push(left[i]);topR.push(right[i])}else if(q>.65&&q<.92){botL.push(left[i]);botR.push(right[i])}}
+  if(!topL.length||!botL.length)return cloneCanvas(c);var tl=median(topL),tr=median(topR),bl=median(botL),br=median(botR),tw=tr-tl,bw=br-bl;if(tw<sw*.35||bw<sw*.35)return cloneCanvas(c);
+  var change=Math.abs(tw-bw)/Math.max(tw,bw),sideShift=(Math.abs(tl-bl)+Math.abs(tr-br))/sw;if(change<.035&&sideShift<.04)return cloneCanvas(c);if(change>.55||sideShift>.7)return cloneCanvas(c);
+  var scaleX=c.width/sw,targetW=Math.max(1,Math.round(Math.max(tw,bw)*scaleX)),out=document.createElement('canvas');out.width=Math.min(targetW,ocrMaxSide());out.height=c.height;var ox=out.getContext('2d');ox.fillStyle='#fff';ox.fillRect(0,0,out.width,out.height);var stripe=6;
+  for(var yy=0;yy<c.height;yy+=stripe){var p=(yy+stripe*.5)/Math.max(1,c.height-1),sl=(tl+(bl-tl)*p)*scaleX,sr=(tr+(br-tr)*p)*scaleX,swid=Math.max(1,sr-sl),hh=Math.min(stripe,c.height-yy);ox.drawImage(c,sl,yy,swid,hh,0,yy,out.width,hh)}return out;
+}
+function manualAdjust(c,forceGray){
+  var maxSide=ocrMaxSide(),long=Math.max(c.width,c.height),scale=Math.min(1.35,Math.max(.55,maxSide/Math.max(1,long))),o=document.createElement('canvas');
+  o.width=Math.max(1,Math.round(c.width*scale));o.height=Math.max(1,Math.round(c.height*scale));var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  var br=+$('brightness').value,ct=+$('contrast').value,force=forceGray||$('grayMode').checked;
+  /* Canvas filters avoid a JavaScript per-pixel loop on multi-megapixel images. */
+  x.filter='brightness('+Math.max(55,100+br)+'%) contrast('+Math.max(70,100+ct)+'%)'+(force?' grayscale(100%)':'');
+  x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
+}
+function otsuBinary(c){
+  var max=1200,k0=Math.min(1,max/Math.max(c.width,c.height)),o=document.createElement('canvas');o.width=Math.max(1,Math.round(c.width*k0));o.height=Math.max(1,Math.round(c.height*k0));var x=o.getContext('2d');x.drawImage(c,0,0,o.width,o.height);var im=x.getImageData(0,0,o.width,o.height),d=im.data,h=new Uint32Array(256),n=0;
+  for(var i=0;i<d.length;i+=4){var v=Math.round(.299*d[i]+.587*d[i+1]+.114*d[i+2]);h[v]++;n++}var sum=0;for(var j=0;j<256;j++)sum+=j*h[j];var wb=0,sb=0,best=-1,th=145;for(var t=0;t<256;t++){wb+=h[t];if(!wb)continue;var wf=n-wb;if(!wf)break;sb+=t*h[t];var mb=sb/wb,mf=(sum-sb)/wf,vv=wb*wf*(mb-mf)*(mb-mf);if(vv>best){best=vv;th=t}}for(var q=0;q<d.length;q+=4){var y=.299*d[q]+.587*d[q+1]+.114*d[q+2],v2=y>th?255:0;d[q]=d[q+1]=d[q+2]=v2}x.putImageData(im,0,0);return o;
+}
+async function enhancedVariants(){
+  setProg(true,5,'Preparing the OCR image');await sleep(20);var base=cropHighRes();
+  if($('perspectiveMode').checked){setProg(true,7,'Applying light perspective correction');await sleep(0);base=lightPerspectiveCorrect(base)}
+  var forceGray=$('autoEnhance').checked||$('grayMode').checked;return manualAdjust(base,forceGray);
+}
+function parseTsvWords(tsv){
+  if(!tsv)return [];var ls=String(tsv).split(/\r?\n/),out=[];
+  for(var i=1;i<ls.length;i++){if(!ls[i])continue;var p=ls[i].split('\t');if(p.length<12||+p[0]!==5)continue;var txt=p.slice(11).join('\t').trim(),conf=+p[10];if(!txt||conf<8)continue;var l=+p[6],t=+p[7],w=+p[8],h=+p[9];if(!isFinite(l+t+w+h)||w<=0||h<=0)continue;out.push({text:txt,conf:conf,left:l,top:t,width:w,height:h,right:l+w,cx:l+w/2,cy:t+h/2});}
+  return out;
+}
+function medianNum(a){if(!a.length)return 12;var b=a.slice().sort(function(x,y){return x-y}),m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2}
+function visualRowsFromTsv(tsv){
+  var words=parseTsvWords(tsv);if(!words.length)return {rows:[],width:1,text:''};var hs=words.map(function(w){return w.height}),tol=Math.max(5,medianNum(hs)*.62),rows=[];
+  words.sort(function(a,b){return a.cy-b.cy||a.left-b.left});
+  words.forEach(function(w){var best=null,bd=1e9;for(var j=Math.max(0,rows.length-5);j<rows.length;j++){var d=Math.abs(rows[j].cy-w.cy);if(d<=tol&&d<bd){best=rows[j];bd=d}}if(!best){best={cy:w.cy,words:[]};rows.push(best)}best.words.push(w);best.cy=best.words.reduce(function(a,z){return a+z.cy},0)/best.words.length;});
+  rows.sort(function(a,b){return a.cy-b.cy});var pageW=1;
+  rows.forEach(function(r){r.words.sort(function(a,b){return a.left-b.left});r.words.forEach(function(w){pageW=Math.max(pageW,w.right)});r.text=r.words.map(function(w){return w.text}).join(' ')});
+  var txt=rows.map(function(r){var line='',last=0,unit=Math.max(5,pageW/86);r.words.forEach(function(w){var gap=Math.max(1,Math.min(12,Math.round((w.left-last)/unit)));line+=new Array(gap+1).join(' ')+w.text;last=w.right});return line.trimEnd()}).join('\n');
+  return {rows:rows,width:pageW,text:txt};
+}
+function cleanNumericText(v){
+  return String(v||'').trim().replace(/[₩원$€£\s]/g,'').replace(/[Oo]/g,'0').replace(/[Il|]/g,'1').replace(/[^0-9,.-]/g,'');
+}
+function isNumericWord(v){var s=String(v||'').trim().replace(/[₩원$€£\s]/g,'');return /^[0-9OoIl|,.-]+$/.test(s)&&/[0-9OoIl|]/.test(s);}
+function numberToken(v){
+  var s=cleanNumericText(v);if(!/[0-9]/.test(s))return null;
+  var n=parseInt(s.replace(/[,.]/g,''),10);if(!isFinite(n)||n<0||n>100000000)return null;return n;
+}
+function moneyToken(v){var n=numberToken(v);return n!==null&&n>=10?n:null;}
+function numericGroups(words,W){
+  var src=words.filter(function(w){return w.cx>W*.38&&(isNumericWord(w.text)||/^[,.]$/.test(String(w.text).trim()))}).sort(function(a,b){return a.left-b.left}),out=[];
+  src.forEach(function(w){
+    var raw=cleanNumericText(w.text),last=out.length?out[out.length-1]:null,gap=last?w.left-last.right:9999,join=false;
+    if(!/[0-9]/.test(raw)){
+      if(last&&/^[,.]+$/.test(raw)&&gap<=Math.max(30,last.height*1.6)){last.raw+=raw;last.text+=(last.text?' ':'')+w.text;last.right=w.right;last.cx=(last.left+last.right)/2;last.words.push(w);}
+      return;
+    }
+    if(last){
+      var near=Math.max(7,Math.min(24,Math.max(last.height,w.height)*.70));
+      join=/[,.]$/.test(last.raw)||/^[,.]/.test(raw)||gap<=near;
+      if(join&&!/[,.]$/.test(last.raw)&&!/^[,.]/.test(raw)&&gap>Math.max(6,Math.min(last.height,w.height)*.38))join=false;
+    }
+    if(join){last.raw+=raw;last.text+=(last.text?' ':'')+w.text;last.right=w.right;last.cx=(last.left+last.right)/2;last.height=Math.max(last.height,w.height);last.words.push(w);}
+    else out.push({raw:raw,text:w.text,left:w.left,right:w.right,cx:w.cx,height:w.height,words:[w]});
   });
+  out.forEach(function(g){g.value=numberToken(g.raw)});return out.filter(function(g){return g.value!==null});
 }
-
-async function processOne(file){
-  var url = await readFile(file);
-  $('pv').src = url;
-  $('pvWrap').classList.add('on');
-  $('pvName').textContent = file.name || 'pasted image';
-
-  var w = await getWorker();
-  setProg(true, 8, 'Reading the text');
-  var out = await w.recognize(url);
-  var text = (out && out.data && out.data.text) || '';
-
-  $('raw').textContent = text.trim() || '(no text was recognised)';
-  $('rawWrap').classList.add('on');
-
-  var date = parseDate(text);
-  var store = parseStore(text);
-  var amount = parseAmount(text);
-  addRow({ date:date, store:store, amount:amount, acct:guessAcct(store) });
-
-  var missing = [];
-  if (!date) missing.push('date');
-  if (!store) missing.push('merchant');
-  if (!amount) missing.push('amount');
-  return missing;
+function leadIndexInfo(r,W){
+  var w=r&&r.words&&r.words[0];if(!w||w.cx>W*.22)return null;
+  var t=String(w.text||'').trim(),m=t.match(/^(\d{1,3})[.)-]?(.*)$/);
+  if(!m)return null;
+  /* Large money-like values at the left are not line indexes. */
+  var n=+m[1];if(n>300)return null;
+  return {index:m[1],rest:(m[2]||'').replace(/^[.)-]+/,'').trim()};
 }
-
-async function handleFiles(files){
-  var list = Array.prototype.slice.call(files).filter(function(f){
-    return /^image\//.test(f.type || '');
+function stripLeadIndex(words,W){
+  var a=words.slice();if(!a.length)return a;
+  var info=leadIndexInfo({words:a},W);if(!info)return a;
+  if(info.rest){a[0]=Object.assign({},a[0],{text:info.rest});}
+  else a.shift();
+  return a;
+}
+function wordsLeftText(r,cut,W){
+  var a=r.words.filter(function(w){return w.cx<Math.min(cut==null?W*.64:cut,W*.68)});a=stripLeadIndex(a,W);
+  return a.map(function(w){return w.text}).join(' ').replace(/^[·•:_-]+|[·•:_-]+$/g,'').replace(/\s+/g,' ').trim();
+}
+function hasLeadIndex(r,W){return !!leadIndexInfo(r,W);}
+function textStrength(s){return String(s||'').replace(/[^가-힣A-Za-z]/g,'').length;}
+function looksAuxiliaryText(s){
+  s=String(s||'').replace(/\s+/g,' ').trim();
+  if(!s)return false;
+  return /(제\s*약|약\s*품|제\s*조|판\s*매|유\s*통|수\s*입|개\s*발|해\s*외\s*개\s*발|의\s*약\s*외\s*품|건강\s*기능|식\s*품|주\s*식\s*회\s*사|\(\s*주\s*\)|㈜|\(\s*유\s*\)|pharma|pharmaceutical|laborator|manufacturer|manufactured|distributed|distributor|imported|importer|developer|development|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(s);
+}
+function metaRowText(s){return /(상품\s*명|품\s*명|품목|단가|수량|금액|합계|총\s*액|총\s*계|부가세|과세|면세|공급가|결제|승인|카드|현금|거스름|사업자|대표자|전화|TEL|주소|일시|영수증|전표|receipt|subtotal|grand\s*total|total|tax|amount|quantity|qty|price|unit\s*price)/i.test(String(s||''));}
+function detectHeaderColumns(vr){
+  var W=vr.width,best=null;
+  vr.rows.slice(0,Math.max(8,Math.ceil(vr.rows.length*.65))).forEach(function(r){
+    var cols={unit:null,qty:null,total:null},hits=0;
+    r.words.forEach(function(w){var t=String(w.text||'').replace(/\s+/g,'');
+      if(/^(단가|판매가|가격|unitprice|unit|price)$/i.test(t)){cols.unit=w.cx;hits++;}
+      else if(/^(수량|qty|quantity|count)$/i.test(t)){cols.qty=w.cx;hits++;}
+      else if(/^(금액|합계금액|amount|total)$/i.test(t)){cols.total=w.cx;hits++;}
+    });
+    if(hits>=2&&(!best||hits>best.hits))best={unit:cols.unit,qty:cols.qty,total:cols.total,hits:hits};
   });
-  if (!list.length){ toast('That is not an image file'); return; }
-  if (busy){ queue = queue.concat(list); toast('Still working \u00B7 ' + list.length + ' queued'); return; }
-
-  busy = true;
-  var done = 0, warned = 0;
-  try {
-    while (list.length){
-      var f = list.shift();
-      done++;
-      if (done > 1 || list.length) setProg(true, null, 'Reading photo ' + done);
-      var missing = await processOne(f);
-      if (missing.length) warned++;
-      if (!list.length && queue.length){ list = queue; queue = []; }
-    }
-    setProg(false);
-    var msg = done + ' photo(s) processed';
-    if (warned) msg += ' \u00B7 ' + warned + ' need checking, some fields were not found';
-    toast(msg);
-  } catch(e){
-    setProg(false);
-    console.error(e);
-    toast('Text recognition failed \u00B7 check your connection and try again');
-  } finally {
-    busy = false;
-  }
+  return best||{unit:null,qty:null,total:null,hits:0};
 }
-
-/* 넣는 방법 세 가지 */
-$('drop').addEventListener('click', function(){ $('fileInput').click(); });
-$('drop').addEventListener('keydown', function(ev){
-  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
-});
-$('fileInput').addEventListener('change', function(e){
-  var f = e.target.files;
-  if (f && f.length) handleFiles(f);
-  this.value = '';
-});
-var dragDepth = 0;
-window.addEventListener('dragenter', function(e){
-  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
-    dragDepth++; document.body.classList.add('dragging');
+function nearestGroup(groups,x,maxD,filter){
+  if(x==null)return null;var best=null,bd=1e9;
+  groups.forEach(function(g){if(filter&&!filter(g))return;var d=Math.abs(g.cx-x);if(d<bd&&d<=maxD){best=g;bd=d}});return best;
+}
+function inferFields(groups,W,cols){
+  if(!groups.length)return {unit:'',qty:'',amount:'',first:null};
+  var amountG=null,qtyG=null,unitG=null,range=W*.15;
+  if(cols&&cols.total!=null)amountG=nearestGroup(groups,cols.total,range,function(g){return moneyToken(g.raw)!==null});
+  if(!amountG){for(var i=groups.length-1;i>=0;i--){if(moneyToken(groups[i].raw)!==null&&groups[i].cx>W*.62){amountG=groups[i];break;}}}
+  if(!amountG)return {unit:'',qty:'',amount:'',first:null};
+  var before=groups.filter(function(g){return g.right<amountG.left+2});
+  if(cols&&cols.qty!=null)qtyG=nearestGroup(before,cols.qty,range,function(g){return g.value>=1&&g.value<=999&&Math.floor(g.value)===g.value});
+  if(!qtyG){for(var q=before.length-1;q>=0;q--){var qv=before[q].value;if(qv>=1&&qv<=99&&Math.floor(qv)===qv){qtyG=before[q];break;}}}
+  var beforeUnit=before.filter(function(g){return !qtyG||g!==qtyG});
+  if(cols&&cols.unit!=null)unitG=nearestGroup(beforeUnit,cols.unit,range,function(g){return moneyToken(g.raw)!==null});
+  if(!unitG){for(var u=beforeUnit.length-1;u>=0;u--){if(moneyToken(beforeUnit[u].raw)!==null){unitG=beforeUnit[u];break;}}}
+  var amount=amountG.value,qty=qtyG?qtyG.value:'',unit=unitG?unitG.value:'';
+  if(!qty&&unit&&amount>=unit){var iq=amount/unit;if(iq>=1&&iq<=99&&Math.abs(iq-Math.round(iq))<.001)qty=Math.round(iq);}
+  if(qty&&!unit&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
+  if(unit&&!qty&&unit===amount)qty=1;
+  if(qty&&unit&&Math.abs(unit*qty-amount)>Math.max(2,amount*.025)){
+    var fixed=false;
+    for(var j=beforeUnit.length-1;j>=0;j--){var uv=beforeUnit[j].value;if(uv>=10&&Math.abs(uv*qty-amount)<=Math.max(2,amount*.025)){unit=uv;unitG=beforeUnit[j];fixed=true;break;}}
+    if(!fixed&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
   }
-});
-window.addEventListener('dragleave', function(){
-  dragDepth = Math.max(0, dragDepth - 1);
-  if (!dragDepth) document.body.classList.remove('dragging');
-});
-window.addEventListener('dragover', function(e){ e.preventDefault(); });
-window.addEventListener('drop', function(e){
-  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
-  if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-});
-document.addEventListener('paste', function(e){
-  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
-  if (e.target && e.target.isContentEditable) return;
-  var dt = e.clipboardData;
-  if (!dt) return;
-  if (dt.files && dt.files.length){
-    for (var i = 0; i < dt.files.length; i++){
-      if (/^image\//.test(dt.files[i].type || '')){ e.preventDefault(); handleFiles(dt.files); return; }
+  var first=unitG||qtyG||amountG;
+  groups.forEach(function(g){if(g.left<first.left&&g.cx>W*.40)first=g;});
+  return {unit:unit||'',qty:qty||'',amount:amount||'',first:first,amountG:amountG,qtyG:qtyG,unitG:unitG};
+}
+function rowGap(a,b){if(!a||!b)return 9999;var ah=medianNum(a.words.map(function(w){return w.height})),bh=medianNum(b.words.map(function(w){return w.height}));return Math.abs(b.cy-a.cy)/Math.max(8,(ah+bh)/2);}
+function parseItemRows(tsv){
+  var vr=visualRowsFromTsv(tsv),W=vr.width,cols=detectHeaderColumns(vr),infos=[],used={};
+  vr.rows.forEach(function(r,idx){
+    var groups=numericGroups(r.words,W),fields=inferFields(groups,W,cols),cut=fields.first?fields.first.left-4:W*.64,left=wordsLeftText(r,cut,W);
+    infos.push({idx:idx,row:r,groups:groups,fields:fields,left:left,lead:hasLeadIndex(r,W),meta:metaRowText(r.text),hasData:!!fields.amount});
+  });
+  var items=[];
+  for(var i=0;i<infos.length;i++){
+    var cur=infos[i];if(!cur.hasData||cur.meta)continue;
+    var prev=i>0?infos[i-1]:null,next=i+1<infos.length?infos[i+1]:null,item='',note='',consumePrev=false,consumeNext=false;
+    var prevOK=prev&&!prev.hasData&&!prev.meta&&!used[prev.idx]&&textStrength(prev.left)>=2&&rowGap(prev.row,cur.row)<=2.50;
+    var curText=cur.left;
+
+    /* Rule 1: a numbered text-only row followed by a numeric row is a two-line item.
+       The numbered row is the product name. Any left text on the numeric row is note/manufacturer, never part of the name. */
+    if(prevOK&&prev.lead){
+      item=prev.left;consumePrev=true;if(curText)note=curText;
     }
-  }
-  var items = dt.items || [];
-  for (var k = 0; k < items.length; k++){
-    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
-      var f = items[k].getAsFile();
-      if (f){ e.preventDefault(); handleFiles([f]); return; }
+    /* Rule 2: one-line receipts often carry item number/name and values on the same row. */
+    else if(cur.lead&&textStrength(curText)>=2){
+      item=curText;
     }
+    /* Rule 3: without a line number, a clearly auxiliary left label on the numeric row belongs in note. */
+    else if(prevOK&&curText&&looksAuxiliaryText(curText)){
+      item=prev.left;note=curText;consumePrev=true;
+    }
+    /* Rule 4: value-only numeric row inherits the immediately preceding text row as its item name. */
+    else if(prevOK&&!curText){
+      item=prev.left;consumePrev=true;
+    }
+    /* Rule 5: standard one-line item. */
+    else if(textStrength(curText)>=2){
+      item=curText;
+    }
+    else if(prevOK){
+      item=prev.left;consumePrev=true;
+    }
+
+    if(textStrength(item)<2||metaRowText(item))continue;
+    /* A text-only auxiliary line immediately below a one-line item is note/manufacturer. */
+    if(next&&!next.hasData&&!next.meta&&!used[next.idx]&&!next.lead&&textStrength(next.left)>=2&&rowGap(cur.row,next.row)<=2.15&&looksAuxiliaryText(next.left)){
+      note=(note?note+' · ':'')+next.left;consumeNext=true;
+    }
+    if(consumePrev)used[prev.idx]=1;if(consumeNext)used[next.idx]=1;used[cur.idx]=1;
+    items.push({name:compactItemName(item),unit:cur.fields.unit,qty:cur.fields.qty,amount:cur.fields.amount,note:note,y:cur.row.cy});
   }
-});
-
-$('rawToggle').addEventListener('click', function(){
-  var r = $('raw');
-  var hidden = r.style.display === 'none';
-  r.style.display = hidden ? 'block' : 'none';
-  this.textContent = hidden ? 'Hide' : 'Show';
-});
-
+  var seen={},ded=[];items.forEach(function(x){var k=x.name.replace(/\s/g,'').toLowerCase()+'|'+x.amount;if(seen[k])return;seen[k]=1;ded.push(x)});
+  return {items:ded.slice(0,10),totalFound:ded.length,overflow:ded.length>10,visualText:vr.text,columns:cols};
+}
+function compactItemName(s){return String(s||'').replace(/\s+/g,'').trim();}
+function compactNote(s){return String(s||'').replace(/\s+/g,'').trim();}
+function itemMemo(x){return compactNote(x.note||'');}
+async function recognizeVariant(w,c,mode,needLayout){
+  var P=Tesseract.PSM||{},psm;
+  if(mode==='sparse') psm=P.SPARSE_TEXT||'11';
+  else if(mode==='block') psm=P.SINGLE_BLOCK||P.SINGLE_COLUMN||'6';
+  else psm=P.AUTO||'3';
+  await w.setParameters({tessedit_pageseg_mode:psm,preserve_interword_spaces:'1',user_defined_dpi:mode==='block'?'320':'300'});
+  return await w.recognize(c,{},needLayout?{text:true,tsv:true}:{text:true});
+}
+function precisionVariant(c){
+  /* Keep exactly the same geometry as the first pass so TSV word coordinates can be merged safely. */
+  var o=document.createElement('canvas');o.width=c.width;o.height=c.height;var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  x.filter='grayscale(100%) contrast(118%) brightness(103%)';x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
+}
+function deepPrecisionVariant(c){
+  /* Third pass stays conservative: same geometry, stronger contrast, no hard binarisation. */
+  var o=document.createElement('canvas');o.width=c.width;o.height=c.height;var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  x.filter='grayscale(100%) contrast(132%) brightness(101%)';x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
+}
+function normItemName(s){return String(s||'').toLowerCase().replace(/[^0-9a-z가-힣]/g,'')}
+function nameSim(a,b){
+  a=normItemName(a);b=normItemName(b);if(!a||!b)return 0;if(a===b)return 1;if(a.indexOf(b)>=0||b.indexOf(a)>=0)return .88;
+  var A={},B={},i;for(i=0;i<a.length-1;i++)A[a.slice(i,i+2)]=1;for(i=0;i<b.length-1;i++)B[b.slice(i,i+2)]=1;var hit=0,tot=0;Object.keys(A).forEach(function(k){tot++;if(B[k])hit++});Object.keys(B).forEach(function(k){if(!A[k])tot++});return tot?hit/tot:0;
+}
+function itemMathScore(it){var u=+it.unit||0,q=+it.qty||0,a=+it.amount||0,s=0;if(a)s+=3;if(u)s+=2;if(q)s+=1;if(u&&q&&a&&Math.abs(u*q-a)<=Math.max(2,a*.025))s+=4;return s}
+function itemTextScore(it){
+  var n=String(it.name||''),letters=textStrength(n),noise=(n.match(/[�□■]/g)||[]).length,aux=looksAuxiliaryText(n)?1:0;
+  return letters*1.2-noise*4-aux*28;
+}
+function mergeItemPair(a,b){
+  var an=compactItemName(a.name),bn=b?compactItemName(b.name):'',o={name:an,unit:a.unit,qty:a.qty,amount:a.amount,note:a.note||'',y:a.y};
+  if(b){
+    /* Precision OCR sometimes appends the manufacturer/note to a correctly read product name. Keep the clean base name. */
+    if(an&&bn.indexOf(an)===0&&bn.length>an.length){var sx=bn.slice(an.length);if(looksAuxiliaryText(sx)){if(!o.note)o.note=sx;}else if(itemTextScore(b)>itemTextScore(a)+1.5)o.name=bn;}
+    else if(bn&&an.indexOf(bn)===0&&an.length>bn.length){var sa=an.slice(bn.length);if(looksAuxiliaryText(sa)){o.name=bn;if(!o.note)o.note=sa;}else if(itemTextScore(b)>itemTextScore(a)+1.5)o.name=bn;}
+    else if(itemTextScore(b)>itemTextScore(a)+1.5)o.name=bn;
+  }
+  var am=itemMathScore(a),bm=b?itemMathScore(b):-1;if(b&&bm>am){o.unit=b.unit;o.qty=b.qty;o.amount=b.amount}else if(b){if(!o.unit&&b.unit)o.unit=b.unit;if(!o.qty&&b.qty)o.qty=b.qty;if(!o.amount&&b.amount)o.amount=b.amount}
+  if(b&&b.note&&(!o.note||textStrength(b.note)>textStrength(o.note)+2))o.note=b.note;
+  return o;
+}
+function mergeStructuredCandidates(a,b,rtype){
+  var o=Object.assign({},a);o.precisionText=b&&b.text||'';o.precisionUsed=true;o.conf=Math.max(+a.conf||0,+b.conf||0);
+  if(!o.date&&b.date)o.date=b.date;if(!o.store&&b.store)o.store=b.store;if(!o.amount&&b.amount)o.amount=b.amount;
+  if(rtype!=='itemized'){o.score=Math.max(a.score||0,b.score||0);return o}
+  var P=(a.items||[]).slice(),S=(b.items||[]),used={},merged=[];
+  P.forEach(function(p){var best=-1,bscore=-1;for(var i=0;i<S.length;i++){if(used[i])continue;var q=S[i],score=0,sim=nameSim(p.name,q.name),dy=Math.abs((+p.y||0)-(+q.y||0));if(sim>=.55)score+=5*sim;if(p.amount&&q.amount&&+p.amount===+q.amount)score+=4;if(dy<=38)score+=3*(1-dy/50);if(p.unit&&q.unit&&+p.unit===+q.unit)score+=1;if(score>bscore){bscore=score;best=i}}if(best>=0&&bscore>=4.2){used[best]=1;merged.push(mergeItemPair(p,S[best]))}else merged.push(p)});
+  S.forEach(function(q,i){if(used[i])return;var dup=merged.some(function(p){return nameSim(p.name,q.name)>.72||(p.amount&&q.amount&&+p.amount===+q.amount&&Math.abs((+p.y||0)-(+q.y||0))<28)});if(!dup&&itemMathScore(q)>=3&&textStrength(q.name)>=2)merged.push(q)});
+  merged.sort(function(x,y){return (+x.y||0)-(+y.y||0)});o.items=merged.slice(0,10);o.itemFound=merged.length;o.itemOverflow=merged.length>10;o.visualText=a.visualText||b.visualText;o.score=Math.max(a.score||0,b.score||0)+Math.min(12,o.items.length);return o;
+}
+function candidate(out,rtype){
+  var text=(out&&out.data&&out.data.text)||'',date=parseDate(text),store=parseStore(text),amount=parseAmount(text),conf=+(out&&out.data&&out.data.confidence)||0,fields=(date?1:0)+(store?1:0)+(amount?1:0),items=[],visualText='';
+  if(rtype==='itemized'){var pr=parseItemRows((out&&out.data&&out.data.tsv)||'');items=pr.items;visualText=pr.visualText;var itemScore=Math.min(10,items.length)*34;return{text:text,date:date,store:store,amount:amount,conf:conf,fields:fields,items:items,visualText:visualText,itemOverflow:pr.overflow,itemFound:pr.totalFound,score:itemScore+fields*25+Math.min(100,conf)*.25};}
+  return{text:text,date:date,store:store,amount:amount,conf:conf,fields:fields,items:items,visualText:visualText,itemOverflow:false,itemFound:0,score:fields*55+Math.min(100,conf)*.45+Math.min(20,text.replace(/\s/g,'').length/40)};
+}
+async function scanCurrent(){
+  if(!currentFile){toast('Add a photo first');return}if(busy)return;busy=true;$('ocrBtn').disabled=true;
+  try{
+    setProg(true,2,'Preparing OCR');await sleep(30);var w=await getWorker(),first=await enhancedVariants(),rtype=$('receiptType').value,needLayout=rtype==='itemized',firstMode=rtype==='simple'?'sparse':'auto';
+    setProg(true,10,rtype==='simple'?'Pass 1 · reading the amount':'Pass 1 · reading word positions and row structure');var a=candidate(await recognizeVariant(w,first,firstMode,needLayout),rtype),best=a,precisionApplied=false,deepApplied=false;
+    if($('precisionOcr')&&$('precisionOcr').checked){
+      setProg(true,52,'Pass 2 · precision OCR is cross-checking rows and words');await sleep(30);var pc=precisionVariant(first);
+      try{var b=candidate(await recognizeVariant(w,pc,rtype==='itemized'?'block':'sparse',needLayout),rtype);best=mergeStructuredCandidates(a,b,rtype);precisionApplied=true}finally{pc.width=1;pc.height=1}
+    }
+    if($('deepPrecisionOcr')&&$('deepPrecisionOcr').checked){
+      setProg(true,76,'Pass 3 · checking for missing words and numbers');await sleep(30);var dc=deepPrecisionVariant(first);
+      try{var c3=candidate(await recognizeVariant(w,dc,rtype==='itemized'?'sparse':'auto',needLayout),rtype);best=mergeStructuredCandidates(best,c3,rtype);deepApplied=true}finally{dc.width=1;dc.height=1}
+    }
+    if(rtype==='itemized'&&best.items.length){
+      var batch=best.items.map(function(it){return{date:best.date,store:'',item:compactItemName(it.name),unit:it.unit?Number(it.unit).toLocaleString('en-US'):'',qty:it.qty?String(it.qty):'',amount:Number(it.amount).toLocaleString('en-US'),acct:guessAcct(it.name+' '+(it.note||''),best.text),memo:itemMemo(it)}});addRowsBatch(batch);
+      var structured='[ OCR rows rebuilt left to right ]\n'+(best.visualText||best.text.trim())+'\n\n[ Extracted line items · item | unit | qty | amount | note ]\n'+best.items.map(function(it,i){return String(i+1).padStart(2,'0')+' | '+compactItemName(it.name)+' | '+(it.unit?Number(it.unit).toLocaleString('en-US'):'')+' | '+(it.qty||'')+' | '+Number(it.amount).toLocaleString('en-US')+' | '+compactNote(it.note||'')}).join('\n')+'\n\n[ Raw OCR text ]\n'+best.text.trim();$('raw').textContent=structured;$('rawWrap').classList.add('on');doneCount+=best.items.length;
+      var isum=best.items.reduce(function(z,it){return z+(+it.amount||0)},0),receiptTotal=toNum(best.amount),msg=best.items.length+' line item(s) extracted · OCR '+Math.round(best.conf)+'%'+(precisionApplied?' · two-pass precision':'')+(deepApplied?' · third-pass recovery':'');if(best.itemOverflow)msg+=' · only the first 10 were added';if(receiptTotal&&Math.abs(isum-receiptTotal)>Math.max(1,receiptTotal*.04))msg+=' · item sum differs from receipt total';toast(msg);
+    }else{
+      $('raw').textContent=best.text.trim()||'(no text was recognised)';$('rawWrap').classList.add('on');var acct=guessAcct(best.store,best.text);addRow({date:best.date,store:(rtype==='itemized'?'':best.store),item:'',amount:best.amount,acct:acct});doneCount++;
+      var missing=[];if(!best.date)missing.push('date');if(!best.store)missing.push('merchant');if(!best.amount)missing.push('amount');var msg2=rtype==='itemized'?'Could not separate enough item rows, so one total row was added':'Recognition complete';msg2+=' · OCR '+Math.round(best.conf)+'%'+(precisionApplied?' · two-pass precision':'')+(deepApplied?' · third-pass recovery':'');if(missing.length)msg2+=' · check '+missing.join(', ');toast(msg2);
+    }
+    setProg(false);if(workBase){workBase.width=1;workBase.height=1;workBase=null}currentFile=null;if(queue.length){var n=queue.shift();loadEditor(n);toast('Next photo loaded · check the crop before reading it')}else{$('editorWrap').classList.remove('on');$('drop').style.display='';updateQueueNote()}
+  }catch(e){console.error(e);setProg(false);toast('Could not read the text · use a closer photo or tighten the crop')}finally{busy=false;$('ocrBtn').disabled=false}
+}
+function updateQueueNote(){var n=queue.length;$('queueNote').textContent=n?n+' photo(s) waiting':''}
+function handleFiles(files){var list=Array.prototype.slice.call(files).filter(function(f){return /^image\//.test(f.type||'')});if(!list.length){toast('That is not an image file');return}var room=Math.max(0,10-queue.length),accepted=0,skipped=0;if(currentFile||busy){var add=list.slice(0,room);skipped=list.length-add.length;queue=queue.concat(add);accepted=add.length;updateQueueNote();toast(accepted+' photo(s) added to the queue'+(skipped?' · '+skipped+' skipped because the waiting queue is capped at 10':''));return}var first=list.shift();var add2=list.slice(0,10);skipped=list.length-add2.length;queue=queue.concat(add2);loadEditor(first);if(skipped)toast('Loaded the current photo plus up to 10 waiting photos · add the rest after this batch')}
+$('ocrBtn').addEventListener('click',scanCurrent);$('autoCrop').addEventListener('click',function(){var b=this;if(b.disabled)return;b.disabled=true;requestAnimationFrame(function(){setTimeout(function(){try{autoDetectReceipt(true)}finally{b.disabled=false}},0)})});
+$('rotL').addEventListener('click',function(){rot90=(rot90-90)%360;crop={x:.04,y:.04,w:.92,h:.92};drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('rotR').addEventListener('click',function(){rot90=(rot90+90)%360;crop={x:.04,y:.04,w:.92,h:.92};drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});
+$('resetEdit').addEventListener('click',function(){resetControls();drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('deskew').addEventListener('input',function(){fineRot=+this.value;syncVals();schedulePreview()});$('brightness').addEventListener('input',syncVals);$('contrast').addEventListener('input',syncVals);
+/* Ways to add a photo */
+$('drop').addEventListener('click',function(){$('fileInput').click()});$('browseBtn').addEventListener('click',function(){$('fileInput').click()});$('cameraBtn').addEventListener('click',function(){$('cameraInput').click()});$('drop').addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();$('fileInput').click()}});
+$('fileInput').addEventListener('change',function(e){if(e.target.files&&e.target.files.length)handleFiles(e.target.files);this.value=''});$('cameraInput').addEventListener('change',function(e){if(e.target.files&&e.target.files.length)handleFiles(e.target.files);this.value=''});
+var dragDepth=0;window.addEventListener('dragenter',function(e){if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0){dragDepth++;document.body.classList.add('dragging')}});window.addEventListener('dragleave',function(){dragDepth=Math.max(0,dragDepth-1);if(!dragDepth)document.body.classList.remove('dragging')});window.addEventListener('dragover',function(e){e.preventDefault()});window.addEventListener('drop',function(e){e.preventDefault();dragDepth=0;document.body.classList.remove('dragging');if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});
+document.addEventListener('paste',function(e){if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.target&&e.target.isContentEditable)return;var dt=e.clipboardData;if(!dt)return;if(dt.files&&dt.files.length){for(var i=0;i<dt.files.length;i++)if(/^image\//.test(dt.files[i].type||'')){e.preventDefault();handleFiles(dt.files);return}}var items=dt.items||[];for(var k=0;k<items.length;k++)if(items[k].kind==='file'&&items[k].type&&items[k].type.indexOf('image')===0){var f=items[k].getAsFile();if(f){e.preventDefault();handleFiles([f]);return}}});
+$('rawToggle').addEventListener('click',function(){var r=$('raw'),hidden=r.style.display==='none';r.style.display=hidden?'block':'none';this.textContent=hidden?'Hide':'Show'});
 /* ============================================================
    내보내기
    ============================================================ */
-var HEAD = ['Date','Merchant','Amount','Payment','Category','Note'];
-function rowArr(r){ return [r.date, r.store, r.amount, r.pay, r.acct, r.memo]; }
+var HEAD = ['Date','Merchant','Item','Unit price','Qty','Amount','Payment','Category','Note'];
+function rowArr(r){ return [r.date, r.store, r.item, r.unit, r.qty, r.amount, r.pay, r.acct, r.memo]; }
 
 /* 탭으로 나누면 엑셀이 칸을 그대로 나눈다. 값 안의 탭과 줄바꿈은 공백으로 바꾼다 */
 function tsvText(){
@@ -737,7 +1058,7 @@ function csvText(){
   rows.forEach(function(r){ out.push(rowArr(r).map(cell).join(',')); });
   var sum = rows.reduce(function(a, r){ return a + toNum(r.amount); }, 0);
   out.push('');
-  out.push(['Total','','' + sum.toLocaleString('en-US'),'','',''].map(cell).join(','));
+  out.push(['Total','','','','','' + sum.toLocaleString('en-US'),'','',''].map(cell).join(','));
   return out.join('\n');
 }
 function copyText(txt, done){
@@ -807,7 +1128,7 @@ render();
 <section class="tk-guide"><div class="tk-guide-inner">
 <h2>Typing receipts in, one line at a time</h2>
 <p>You tip the month’s receipts out of the drawer and open a spreadsheet. Date, merchant, amount, next one. Twenty receipts eats an hour, and somewhere in there you fat-finger a figure.</p>
-<p>This tool takes over the transcribing. Drop a photo in and it reads the text, pulls out the date, amount and merchant, and drops them into the table as a row. Fix anything that came out wrong, then paste the lot into your spreadsheet.</p>
+<p>This tool takes over the transcribing. Drop a photo in and it reads the date, amount and merchant. For itemised receipts it treats OCR word coordinates as a table: item, unit price, quantity and total are assigned by column, and a second manufacturer/detail line is attached as the note. Up to ten line items are added from one photo. Fix anything that came out wrong, then paste the lot into your spreadsheet.</p>
 
 <h2>The photos never go anywhere</h2>
 <p>A receipt carries your company name and what you spent it on. Uploading that to somebody else’s server is not a comfortable trade for a bit of convenience.</p>
@@ -817,17 +1138,18 @@ render();
 <dt>📅 Date</dt><dd>Whether the receipt says 2025-08-14, 25/08/14 or 14 August 2025, it comes out as <strong>year-month-day</strong>. Impossible dates like a thirteenth month or 30 February are discarded and the next candidate is tried.</dd>
 <dt>💰 Amount</dt><dd>Found near words like total, approved or amount due. If that line holds no figure it looks at the next one. Lines carrying approval numbers or registration numbers are skipped so they are not mistaken for money.</dd>
 <dt>🏢 Merchant</dt><dd>A line explicitly labelled as the merchant comes first, then a company marker, and failing both it takes a plausible line from the top of the receipt, skipping registration and phone numbers.</dd>
-<dt>📁 Category</dt><dd>Guessed from the merchant and filled in for you — a cafe or restaurant becomes Meals, a taxi or fuel stop becomes Travel. You can change it in the table.</dd>
+<dt>📁 Category</dt><dd>Guessed from the merchant name and recognised text using a broad built-in keyword dictionary. Pharmacies and pharmaceutical companies map to Pharmacy, hospitals to Medical, hotels to Lodging, fuel and repair shops to Vehicle, software services to Software &amp; subscriptions, and so on. It is still a heuristic, so ambiguous merchants should be checked.</dd>
 </dl>
 
 <h2>Recognition is not perfect</h2>
 <p>Receipts print in every condition imaginable. Faded thermal paper, a fold across the middle, ink that gave up halfway — even a person squints at some of them.</p>
 <p>So <strong>every cell in the table can be clicked and edited.</strong> The recognised text is shown on the left exactly as it came out, which makes it quick to see where things went astray. If any of the three fields is missing, you are told how many rows need attention when the batch finishes, and the summary row keeps a running count.</p>
-<p>Better photos help. Flatten the receipt, use good light, and fill the frame with the text.</p>
+<p>OCR depends heavily on photo quality. Keep the four receipt corners visible, fill the frame, avoid shadows and glare, and keep the print sharp. For <strong>itemised receipts, roughly 10 line items or fewer per photo</strong> is a practical target; photograph long receipts in overlapping upper and lower sections and continue scanning. The selected region is cropped from the original and resized to an OCR-friendly resolution before perspective and contrast correction. Curved paper, severe blur and blown highlights still need a better photo.</p>
 
 <h2>How to use it</h2><ol>
-<li>Add a receipt photo — click to browse, drag it in, or paste with <strong>Ctrl+V</strong>.</li>
-<li>Select several at once and they are worked through in order, stacking up in the table.</li>
+<li>Choose a receipt photo or <strong>take one directly with the camera</strong>. Drag-and-drop and <strong>Ctrl+V</strong> also work.</li>
+<li>Check the automatically estimated <strong>OCR area</strong>, then rotate, straighten or enhance the image if needed.</li>
+<li>Choose Korean, English or mixed recognition and press <strong>Enhance &amp; read this area</strong>. With several photos, you review them one by one.</li>
 <li><strong>Click any cell to correct it.</strong> Payment and category are dropdowns.</li>
 <li>Missing a receipt? <strong>Add row</strong> and type it in.</li>
 <li><strong>Copy for spreadsheet</strong>, then paste — every value lands in its own cell.</li>
@@ -855,6 +1177,36 @@ render();
 <a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
 </div></section>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
 
 </body>
 </html>
