@@ -486,3 +486,62 @@ GUIDE → SHARE → VERSION 과 다름). SHARE 블록은 position:fixed 라
 문서 순서와 무관하게 항상 같은 화면 위치에 뜨므로 실제 렌더링에는
 영향이 없다. 순서를 하나로 통일하고 싶으면 두 스크립트를 항상
 inject-share.js → inject-version.js 순서로 실행할 것.
+
+## 대대적 구조 변경 — kr/en 폴더 + _kr/_en 파일명 (2026-08-30, 늦은 밤)
+
+문제 : 한국어·영문 도구 파일명이 완전히 똑같아서(예: lotto.html 이
+productivity/ 와 en/productivity/ 양쪽에 존재) 파일을 개별로 주고받을 때
+헷갈림. 게다가 한국어는 루트에, 영문만 en/ 밑에 있어 비대칭.
+
+### 구조 변경
+
+```
+이전 : mnledu.com/<category>/<id>.html          (한국어)
+       mnledu.com/en/<category>/<id>.html       (영문)
+
+이후 : mnledu.com/kr/<category>/<id>_kr.html    (한국어)
+       mnledu.com/en/<category>/<id>_en.html    (영문)
+```
+
+**범위 제외** : 포털 자체(index.html)와 정보 페이지(about/contact/
+privacy/terms)는 그대로 뒀다. GitHub Pages 가 루트에 index.html 을
+요구하는 기술적 제약 때문이고, 애초에 파일명 혼동 문제도 61개 도구
+파일 쪽에서만 실제로 겪은 문제였음. 필요해지면 이 부분도 나중에
+같은 방식으로 옮길 수 있다.
+
+기존 주소는 리다이렉트 없이 그냥 버림 (사용자 확인 — 색인 재수집
+신경 안 씀).
+
+### 실행 순서 (참고용 — 스크립트 자체는 일회성이라 삭제함)
+
+1. `tools-data.js`/`tools-data-en.js` 의 `url:` 을 읽어 이전→새 경로
+   매핑 122개를 만들고, 파일을 실제로 이동(rename)
+2. 빈 카테고리 폴더(루트, en/ 밑) 정리
+3. 매핑표를 저장해 두고, 저장소 전체 html/xml/js 파일 내용에서
+   이전 URL 문자열을 새 URL 로 전부 치환 (canonical, hreflang, OG,
+   공유버튼 자기URL, 안내문 안 "같은 분류 도구" 정적 링크까지 한 번에)
+4. 표준 파이프라인 재실행 : build-seo → patch-tool-pages →
+   build-guides → fix-paths → inject-version(전체) → inject-share(전체)
+5. 전수 검증
+
+### 검증 결과
+
+- 파일 위치 : 카테고리별 kr/en 개수 정확히 일치, 옛 폴더·옛 파일 잔여 0
+- canonical·공유버튼 자기URL : 122/122 카탈로그와 일치
+- hreflang 상호 참조 : 정상
+- 안내문 안 "같은 분류 도구" 링크 : baseline(build-guides.js 생성분)과
+  직접 심은 안내문(image-studio 등) 모두 새 경로로 정상 치환
+- sitemap.xml : 127개 도구 주소 + 정보페이지 5개, 옛 구조 잔여 0
+- 스크립트 구문 : 무작위 8개 파일 샘플 전부 정상
+- 스크립트 자체(build-seo.js 등)는 전부 `tool.url` 에서 경로를 파생하는
+  구조라 하드코딩된 카테고리 경로가 없었고, 수정 없이 새 구조에 그대로
+  대응함
+
+### 부수 발견 및 수정
+
+`advanced-image-tailor` · `text-batch-factory` 의 영문판이 애초부터
+(이전 세션에서) SEO 블록(title/description/canonical/hreflang/OG)이
+전혀 없었던 것을 이번 전수 검증 중 발견해서 새로 만들어 넣었다.
+patch-tool-pages.js 가 한국어 파일만 처리한다는 걸 계속 놓치기 쉬우니,
+새 도구를 영문으로 등록할 때는 항상 canonical 존재 여부를 직접
+확인할 것.

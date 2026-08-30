@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F7">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pricing Engine">
+<title>Margin &amp; VAT Calculator | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Set a target margin, add tax and fees, and see the listing price… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/data-analytics/percent-calc_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/data-analytics/percent-calc_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/percent-calc_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/data-analytics/percent-calc_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/data-analytics/percent-calc_en.html" />
+<meta property="og:title" content="Margin &amp; VAT Calculator · calculator · margin | TOOLKIT" />
+<meta property="og:description" content="Set a target margin, add tax and fees, and see the listing price… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Margin &amp; VAT Calculator · calculator · margin | TOOLKIT" />
+<meta name="twitter:description" content="Set a target margin, add tax and fees, and see the listing price… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Margin & VAT Calculator",
+  "description": "Set a target margin, add tax and fees, and see the listing price and what you keep.",
+  "url": "https://mnledu.com/en/data-analytics/percent-calc_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+  :root{
+    --bg:#FAF9F7; --card:#FFFFFF; --line:#E8E5E0; --ink:#1F2937; --dim:#6B7280;
+    --accent:#2563EB; --soft:#EFF4FE; --up:#15803D; --down:#C2410C;
+    --warnBg:#FFF7ED; --warnLine:#FED7AA; --warn:#C2410C;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none; touch-action:manipulation;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  #app{ max-width:520px; margin:0 auto; padding:14px 14px calc(96px + env(safe-area-inset-bottom)); }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px; margin-bottom:12px;
+    box-shadow:0 1px 2px rgba(31,41,55,.03), 0 6px 18px rgba(31,41,55,.05);
+  }
+  .h{ font-size:15px; font-weight:700; margin:0 0 3px; }
+  .sub{ font-size:11.5px; color:var(--dim); line-height:1.7; margin:0; }
+
+  .field{ margin-bottom:11px; }
+  .field:last-child{ margin-bottom:0; }
+  .lab{ display:block; font-size:12px; color:var(--dim); margin-bottom:6px; }
+  .inWrap{ position:relative; display:flex; align-items:center; }
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:11px; background:#fff;
+    padding:13px 40px 13px 13px; font-size:17px; color:var(--ink); outline:none; min-height:50px;
+    font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums;
+    text-align:right; font-weight:600;
+  }
+  .fld:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+  .fld::placeholder{ color:#C7CBD1; font-weight:400; }
+  .unit{
+    position:absolute; right:13px; font-size:12.5px; color:var(--dim); pointer-events:none; font-weight:500;
+  }
+
+  .seg{ display:flex; gap:6px; }
+  .seg button{
+    flex:1; padding:10px 6px; border-radius:10px; cursor:pointer; min-height:44px;
+    border:1px solid var(--line); background:#fff; color:var(--dim);
+    font-size:13px; font-weight:500; transition:all .13s;
+  }
+  .seg button.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  .out{
+    background:linear-gradient(165deg,#1F2937,#111827); color:#fff;
+    border-radius:16px; padding:19px 17px; margin-bottom:12px;
+  }
+  .out .cap{ font-size:11.5px; opacity:.62; letter-spacing:.04em; }
+  .out .big{
+    font-family:'JetBrains Mono',monospace; font-size:31px; font-weight:700;
+    line-height:1.15; letter-spacing:-.02em; margin:5px 0 3px;
+  }
+  .out .sub2{ font-size:12.5px; opacity:.78; }
+  .kv{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    padding:9px 0; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px;
+  }
+  .kv:last-child{ border-bottom:0; }
+  .kv .v{ font-family:'JetBrains Mono',monospace; font-weight:700; }
+
+  .row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:11px 12px; border:1px solid var(--line); border-radius:11px; margin-bottom:7px;
+  }
+  .row.hot{ border-color:var(--accent); background:var(--soft); }
+  .row .n{ font-size:13.5px; font-weight:600; }
+  .row .p{ font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; }
+  .row .m{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--dim); }
+
+  .alert{
+    background:var(--warnBg); border:1px solid var(--warnLine); border-radius:14px;
+    padding:16px; color:var(--warn); font-size:13.5px; line-height:1.8;
+  }
+  .alert b{ font-size:19px; font-family:'JetBrains Mono',monospace; }
+
+  .btn{
+    width:100%; border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:12px; font-size:14px; font-weight:600; padding:14px; cursor:pointer; min-height:50px;
+    box-shadow:0 2px 0 rgba(31,41,55,.05);
+  }
+  .btn:active{ transform:translateY(2px); box-shadow:none; }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 3px 0 #1D4ED8; }
+  .btn.p:active{ box-shadow:0 1px 0 #1D4ED8; }
+
+  /* 하단 탭 */
+  #tabs{
+    position:fixed; left:0; right:0; bottom:0; z-index:50;
+    background:rgba(255,255,255,.94); backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    display:flex; gap:6px; max-width:520px; margin:0 auto;
+  }
+  #tabs button{
+    flex:1; border:0; background:transparent; cursor:pointer; border-radius:12px;
+    padding:8px 2px; display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--dim); font-size:10.5px; font-weight:600; min-height:56px; transition:all .14s;
+  }
+  #tabs button .ic{ font-size:20px; line-height:1; }
+  #tabs button.on{ background:var(--soft); color:var(--accent); }
+
+  #toast{
+    position:fixed; left:50%; bottom:96px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:11px;
+    padding:11px 17px; font-size:13.5px; z-index:70;
+    pointer-events:none; transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+  /* 이미지 캡처 전용 카드 : 화면 폭과 무관하게 항상 같은 비율로 찍히도록 고정 폭으로 따로 그린다 */
+  #shareStage{ position:fixed; left:-9999px; top:0; z-index:-1; }
+  .shareCard{
+    width:380px; background:#FFFFFF; padding:26px 24px 22px;
+    font-family:'Pretendard',system-ui,sans-serif; color:#1F2937;
+  }
+  .shareCard .brand{ display:flex; align-items:center; gap:7px; margin-bottom:18px; }
+  .shareCard .brand .dot{ width:9px; height:9px; border-radius:999px; background:#2563EB; }
+  .shareCard .brand .nm{ font-size:12.5px; font-weight:700; color:#6B7280; letter-spacing:.02em; }
+  .shareCard .cap{ font-size:12px; color:#9CA3AF; margin:0 0 6px; }
+  .shareCard .big{
+    font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700;
+    color:#111827; line-height:1.2; letter-spacing:-.02em; margin:0 0 4px;
+  }
+  .shareCard .sub2{ font-size:13px; color:#6B7280; margin:0 0 18px; }
+  .shareCard .kvBox{ border-top:1px solid #E8E5E0; padding-top:4px; }
+  .shareCard .kv{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    padding:9px 0; border-bottom:1px solid #F0EEE9; font-size:13px; color:#374151;
+  }
+  .shareCard .kv:last-child{ border-bottom:0; }
+  .shareCard .kv .v{ font-family:'JetBrains Mono',monospace; font-weight:700; }
+  .shareCard .foot{
+    margin-top:18px; padding-top:14px; border-top:1px dashed #E8E5E0;
+    font-size:10.5px; color:#B0B7C0; display:flex; justify-content:space-between;
+  }
+  .shareCard .alertBox{
+    background:#FFF7ED; border:1px solid #FED7AA; border-radius:12px;
+    padding:14px 15px; margin-bottom:16px; font-size:13px; color:#C2410C; line-height:1.7;
+  }
+  .shareCard .alertBox b{ font-size:17px; font-family:'JetBrains Mono',monospace; }
+  .shareCard .rowMini{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:9px 11px; border:1px solid #E8E5E0; border-radius:10px; margin-bottom:6px; font-size:12.5px;
+  }
+  .shareCard .rowMini.hot{ border-color:#2563EB; background:#EFF4FE; }
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  <header style="padding:4px 2px 14px">
+    <p style="margin:0; font-size:19px; font-weight:700; letter-spacing:-.01em">
+      💰 Smart Pricing <span style="color:var(--dim); font-weight:500">&amp; Settlement Engine</span>
+    </p>
+    <p style="margin:4px 0 0; font-size:12.5px; color:var(--dim); line-height:1.6">
+      From reverse-calculating a price to discounts, offers and tax set-aside
+    </p>
+  </header>
+
+  <!-- 1. Reverse from profit -->
+  <section data-tab="net">
+    <div class="card">
+      <p class="h">🎯 Reverse from take-home profit</p>
+      <p class="sub">Enter the profit you want and it works back to the price to list</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="lab" for="n_net">Profit you want to keep</label>
+        <div class="inWrap"><input class="fld" id="n_net" inputmode="numeric" value="10,000"><span class="unit">$</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_cost">Unit cost</label>
+        <div class="inWrap"><input class="fld" id="n_cost" inputmode="numeric" value="12,000"><span class="unit">$</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_fee">Platform fee</label>
+        <div class="inWrap"><input class="fld" id="n_fee" inputmode="decimal" value="12"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_ship">Shipping you absorb</label>
+        <div class="inWrap"><input class="fld" id="n_ship" inputmode="numeric" value="3,000"><span class="unit">$</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_ad">Advertising (share of revenue)</label>
+        <div class="inWrap"><input class="fld" id="n_ad" inputmode="decimal" value="10"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="n_vatSel">Sales tax / VAT</label>
+        <select class="fld" id="n_vatSel">
+          <option value="0" selected>United States — no VAT, tax added at checkout</option>
+          <option value="5">Canada — GST 5%</option>
+          <option value="9">Singapore — GST 9%</option>
+          <option value="10">Korea — VAT 10%</option>
+          <option value="10">Japan — consumption tax 10%</option>
+          <option value="10">Australia — GST 10%</option>
+          <option value="19">Germany — VAT 19%</option>
+          <option value="20">United Kingdom — VAT 20%</option>
+          <option value="20">France — VAT 20%</option>
+          <option value="22">Italy — VAT 22%</option>
+          <option value="custom">Enter a rate</option>
+        </select>
+        <div class="inWrap" id="n_vatCustomWrap" style="display:none;margin-top:8px">
+          <input class="fld" id="n_vatCustom" inputmode="decimal" value="10"><span class="unit">%</span>
+        </div>
+        <p class="sub2" style="margin-top:6px">US sellers usually add sales tax at checkout rather than building it into the price, so 0% is the normal setting there.</p>
+      </div>
+    </div>
+
+    <div class="out" id="n_out"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="net">Copy as text</button>
+      <button class="btn p" data-shot="net">📸 Save image</button>
+    </div>
+  </section>
+
+  <!-- 2. 중복 할인 -->
+  <section data-tab="shop" style="display:none">
+    <div class="card">
+      <p class="h">🛒 Stacked discount, real unit price</p>
+      <p class="sub">Applied in order: list price, base discount, coupon, card discount, then points</p>
+    </div>
+
+    <div class="card">
+      <div style="display:grid; grid-template-columns:1fr 96px; gap:9px">
+        <div class="field" style="margin:0">
+          <label class="lab" for="s_list">List price (each)</label>
+          <div class="inWrap"><input class="fld" id="s_list" inputmode="numeric" value="50,000"><span class="unit">$</span></div>
+        </div>
+        <div class="field" style="margin:0">
+          <label class="lab" for="s_qty">Quantity</label>
+          <div class="inWrap"><input class="fld" id="s_qty" inputmode="numeric" value="2" style="padding-right:32px"><span class="unit">pcs</span></div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:11px">
+        <label class="lab" for="s_base">Base discount</label>
+        <div class="inWrap"><input class="fld" id="s_base" inputmode="decimal" value="20"><span class="unit">%</span></div>
+      </div>
+
+      <div class="field">
+        <label class="lab">Cart coupon</label>
+        <div class="seg" id="s_coupSeg" style="margin-bottom:8px">
+          <button data-coup="won" class="on">Amount</button>
+          <button data-coup="pct">Percent</button>
+        </div>
+        <div class="inWrap"><input class="fld" id="s_coup" inputmode="numeric" value="5,000"><span class="unit" id="s_coupUnit">$</span></div>
+      </div>
+
+      <div class="field">
+        <label class="lab" for="s_card">Card statement discount</label>
+        <div class="inWrap"><input class="fld" id="s_card" inputmode="decimal" value="7"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="s_point">Points earned</label>
+        <div class="inWrap"><input class="fld" id="s_point" inputmode="decimal" value="3"><span class="unit">%</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="s_ship">Shipping</label>
+        <div class="inWrap"><input class="fld" id="s_ship" inputmode="numeric" value="3,000"><span class="unit">$</span></div>
+      </div>
+    </div>
+
+    <div class="out" id="s_out"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="shop">Copy as text</button>
+      <button class="btn p" data-shot="shop">📸 Save image</button>
+    </div>
+  </section>
+
+  <!-- 3. 900원 마감 -->
+  <section data-tab="price" style="display:none">
+    <div class="card">
+      <p class="h">🏷️ Rounded price that meets your margin</p>
+      <p class="sub">Finds the lowest price that meets your margin, then rounds it to a tidy figure</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="lab" for="p_cost">Unit cost</label>
+        <div class="inWrap"><input class="fld" id="p_cost" inputmode="numeric" value="12,000"><span class="unit">$</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="p_margin">Target margin (share of price)</label>
+        <div class="inWrap"><input class="fld" id="p_margin" inputmode="decimal" value="35"><span class="unit">%</span></div>
+      </div>
+    </div>
+
+    <div class="out" id="p_out"></div>
+    <div class="card" id="p_list" style="padding:12px"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="price">Copy as text</button>
+      <button class="btn p" data-shot="price">📸 Save image</button>
+    </div>
+  </section>
+
+  <!-- 4. 세금 통장 -->
+  <section data-tab="tax" style="display:none">
+    <div class="card">
+      <p class="h">🛡️ Tax set-aside splitter</p>
+      <p class="sub">Shows how much of today's takings belongs to the tax authority</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="lab" for="t_in">Total received today</label>
+        <div class="inWrap"><input class="fld" id="t_in" inputmode="numeric" value="1,000,000"><span class="unit">$</span></div>
+      </div>
+      <div class="field">
+        <label class="lab" for="t_vat">Sales tax / VAT rate</label>
+        <div class="inWrap"><input class="fld" id="t_vat" inputmode="decimal" value="0"><span class="unit">%</span></div>
+        <p class="sub2" style="margin-top:6px">Set 0% if you collect sales tax separately at checkout.</p>
+      </div>
+      <div class="field">
+        <label class="lab" for="t_inc">Income tax set aside</label>
+        <div class="inWrap"><input class="fld" id="t_inc" inputmode="decimal" value="4"><span class="unit">%</span></div>
+      </div>
+    </div>
+
+    <div class="alert" id="t_alert" style="margin-bottom:12px"></div>
+    <div class="out" id="t_out"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <button class="btn" data-copy="tax">Copy as text</button>
+      <button class="btn p" data-shot="tax">📸 Save image</button>
+    </div>
+  </section>
+</div>
+
+<nav id="tabs">
+  <button data-go="net" class="on"><span class="ic">🎯</span>Reverse from profit</button>
+  <button data-go="shop"><span class="ic">🛒</span>Discount</button>
+  <button data-go="price"><span class="ic">🏷️</span>Price offer</button>
+  <button data-go="tax"><span class="ic">🛡️</span>Tax split</button>
+</nav>
+
+<div id="shareStage"><div id="shareCard" class="shareCard"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = function (id) { return document.getElementById(id); };
+
+  let tab = 'net', vatOn = true, coupType = 'won', taxType = 'general';
+  // 지역마다 Sales tax율이 다르므로 값으로 다룬다. 0.10 = 10%
+  let vatRate = 0;
+  function vatK() { return vatRate / (1 + vatRate); }
+  const texts = { net: '', shop: '', price: '', tax: '' };
+  const shots = { net: null, shop: null, price: null, tax: null };   // 캡처 카드용 데이터
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+  }
+
+  function won(v) { return '$' + Math.round(v).toLocaleString('en-US'); }
+  function pct(v) { return (Math.round(v * 10) / 10).toFixed(1) + '%'; }
+  function num(id) {
+    const t = String($(id).value).replace(/[^0-9.]/g, '');
+    const v = parseFloat(t);
+    return isNaN(v) ? 0 : v;
+  }
+
+  // 입력  of 천 단위 쉼표를 붙이되 커서 자리를 지켜준다
+  function comma(el) {
+    if (el.dataset.raw === '1') return;      // % 입력칸은 쉼표를 붙이지 않는다
+    const before = el.value;
+    const pos = el.selectionStart;
+    const digitsBefore = before.slice(0, pos).replace(/[^0-9]/g, '').length;
+
+    const parts = before.replace(/[^0-9.]/g, '').split('.');
+    let ip = parts[0].replace(/^0+(?=\d)/, '');
+    const fp = parts.length > 1 ? '.' + parts.slice(1).join('').slice(0, 2) : '';
+    if (ip === '' && fp === '') { el.value = ''; return; }
+
+    el.value = ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + fp;
+
+    let seen = 0, newPos = el.value.length;
+    for (let i = 0; i < el.value.length; i++) {
+      if (/[0-9]/.test(el.value[i])) seen++;
+      if (seen === digitsBefore) { newPos = i + 1; break; }
+    }
+    if (digitsBefore === 0) newPos = 0;
+    try { el.setSelectionRange(newPos, newPos); } catch (e) {}
+  }
+
+  /* ---------- 1. Reverse from profit ---------- */
+  // Price P에 Fee·Advertising·Sales tax가 모두 연동되므로 P에 대해 정리해 한 번에 푼다
+  function calcNet() {
+    const net = num('n_net'), cost = num('n_cost'), fee = num('n_fee') / 100;
+    const ship = num('n_ship'), ad = num('n_ad') / 100;
+    const k = vatK();              // tax share of the price, rate / (1 + rate)
+    const denom = 1 - fee - ad - k;
+    const box = $('n_out');
+
+    if (denom <= 0.02) {
+      box.innerHTML = '<p class="cap">Fees and advertising add up to more than the price can carry</p>' +
+                      '<p class="sub2" style="margin-top:6px">Lower one of the two percentages</p>';
+      texts.net = '';
+      return;
+    }
+
+    const P = (net + cost + ship - cost * k) / denom;
+    const feeAmt = P * fee, adAmt = P * ad, vat = (P - cost) * vatK();
+    const real = P - feeAmt - adAmt - vat - cost - ship;
+
+    box.innerHTML =
+      '<p class="cap">Price to list</p>' +
+      '<p class="big">' + won(P) + '</p>' +
+      '<p class="sub2">Net margin ' + pct(real / P * 100) + ' · You keep ' + won(real) + '</p>' +
+      '<div style="margin-top:14px">' +
+        kv('Platform fee ' + pct(fee * 100), '−' + won(feeAmt)) +
+        kv('Advertising ' + pct(ad * 100), '−' + won(adAmt)) +
+        (vatOn ? kv('Sales tax on the margin', '−' + won(vat)) : '') +
+        kv('Unit cost', '−' + won(cost)) +
+        kv('Shipping', '−' + won(ship)) +
+        kv('<b>What lands in your account</b>', '<b style="color:#7DD3A0">' + won(real) + '</b>') +
+      '</div>';
+
+    texts.net = '🎯 Reverse pricing\n' +
+      'Price ' + won(P) + ' (Net margin ' + pct(real / P * 100) + ')\n' +
+      '− Fee ' + won(feeAmt) + ' / Ads ' + won(adAmt) +
+      (vatOn ? ' / Sales tax ' + won(vat) : '') + '\n' +
+      '− Cost ' + won(cost) + ' / Shipping ' + won(ship) + '\n' +
+      '= Take-home ' + won(real);
+
+    shots.net = {
+      title: '🎯 Reverse from take-home profit',
+      cap: 'Price to list',
+      big: won(P),
+      sub: 'Net margin ' + pct(real / P * 100) + ' · You keep ' + won(real),
+      rows: [
+        ['Platform fee ' + pct(fee * 100), '−' + won(feeAmt)],
+        ['Advertising ' + pct(ad * 100), '−' + won(adAmt)]
+      ].concat(vatOn ? [['Sales tax on the margin', '−' + won(vat)]] : [])
+       .concat([['Unit cost', '−' + won(cost)], ['Shipping', '−' + won(ship)],
+                ['What lands in your account', won(real)]])
+    };
+  }
+  function kv(k, v) { return '<div class="kv"><span>' + k + '</span><span class="v">' + v + '</span></div>'; }
+
+  /* ---------- 2. 중복 할인 ---------- */
+  function calcShop() {
+    const list = num('s_list'), qty = Math.max(1, num('s_qty'));
+    const base = num('s_base'), coup = num('s_coup');
+    const card = num('s_card'), point = num('s_point'), ship = num('s_ship');
+
+    const unit = list * (1 - base / 100);
+    let sum = unit * qty;
+    const baseOff = list * qty - sum;
+
+    const coupOff = coupType === 'won' ? Math.min(coup, sum) : sum * coup / 100;
+    sum -= coupOff;
+
+    const beforeCard = sum + ship;
+    const cardOff = beforeCard * card / 100;
+    const pay = beforeCard - cardOff;
+    const pt = pay * point / 100;
+    const real = pay - pt;
+
+    const listTotal = list * qty;
+    const rate = listTotal ? (1 - real / listTotal) * 100 : 0;
+
+    $('s_out').innerHTML =
+      '<p class="cap">Amount actually charged</p>' +
+      '<p class="big">' + won(pay) + '</p>' +
+      '<p class="sub2">After points Effective ' + won(real) + ' · each ' + won(real / qty) + '</p>' +
+      '<div style="margin-top:14px">' +
+        kv('List price total (' + qty + ' pcs)', won(listTotal)) +
+        kv('Base discount ' + pct(base), '−' + won(baseOff)) +
+        kv('Cart coupon', '−' + won(coupOff)) +
+        kv('Shipping', '+' + won(ship)) +
+        kv('Card statement discount ' + pct(card), '−' + won(cardOff)) +
+        kv('Points earned ' + pct(point), '−' + won(pt)) +
+        kv('<b>Total discount</b>', '<b style="color:#7DD3A0">' + pct(rate) + '</b>') +
+      '</div>';
+
+    texts.shop = '🛒 Discount\n' +
+      'List price ' + won(listTotal) + ' (' + qty + ' pcs)\n' +
+      'Charged ' + won(pay) + '\n' +
+      'After points Effective ' + won(real) + ' (each ' + won(real / qty) + ')\n' +
+      'Total discount ' + pct(rate);
+
+    shots.shop = {
+      title: '🛒 Stacked discount, real unit price',
+      cap: 'Amount actually charged',
+      big: won(pay),
+      sub: 'Effective ' + won(real) + ' · each ' + won(real / qty),
+      rows: [
+        ['List price total (' + qty + ' pcs)', won(listTotal)],
+        ['Base discount ' + pct(base), '−' + won(baseOff)],
+        ['Cart coupon', '−' + won(coupOff)],
+        ['Shipping', '+' + won(ship)],
+        ['Card statement discount ' + pct(card), '−' + won(cardOff)],
+        ['Points earned ' + pct(point), '−' + won(pt)],
+        ['Total discount', pct(rate)]
+      ]
+    };
+  }
+
+  /* ---------- 3. 900원 마감 ---------- */
+  function calcPrice() {
+    const cost = num('p_cost'), m = num('p_margin');
+    const box = $('p_out'), list = $('p_list');
+
+    if (m >= 100) {
+      box.innerHTML = '<p class="cap">Margin must be below 100%</p>';
+      list.innerHTML = '';
+      texts.price = '';
+      return;
+    }
+
+    const min = cost / (1 - m / 100);
+    // Charm pricing : the next price ending in 9
+    const up9 = function (v) {
+      const b = Math.floor(v / 10) * 10 + 9;
+      return b >= v ? b : b + 10;
+    };
+    const cands = [
+      { nm: 'Exact minimum', p: Math.ceil(min), note: 'Meets the target margin exactly' },
+      { nm: 'Ends in 9', p: up9(min), note: 'The usual charm price' },
+      { nm: 'One below', p: up9(min) - 10, note: 'Looks cheaper, costs margin' },
+      { nm: 'Round up to 5', p: Math.ceil(min / 5) * 5, note: 'Clean ending' },
+      { nm: 'Round up to 10', p: Math.ceil(min / 10) * 10, note: 'Simplest' }
+    ];
+
+    box.innerHTML =
+      '<p class="cap">Target margin ' + pct(m) + ' Minimum price</p>' +
+      '<p class="big">' + won(min) + '</p>' +
+      '<p class="sub2">Cost ' + won(cost) + ' · Profit each ' + won(min - cost) + '</p>';
+
+    list.innerHTML = '';
+    cands.forEach(function (c, i) {
+      if (c.p <= cost) return;                 // Cost보다 낮으면 제안하지 않는다
+      const mg = (c.p - cost) / c.p * 100;
+      const el = document.createElement('div');
+      el.className = 'row' + (i === 1 ? ' hot' : '');
+      el.innerHTML =
+        '<span><span class="n">' + c.nm + '</span><br>' +
+        '<span class="m" style="font-family:Pretendard">' + c.note + '</span></span>' +
+        '<span style="text-align:right"><span class="p">' + won(c.p) + '</span><br>' +
+        '<span class="m">margin ' + pct(mg) + ' · profit ' + won(c.p - cost) + '</span></span>';
+      list.appendChild(el);
+    });
+
+    texts.price = '🏷️ Price offer (Cost ' + won(cost) + ' · Target margin ' + pct(m) + ')\n' +
+      cands.filter(function (c) { return c.p > cost; }).map(function (c) {
+        return c.nm + ' ' + won(c.p) + ' (margin ' + pct((c.p - cost) / c.p * 100) + ')';
+      }).join('\n');
+
+    shots.price = {
+      title: '🏷️ Rounded price that meets your margin',
+      cap: 'Target margin ' + pct(m) + ' Minimum price',
+      big: won(min),
+      sub: 'Cost ' + won(cost) + ' · Profit each ' + won(min - cost),
+      picks: cands.filter(function (c) { return c.p > cost; }).map(function (c) {
+        return { nm: c.nm, note: c.note, p: won(c.p),
+                 m: pct((c.p - cost) / c.p * 100), hot: c.nm === 'Ends in 9' };
+      })
+    };
+  }
+
+  /* ---------- 4. 세금 통장 ---------- */
+  function calcTax() {
+    const income = num('t_in');
+    const incRate = num('t_inc') / 100;
+
+    // Tax already inside the gross amount : gross × rate / (1 + rate)
+    const tr = (parseFloat(($('t_vat') || {}).value) || 0) / 100;
+    const vat = income * (tr / (1 + tr));
+    const inc = income * incRate;
+    const total = vat + inc;
+    const keep = income - total;
+
+    $('t_alert').innerHTML =
+      '⚠️ Of what arrived today, <b>' + won(total) + '</b> is not yours to spend.<br>Move it to a separate tax account.';
+
+    $('t_out').innerHTML =
+      '<p class="cap">Free to spend</p>' +
+      '<p class="big">' + won(keep) + '</p>' +
+      '<p class="sub2">Total in ' + won(income) + '  of ' + pct(income ? total / income * 100 : 0) + '  set aside</p>' +
+      '<div style="margin-top:14px">' +
+        kv('Sales tax / VAT (' + (tr * 100).toFixed(tr * 100 % 1 ? 1 : 0) + '%)', '−' + won(vat)) +
+        kv('Income tax reserve ' + pct(incRate * 100), '−' + won(inc)) +
+        kv('<b>To the tax account</b>', '<b style="color:#FBBF7A">' + won(total) + '</b>') +
+      '</div>';
+
+    texts.tax = '🛡️ Tax set-aside\n' +
+      'Received today ' + won(income) + ' (tax ' + (tr * 100) + '%)\n' +
+      'Sales tax ' + won(vat) + ' + Income tax ' + won(inc) + '\n' +
+      '→ To the tax account ' + won(total) + '\n' +
+      'Free to spend ' + won(keep);
+
+    shots.tax = {
+      title: '🛡️ Tax set-aside splitter',
+      alert: 'Of what arrived today, <b>' + won(total) + '</b> is not yours to spend.<br>Move it to a separate tax account.',
+      cap: 'Free to spend',
+      big: won(keep),
+      sub: 'Total in ' + won(income) + '  of ' + pct(income ? total / income * 100 : 0) + '  set aside',
+      rows: [
+        ['Sales tax / VAT (' + (tr * 100).toFixed(tr * 100 % 1 ? 1 : 0) + '%)', '−' + won(vat)],
+        ['Income tax reserve ' + pct(incRate * 100), '−' + won(inc)],
+        ['To the tax account', won(total)]
+      ]
+    };
+  }
+
+  /* ---------- 갱신 ---------- */
+  function render() {
+    try {
+      if (tab === 'net') calcNet();
+      else if (tab === 'shop') calcShop();
+      else if (tab === 'price') calcPrice();
+      else calcTax();
+    } catch (e) { /* 입력 도중의 일시적인 값은 무시한다 */ }
+  }
+
+  // 모든 입력칸에 쉼표 처리와 실시간 계산을 건다
+  document.querySelectorAll('.fld').forEach(function (el) {
+    if (el.getAttribute('inputmode') === 'decimal' || el.id === 's_qty') el.dataset.raw = '1';
+    el.addEventListener('input', function () { comma(el); render(); });
+    el.addEventListener('focus', function () { setTimeout(function () { el.select(); }, 10); });
+  });
+
+  (function () {
+    const sel = $('n_vatSel'), wrap = $('n_vatCustomWrap'), cust = $('n_vatCustom');
+    function apply() {
+      if (sel.value === 'custom') {
+        wrap.style.display = '';
+        vatRate = (parseFloat(cust.value) || 0) / 100;
+      } else {
+        wrap.style.display = 'none';
+        vatRate = (parseFloat(sel.value) || 0) / 100;
+      }
+      vatOn = vatRate > 0;
+      render();
+    }
+    sel.addEventListener('change', apply);
+    cust.addEventListener('input', apply);
+    apply();
+  })();
+  document.querySelectorAll('#s_coupSeg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      coupType = b.dataset.coup;
+      document.querySelectorAll('#s_coupSeg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $('s_coupUnit').textContent = coupType === 'won' ? '$' : '%';
+      $('s_coup').dataset.raw = coupType === 'won' ? '' : '1';
+      render();
+    });
+  });
+  (function () {
+    const t = $('t_vat');
+    if (t) t.addEventListener('input', render);
+  })();
+
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      tab = b.dataset.go;
+      document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.querySelectorAll('section[data-tab]').forEach(function (s) {
+        s.style.display = s.dataset.tab === tab ? 'block' : 'none';
+      });
+      window.scrollTo(0, 0);
+      render();
+    });
+  });
+
+  /* ---------- 이미지 캡처 ---------- */
+  // 화면 폭이 얼마든 항상 같은 결과가 나오도록, 화면 밖 고정 폭(380px) 카드에 다시 그려서 찍는다
+  function nowLabel() {
+    const d = new Date();
+    const z = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()) + ' ' +
+           z(d.getHours()) + ':' + z(d.getMinutes()) + ' ';
+  }
+
+  function buildShareHTML(data) {
+    let html = '<div class="brand"><span class="dot"></span><span class="nm">Smart Pricing &amp; Settlement Engine</span></div>';
+    html += '<p class="cap" style="font-size:13px; font-weight:600; color:#374151; margin-bottom:14px">' + data.title + '</p>';
+
+    if (data.alert) html += '<div class="alertBox">⚠️ ' + data.alert + '</div>';
+
+    html += '<p class="cap">' + data.cap + '</p>';
+    html += '<p class="big">' + data.big + '</p>';
+    html += '<p class="sub2">' + data.sub + '</p>';
+
+    if (data.rows) {
+      html += '<div class="kvBox">';
+      data.rows.forEach(function (r) {
+        html += '<div class="kv"><span>' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    if (data.picks) {
+      html += '<div style="margin-top:6px">';
+      data.picks.forEach(function (p) {
+        html += '<div class="rowMini' + (p.hot ? ' hot' : '') + '">' +
+          '<span><b>' + p.nm + '</b><br><span style="color:#9CA3AF; font-size:11px">' + p.note + '</span></span>' +
+          '<span style="text-align:right; font-family:\'JetBrains Mono\',monospace">' +
+          '<b>' + p.p + '</b><br><span style="color:#9CA3AF; font-size:11px; font-weight:400">margin ' + p.m + '</span></span>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="foot"><span>' + nowLabel() + '</span><span>Estimate · actual figures may differ</span></div>';
+    return html;
+  }
+
+  let shotting = false;
+  async function doShot(key) {
+    if (shotting) return;
+    const data = shots[key];
+    if (!data) { toast('Enter some values first'); return; }
+    if (typeof html2canvas !== 'function') { toast('The image feature could not be loaded'); return; }
+
+    shotting = true;
+    const btn = document.querySelector('[data-shot="' + key + '"]');
+    const origText = btn ? btn.textContent : '';
+    if (btn) { btn.textContent = 'Creating image…'; btn.disabled = true; }
+
+    try {
+      const stage = $('shareCard');
+      stage.innerHTML = buildShareHTML(data);
+
+      // 폰트 로딩을 한 박자 기다린 뒤 찍어야 글자가 깨지지 않는다
+      if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+      await new Promise(function (r) { requestAnimationFrame(function () { requestAnimationFrame(r); }); });
+
+      const canvas = await html2canvas(stage, {
+        backgroundColor: '#FFFFFF',
+        scale: Math.min(3, (window.devicePixelRatio || 1) * 2),   // 화면 배율과 무관하게 선명하게
+        useCORS: true,
+        logging: false
+      });
+
+      canvas.toBlob(async function (blob) {
+        if (!blob) { toast('The image could not be created'); shotting = false; if (btn) { btn.textContent = origText; btn.disabled = false; } return; }
+
+        const file = new File([blob], key + '_result.png', { type: 'image/png' });
+
+        // 모바일에서 공유 시트를 지원하면 그쪽을 우선 쓰고, 아니면 다운로드한다
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: data.title });
+            toast('Share sheet opened');
+          } catch (e) {
+            if (e && e.name !== 'AbortError') downloadBlob(blob, key);
+          }
+        } else {
+          downloadBlob(blob, key);
+        }
+        shotting = false;
+        if (btn) { btn.textContent = origText; btn.disabled = false; }
+      }, 'image/png');
+    } catch (e) {
+      toast('Something went wrong while making the image');
+      shotting = false;
+      if (btn) { btn.textContent = origText; btn.disabled = false; }
+    }
+  }
+
+  function downloadBlob(blob, key) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    const z = function (x) { return String(x).padStart(2, '0'); };
+    a.href = url;
+    a.download = key + '_' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' + z(d.getHours()) + z(d.getMinutes()) + '.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+    toast('Image saved');
+  }
+
+  document.querySelectorAll('[data-shot]').forEach(function (b) {
+    b.addEventListener('click', function () { doShot(b.dataset.shot); });
+  });
+
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', async function () {
+      const t = texts[b.dataset.copy];
+      if (!t) { toast('Nothing to copy yet'); return; }
+      try {
+        if (navigator.clipboard) await navigator.clipboard.writeText(t);
+        else throw new Error('no clipboard');
+        toast('Copied');
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = t; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+        document.body.appendChild(ta); ta.select();
+        let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+        document.body.removeChild(ta);
+        toast(ok ? 'Copied' : 'Copy was blocked');
+      }
+    });
+  });
+
+  /* ---------- 시작 ---------- */
+  ['net', 'shop', 'price', 'tax'].forEach(function (t) {
+    tab = t; render();
+  });
+  tab = 'net';
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Where margin maths usually goes wrong</h2>
+<p>Add 30% to a $10 cost and you get $13. That is 30% <strong>of cost</strong>. A 30% margin <strong>on the selling price</strong> is about $14.30. Which base you use changes the answer, and the two sides of a negotiation often mean different things by the same number.</p>
+<p>Then platform fees, advertising, shipping and tax come off the top. This tool works through those in order, so you can see the price to list and what actually reaches your account.</p>
+<h2>When to use it</h2><dl>
+<dt>Setting a listing price</dt><dd>Start from the margin you want and work backwards to the price, with fees and tax already accounted for.</dd>
+<dt>Checking what you keep</dt><dd>Enter what a marketplace paid out and see what remains once cost, fees and tax are removed.</dd>
+<dt>Setting money aside for tax</dt><dd>Separate the tax portion of revenue so it is not spent before the filing date.</dd>
+<dt>Testing a discount</dt><dd>See how far a promotion cuts into margin before you commit to it.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Enter your unit cost and quantity.</li>
+<li>Set the target margin, platform fee, advertising share and shipping.</li>
+<li>Choose your <strong>sales tax or VAT</strong> setting, or enter a rate directly.</li>
+<li>Read off the price to list and what lands in your account.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Sales tax / VAT</dt><dd>Presets cover the common cases: the United States at 0%, since sales tax is normally added at checkout rather than built into the listed price, plus Canada, Singapore, Korea, Japan, Australia, Germany, the United Kingdom, France and Italy. <strong>Enter a rate</strong> handles anything else, including a state or provincial rate you want folded into the price.</dd>
+<dt>Target margin (share of price)</dt><dd>Margin measured against the selling price, which is the convention in retail. If your supplier quotes markup on cost instead, the two numbers will not match.</dd>
+<dt>Advertising (share of revenue)</dt><dd>Enter advertising as a percentage of revenue and it is deducted before the margin figure.</dd>
+<dt>Move to the tax account</dt><dd>Shows the portion of revenue that belongs to the tax authority rather than to you. Setting it aside as it arrives avoids a shortfall at filing time.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Margin on cost or on price</dt><dd>Use whichever your buyer, supplier or platform uses. Retail generally quotes margin on the selling price, while manufacturing often quotes markup on cost. The important thing is that both sides mean the same thing.</dd>
+<dt>Why is the United States set to 0%</dt><dd>In most US states sales tax is added at checkout rather than included in the advertised price, so the listed price carries no tax. If you do want a rate folded in, choose <strong>Enter a rate</strong> and type your combined state and local rate.</dd>
+<dt>How is tax calculated from a gross amount</dt><dd>When tax is already inside the amount, the tax portion is the gross multiplied by rate ÷ (1 + rate). At 10% that is one eleventh, which is why a $110 sale contains $10 of tax rather than $11.</dd>
+<dt>Can I rely on this for filing</dt><dd>Treat it as an estimate for planning. Registration status, thresholds, exemptions and reduced rates all vary by country and often by state or province. Check with an accountant before filing.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/data-analytics/cagrcal_en.html">CAGR Calculator</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/ocrextract_en.html">Image to Text (OCR)</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/gov-fund-calc_en.html">Korean Grant Cost Share Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Margin on cost or on price",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use whichever your buyer, supplier or platform uses. Retail generally quotes margin on the selling price, while manufacturing often quotes markup on cost. The important thing is that both sides mean the same thing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is the United States set to 0%",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In most US states sales tax is added at checkout rather than included in the advertised price, so the listed price carries no tax. If you do want a rate folded in, choose Enter a rate and type your combined state and local rate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is tax calculated from a gross amount",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When tax is already inside the amount, the tax portion is the gross multiplied by rate ÷ (1 + rate). At 10% that is one eleventh, which is why a $110 sale contains $10 of tax rather than $11."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I rely on this for filing",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Treat it as an estimate for planning. Registration status, thresholds, exemptions and reduced rates all vary by country and often by state or province. Check with an accountant before filing."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/data-analytics/percent-calc_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/data-analytics/percent-calc_en.html";
+  var TK_SHARE_TITLE = "Margin & VAT Calculator";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

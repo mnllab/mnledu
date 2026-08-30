@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스마트 리스트 포맷터 · 텍스트 · 자동 정리 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="줄 단위 목록에서 빈 줄과 중복을 걷어내고 번호·접두사·구분자를 붙여 원하는 형태로 다듬습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/productivity/listformat_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/listformat_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/listformat_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/listformat_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/productivity/listformat_kr.html" />
+<meta property="og:title" content="스마트 리스트 포맷터 · 텍스트 · 자동 정리 | TOOLKIT" />
+<meta property="og:description" content="줄 단위 목록에서 빈 줄과 중복을 걷어내고 번호·접두사·구분자를 붙여 원하는 형태로 다듬습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="스마트 리스트 포맷터 · 텍스트 · 자동 정리 | TOOLKIT" />
+<meta name="twitter:description" content="줄 단위 목록에서 빈 줄과 중복을 걷어내고 번호·접두사·구분자를 붙여 원하는 형태로 다듬습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "스마트 리스트 포맷터",
+  "description": "줄 단위 목록에서 빈 줄과 중복을 걷어내고 번호·접두사·구분자를 붙여 원하는 형태로 다듬습니다.",
+  "url": "https://mnledu.com/kr/productivity/listformat_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "스마트 리스트 포맷터",
+      "item": "https://mnledu.com/kr/productivity/listformat_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:13.5px; line-height:1.8;
+    min-height:clamp(280px, 46vh, 560px);
+  }
+  textarea::placeholder{ color:#9AA7B4; font-family:'Pretendard',sans-serif; font-size:14px; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  .opt{
+    display:flex; align-items:center; gap:9px;
+    border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:11px 13px; cursor:pointer; user-select:none;
+    font-size:13.5px;
+    transition:border-color .12s, background .12s;
+  }
+  .opt:hover{ border-color:#C3CCD6; }
+  .opt.on{ border-color:var(--steel); background:#F5F9FC; }
+  .opt input{ accent-color:var(--steel); width:16px; height:16px; flex:none; cursor:pointer; }
+
+  .fld{
+    border:1px solid var(--hair); border-radius:6px; background:#fff;
+    padding:8px 11px; font-size:13px; color:var(--ink);
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    outline:none; width:100%;
+    transition:border-color .12s;
+  }
+  .fld:focus{ border-color:var(--steel); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">스마트 리스트 포맷터</h1>
+      <p class="mt-1 text-[13px] text-muted">줄 단위 목록을 다듬고 원하는 형태로 · 저장되지 않음</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="copyFmt" class="btn" aria-label="복사 형식" title="복사·저장 형식">
+        <option value="plain" selected>메모장용</option>
+        <option value="word">워드·한글용</option>
+      </select>
+      <button id="sampleBtn" class="btn">예시</button>
+      <button id="saveBtn" class="btn">저장</button>
+      <button id="resetOpt" class="btn">옵션 초기화</button>
+    </div>
+  </header>
+
+  <!-- 제어부 -->
+  <div class="mb-4 rounded-lg border border-hair bg-white px-5 py-4">
+    <div class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+      <label class="opt on"><input type="checkbox" id="optBlank" checked>빈 줄 제거</label>
+      <label class="opt on"><input type="checkbox" id="optTrim" checked>양쪽 공백 제거</label>
+      <label class="opt"><input type="checkbox" id="optUniq">중복 제거</label>
+      <label class="opt"><input type="checkbox" id="optSort">오름차순 정렬</label>
+    </div>
+
+    <div class="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <label for="prefix" class="mb-1.5 block text-[12px] text-muted">접두사</label>
+        <input id="prefix" class="fld" placeholder='예) "' autocomplete="off">
+      </div>
+      <div>
+        <label for="suffix" class="mb-1.5 block text-[12px] text-muted">접미사</label>
+        <input id="suffix" class="fld" placeholder='예) ",' autocomplete="off">
+      </div>
+      <div>
+        <label for="delim" class="mb-1.5 block text-[12px] text-muted">구분자 (한 줄로 합칠 때)</label>
+        <input id="delim" class="fld" value=", " autocomplete="off">
+      </div>
+      <div class="flex items-end">
+        <label class="opt w-full"><input type="checkbox" id="optJoin">한 줄로 합치기</label>
+      </div>
+    </div>
+
+    <div class="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+      <label class="opt"><input type="checkbox" id="optNum">번호 매기기</label>
+      <div class="flex items-center gap-2 text-[12px] text-muted">
+        <label for="numFmt" class="shrink-0">번호 형식</label>
+        <select id="numFmt" class="btn py-1.5 text-[12px]">
+          <option value="dot" selected>1.</option>
+          <option value="paren">1)</option>
+          <option value="bracket">[1]</option>
+          <option value="dash">- </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="grid gap-4 md:grid-cols-2">
+
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">원본</span>
+        <button id="clearInput" class="btn px-2.5 py-1.5 text-[12px]">지우기</button>
+      </div>
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="input" placeholder="여기에 텍스트를 줄바꿈하여 붙여넣으세요" spellcheck="false"></textarea>
+      </div>
+      <div class="border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <span>줄 <b id="inLines" class="num ml-0.5 font-medium text-ink">0</b></span>
+      </div>
+    </section>
+
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">결과</span>
+        <button id="copyBtn" class="btn btn-primary px-2.5 py-1.5 text-[12px]">결과 복사</button>
+      </div>
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="output" readonly spellcheck="false" placeholder="가공된 결과가 여기에 표시됩니다"></textarea>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <span>항목 <b id="outLines" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span>글자 <b id="outChars" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span id="dropInfo" class="num"></span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const input     = document.getElementById('input');
+  const output    = document.getElementById('output');
+  const optBlank  = document.getElementById('optBlank');
+  const optTrim   = document.getElementById('optTrim');
+  const optUniq   = document.getElementById('optUniq');
+  const optSort   = document.getElementById('optSort');
+  const optJoin   = document.getElementById('optJoin');
+  const optNum    = document.getElementById('optNum');
+  const numFmt    = document.getElementById('numFmt');
+  const prefix    = document.getElementById('prefix');
+  const suffix    = document.getElementById('suffix');
+  const delim     = document.getElementById('delim');
+  const copyFmt   = document.getElementById('copyFmt');
+  const inLines   = document.getElementById('inLines');
+  const outLines  = document.getElementById('outLines');
+  const outChars  = document.getElementById('outChars');
+  const dropInfo  = document.getElementById('dropInfo');
+
+  const boxes = [optBlank, optTrim, optUniq, optSort, optJoin, optNum];
+
+  /* ---------- 가공 ---------- */
+  // 순서 : 공백 정리 → 빈 줄 제거 → 중복 제거 → 정렬 → 번호 → 접두·접미 → 합치기
+  // 접두·접미를 번호보다 나중에 붙여야 "1. 항목" 전체를 감쌀 수 있고,
+  // 중복 제거를 정렬보다 먼저 해야 원본 순서 기준으로 첫 항목이 남는다.
+  function process(src) {
+    let lines = src.replace(/\r\n?/g, '\n').split('\n');
+    const rawCount = lines.length;
+
+    if (optTrim.checked) lines = lines.map(function (l) { return l.trim(); });
+    if (optBlank.checked) lines = lines.filter(function (l) { return l.trim() !== ''; });
+
+    let removed = 0;
+    if (optUniq.checked) {
+      const seen = {};
+      const kept = [];
+      lines.forEach(function (l) {
+        const key = optTrim.checked ? l : l.trim();
+        if (Object.prototype.hasOwnProperty.call(seen, key)) { removed++; return; }
+        seen[key] = true;
+        kept.push(l);
+      });
+      lines = kept;
+    }
+
+    if (optSort.checked) {
+      lines = lines.slice().sort(function (a, b) {
+        return a.localeCompare(b, 'ko', { numeric: true, sensitivity: 'base' });
+      });
+    }
+
+    const p = prefix.value, s = suffix.value;
+    lines = lines.map(function (l, i) {
+      let body = l;
+      if (optNum.checked) {
+        const n = i + 1;
+        const mark = numFmt.value === 'paren'   ? n + ') '
+                   : numFmt.value === 'bracket' ? '[' + n + '] '
+                   : numFmt.value === 'dash'    ? '- '
+                   : n + '. ';
+        body = mark + body;
+      }
+      return p + body + s;
+    });
+
+    const count = lines.length;
+    const text = optJoin.checked ? lines.join(delim.value) : lines.join('\n');
+
+    return { text: text, count: count, removed: removed, rawCount: rawCount };
+  }
+
+  function fmt(n) { return n.toLocaleString('ko-KR'); }
+
+  function render() {
+    let r = { text: '', count: 0, removed: 0, rawCount: 0 };
+    try {
+      r = process(input.value);
+    } catch (e) {
+      r.text = '(처리 중 오류가 발생했습니다 : ' + (e && e.message ? e.message : '알 수 없음') + ')';
+    }
+
+    output.value = r.text;
+
+    inLines.textContent = fmt(input.value ? input.value.split('\n').length : 0);
+    outLines.textContent = fmt(r.count);
+    outChars.textContent = fmt(Array.from(r.text.replace(/\n/g, '')).length);
+    dropInfo.textContent = r.removed ? '중복 ' + fmt(r.removed) + '건 제거' : '';
+
+    // 토글 강조와 종속 컨트롤 상태
+    document.querySelectorAll('.opt').forEach(function (el) {
+      const box = el.querySelector('input');
+      if (box) el.classList.toggle('on', box.checked);
+    });
+    delim.disabled = !optJoin.checked;
+    delim.style.opacity = optJoin.checked ? '1' : '.5';
+    numFmt.disabled = !optNum.checked;
+    numFmt.style.opacity = optNum.checked ? '1' : '.5';
+  }
+
+  input.addEventListener('input', render);
+  boxes.forEach(function (b) { b.addEventListener('change', render); });
+  [prefix, suffix, delim].forEach(function (f) { f.addEventListener('input', render); });
+  numFmt.addEventListener('change', render);
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 복사 · 저장 ---------- */
+  // 워드·한글은 CRLF를 문단 구분으로 읽는다
+  function formatted() {
+    const t = output.value;
+    if (copyFmt.value === 'plain') return t;
+    return t.replace(/\r\n?/g, '\n').split('\n').join('\r\n');
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    if (!output.value.trim()) { toast('복사할 결과가 없습니다'); return; }
+    const text = formatted();
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('복사되었습니다!');
+    } catch (e) {
+      if (legacyCopy(text)) toast('복사되었습니다!');
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!output.value.trim()) { toast('저장할 내용이 없습니다'); return; }
+    const d = new Date();
+    const p2 = function (x) { return String(x).padStart(2, '0'); };
+    const name = '리스트_' + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) +
+                 '_' + p2(d.getHours()) + p2(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + formatted()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  /* ---------- 지우기 · 초기화 · 예시 ---------- */
+  document.getElementById('clearInput').addEventListener('click', function () {
+    input.value = '';
+    render();
+    input.focus();
+  });
+
+  document.getElementById('resetOpt').addEventListener('click', function () {
+    optBlank.checked = true;
+    optTrim.checked = true;
+    optUniq.checked = false;
+    optSort.checked = false;
+    optJoin.checked = false;
+    optNum.checked = false;
+    numFmt.value = 'dot';
+    prefix.value = '';
+    suffix.value = '';
+    delim.value = ', ';
+    render();
+    toast('옵션을 처음 상태로 되돌렸습니다');
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    input.value =
+      '스마트 그리퍼\n' +
+      '  서보 액추에이터  \n' +
+      '\n' +
+      '감속기 모듈\n' +
+      '스마트 그리퍼\n' +
+      '\n' +
+      '하모닉 드라이브\n' +
+      '감속기 모듈';
+    render();
+    input.focus();
+  });
+
+  render();
+  input.focus();
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>목록 정리에 드는 시간</h2>
+<p>명단이나 항목 목록을 받아 보면 앞뒤에 공백이 붙어 있고, 중복이 섞여 있고, 순서도 뒤죽박죽인 경우가 많습니다. 여기에 번호를 매기거나 쉼표로 이어 붙이는 작업까지 하려면 엑셀을 열어 함수를 쓰게 됩니다.</p>
+<p>이 도구는 그 과정을 한 화면에서 처리합니다. 줄바꿈으로 나뉜 목록을 붙여넣고 필요한 항목만 켜면 됩니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>참가자 명단 정리</dt><dd>여러 경로로 받은 명단을 합쳤을 때 중복을 걸러내고 가나다순으로 맞출 때.</dd>
+<dt>번호 붙은 목록 만들기</dt><dd>보고서에 넣을 항목에 <strong>1. 2. 3.</strong> 또는 <strong>①②③</strong>을 붙일 때.</dd>
+<dt>쉼표로 이어 붙이기</dt><dd>이메일 주소 목록을 한 줄로 합쳐 수신자 칸에 넣을 때. 구분자를 지정할 수 있습니다.</dd>
+<dt>접두사·접미사 일괄 적용</dt><dd>모든 항목 앞에 경로를 붙이거나 뒤에 확장자를 붙일 때. 코드 작업이나 파일 목록 정리에 씁니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>왼쪽에 목록을 붙여넣습니다. 한 줄에 한 항목입니다.</li>
+<li>필요한 옵션을 켭니다. 여러 개를 동시에 적용할 수 있습니다.</li>
+<li>오른쪽 결과를 확인하고 <strong>결과 복사</strong>로 가져갑니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>중복 제거 · 빈 줄 제거 · 양쪽 공백 제거</dt><dd>목록을 다듬는 기본 정리입니다. 여러 곳에서 모은 자료를 합쳤을 때 먼저 켜두면 좋습니다.</dd>
+<dt>오름차순 정렬</dt><dd>가나다순 또는 알파벳순으로 맞춥니다.</dd>
+<dt>번호 매기기 · 번호 형식</dt><dd>항목마다 번호를 붙입니다. 형식은 여러 가지 중에서 고를 수 있습니다.</dd>
+<dt>한 줄로 합치기 · 구분자</dt><dd>전체를 한 줄로 만듭니다. 구분자에 쉼표나 세미콜론을 지정하면 그것으로 이어집니다.</dd>
+<dt>접두사 · 접미사</dt><dd>모든 항목의 앞뒤에 같은 문자열을 붙입니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>옵션을 여러 개 켜면 어떤 순서로 적용되나요</dt><dd>정리(공백·중복·빈 줄) → 정렬 → 접두사·접미사 → 번호 → 합치기 순으로 처리됩니다. 결과를 보면서 조절하시면 됩니다.</dd>
+<dt>원본이 바뀌나요</dt><dd>아닙니다. 왼쪽 원본은 그대로 두고 오른쪽에 결과만 새로 만듭니다. 옵션을 껐다 켜며 여러 결과를 비교할 수 있습니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html">스마트 텍스트 가공 공장</a></li>
+<li><a href="https://mnledu.com/kr/productivity/data-slicer_kr.html">엑셀·CSV 원클릭 분할 압축기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/copy-desk_kr.html">원클릭 복붙 작업대</a></li>
+<li><a href="https://mnledu.com/kr/productivity/receipt-to-excel_kr.html">영수증 지출결의서 변환기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/roster-maker_kr.html">공평무사 당직표 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/sheet2memo_kr.html">시트 포스트잇 대시보드</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "옵션을 여러 개 켜면 어떤 순서로 적용되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "정리(공백·중복·빈 줄) → 정렬 → 접두사·접미사 → 번호 → 합치기 순으로 처리됩니다. 결과를 보면서 조절하시면 됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "원본이 바뀌나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아닙니다. 왼쪽 원본은 그대로 두고 오른쪽에 결과만 새로 만듭니다. 옵션을 껐다 켜며 여러 결과를 비교할 수 있습니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/productivity/listformat_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/productivity/listformat_kr.html";
+  var TK_SHARE_TITLE = "스마트 리스트 포맷터";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+</body>
+</html>

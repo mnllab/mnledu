@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to Text (OCR) | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Pull text out of screenshots and scans. Runs on your device, so i… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/data-analytics/ocrextract_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/data-analytics/ocrextract_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/ocrextract_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/data-analytics/ocrextract_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/data-analytics/ocrextract_en.html" />
+<meta property="og:title" content="Image to Text (OCR) · OCR · image | TOOLKIT" />
+<meta property="og:description" content="Pull text out of screenshots and scans. Runs on your device, so i… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Image to Text (OCR) · OCR · image | TOOLKIT" />
+<meta name="twitter:description" content="Pull text out of screenshots and scans. Runs on your device, so i… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Image to Text (OCR)",
+  "description": "Pull text out of screenshots and scans. Runs on your device, so images stay local.",
+  "url": "https://mnledu.com/en/data-analytics/ocrextract_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover:not([disabled]){ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  #dropzone{
+    border:2px dashed #CBD4DE; border-radius:12px; background:#fff;
+    padding:56px 24px; text-align:center; cursor:pointer;
+    transition:border-color .14s, background .14s;
+  }
+  #dropzone:hover{ border-color:var(--steel); background:#FAFCFD; }
+  #dropzone.over{ border-color:var(--steel); background:#EDF4FA; }
+  #dropzone:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+
+  #stage{
+    background:
+      linear-gradient(45deg, #EFF1F4 25%, transparent 25%, transparent 75%, #EFF1F4 75%),
+      linear-gradient(45deg, #EFF1F4 25%, #fff 25%, #fff 75%, #EFF1F4 75%);
+    background-size:18px 18px; background-position:0 0, 9px 9px;
+    border-radius:10px;
+  }
+  #canvas{ max-width:100%; max-height:48vh; height:auto; display:block; margin:0 auto; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:inherit; font-size:14.5px; line-height:1.85;
+    min-height:clamp(260px, 40vh, 520px);
+  }
+  textarea::placeholder{ color:#9AA7B4; }
+
+  /* 진행 표시 */
+  .spinner{
+    width:15px; height:15px; border-radius:999px;
+    border:2px solid #D6DDE4; border-top-color:var(--steel);
+    animation:spin .8s linear infinite; flex:none;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #barFill{ transition:width .2s ease; }
+
+  .opt{ display:inline-flex; align-items:center; gap:7px; cursor:pointer; user-select:none; }
+  .opt input{ accent-color:var(--steel); width:15px; height:15px; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">Image to Text (OCR)</h1>
+      <p class="mt-1 text-[13px] text-muted">Turn characters in an image into text · the image never leaves your browser</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="lang" class="btn" aria-label="Recognition language">
+        <option value="eng" selected>English</option>
+        <option value="kor">Korean only</option>
+        <option value="kor+eng">English + Korean</option>
+      </select>
+      <button id="redoBtn" class="btn" disabled>Run again</button>
+      <button id="newBtn" class="btn hidden">Another image</button>
+    </div>
+  </header>
+
+  <!-- 붙여넣기 안내 -->
+  <div id="dropzone" tabindex="0" role="button" aria-label="Paste an image">
+    <svg class="mx-auto mb-4" width="36" height="36" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"
+         style="color:var(--steel)" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+      <line x1="7" y1="9" x2="17" y2="9"></line>
+      <line x1="7" y1="13" x2="17" y2="13"></line>
+      <line x1="7" y1="17" x2="13" y2="17"></line>
+    </svg>
+    <p class="text-[16px] font-medium">Paste an image here (Ctrl + V)</p>
+    <p class="mt-2 text-[12.5px] text-muted">Use ⌘ + V on a Mac · you can also drop a file here or click to browse</p>
+    <input type="file" id="picker" accept="image/*" class="hidden">
+  </div>
+
+  <!-- 작업 영역 -->
+  <div id="work" class="hidden grid gap-4 lg:grid-cols-2">
+
+    <!-- 좌 : 이미지 -->
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">Original image</span>
+        <span id="imgInfo" class="num text-[11px] text-muted"></span>
+      </div>
+      <div class="p-4">
+        <div id="stage" class="border border-hair p-3">
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- 우 : 결과 -->
+    <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">Result</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="copyFmt" class="btn py-1.5 text-[12px]" aria-label="복사 형식">
+            <option value="plain" selected>Plain text</option>
+            <option value="word">For Word</option>
+          </select>
+          <button id="saveBtn" class="btn py-1.5 text-[12px]">Save</button>
+        </div>
+      </div>
+
+      <!-- 진행 -->
+      <div id="progress" class="hidden border-b border-hair px-5 py-3">
+        <div class="flex items-center gap-2.5 text-[13px]">
+          <span class="spinner"></span>
+          <span id="progressText" class="text-muted">Getting ready…</span>
+        </div>
+        <div class="mt-2.5 h-[3px] w-full overflow-hidden rounded-full bg-hair">
+          <div id="barFill" class="h-full w-0 bg-steel"></div>
+        </div>
+      </div>
+
+      <div id="errBox" class="hidden border-b border-hair px-5 py-3 text-[12.5px] leading-relaxed text-alert"></div>
+
+      <div class="px-5 pt-4 sm:px-6">
+        <textarea id="output" spellcheck="false"
+          placeholder="Add an image and the recognised text appears here. You can edit it directly."></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+        <label class="opt"><input type="checkbox" id="optJoin" checked>Tidy line breaks</label>
+        <span>Characters <b id="chars" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span id="confInfo" class="num"></span>
+        <button id="copyBtn" class="btn btn-primary ml-auto py-1.5 text-[12px]">Copy all recognised text</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const dropzone = document.getElementById('dropzone');
+  const work     = document.getElementById('work');
+  const picker   = document.getElementById('picker');
+  const canvas   = document.getElementById('canvas');
+  const ctx      = canvas.getContext('2d');
+  const output   = document.getElementById('output');
+  const langSel  = document.getElementById('lang');
+  const progress = document.getElementById('progress');
+  const progText = document.getElementById('progressText');
+  const barFill  = document.getElementById('barFill');
+  const errBox   = document.getElementById('errBox');
+  const imgInfo  = document.getElementById('imgInfo');
+  const charsEl  = document.getElementById('chars');
+  const confInfo = document.getElementById('confInfo');
+  const optJoin  = document.getElementById('optJoin');
+  const copyFmt  = document.getElementById('copyFmt');
+  const redoBtn  = document.getElementById('redoBtn');
+  const newBtn   = document.getElementById('newBtn');
+
+  let currentBlob = null;
+  let rawText = '';
+  let busy = false;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2200);
+  }
+
+  function showErr(msg) { errBox.textContent = msg; errBox.classList.remove('hidden'); }
+  function clearErr() { errBox.textContent = ''; errBox.classList.add('hidden'); }
+
+  /* ---------- 이미지 불러오기 ---------- */
+  function loadBlob(blob) {
+    if (!blob || blob.type.indexOf('image/') !== 0) { toast('That is not an image file'); return; }
+    if (busy) { toast('Wait until recognition has finished'); return; }
+
+    const url = URL.createObjectURL(blob);
+    const im = new Image();
+    im.onload = function () {
+      canvas.width = im.naturalWidth;
+      canvas.height = im.naturalHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(im, 0, 0);
+      imgInfo.textContent = im.naturalWidth + ' × ' + im.naturalHeight + ' px';
+
+      dropzone.classList.add('hidden');
+      work.classList.remove('hidden');
+      work.classList.add('grid');
+      newBtn.classList.remove('hidden');
+
+      currentBlob = blob;
+      URL.revokeObjectURL(url);
+      recognize();
+    };
+    im.onerror = function () { URL.revokeObjectURL(url); toast('That image could not be read'); };
+    im.src = url;
+  }
+
+  document.addEventListener('paste', function (ev) {
+    const items = ev.clipboardData && ev.clipboardData.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image/') === 0) {
+        ev.preventDefault();
+        loadBlob(items[i].getAsFile());
+        return;
+      }
+    }
+  });
+
+  dropzone.addEventListener('click', function () { picker.click(); });
+  dropzone.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+  });
+  picker.addEventListener('change', function (ev) {
+    if (ev.target.files && ev.target.files[0]) loadBlob(ev.target.files[0]);
+    picker.value = '';
+  });
+
+  ['dragenter', 'dragover'].forEach(function (t) {
+    dropzone.addEventListener(t, function (ev) { ev.preventDefault(); dropzone.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    dropzone.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && dropzone.contains(ev.relatedTarget)) return;
+      dropzone.classList.remove('over');
+    });
+  });
+  dropzone.addEventListener('drop', function (ev) {
+    if (ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0]) loadBlob(ev.dataTransfer.files[0]);
+  });
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) { if (!dropzone.contains(ev.target)) ev.preventDefault(); });
+  });
+
+  /* ---------- OCR ---------- */
+  // Tesseract가 알려주는 단계 이름을 우리말로 바꾼다
+  const STATUS = {
+    'loading tesseract core': 'Preparing engine',
+    'initializing tesseract': 'Starting engine',
+    'loading language traineddata': 'Downloading language data',
+    'initializing api': 'Initialising recogniser',
+    'recognizing text': 'Extracting text'
+  };
+
+  function setProgress(status, ratio) {
+    const pct = Math.round((ratio || 0) * 100);
+    const label = STATUS[status] || status || 'Working';
+    progText.textContent = label + '… (' + pct + '%)';
+    barFill.style.width = pct + '%';
+  }
+
+  async function recognize() {
+    if (!currentBlob) return;
+    if (typeof Tesseract === 'undefined') {
+      showErr('The OCR engine could not be loaded. Check your connection and reload. (Tesseract.js is fetched from a CDN.)');
+      return;
+    }
+
+    busy = true;
+    clearErr();
+    progress.classList.remove('hidden');
+    redoBtn.disabled = true;
+    langSel.disabled = true;
+    setProgress('initializing tesseract', 0);
+
+    try {
+      const result = await Tesseract.recognize(currentBlob, langSel.value, {
+        logger: function (m) { setProgress(m.status, m.progress); }
+      });
+
+      rawText = (result && result.data && result.data.text) ? result.data.text : '';
+      applyText();
+
+      const conf = result && result.data && typeof result.data.confidence === 'number'
+        ? Math.round(result.data.confidence) : null;
+      confInfo.textContent = conf !== null ? 'confidence ' + conf + '%' : '';
+      confInfo.style.color = (conf !== null && conf < 70) ? 'var(--alert)' : 'var(--muted)';
+
+      toast(rawText.trim() ? 'Extraction complete' : 'No text was found');
+    } catch (e) {
+      showErr('Recognition failed: ' + (e && e.message ? e.message : 'unknown error') +
+              ' · the language data may not have downloaded, so check your connection.');
+    } finally {
+      busy = false;
+      progress.classList.add('hidden');
+      redoBtn.disabled = false;
+      langSel.disabled = false;
+    }
+  }
+
+  /* ---------- Tidy line breaks ---------- */
+  // OCR은 화면에 보이는 줄 단위로 끊어 내보내므로, 문단 안에서 끊긴 줄은 이어 주는 편이 읽기 좋다.
+  // 한글 문서는 대부분 어절 경계에서 줄이 나뉘므로 이을 때 공백을 넣는다.
+  // (빈 줄로 나뉜 문단과 목록 줄은 그대로 둔다)
+  function tidy(text) {
+    const blocks = text.replace(/\r\n?/g, '\n').split(/\n{2,}/);
+    return blocks.map(function (b) {
+      // 영문 단어가 줄 끝 하이픈으로 잘린 경우 먼저 붙인다 (infor-\nmation → information)
+      let t = b.replace(/([A-Za-z])[-‐–]\n[ \t]*([a-z])/g, '$1$2');
+      return t.replace(/\n[ \t]*/g, function (m, off, whole) {
+        const after = whole.slice(off + m.length);
+        const prev = whole.slice(0, off).slice(-1), next = after.slice(0, 1);
+        if (!prev || !next) return '\n';
+        // 목록·번호로 시작하는 줄은 줄바꿈을 유지한다
+        if (/^\s*(?:[□■○●▪·•◇\-*]|\(?\d{1,2}[.)]|[①-⑮])/.test(after)) return '\n';
+        return ' ';
+      }).replace(/[ \t]{2,}/g, ' ').trim();
+    }).filter(Boolean).join('\n\n');
+  }
+
+  function applyText() {
+    output.value = optJoin.checked ? tidy(rawText) : rawText.replace(/\r\n?/g, '\n').trim();
+    updateCount();
+  }
+
+  function updateCount() {
+    charsEl.textContent = Array.from(output.value.replace(/\n/g, '')).length.toLocaleString('ko-KR');
+  }
+
+  optJoin.addEventListener('change', applyText);
+  output.addEventListener('input', updateCount);
+  langSel.addEventListener('change', function () { if (currentBlob) recognize(); });
+  redoBtn.addEventListener('click', function () { if (currentBlob) recognize(); });
+
+  newBtn.addEventListener('click', function () {
+    if (busy) { toast('Wait until recognition has finished'); return; }
+    currentBlob = null;
+    rawText = '';
+    output.value = '';
+    confInfo.textContent = '';
+    updateCount();
+    clearErr();
+    work.classList.add('hidden');
+    work.classList.remove('grid');
+    newBtn.classList.add('hidden');
+    redoBtn.disabled = true;
+    dropzone.classList.remove('hidden');
+    dropzone.focus();
+  });
+
+  /* ---------- 복사 · Save ---------- */
+  function formatted() {
+    const t = output.value.replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '');
+    if (copyFmt.value === 'plain') return t;
+    return t.split('\n').join('\r\n');
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    if (!output.value.trim()) { toast('Nothing to copy'); return; }
+    const text = formatted();
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('Copied');
+    } catch (e) {
+      if (legacyCopy(text)) toast('Copied');
+      else toast('The browser blocked copying. Select the text instead.');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!output.value.trim()) { toast('Nothing to save'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = 'ocr_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + formatted()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('Saved');
+    } catch (e) {
+      toast('Your browser blocked the download');
+    }
+  });
+
+  dropzone.focus();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Retyping text out of a picture</h2>
+<p>A screenshot where copying is disabled. A photograph of a form. A scanned document. Getting the words out means typing them again, and even a small table takes a surprising amount of time.</p>
+<p>OCR finds the characters in an image and converts them to text. This tool does that inside your browser, so the image is never uploaded. That matters for the things people usually need to transcribe: contracts, identity documents, invoices.</p>
+<h2>When to use it</h2><dl>
+<dt>Text from a screenshot</dt><dd>When a page blocks selection, or the content is an image rather than text.</dd>
+<dt>Scanned documents</dt><dd>Pulling the contents out of a paper form that was scanned or photographed.</dd>
+<dt>Conference slides</dt><dd>Turning the photos you took of slides into notes you can search.</dd>
+<dt>Receipts and statements</dt><dd>Getting figures off a photographed document and into a spreadsheet.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Add an image.</li>
+<li>Choose the recognition language. English, English with Korean, or Korean only.</li>
+<li>Correct anything that came out wrong directly in the result box.</li>
+<li>Use <strong>Copy all recognised text</strong>.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Recognition language</dt><dd>Narrowing the language improves accuracy. If the image is English only, choose English rather than a combined mode.</dd>
+<dt>Tidy line breaks</dt><dd>Reflows the recognised text into paragraphs instead of the line by line output.</dd>
+<dt>Run again</dt><dd>Re-runs recognition after you change the language or swap the image.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>How do I get better results</dt><dd>Large, sharp characters help most. Crop and straighten a tilted photo, and retake anything with heavy shadow or glare. Handwriting is generally not recognised well.</dd>
+<dt>Is my image uploaded</dt><dd>No. Recognition runs in your browser and the image never leaves your device.</dd>
+<dt>Are tables preserved</dt><dd>The text is extracted but the row and column structure is not. You will need to rebuild the table after copying.</dd>
+<dt>Why is the first run slow</dt><dd>The recognition model is downloaded on first use. After that it is cached and subsequent runs start straight away.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/data-analytics/cagrcal_en.html">CAGR Calculator</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/gov-fund-calc_en.html">Korean Grant Cost Share Calculator</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/percent-calc_en.html">Margin &amp; VAT Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I get better results",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Large, sharp characters help most. Crop and straighten a tilted photo, and retake anything with heavy shadow or glare. Handwriting is generally not recognised well."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my image uploaded",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Recognition runs in your browser and the image never leaves your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are tables preserved",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The text is extracted but the row and column structure is not. You will need to rebuild the table after copying."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is the first run slow",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The recognition model is downloaded on first use. After that it is cached and subsequent runs start straight away."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/data-analytics/ocrextract_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/data-analytics/ocrextract_en.html";
+  var TK_SHARE_TITLE = "Image to Text (OCR)";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

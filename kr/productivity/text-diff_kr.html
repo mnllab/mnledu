@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>문서·계약서 정밀 비교기 · 계약서 · 비교 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="원본과 수정본을 나란히 놓고 바뀐 곳만 찾아냅니다. 단어·글자 단위 비교와 공백·대소문자 무시를 고를 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/productivity/text-diff_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/text-diff_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/text-diff_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/text-diff_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/productivity/text-diff_kr.html" />
+<meta property="og:title" content="문서·계약서 정밀 비교기 · 계약서 · 비교 | TOOLKIT" />
+<meta property="og:description" content="원본과 수정본을 나란히 놓고 바뀐 곳만 찾아냅니다. 단어·글자 단위 비교와 공백·대소문자 무시를 고를 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="문서·계약서 정밀 비교기 · 계약서 · 비교 | TOOLKIT" />
+<meta name="twitter:description" content="원본과 수정본을 나란히 놓고 바뀐 곳만 찾아냅니다. 단어·글자 단위 비교와 공백·대소문자 무시를 고를 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "문서·계약서 정밀 비교기",
+  "description": "원본과 수정본을 나란히 놓고 바뀐 곳만 찾아냅니다. 단어·글자 단위 비교와 공백·대소문자 무시를 고를 수 있습니다.",
+  "url": "https://mnledu.com/kr/productivity/text-diff_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "문서·계약서 정밀 비교기",
+      "item": "https://mnledu.com/kr/productivity/text-diff_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.1.0/diff.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#0F172A; --accent2:#1E293B;
+    --delbg:#FEE2E2; --delfg:#DC2626;
+    --addbg:#DCFCE7; --addfg:#16A34A;
+    --focus:#FDE68A;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1400px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:600;padding:10px 14px;cursor:pointer;min-height:44px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:#CBD5E1;background:#F8FAFC}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+  .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px;
+    letter-spacing:.02em}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  textarea{width:100%;min-height:230px;border:1px solid var(--line);border-radius:11px;padding:13px;
+    font-size:14px;line-height:1.85;font-family:ui-monospace,Consolas,monospace;color:var(--ink);
+    outline:none;resize:vertical;background:#fff}
+  textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,23,42,.08)}
+  textarea::placeholder{color:#CBD5E1}
+  .chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:8px 0;margin-right:20px}
+  .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+  .rad{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:8px 0;margin-right:20px}
+  .rad input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+
+  /* ---------- 결과 ---------- */
+  #out{display:none}
+  #out.on{display:block}
+  .panes{display:grid;gap:14px;grid-template-columns:1fr}
+  .panes.side{grid-template-columns:1fr}
+  @media(min-width:1000px){.panes.side{grid-template-columns:1fr 1fr}}
+  .pane{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  .ph{background:var(--line2);padding:10px 14px;font-size:12.5px;font-weight:700;color:var(--ink2);
+    border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+  .pb{padding:16px;overflow-y:auto;max-height:62vh;font-size:14.5px;line-height:2;
+    white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Consolas,monospace}
+
+  del{background:var(--delbg);color:var(--delfg);text-decoration:line-through;
+    border-radius:3px;padding:1px 2px}
+  ins{background:var(--addbg);color:var(--addfg);font-weight:700;text-decoration:none;
+    border-radius:3px;padding:1px 2px}
+  del.hit, ins.hit{outline:2px solid #B45309;outline-offset:1px;background:var(--focus)}
+  .gap{opacity:.28}
+
+  #stat{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;padding:13px 16px;
+    background:var(--line2);border-radius:11px;margin-bottom:14px;font-size:13.5px}
+  #stat b{font-size:17px;font-weight:800}
+  #stat .g{color:var(--addfg)}
+  #stat .r{color:var(--delfg)}
+  #same{display:none;padding:26px 20px;text-align:center;background:#F0FDF4;border:1px solid #BBF7D0;
+    border-radius:12px;color:#15803D;font-size:15px;line-height:1.85;margin-bottom:14px}
+  #same.on{display:block}
+
+  #nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  #navPos{font-size:13px;color:var(--muted);min-width:74px}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  .err{font-size:13px;color:#B91C1C;margin:8px 0 0;display:none}
+  .err.on{display:block}
+
+  .sec{padding:32px 0}
+  .sec h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
+  .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+
+  /* ---------- 인쇄 ---------- */
+  @media print{
+    body{background:#fff}
+    .noprint{display:none !important}
+    .wrap{max-width:none;padding:0}
+    #printHead{display:block !important;margin-bottom:18px;padding-bottom:14px;
+      border-bottom:2px solid #0F172A}
+    .pane{break-inside:auto;border:1px solid #94A3B8}
+    .pb{max-height:none;overflow:visible;font-size:11pt;line-height:1.75}
+    .panes.side{grid-template-columns:1fr 1fr}
+    .ph{background:#F1F5F9 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    del{background:#FEE2E2 !important;color:#B91C1C !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    ins{background:#DCFCE7 !important;color:#15803D !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    del.hit, ins.hit{outline:none;background:inherit}
+    #stat{background:#F1F5F9 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    @page{margin:14mm}
+  }
+  #printHead{display:none}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap noprint" style="padding:44px 18px 8px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px">Secure Text Diff</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">문서·계약서 정밀 비교기</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:740px">
+    원본과 수정본을 붙여넣으면 바뀐 곳만 짚어 드립니다. 문서는 <b>서버로 전송되지 않고</b> 이 브라우저 안에서만 대조하므로,
+    대외비 계약서도 안심하고 넣으실 수 있습니다.
+  </p>
+</header>
+
+<!-- 인쇄용 머리말 -->
+<div class="wrap" id="printHead">
+  <h2 style="font-size:18pt;font-weight:800;margin:0 0 6px">문서 비교 결과</h2>
+  <p class="mono" style="font-size:10pt;color:#475569;margin:0" id="printMeta"></p>
+</div>
+
+<section class="wrap noprint" style="padding-top:20px">
+  <div class="panes side">
+    <div>
+      <label class="lab" for="ta">📄 원본 (변경 전)</label>
+      <textarea id="ta" placeholder="원본 문서를 붙여넣으세요"></textarea>
+      <p class="hint mono" id="taInfo"></p>
+    </div>
+    <div>
+      <label class="lab" for="tb">📝 수정본 (변경 후)</label>
+      <textarea id="tb" placeholder="수정된 문서를 붙여넣으세요"></textarea>
+      <p class="hint mono" id="tbInfo"></p>
+    </div>
+  </div>
+
+  <div class="card" style="padding:18px;margin-top:16px">
+    <div style="display:grid;gap:16px;grid-template-columns:1fr">
+      <div>
+        <p class="lab" style="margin-bottom:4px">🔍 비교 단위</p>
+        <label class="rad"><input type="radio" name="mode" value="word" checked><span>단어 단위 <span style="color:var(--muted);font-size:12.5px">· 문장이 바뀐 곳 보기</span></span></label>
+        <label class="rad"><input type="radio" name="mode" value="char"><span>글자 단위 <span style="color:var(--muted);font-size:12.5px">· 조사와 오탈자까지</span></span></label>
+      </div>
+      <div style="border-top:1px solid var(--line2);padding-top:14px">
+        <p class="lab" style="margin-bottom:4px">⚙️ 무시할 차이</p>
+        <label class="chk"><input type="checkbox" id="igSpace" checked><span>공백과 들여쓰기</span></label>
+        <label class="chk"><input type="checkbox" id="igNewline"><span>줄바꿈</span></label>
+        <label class="chk"><input type="checkbox" id="igCase"><span>영문 대소문자</span></label>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:9px;grid-template-columns:1fr;margin-top:16px">
+      <button class="btn p" id="runBtn" style="min-height:52px;font-size:15.5px">🔍 비교하기</button>
+      <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr">
+        <button class="btn" id="swapBtn">⇅ 원본·수정본 바꾸기</button>
+        <button class="btn" id="clearBtn">전체 비우기</button>
+      </div>
+    </div>
+    <p class="err" id="err" role="alert"></p>
+  </div>
+</section>
+
+<div id="out">
+  <section class="wrap sec" style="padding-bottom:0">
+    <div id="same">✅ 두 문서가 같습니다. 설정하신 조건에서 다른 곳을 찾지 못했습니다.</div>
+
+    <div id="stat">
+      <span>변경 <b id="stBlocks">0</b>곳</span>
+      <span class="g">추가 <b id="stAdd">0</b>자</span>
+      <span class="r">삭제 <b id="stDel">0</b>자</span>
+      <span style="color:var(--muted)" id="stMode"></span>
+    </div>
+
+    <div class="noprint" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div id="nav">
+        <button class="btn sm" id="prevBtn">▲ 이전 차이점</button>
+        <button class="btn sm" id="nextBtn">▼ 다음 차이점</button>
+        <span id="navPos" class="mono"></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn sm on" id="viewSide">↔️ 좌우 분할</button>
+        <button class="btn sm" id="viewInline">↕️ 통합 보기</button>
+      </div>
+    </div>
+
+    <div class="panes side" id="panes">
+      <div class="pane" id="paneA">
+        <div class="ph"><span>📄 원본 (변경 전)</span><span class="r mono" id="hdrDel"></span></div>
+        <div class="pb" id="bodyA"></div>
+      </div>
+      <div class="pane" id="paneB">
+        <div class="ph"><span>📝 수정본 (변경 후)</span><span class="g mono" id="hdrAdd"></span></div>
+        <div class="pb" id="bodyB"></div>
+      </div>
+      <div class="pane" id="paneU" style="display:none">
+        <div class="ph"><span>↕️ 통합 보기</span><span class="mono" id="hdrU"></span></div>
+        <div class="pb" id="bodyU"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sec noprint" style="padding-top:22px">
+    <h2>📤 내보내기</h2>
+    <p class="sub">결재 문서에 붙이거나 메일로 보내실 수 있습니다.</p>
+    <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr">
+      <button class="btn p" id="copyBtn">📋 변경 요약 복사</button>
+      <button class="btn" id="printBtn">🖨️ 결과 인쇄 · PDF</button>
+    </div>
+    <div class="card" style="padding:18px;margin-top:14px">
+      <p class="lab" style="margin-bottom:10px">변경 요약 미리보기</p>
+      <pre id="sumPv" class="mono" style="margin:0;font-size:13px;line-height:1.9;color:var(--ink2);white-space:pre-wrap;word-break:break-word;max-height:260px;overflow-y:auto"></pre>
+    </div>
+  </section>
+</div>
+
+<footer class="wrap noprint" style="padding:28px 18px 46px;border-top:1px solid var(--line);margin-top:30px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    모든 대조는 사용자의 브라우저 안에서만 이루어지며, 붙여넣은 문서는 어떤 서버로도 전송되지 않습니다.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2400);
+}
+function showErr(m){ var e = $('err'); e.textContent = m; e.classList.add('on'); }
+function clearErr(){ $('err').classList.remove('on'); }
+
+var parts = [];        /* jsdiff 결과 */
+var hits = [];         /* 변경 부분 요소 목록 */
+var hitIdx = -1;
+var sideView = true;
+
+/* ---------- 전처리 ----------
+   jsdiff 의 옵션만으로는 글자 단위 비교에서 공백과 줄바꿈이 걸러지지 않는다.
+   그래서 비교 전에 텍스트를 손질해 두 방식의 결과를 맞춘다 */
+function prep(text, o){
+  var t = String(text == null ? '' : text);
+  t = t.replace(/\r\n/g, '\n');
+  if (o.ignoreNewline) t = t.replace(/\n+/g, ' ');
+  if (o.ignoreSpace) t = t.replace(/[ \t]+/g, ' ').replace(/^[ \t]+|[ \t]+$/gm, '');
+  return t;
+}
+
+function readOpts(){
+  var mode = 'word';
+  document.querySelectorAll('input[name=mode]').forEach(function(r){ if (r.checked) mode = r.value; });
+  return {
+    mode: mode,
+    ignoreSpace: $('igSpace').checked,
+    ignoreNewline: $('igNewline').checked,
+    ignoreCase: $('igCase').checked
+  };
+}
+
+function runDiff(a, b, o){
+  var A = prep(a, o), B = prep(b, o);
+  var opt = o.ignoreCase ? { ignoreCase: true } : {};
+  if (o.mode === 'char') return Diff.diffChars(A, B, opt);
+  /* 공백을 무시하지 않을 때는 공백까지 보는 쪽을 쓴다.
+     diffWords 는 원래 공백 차이를 무시하기 때문이다 */
+  return o.ignoreSpace ? Diff.diffWords(A, B, opt) : Diff.diffWordsWithSpace(A, B, opt);
+}
+
+/* ---------- 그리기 ---------- */
+function renderPanes(){
+  var A = [], B = [], U = [], n = 0;
+  parts.forEach(function(p){
+    var v = esc(p.value);
+    if (p.removed){
+      var id = 'd' + (n++);
+      A.push('<del data-h="' + id + '">' + v + '</del>');
+      B.push('<span class="gap"></span>');
+      U.push('<del data-h="u' + id + '">' + v + '</del>');
+    } else if (p.added){
+      var id2 = 'a' + (n++);
+      A.push('<span class="gap"></span>');
+      B.push('<ins data-h="' + id2 + '">' + v + '</ins>');
+      U.push('<ins data-h="u' + id2 + '">' + v + '</ins>');
+    } else {
+      A.push(v); B.push(v); U.push(v);
+    }
+  });
+  $('bodyA').innerHTML = A.join('');
+  $('bodyB').innerHTML = B.join('');
+  $('bodyU').innerHTML = U.join('');
+  collectHits();
+}
+function collectHits(){
+  var box = sideView ? $('panes') : $('bodyU');
+  hits = Array.prototype.slice.call(box.querySelectorAll('del[data-h], ins[data-h]'))
+    .filter(function(el){ return el.offsetParent !== null || !sideView; });
+  if (sideView){
+    /* 좌우 보기에서는 한 쌍이 두 번 세지 않도록 순서대로 모은다 */
+    hits = Array.prototype.slice.call(document.querySelectorAll('#paneA del[data-h], #paneB ins[data-h]'));
+    hits.sort(function(x, y){
+      return (+String(x.dataset.h).slice(1)) - (+String(y.dataset.h).slice(1));
+    });
+  }
+  hitIdx = -1;
+  updateNav();
+}
+function updateNav(){
+  var n = hits.length;
+  $('navPos').textContent = n ? ((hitIdx < 0 ? 0 : hitIdx + 1) + ' / ' + n) : '0 / 0';
+  $('prevBtn').disabled = !n;
+  $('nextBtn').disabled = !n;
+}
+function gotoHit(dir){
+  if (!hits.length) return;
+  hits.forEach(function(el){ el.classList.remove('hit'); });
+  hitIdx += dir;
+  if (hitIdx < 0) hitIdx = hits.length - 1;
+  if (hitIdx >= hits.length) hitIdx = 0;
+  var el = hits[hitIdx];
+  el.classList.add('hit');
+  /* 짝이 되는 반대쪽도 함께 표시한다 */
+  if (sideView){
+    var mate = document.querySelector('[data-h="' + el.dataset.h + '"]');
+    if (mate && mate !== el) mate.classList.add('hit');
+  }
+  scrollTo(el, 'center');
+  updateNav();
+}
+
+/* 브라우저마다 지원 범위가 달라 단계적으로 시도한다 */
+function scrollTo(el, block){
+  if (!el || typeof el.scrollIntoView !== 'function') return;
+  try { el.scrollIntoView({ behavior:'smooth', block: block }); return; } catch(e){}
+  try { el.scrollIntoView(true); } catch(e){}
+}
+
+/* ---------- 스크롤 동기화 ---------- */
+var syncing = false;
+function linkScroll(a, b){
+  function on(src, dst){
+    return function(){
+      if (syncing) return;
+      syncing = true;
+      var max = src.scrollHeight - src.clientHeight;
+      var ratio = max > 0 ? src.scrollTop / max : 0;
+      var dmax = dst.scrollHeight - dst.clientHeight;
+      dst.scrollTop = ratio * dmax;
+      requestAnimationFrame(function(){ syncing = false; });
+    };
+  }
+  a.addEventListener('scroll', on(a, b), { passive:true });
+  b.addEventListener('scroll', on(b, a), { passive:true });
+}
+linkScroll($('bodyA'), $('bodyB'));
+
+/* ---------- 실행 ---------- */
+function run(){
+  clearErr();
+  if (typeof Diff === 'undefined'){
+    showErr('비교 엔진을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.');
+    return;
+  }
+  var a = $('ta').value, b = $('tb').value;
+  if (!a.trim() && !b.trim()){ showErr('비교할 문서를 양쪽에 붙여넣어 주세요.'); return; }
+  if (!a.trim()){ showErr('원본이 비어 있습니다.'); return; }
+  if (!b.trim()){ showErr('수정본이 비어 있습니다.'); return; }
+
+  var o = readOpts();
+  var big = Math.max(a.length, b.length);
+  if (o.mode === 'char' && big > 120000){
+    showErr('글자 단위로 대조하기에는 문서가 깁니다. 단어 단위로 먼저 보시거나 조항을 나눠 넣어 주세요.');
+    return;
+  }
+  if (big > 800000){ showErr('문서가 너무 깁니다. 나누어 비교해 주세요.'); return; }
+
+  try {
+    parts = runDiff(a, b, o);
+  } catch(e){
+    console.error(e);
+    showErr('대조하는 중 문제가 발생했습니다. 문서를 나누어 다시 시도해 주세요.');
+    return;
+  }
+
+  var add = 0, del = 0, blocks = 0;
+  parts.forEach(function(p){
+    if (p.added){ add += p.value.length; blocks++; }
+    else if (p.removed){ del += p.value.length; blocks++; }
+  });
+  $('stBlocks').textContent = blocks;
+  $('stAdd').textContent = add.toLocaleString('en-US');
+  $('stDel').textContent = del.toLocaleString('en-US');
+  $('hdrDel').textContent = del ? '−' + del.toLocaleString('en-US') + '자' : '';
+  $('hdrAdd').textContent = add ? '+' + add.toLocaleString('en-US') + '자' : '';
+  $('hdrU').textContent = blocks ? blocks + '곳' : '';
+
+  var names = [];
+  names.push(o.mode === 'char' ? '글자 단위' : '단어 단위');
+  if (o.ignoreSpace) names.push('공백 무시');
+  if (o.ignoreNewline) names.push('줄바꿈 무시');
+  if (o.ignoreCase) names.push('대소문자 무시');
+  $('stMode').textContent = names.join(' · ');
+
+  $('same').classList.toggle('on', blocks === 0);
+  renderPanes();
+  $('sumPv').textContent = summaryText();
+  $('printMeta').textContent = new Date().toLocaleString('ko-KR') +
+    ' · ' + names.join(' · ') + ' · 변경 ' + blocks + '곳';
+  $('out').classList.add('on');
+
+  var el = $('out');
+  setTimeout(function(){
+    scrollTo(el, 'start');
+  }, 40);
+  toast(blocks ? '변경된 곳 ' + blocks + '곳을 찾았습니다' : '다른 곳을 찾지 못했습니다');
+}
+
+/* ---------- 요약 ---------- */
+function summaryText(){
+  var o = readOpts();
+  var L = [];
+  L.push('📋 문서 비교 요약');
+  L.push(new Date().toLocaleString('ko-KR'));
+  var names = [o.mode === 'char' ? '글자 단위' : '단어 단위'];
+  if (o.ignoreSpace) names.push('공백 무시');
+  if (o.ignoreNewline) names.push('줄바꿈 무시');
+  if (o.ignoreCase) names.push('대소문자 무시');
+  L.push('조건 · ' + names.join(' · '));
+  L.push('');
+
+  /* 삭제와 추가가 이어 붙은 것은 한 쌍으로 묶어 보여 준다 */
+  var no = 0, i = 0;
+  while (i < parts.length){
+    var p = parts[i];
+    if (!p.added && !p.removed){ i++; continue; }
+    var nxt = parts[i+1];
+    if (p.removed && nxt && nxt.added){
+      no++;
+      L.push(no + '. 변경');
+      L.push('   [-] 삭제: ' + one(p.value));
+      L.push('   [+] 추가: ' + one(nxt.value));
+      i += 2;
+    } else if (p.removed){
+      no++;
+      L.push(no + '. 삭제');
+      L.push('   [-] ' + one(p.value));
+      i++;
+    } else {
+      no++;
+      L.push(no + '. 추가');
+      L.push('   [+] ' + one(p.value));
+      i++;
+    }
+    L.push('');
+  }
+  if (!no) L.push('두 문서에서 다른 곳을 찾지 못했습니다.');
+  return L.join('\n');
+}
+function one(s){
+  var t = String(s).replace(/\s+/g, ' ').trim();
+  return t.length > 160 ? t.slice(0, 160) + ' …' : (t || '(공백)');
+}
+
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+
+/* ---------- 이벤트 ---------- */
+$('runBtn').addEventListener('click', run);
+$('prevBtn').addEventListener('click', function(){ gotoHit(-1); });
+$('nextBtn').addEventListener('click', function(){ gotoHit(1); });
+
+$('viewSide').addEventListener('click', function(){
+  sideView = true;
+  $('panes').classList.add('side');
+  $('paneA').style.display = ''; $('paneB').style.display = '';
+  $('paneU').style.display = 'none';
+  this.classList.add('on'); $('viewInline').classList.remove('on');
+  collectHits();
+});
+$('viewInline').addEventListener('click', function(){
+  sideView = false;
+  $('panes').classList.remove('side');
+  $('paneA').style.display = 'none'; $('paneB').style.display = 'none';
+  $('paneU').style.display = '';
+  this.classList.add('on'); $('viewSide').classList.remove('on');
+  collectHits();
+});
+
+$('swapBtn').addEventListener('click', function(){
+  var t = $('ta').value;
+  $('ta').value = $('tb').value;
+  $('tb').value = t;
+  updateInfo();
+  if ($('out').classList.contains('on')) run();
+  toast('원본과 수정본을 바꿨습니다');
+});
+$('clearBtn').addEventListener('click', function(){
+  if (!$('ta').value && !$('tb').value){ toast('이미 비어 있습니다'); return; }
+  if (!window.confirm('붙여넣은 내용을 모두 지울까요?')) return;
+  $('ta').value = ''; $('tb').value = '';
+  $('out').classList.remove('on');
+  clearErr(); updateInfo();
+  toast('모두 비웠습니다');
+});
+$('copyBtn').addEventListener('click', function(){
+  copyText(summaryText(), function(ok){
+    toast(ok ? '변경 요약을 복사했습니다' : '복사가 막혔습니다');
+  });
+});
+$('printBtn').addEventListener('click', function(){
+  try { window.print(); } catch(e){ toast('인쇄가 막혔습니다'); }
+});
+
+function updateInfo(){
+  [['ta','taInfo'],['tb','tbInfo']].forEach(function(p){
+    var v = $(p[0]).value;
+    $(p[1]).textContent = v ? (v.length.toLocaleString('en-US') + '자 · ' +
+      v.split(/\n/).length.toLocaleString('en-US') + '줄') : '';
+  });
+}
+['ta','tb'].forEach(function(id){
+  $(id).addEventListener('input', function(){ updateInfo(); clearErr(); });
+});
+/* 조건을 바꾸면 곧바로 다시 대조한다 */
+document.querySelectorAll('input[name=mode], #igSpace, #igNewline, #igCase').forEach(function(el){
+  el.addEventListener('change', function(){
+    if ($('out').classList.contains('on')) run();
+  });
+});
+document.addEventListener('keydown', function(ev){
+  if (/TEXTAREA|INPUT/.test((ev.target && ev.target.tagName) || '')) return;
+  if (!$('out').classList.contains('on')) return;
+  if (ev.key === 'ArrowDown' || ev.key === 'n'){ ev.preventDefault(); gotoHit(1); }
+  else if (ev.key === 'ArrowUp' || ev.key === 'p'){ ev.preventDefault(); gotoHit(-1); }
+});
+
+updateInfo();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#0F172A}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#0F172A;text-decoration:none;font-weight:600}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#0F172A}
+</style>
+<section class="tk-guide noprint"><div class="tk-guide-inner">
+<h2>어디가 바뀌었는지 말해 주지 않는 수정본</h2>
+<p>상대방이 검토했다며 계약서를 보내옵니다. 어디를 고쳤는지는 적혀 있지 않습니다. 두 문서를 나란히 띄워 놓고 조항을 하나씩 눈으로 대조하다 보면, 정작 중요한 한 줄을 놓칩니다. 지급 기한이 30일에서 60일로 바뀐 것 같은 한 줄을요.</p>
+<p>이 도구는 그 대조를 대신합니다. 원본과 수정본을 붙여넣으면 삭제된 곳은 빨갛게, 추가된 곳은 초록으로 표시하고, 변경된 곳 사이를 단추로 옮겨 다닐 수 있습니다.</p>
+
+<h2>대외비 문서를 다루는 방식</h2>
+<p>계약서나 내부 문서를 인터넷 어딘가에 올리는 일은 그 자체로 문제가 됩니다. 검토 중인 조건이 담겨 있기 때문입니다.</p>
+<p>이 도구는 <strong>대조하는 일까지 브라우저 안에서 처리합니다.</strong> 서버로 보내지 않으므로, 인터넷 연결을 끊고 쓰셔도 그대로 동작합니다. 페이지를 닫으면 붙여넣은 내용도 함께 사라집니다.</p>
+
+<h2>비교 단위를 고르는 기준</h2><dl>
+<dt>단어 단위</dt><dd>기본값입니다. 문장이나 조항이 통째로 바뀐 곳을 보기에 좋습니다. 표시가 덩어리로 묶여 무엇이 어떻게 바뀌었는지 읽기 쉽습니다.</dd>
+<dt>글자 단위</dt><dd>계약을과 계약를처럼 조사 한 글자 차이나 오탈자를 잡아냅니다. 표시가 잘게 쪼개지므로 문서 전체보다는 확인이 필요한 조항만 떼어 넣으시는 편이 좋습니다.</dd>
+</dl>
+
+<h2>무시할 차이를 정하는 이유</h2>
+<p>워드에서 복사한 문서와 PDF에서 복사한 문서는 띄어쓰기와 줄바꿈이 다르게 붙습니다. 그대로 대조하면 <strong>실제로는 같은 문장이 온통 빨갛게</strong> 표시되어 진짜 변경점이 묻힙니다.</p>
+<ul>
+<li><strong>공백과 들여쓰기</strong> — 기본으로 켜져 있습니다. 서식이 다른 두 문서를 견줄 때 필요합니다.</li>
+<li><strong>줄바꿈</strong> — 문단 나누기가 달라졌을 때 켜세요. 내용만 놓고 봅니다.</li>
+<li><strong>영문 대소문자</strong> — 영문 계약서에서 표기만 다른 경우에 씁니다.</li>
+</ul>
+<p>조건을 바꾸면 곧바로 다시 대조하므로, 켜고 끄며 결과를 견줘 보실 수 있습니다.</p>
+
+<h2>이렇게 써 보세요</h2><ol>
+<li>왼쪽에 <strong>원본</strong>, 오른쪽에 <strong>수정본</strong>을 붙여넣습니다.</li>
+<li>비교 단위와 무시할 차이를 고른 뒤 <strong>비교하기</strong>를 누릅니다.</li>
+<li><strong>다음 차이점</strong>으로 변경된 곳을 하나씩 확인합니다. 방향키로도 넘길 수 있습니다.</li>
+<li>한눈에 보고 싶으면 <strong>통합 보기</strong>로 바꿔 보세요.</li>
+<li><strong>변경 요약 복사</strong>로 메일에 붙이거나, <strong>인쇄</strong>로 PDF를 만들어 결재에 첨부합니다.</li>
+</ol>
+<p>좌우로 놓고 볼 때는 양쪽 스크롤이 함께 움직이므로, 한쪽을 내리면 반대쪽 같은 위치가 따라옵니다.</p>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>붙여넣은 문서가 서버로 전송되나요</dt><dd>전송되지 않습니다. 대조하는 일까지 모두 브라우저 안에서 처리되며, 인터넷 연결을 끊고 쓰셔도 그대로 동작합니다. 페이지를 닫으면 붙여넣은 내용도 함께 사라집니다.</dd>
+<dt>단어 단위와 글자 단위는 어떻게 다른가요</dt><dd>단어 단위는 문장이 통째로 바뀐 곳을 보기 좋고, 조항이 갈아엎어진 계약서에 알맞습니다. 글자 단위는 계약을과 계약를처럼 조사 한 글자나 오탈자를 잡아냅니다. 표시가 잘게 쪼개지므로 미세한 확인이 필요할 때만 쓰시면 됩니다.</dd>
+<dt>공백 무시는 언제 쓰나요</dt><dd>워드에서 복사한 문서와 PDF에서 복사한 문서는 띄어쓰기와 들여쓰기가 다르게 붙습니다. 그대로 대조하면 실제로는 같은 문장이 온통 빨갛게 표시됩니다. 공백 무시를 켜면 그런 차이를 건너뛰고 내용만 봅니다.</dd>
+<dt>바뀐 곳을 빠르게 찾아볼 수 있나요</dt><dd>이전과 다음 단추로 변경된 곳을 하나씩 옮겨 다닐 수 있습니다. 현재 보고 있는 곳이 몇 번째인지도 함께 표시되고, 좌우로 놓고 볼 때는 양쪽 스크롤이 함께 움직입니다.</dd>
+<dt>결과를 어떻게 남기나요</dt><dd>변경 요약을 복사하면 삭제된 내용과 추가된 내용이 짝을 이룬 글로 클립보드에 담깁니다. 인쇄를 누르면 하이라이트가 살아 있는 보고서 형태로 나오므로 PDF로 저장해 결재에 붙이실 수 있습니다.</dd>
+<dt>얼마나 긴 문서까지 되나요</dt><dd>보통의 계약서나 보고서 분량은 문제없이 처리됩니다. 다만 아주 긴 문서를 글자 단위로 대조하면 시간이 걸릴 수 있으므로, 그럴 때는 단어 단위로 먼저 훑어보시고 필요한 조항만 따로 떼어 글자 단위로 보시는 편이 빠릅니다.</dd>
+</dl>
+
+<p class="tk-guide-note">모든 대조는 사용자의 브라우저 안에서만 이루어지며 붙여넣은 문서는 어떤 서버로도 전송되지 않습니다. 이 도구는 두 글의 차이를 기계적으로 찾아 보여 주는 것이며, 변경된 조항이 갖는 법률적 의미까지 판단하지는 않습니다. 계약 내용에 관한 판단은 담당자나 법률 전문가와 함께 확인해 주시기 바랍니다.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/productivity/receipt-to-excel_kr.html">영수증 지출결의서 변환기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/roster-maker_kr.html">공평무사 당직표 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/pdf-signature_kr.html">PDF 서명 스탬프</a></li>
+<li><a href="https://mnledu.com/kr/productivity/meeting-minutes_kr.html">스마트 회의록</a></li>
+<li><a href="https://mnledu.com/kr/productivity/image-studio_kr.html">사진 편집 스튜디오</a></li>
+<li><a href="https://mnledu.com/productivity/date-calc.html">만능 날짜 계산기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/productivity/text-diff_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/productivity/text-diff_kr.html";
+  var TK_SHARE_TITLE = "문서·계약서 정밀 비교기";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

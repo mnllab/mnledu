@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>Excel &amp; CSV Data Slicer · Split by Column, Download as ZIP | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Load a spreadsheet, pick the column to split on, and get one file per value bundled into a single ZIP. Turns an hour of filtering and saving into one click. Files never leave your browser." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/data-slicer_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/data-slicer_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/data-slicer_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/data-slicer_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/data-slicer_en.html" />
+<meta property="og:title" content="Excel &amp; CSV Data Slicer · Split by Column, Download as ZIP | TOOLKIT" />
+<meta property="og:description" content="Split a spreadsheet by any column and download every piece as one ZIP. Nothing is uploaded." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Excel &amp; CSV Data Slicer | TOOLKIT" />
+<meta name="twitter:description" content="Split a spreadsheet by any column and download every piece as one ZIP." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Excel & CSV Data Slicer",
+ "description": "Splits spreadsheets by the values in a chosen column and bundles the resulting files into a single ZIP.",
+ "url": "https://mnledu.com/en/productivity/data-slicer_en.html",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "Excel & CSV Data Slicer", "item": "https://mnledu.com/en/productivity/data-slicer_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Are my files uploaded?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Reading, splitting and zipping all happen inside your browser, and the tool works with the connection switched off. For confidential material, open the page first and then disconnect \u2014 it will still work." }
+  },
+  {
+   "@type": "Question",
+   "name": "How many rows can it handle?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Tens of thousands are fine. Files are built one group at a time so the page never freezes, which takes a moment longer but shows you progress as it goes." }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens to blank values in the key column?",
+   "acceptedAnswer": { "@type": "Answer", "text": "They are grouped together into one file rather than discarded, so every row from the original ends up somewhere. The screen confirms whether the totals still match after splitting." }
+  },
+  {
+   "@type": "Question",
+   "name": "What about characters filenames cannot use?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Slashes, question marks and the like are replaced with underscores. If two values collide after that substitution, a number is appended so no file overwrites another." }
+  },
+  {
+   "@type": "Question",
+   "name": "Does it work with multi-sheet workbooks?",
+   "acceptedAnswer": { "@type": "Answer", "text": "If there is more than one sheet you can choose which to use, and only that sheet is split. The first row is treated as the column names." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I get CSV instead?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Yes, pick CSV instead of Excel. The CSV files carry a byte-order mark so non-Latin characters open correctly in Excel." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --panel:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9; --sub:#F8FAFC;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --green:#10B981; --green2:#059669; --greensoft:#ECFDF5;
+    --blue:#3B82F6; --blue2:#2563EB; --bluesoft:#EFF6FF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:920px;margin:0 auto;padding:0 18px}
+
+  .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;
+    font-size:14px;font-weight:600;padding:10px 15px;cursor:pointer;min-height:44px;
+    font-family:inherit;white-space:nowrap;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:var(--green);background:var(--greensoft)}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  .btn.p{background:var(--green);border-color:var(--green);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--green2);border-color:var(--green2)}
+  .btn.b{background:var(--blue);border-color:var(--blue);color:#fff}
+  .btn.b:hover:not(:disabled){background:var(--blue2);border-color:var(--blue2)}
+  .btn.sm{min-height:36px;padding:7px 12px;font-size:13px;border-radius:8px}
+
+  label.lab{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:7px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  .fld{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+    font-size:14.5px;color:var(--ink);outline:none;background:var(--panel);min-height:46px;
+    font-family:inherit}
+  .fld:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.14)}
+  select.fld{appearance:none;cursor:pointer;padding-right:34px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 53%,calc(100% - 13px) 53%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+  /* ---------- 단계 ---------- */
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    margin-bottom:14px;overflow:hidden;transition:border-color .16s,opacity .16s}
+  .step.off{opacity:.5}
+  .step.on{border-color:var(--green);box-shadow:0 3px 14px rgba(16,185,129,.1)}
+  .sh{display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid var(--line2);
+    background:var(--sub)}
+  .sh .num{width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:800;background:var(--line);color:var(--muted)}
+  .step.on .sh .num{background:var(--green);color:#fff}
+  .step.done .sh .num{background:var(--blue);color:#fff}
+  .sh b{font-size:14.5px;font-weight:800}
+  .sh .tag{font-size:12px;color:var(--muted);margin-left:auto;font-weight:600}
+  .sb{padding:18px}
+
+  #drop{border:2px dashed var(--line);border-radius:13px;padding:44px 20px;text-align:center;
+    cursor:pointer;background:var(--sub);transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--green);background:var(--greensoft)}
+  body.dragging #drop{border-color:var(--green);background:var(--greensoft)}
+  #drop .ic{font-size:40px;margin-bottom:12px}
+  #drop p{margin:0;font-size:15px;color:var(--ink2);line-height:1.9;font-weight:600}
+  #drop small{display:block;font-size:12.5px;color:var(--muted);margin-top:6px;font-weight:400}
+
+  #fileInfo{display:none;align-items:center;gap:13px;padding:14px 16px;background:var(--greensoft);
+    border:1px solid #A7F3D0;border-radius:11px}
+  #fileInfo.on{display:flex}
+  #fileInfo .ic{font-size:26px;flex:none}
+  #fileInfo .body{flex:1;min-width:0}
+  #fileInfo .nm{font-size:14px;font-weight:800;word-break:break-all;line-height:1.5}
+  #fileInfo .meta{font-size:12px;color:var(--green2);margin-top:3px;font-weight:600}
+
+  #preview{margin-top:14px;border:1px solid var(--line);border-radius:10px;overflow:auto;
+    max-height:230px}
+  #preview table{border-collapse:collapse;width:100%;font-size:12.5px;white-space:nowrap}
+  #preview th{background:var(--sub);padding:8px 11px;text-align:left;font-weight:800;
+    border-bottom:1px solid var(--line);position:sticky;top:0;color:var(--ink)}
+  #preview td{padding:7px 11px;border-bottom:1px solid var(--line2);color:var(--ink2)}
+  #preview tr:last-child td{border-bottom:0}
+  #preview th.key{background:var(--greensoft);color:var(--green2)}
+  #preview td.key{background:var(--greensoft);font-weight:700;color:var(--green2)}
+
+  .groups{display:grid;gap:7px;grid-template-columns:1fr;max-height:280px;overflow-y:auto;
+    margin-top:13px;padding-right:2px}
+  @media(min-width:560px){.groups{grid-template-columns:1fr 1fr}}
+  .grp{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);
+    border-radius:9px;background:var(--panel);font-size:13px}
+  .grp .nm{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .grp .ct{flex:none;font-size:12px;color:var(--muted);font-family:ui-monospace,monospace}
+  .grp .bar{flex:none;width:44px;height:5px;background:var(--line2);border-radius:99px;overflow:hidden}
+  .grp .bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+
+  #summary{padding:15px 17px;background:var(--bluesoft);border:1px solid #BFDBFE;border-radius:11px;
+    font-size:14px;line-height:1.8;color:var(--ink)}
+  #summary b{color:var(--blue2);font-weight:800}
+  #warn{display:none;margin-top:10px;padding:12px 15px;background:#FFFBEB;border:1px solid #FDE68A;
+    border-radius:10px;font-size:12.5px;color:#92400E;line-height:1.75}
+  #warn.on{display:block}
+
+  #prog{display:none;margin-top:13px}
+  #prog.on{display:block}
+  #progBar{height:9px;background:var(--line2);border-radius:99px;overflow:hidden}
+  #progFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));
+    border-radius:99px;transition:width .2s}
+  #progTxt{font-size:12.5px;color:var(--muted);margin-top:7px;font-family:ui-monospace,monospace}
+
+  #err{display:none;margin-top:12px;padding:13px 16px;background:#FEF2F2;border:1px solid #FECACA;
+    border-radius:10px;font-size:13.5px;color:#B91C1C;line-height:1.8}
+  #err.on{display:block}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:10px;padding:12px 20px;font-size:14px;
+    z-index:90;pointer-events:none;transition:opacity .18s,transform .18s;font-weight:700;
+    max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:38px 18px 6px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--green2);font-weight:700;margin:0 0 10px">Data Slicer</p>
+  <h1 style="font-size:clamp(23px,4.4vw,32px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">
+    Excel &amp; CSV Data Slicer
+  </h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:660px">
+    Pick one column and it <b>splits the file by that column\u2019s values</b>, bundled into a single ZIP.
+    Your file never leaves the browser.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+
+  <!-- Step 1 -->
+  <div class="step on" id="step1">
+    <div class="sh"><span class="num">1</span><b>Load a file</b><span class="tag" id="tag1"></span></div>
+    <div class="sb">
+      <div id="drop" role="button" tabindex="0">
+        <div class="ic">📊</div>
+        <p>Drop an Excel or CSV file here
+          <small>Click to browse · drag and drop · xlsx, xls, csv</small>
+          <small>Processed entirely inside this browser</small>
+        </p>
+      </div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.tsv" style="display:none">
+      <div id="fileInfo">
+        <span class="ic">📗</span>
+        <span class="body"><span class="nm" id="fName"></span><span class="meta" id="fMeta"></span></span>
+        <button class="btn sm" id="resetBtn">Different file</button>
+      </div>
+      <div id="sheetWrap" style="display:none;margin-top:13px">
+        <label class="lab" for="sheetSel">Choose a sheet</label>
+        <select class="fld" id="sheetSel"></select>
+      </div>
+      <p class="err" id="err" role="alert"></p>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step off" id="step2">
+    <div class="sh"><span class="num">2</span><b>Pick the key column</b><span class="tag" id="tag2"></span></div>
+    <div class="sb">
+      <label class="lab" for="colSel">Files are split by this column\u2019s values</label>
+      <div style="display:grid;gap:9px;grid-template-columns:1fr auto">
+        <select class="fld" id="colSel" disabled></select>
+        <button class="btn p" id="sliceBtn" disabled>✂️ Split the data</button>
+      </div>
+      <p class="hint" id="colHint">Load a file and the columns appear here.</p>
+      <div id="preview" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step off" id="step3">
+    <div class="sh"><span class="num">3</span><b>Review and download</b><span class="tag" id="tag3"></span></div>
+    <div class="sb">
+      <div id="summary">Load a file and pick a column to see the result here.</div>
+      <div id="warn"></div>
+      <div class="groups" id="groups"></div>
+
+      <div style="display:grid;gap:9px;grid-template-columns:1fr auto;margin-top:16px">
+        <button class="btn b" id="zipBtn" disabled style="min-height:56px;font-size:16px;font-weight:800">
+          🎁 Download every split file as one ZIP
+        </button>
+        <select class="fld" id="fmtSel" style="width:auto;min-width:112px">
+          <option value="xlsx">Excel xlsx</option>
+          <option value="csv">CSV</option>
+        </select>
+      </div>
+      <div id="prog"><div id="progBar"><div id="progFill"></div></div><p id="progTxt"></p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:24px 18px 42px;border-top:1px solid var(--line);margin-top:16px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Your file is processed entirely inside this browser and never sent to any server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2200);
+}
+function showErr(m){ var e = $('err'); e.textContent = m; e.classList.add('on'); }
+function clearErr(){ $('err').classList.remove('on'); }
+function fmtSize(b){
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(0) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+function num(n){ return Number(n).toLocaleString('en-US'); }
+function setStep(i, state){
+  var el = $('step' + i);
+  el.classList.remove('on','off','done');
+  el.classList.add(state);
+}
+
+/* ============================================================
+   Name cleanup
+   ============================================================ */
+/* Strip characters filenames cannot use, and avoid names Windows reserves */
+var BAD = /[\\\/:*?"<>|]/g;
+var RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
+function safeName(s, fallback){
+  var t = String(s == null ? '' : s).replace(BAD, '_').replace(/\s+/g, ' ').trim();
+  t = t.replace(/^\.+/, '').replace(/\.+$/, '');
+  if (!t) t = fallback || 'blank';
+  if (RESERVED.test(t)) t = '_' + t;
+  if (t.length > 60) t = t.slice(0, 60);
+  return t;
+}
+/* Sheet names cap at 31 characters and cannot contain []:*?/\\ */
+function safeSheet(s){
+  var t = String(s == null ? '' : s).replace(/[\[\]:*?\/\\]/g, '_').trim();
+  if (!t) t = 'Sheet';
+  return t.slice(0, 31);
+}
+
+/* ============================================================
+   State
+   ============================================================ */
+var wb = null, rows = [], cols = [], groups = [], baseName = '', busy = false;
+
+function libReady(){
+  var miss = [];
+  if (typeof XLSX === 'undefined') miss.push('spreadsheet');
+  if (typeof JSZip === 'undefined') miss.push('zip');
+  if (typeof saveAs === 'undefined') miss.push('download');
+  return miss;
+}
+
+/* ============================================================
+   Reading the file
+   ============================================================ */
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) readFile(f);
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) readFile(f);
+});
+
+function readFile(file){
+  var miss = libReady();
+  if (miss.length){
+    showErr('The ' + miss.join(' and ') + ' library did not load. Check your connection and refresh.');
+    return;
+  }
+  if (!/\.(xlsx|xls|csv|tsv)$/i.test(file.name || '')){
+    showErr('Only Excel and CSV files can be opened.');
+    return;
+  }
+  clearErr();
+  toast('Reading the file');
+  var fr = new FileReader();
+  fr.onload = function(ev){
+    try {
+      /* Reading as bytes keeps non-Latin characters intact */
+      wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array', cellDates: true });
+      var names = wb.SheetNames || [];
+      if (!names.length){ showErr('No sheets found.'); return; }
+      baseName = String(file.name).replace(/\.[^.]+$/, '');
+      $('fName').textContent = file.name;
+      $('fMeta').textContent = fmtSize(file.size) + ' \u00B7 ' + names.length + ' sheet(s)';
+      $('fileInfo').classList.add('on');
+      $('drop').style.display = 'none';
+      if (names.length > 1){
+        $('sheetSel').innerHTML = names.map(function(n){
+          return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join('');
+        $('sheetWrap').style.display = 'block';
+      } else $('sheetWrap').style.display = 'none';
+      loadSheet(names[0]);
+    } catch(e){
+      console.error(e);
+      showErr('Could not read that file. Try saving it in another format.');
+    }
+  };
+  fr.onerror = function(){ showErr('Could not read the file.'); };
+  fr.readAsArrayBuffer(file);
+}
+$('sheetSel').addEventListener('change', function(){ loadSheet(this.value); });
+
+function loadSheet(name){
+  try {
+    var ws = wb.Sheets[name];
+    /* defval keeps columns present even when a cell is empty */
+    rows = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false, blankrows: false });
+    if (!rows.length){
+      showErr('Nothing readable on this sheet. Check that row one holds the column names.');
+      resetSteps();
+      return;
+    }
+    /* Scan every row for column names so none are missed */
+    var seen = {}; cols = [];
+    rows.forEach(function(r){
+      Object.keys(r).forEach(function(k){
+        if (!seen[k]){ seen[k] = 1; cols.push(k); }
+      });
+    });
+    if (!cols.length){ showErr('No column names found.'); resetSteps(); return; }
+
+    clearErr();
+    $('tag1').textContent = num(rows.length) + ' rows \u00B7 ' + cols.length + ' cols';
+    setStep(1, 'done'); setStep(2, 'on');
+    $('colSel').innerHTML = cols.map(function(c){
+      return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
+    $('colSel').disabled = false;
+    $('sliceBtn').disabled = false;
+    updateColHint();
+    renderPreview();
+    groups = [];
+    $('groups').innerHTML = '';
+    $('zipBtn').disabled = true;
+    $('summary').textContent = 'Pick a key column and press split.';
+    $('warn').classList.remove('on');
+    setStep(3, 'off');
+    $('tag3').textContent = '';
+  } catch(e){
+    console.error(e);
+    showErr('Could not read that sheet.');
+  }
+}
+function resetSteps(){
+  rows = []; cols = []; groups = [];
+  $('colSel').innerHTML = ''; $('colSel').disabled = true;
+  $('sliceBtn').disabled = true; $('zipBtn').disabled = true;
+  $('preview').style.display = 'none';
+  $('groups').innerHTML = '';
+  $('tag1').textContent = ''; $('tag2').textContent = ''; $('tag3').textContent = '';
+  setStep(1, 'on'); setStep(2, 'off'); setStep(3, 'off');
+}
+$('resetBtn').addEventListener('click', function(){
+  wb = null; baseName = '';
+  $('fileInfo').classList.remove('on');
+  $('drop').style.display = '';
+  $('sheetWrap').style.display = 'none';
+  $('summary').textContent = 'Load a file and pick a column to see the result here.';
+  $('warn').classList.remove('on');
+  clearErr(); resetSteps();
+});
+
+/* Show how many distinct values the chosen column holds */
+function distinctCount(col){
+  var seen = {}, n = 0;
+  for (var i = 0; i < rows.length; i++){
+    var v = rows[i][col];
+    var k = (v === undefined || v === null || String(v).trim() === '') ? '' : String(v).trim();
+    if (!seen[k]){ seen[k] = 1; n++; }
+  }
+  return n;
+}
+function updateColHint(){
+  var c = $('colSel').value;
+  if (!c){ $('colHint').textContent = ''; return; }
+  var n = distinctCount(c);
+  $('colHint').textContent = '"' + c + '" holds ' + num(n) + ' distinct value(s), ' +
+    'so splitting produces ' + num(n) + ' file(s).';
+  $('tag2').textContent = n + ' values';
+  renderPreview();
+}
+$('colSel').addEventListener('change', updateColHint);
+
+function renderPreview(){
+  if (!rows.length){ $('preview').style.display = 'none'; return; }
+  var key = $('colSel').value;
+  var show = rows.slice(0, 6);
+  var head = '<tr>' + cols.map(function(c){
+    return '<th class="' + (c === key ? 'key' : '') + '">' + esc(c) + '</th>'; }).join('') + '</tr>';
+  var body = show.map(function(r){
+    return '<tr>' + cols.map(function(c){
+      var v = r[c];
+      var t = (v === undefined || v === null) ? '' : String(v);
+      if (t.length > 22) t = t.slice(0, 22) + '…';
+      return '<td class="' + (c === key ? 'key' : '') + '">' + esc(t) + '</td>';
+    }).join('') + '</tr>';
+  }).join('');
+  $('preview').innerHTML = '<table>' + head + body + '</table>';
+  $('preview').style.display = 'block';
+}
+
+/* ============================================================
+   Splitting
+   ============================================================ */
+/* Group by the key column\u2019s distinct values; blanks collect together */
+function groupBy(list, col){
+  var map = {}, order = [];
+  for (var i = 0; i < list.length; i++){
+    var v = list[i][col];
+    var k = (v === undefined || v === null || String(v).trim() === '') ? '' : String(v).trim();
+    if (!Object.prototype.hasOwnProperty.call(map, k)){ map[k] = []; order.push(k); }
+    map[k].push(list[i]);
+  }
+  return order.map(function(k){
+    return { key: k, label: k === '' ? '(blank)' : k, rows: map[k] };
+  });
+}
+/* Substituting characters can collide, so append a number */
+function uniqueNames(gs, base){
+  var used = {}, out = [];
+  gs.forEach(function(g){
+    var n = base + '_' + safeName(g.label);
+    var t = n, i = 2;
+    while (used[t.toLowerCase()]) { t = n + '(' + (i++) + ')'; }
+    used[t.toLowerCase()] = 1;
+    out.push(t);
+  });
+  return out;
+}
+$('sliceBtn').addEventListener('click', function(){
+  if (!rows.length){ toast('Load a file first'); return; }
+  var col = $('colSel').value;
+  if (!col){ toast('Pick a key column'); return; }
+
+  groups = groupBy(rows, col);
+  var names = uniqueNames(groups, safeName(baseName, 'data'));
+  groups.forEach(function(g, i){ g.file = names[i]; });
+
+  var total = groups.reduce(function(s, g){ return s + g.rows.length; }, 0);
+  var max = Math.max.apply(null, groups.map(function(g){ return g.rows.length; }));
+
+  $('summary').innerHTML = '<b>' + num(total) + ' rows</b> split into <b>' +
+    num(groups.length) + ' group(s)</b>.' +
+    (total === rows.length ? ' <span style="color:var(--green2)">Every row accounted for.</span>' : '');
+
+  var notes = [];
+  if (groups.length > 100)
+    notes.push('That is ' + num(groups.length) + ' groups, and as many files. Check the key column is the one you meant.');
+  var empty = groups.filter(function(g){ return g.key === ''; })[0];
+  if (empty) notes.push(num(empty.rows.length) + ' row(s) with a blank key went into the "(blank)" file.');
+  if (groups.length === 1)
+    notes.push('Only one distinct value, so only one file. Try a different column.');
+  $('warn').innerHTML = notes.join('<br>');
+  $('warn').classList.toggle('on', notes.length > 0);
+
+  $('groups').innerHTML = groups.map(function(g){
+    var pct = Math.round(g.rows.length / max * 100);
+    return '<div class="grp"><span class="nm" title="' + esc(g.file) + '">' + esc(g.label) + '</span>' +
+      '<span class="bar"><i style="width:' + pct + '%"></i></span>' +
+      '<span class="ct">' + num(g.rows.length) + '</span></div>';
+  }).join('');
+
+  $('zipBtn').disabled = false;
+  $('tag3').textContent = groups.length + ' files';
+  setStep(2, 'done'); setStep(3, 'on');
+  /* Older browsers lack this, so guard it */
+  try {
+    var el3 = $('step3');
+    if (el3 && typeof el3.scrollIntoView === 'function')
+      el3.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch(e){}
+  toast('Split into ' + num(groups.length) + ' groups');
+});
+
+/* ============================================================
+   Building the ZIP
+   Looping through every group at once freezes the page, so build one at a
+   time and yield in between, which also lets the progress bar update
+   ============================================================ */
+function nextFrame(){
+  return new Promise(function(res){
+    if (window.requestAnimationFrame) requestAnimationFrame(function(){ res(); });
+    else setTimeout(res, 0);
+  });
+}
+function sheetOf(list){
+  var ws = XLSX.utils.json_to_sheet(list, { header: cols });
+  return ws;
+}
+$('zipBtn').addEventListener('click', function(){
+  if (busy) return;
+  if (!groups.length){ toast('Split the data first'); return; }
+  var miss = libReady();
+  if (miss.length){ showErr('The ' + miss.join(' and ') + ' library did not load.'); return; }
+  makeZip();
+});
+function makeZip(){
+  busy = true;
+  var fmt = $('fmtSel').value;
+  $('zipBtn').disabled = true;
+  $('prog').classList.add('on');
+  $('progFill').style.width = '0%';
+  $('progTxt').textContent = 'Getting ready';
+  clearErr();
+
+  var zip = new JSZip();
+  var i = 0;
+
+  function step(){
+    if (i >= groups.length){ finish(); return; }
+    var g = groups[i];
+    try {
+      if (fmt === 'csv'){
+        var ws = sheetOf(g.rows);
+        var csv = XLSX.utils.sheet_to_csv(ws);
+        /* The byte-order mark keeps non-Latin characters readable in Excel */
+        zip.file(g.file + '.csv', '\ufeff' + csv);
+      } else {
+        var ws2 = sheetOf(g.rows);
+        var book = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(book, ws2, safeSheet(g.label));
+        var buf = XLSX.write(book, { bookType: 'xlsx', type: 'array' });
+        zip.file(g.file + '.xlsx', buf);
+      }
+    } catch(e){
+      console.error(e);
+      fail('Something went wrong building the "' + g.label + '" group.');
+      return;
+    }
+    i++;
+    var pct = Math.round(i / groups.length * 60);
+    $('progFill').style.width = pct + '%';
+    $('progTxt').textContent = 'Building files \u00B7 ' + i + ' / ' + groups.length;
+    nextFrame().then(step);
+  }
+
+  function finish(){
+    $('progTxt').textContent = 'Compressing';
+    zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } },
+      function(meta){
+        var pct = 60 + Math.round(meta.percent * 0.4);
+        $('progFill').style.width = pct + '%';
+        $('progTxt').textContent = 'Compressing \u00B7 ' + Math.round(meta.percent) + '%';
+      }
+    ).then(function(blob){
+      $('progFill').style.width = '100%';
+      $('progTxt').textContent = 'Done \u00B7 ' + fmtSize(blob.size) + ' \u00B7 ' + groups.length + ' files';
+      try {
+        saveAs(blob, safeName(baseName, 'data') + '_split.zip');
+        toast('ZIP downloaded');
+      } catch(e){ fail('The download was blocked.'); return; }
+      busy = false;
+      $('zipBtn').disabled = false;
+      setStep(3, 'done');
+    }, function(){ fail('Something went wrong while compressing.'); });
+  }
+  function fail(msg){
+    busy = false;
+    $('zipBtn').disabled = false;
+    $('prog').classList.remove('on');
+    showErr(msg + ' If the file is very large, try splitting it in smaller batches.');
+  }
+  nextFrame().then(step);
+}
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:54px 20px 62px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:750px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.95;color:#334155;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.9;color:#334155;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#059669}
+.tk-guide code{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#0F172A}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0F172A;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.9;color:#334155;margin:6px 0 18px;padding-bottom:18px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:17px 19px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:13px;font-size:13px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#059669;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#059669}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>“Send it out split by region”</h2>
+<p>One company-wide list arrives and has to become fifteen regional files, each saved separately, each attached to its own email. Filter, copy, paste into a new file. Fifteen times.</p>
+<p>An hour’s work, and easy to get wrong — miss a region, or save with the filter still applied and ship the wrong rows to someone.</p>
+<p>This does all of it once you <strong>pick the column to split on</strong>.</p>
+
+<h2>Three steps</h2><ol>
+<li><strong>Load a file</strong> — drag in an Excel or CSV file. Choose the sheet if there is more than one.</li>
+<li><strong>Pick the key column</strong> — region, department, whatever divides it. Choosing one tells you <strong>how many distinct values</strong> it holds first.</li>
+<li><strong>Download</strong> — check the split and take the whole lot as one ZIP.</li>
+</ol>
+<p>The preview table highlights the chosen column, so a wrong pick is obvious immediately.</p>
+
+<h2>No rows go missing</h2>
+<p>After splitting, the screen confirms <strong>whether the totals still match</strong> the original. Losing a handful of rows is the real danger when filtering by hand, and here you can see it did not happen.</p>
+<p>Rows with a blank key are not discarded either — they collect into a <code>(blank)</code> file. Leading and trailing spaces are ignored, so <code>Seoul</code> and <code>Seoul </code> never split into two files.</p>
+
+<h2>Filenames that do not collide</h2>
+<p>Slashes and question marks cannot go in a filename, so they become underscores. That creates a trap: <code>Sales/1</code> and <code>Sales:1</code> both become <code>Sales_1</code>, and <strong>one would overwrite the other.</strong></p>
+<p>When that happens a number is appended instead. The file count always matches the group count.</p>
+
+<h2>Tens of thousands of rows</h2>
+<p>Files are built <strong>one group at a time</strong> so the page never locks up. A progress bar moves as it goes, so you can tell it is working rather than hung.</p>
+<p>Compression comes after. Since the files share a structure, it compresses well — 3.5MB down to 0.4MB in testing.</p>
+
+<h2>If the data is confidential</h2>
+<p>Your file is never uploaded. Reading, splitting and zipping all finish inside this browser.</p>
+<p>To be certain, <strong>open the page and then disconnect from the internet</strong> — it still works. Once the interface has loaded, nothing further is exchanged with the outside.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Are my files uploaded?</dt><dd>No. Reading, splitting and zipping all happen inside your browser, and the tool works with the connection switched off. For confidential material, open the page first and then disconnect — it will still work.</dd>
+<dt>How many rows can it handle?</dt><dd>Tens of thousands are fine. Files are built one group at a time so the page never freezes, which takes a moment longer but shows you progress as it goes.</dd>
+<dt>What happens to blank values in the key column?</dt><dd>They are grouped together into one file rather than discarded, so every row from the original ends up somewhere. The screen confirms whether the totals still match after splitting.</dd>
+<dt>What about characters filenames cannot use?</dt><dd>Slashes, question marks and the like are replaced with underscores. If two values collide after that substitution, a number is appended so no file overwrites another.</dd>
+<dt>Does it work with multi-sheet workbooks?</dt><dd>If there is more than one sheet you can choose which to use, and only that sheet is split. The first row is treated as the column names.</dd>
+<dt>Can I get CSV instead?</dt><dd>Yes, pick CSV instead of Excel. The CSV files carry a byte-order mark so non-Latin characters open correctly in Excel.</dd>
+</dl>
+
+<p class="tk-guide-note">Everything runs inside your browser and the file you load is never sent to any server. Closing the page clears what was read. Browser memory has limits, though, so very large files or splits producing hundreds of groups are better handled in batches.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/sheet2memo_en.html">Sheet2Memo</a></li>
+<li><a href="https://mnledu.com/en/productivity/smart-list_en.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/data-harvester_en.html">Data Harvester</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-workbench.html">Smart Text Workbench</a></li>
+<li><a href="https://mnledu.com/en/productivity/receipt-to-excel_en.html">Receipt to Expense Sheet</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-diff_en.html">Secure Text Diff Checker</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/data-slicer_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/data-slicer_en.html";
+  var TK_SHARE_TITLE = "Excel & CSV Data Slicer";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">최초 등록</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+</body>
+</html>

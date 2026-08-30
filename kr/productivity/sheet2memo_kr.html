@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F3F4F6">
+
+<title>시트 포스트잇 대시보드 · 스프레드시트 · 대시보드 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="구글 시트나 엑셀 파일을 넣으면 각 행을 포스트잇 카드로 펼쳐 보여 줍니다. 검색·분류로 원하는 카드만 골라 봅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/productivity/sheet2memo_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/sheet2memo_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/sheet2memo_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/sheet2memo_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/productivity/sheet2memo_kr.html" />
+<meta property="og:title" content="시트 포스트잇 대시보드 · 스프레드시트 · 대시보드 | TOOLKIT" />
+<meta property="og:description" content="구글 시트나 엑셀 파일을 넣으면 각 행을 포스트잇 카드로 펼쳐 보여 줍니다. 검색·분류로 원하는 카드만 골라 봅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="시트 포스트잇 대시보드 · 스프레드시트 · 대시보드 | TOOLKIT" />
+<meta name="twitter:description" content="구글 시트나 엑셀 파일을 넣으면 각 행을 포스트잇 카드로 펼쳐 보여 줍니다. 검색·분류로 원하는 카드만 골라 봅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "시트 포스트잇 대시보드",
+  "description": "구글 시트나 엑셀 파일을 넣으면 각 행을 포스트잇 카드로 펼쳐 보여 줍니다. 검색·분류로 원하는 카드만 골라 봅니다.",
+  "url": "https://mnledu.com/kr/productivity/sheet2memo_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "시트 포스트잇 대시보드",
+      "item": "https://mnledu.com/kr/productivity/sheet2memo_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F3F4F6; --card:#FFFFFF; --line:#E5E7EB; --line2:#F3F4F6;
+    --ink:#111827; --ink2:#374151; --muted:#6B7280;
+    --accent:#7C3AED; --accent2:#6D28D9; --soft:#F5F3FF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background:var(--bg);
+    background-image:
+      linear-gradient(rgba(17,24,39,.028) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(17,24,39,.028) 1px,transparent 1px);
+    background-size:26px 26px}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1400px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:600;padding:10px 14px;cursor:pointer;min-height:44px;
+    font-family:inherit;white-space:nowrap;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+  .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  .fld{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-size:14.5px;color:var(--ink);outline:none;background:#fff;min-height:46px;font-family:inherit}
+  .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.14)}
+  .fld::placeholder{color:#C7CBD3}
+
+  #drop{border:2px dashed var(--line);border-radius:13px;padding:22px 16px;text-align:center;
+    cursor:pointer;background:#FAFAFB;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--accent);background:var(--soft)}
+  body.dragging #drop{border-color:var(--accent);background:var(--soft)}
+  #drop p{margin:0;font-size:14px;color:var(--ink2);line-height:1.8}
+  #drop small{display:block;font-size:12.5px;color:var(--muted);margin-top:5px}
+
+  /* ---------- 보드 ---------- */
+  #board{display:grid;gap:16px;grid-template-columns:1fr;padding:4px 0 40px}
+  @media(min-width:640px){#board{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1000px){#board{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:1320px){#board{grid-template-columns:repeat(4,1fr)}}
+
+  .memo{border-radius:3px 3px 12px 12px;padding:0;position:relative;
+    box-shadow:0 6px 14px rgba(17,24,39,.10),0 1px 3px rgba(17,24,39,.08);
+    transition:transform .13s,box-shadow .13s;display:flex;flex-direction:column;
+    border:1px solid rgba(17,24,39,.05)}
+  .memo:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(17,24,39,.14)}
+  .memo::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+    width:64px;height:14px;background:rgba(255,255,255,.5);border-radius:0 0 4px 4px;
+    box-shadow:0 1px 2px rgba(17,24,39,.08)}
+  .memo .mh{padding:22px 16px 12px;border-bottom:1px dashed rgba(17,24,39,.14)}
+  .memo .mt{font-size:16.5px;font-weight:800;line-height:1.5;word-break:break-word;
+    color:#1F2937;padding-right:34px}
+  .memo .mk{font-size:11px;color:rgba(17,24,39,.45);font-weight:700;letter-spacing:.04em;
+    margin-bottom:5px}
+  .memo .mb{padding:13px 16px 16px;display:flex;flex-direction:column;gap:11px;flex:1}
+  .memo .no{position:absolute;top:20px;right:14px;font-size:11px;font-weight:800;
+    color:rgba(17,24,39,.32);font-family:ui-monospace,monospace}
+  .copyAll{position:absolute;bottom:11px;right:12px;border:0;background:rgba(255,255,255,.72);
+    border-radius:8px;padding:5px 9px;font-size:11.5px;font-weight:700;color:#1F2937;
+    cursor:pointer;opacity:0;transition:opacity .13s;font-family:inherit}
+  .memo:hover .copyAll,.memo:focus-within .copyAll{opacity:1}
+  .copyAll:hover{background:#fff}
+
+  .field .fk{font-size:11px;font-weight:800;color:rgba(17,24,39,.5);letter-spacing:.03em;
+    margin-bottom:4px;text-transform:none}
+  .sent{font-size:13.5px;line-height:1.75;color:#1F2937;cursor:pointer;border-radius:6px;
+    padding:4px 7px;margin:0 -7px;transition:background .11s;word-break:break-word;
+    position:relative}
+  .sent:hover{background:rgba(255,255,255,.62)}
+  .sent:active{background:rgba(255,255,255,.85)}
+  .badge{display:inline-block;background:rgba(255,255,255,.62);border-radius:999px;
+    padding:3px 11px;font-size:12.5px;font-weight:700;color:#1F2937;cursor:pointer;
+    margin:0 4px 4px 0;transition:background .11s}
+  .badge:hover{background:#fff}
+  .badge .bk{font-weight:500;color:rgba(17,24,39,.5);margin-right:4px}
+  .empty{font-size:12.5px;color:rgba(17,24,39,.3)}
+
+  #none{display:none;padding:56px 20px;text-align:center;color:var(--muted);
+    font-size:15px;line-height:1.9}
+  #none.on{display:block}
+
+  .chipRow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;
+    font-size:13px;font-weight:600;cursor:pointer;color:var(--ink2);font-family:inherit;
+    transition:border-color .12s,background .12s}
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:12px 20px;font-size:14px;
+    z-index:90;pointer-events:none;transition:opacity .18s,transform .18s;max-width:90vw;
+    text-align:center;font-weight:600}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  #err{display:none;margin-top:10px;padding:12px 15px;background:#FEF2F2;border:1px solid #FECACA;
+    border-radius:10px;font-size:13.5px;color:#B91C1C;line-height:1.8}
+  #err.on{display:block}
+  #busy{display:none;padding:40px;text-align:center}
+  #busy.on{display:block}
+  .spin{width:36px;height:36px;margin:0 auto 12px;border:3px solid var(--line);
+    border-top-color:var(--accent);border-radius:50%;animation:sp 850ms linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:42px 18px 6px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Sheet2Memo</p>
+  <h1 style="font-size:clamp(25px,4.6vw,34px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">시트 포스트잇 대시보드</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
+    구글 시트나 엑셀의 <b>한 행을 포스트잇 한 장</b>으로 펼쳐 보여 드립니다.
+    문장을 누르면 그 문장만 바로 복사됩니다.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div class="card" style="padding:20px">
+    <div style="display:grid;gap:14px;grid-template-columns:1fr">
+      <div>
+        <label class="lab" for="url">🔗 구글 시트 주소</label>
+        <div style="display:grid;gap:8px;grid-template-columns:1fr auto">
+          <input class="fld" id="url" placeholder="https://docs.google.com/spreadsheets/d/... 또는 CSV 주소" autocomplete="off">
+          <button class="btn p" id="loadBtn">불러오기</button>
+        </div>
+        <p class="hint">시트를 <b>링크가 있는 사람은 볼 수 있음</b>으로 공유한 뒤 주소창의 주소를 그대로 붙여넣으세요.</p>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12.5px">
+        <span style="flex:1;height:1px;background:var(--line)"></span>또는<span style="flex:1;height:1px;background:var(--line)"></span>
+      </div>
+
+      <div id="drop" role="button" tabindex="0">
+        <p>📄 엑셀이나 CSV 파일을 여기에 놓아 주세요
+          <small>눌러서 고르기 · 끌어다 놓기 · xlsx, xls, csv</small>
+          <small>파일은 서버로 전송되지 않고 브라우저가 직접 읽습니다</small>
+        </p>
+      </div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.tsv" style="display:none">
+      <p class="err" id="err" role="alert"></p>
+    </div>
+  </div>
+
+  <div id="busy"><div class="spin"></div><p style="font-size:14px;color:var(--ink2);margin:0" id="busyMsg">불러오는 중입니다</p></div>
+
+  <div id="tools" style="display:none;margin-top:18px">
+    <div class="card" style="padding:16px">
+      <div style="display:grid;gap:11px;grid-template-columns:1fr">
+        <div style="display:grid;gap:8px;grid-template-columns:1fr auto auto">
+          <input class="fld" id="search" placeholder="🔍 카드 내용 검색" autocomplete="off">
+          <select class="fld" id="sheetSel" style="display:none;min-width:130px" aria-label="시트 고르기"></select>
+          <button class="btn" id="reloadBtn" title="다시 불러오기">🔄</button>
+        </div>
+        <div class="chipRow" id="filters"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span class="hint mono" style="margin:0" id="count"></span>
+          <span style="flex:1"></span>
+          <button class="btn sm" id="copyAllBtn">📋 보이는 카드 전체 복사</button>
+          <button class="btn sm" id="csvBtn">💾 CSV 저장</button>
+          <button class="btn sm" id="resetBtn">새로 시작</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div id="board"></div>
+  <div id="none">조건에 맞는 카드가 없습니다.<br>검색어나 분류를 바꿔 보세요.</div>
+</div>
+
+<footer class="wrap" style="padding:24px 18px 44px;border-top:1px solid var(--line);margin-top:10px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    엑셀 파일은 브라우저가 직접 읽으며 어떤 서버로도 전송되지 않습니다.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2100);
+}
+function showErr(m){ var e = $('err'); e.textContent = m; e.classList.add('on'); }
+function clearErr(){ $('err').classList.remove('on'); }
+function busy(on, msg){
+  $('busy').classList.toggle('on', !!on);
+  if (msg) $('busyMsg').textContent = msg;
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+
+/* 포스트잇 색. 카드마다 돌아가며 쓴다 */
+var TONES = [
+  { bg:'#FEF3C7', line:'#FDE68A' },  /* 노랑 */
+  { bg:'#DBEAFE', line:'#BFDBFE' },  /* 파랑 */
+  { bg:'#DCFCE7', line:'#BBF7D0' },  /* 초록 */
+  { bg:'#FCE7F3', line:'#FBCFE8' },  /* 분홍 */
+  { bg:'#EDE9FE', line:'#DDD6FE' },  /* 보라 */
+  { bg:'#FFEDD5', line:'#FED7AA' }   /* 주황 */
+];
+
+var headers = [], cards = [], workbook = null, lastUrl = '';
+var filterCol = -1, filterVal = '';
+
+/* ============================================================
+   주소 다듬기
+   ============================================================ */
+function toCsvUrl(u){
+  u = String(u || '').trim();
+  if (!u) return null;
+  if (!/^https?:\/\//i.test(u)) return null;
+  /* 이미 CSV 를 내주는 주소면 그대로 쓴다 */
+  if (/output=csv|format=csv/i.test(u)) return u;
+  var m = u.match(/\/spreadsheets\/d\/(?:e\/)?([a-zA-Z0-9-_]+)/);
+  if (m){
+    /* 웹에 게시한 주소와 일반 문서 주소는 내려받기 방식이 다르다 */
+    if (/\/spreadsheets\/d\/e\//.test(u)) return u.replace(/\/(pubhtml|pub|edit).*$/, '/pub?output=csv');
+    var g = u.match(/[#&?]gid=([0-9]+)/);
+    return 'https://docs.google.com/spreadsheets/d/' + m[1] +
+           '/export?format=csv&gid=' + (g ? g[1] : '0');
+  }
+  return u;   /* 구글 시트가 아니면 그대로 받아 본다 */
+}
+
+/* ============================================================
+   표를 카드로
+   ============================================================ */
+function buildCards(rows){
+  if (!rows || !rows.length) return { headers:[], cards:[] };
+  var clean = rows.map(function(r){
+    return (Array.isArray(r) ? r : []).map(function(c){
+      return (c === null || c === undefined) ? '' : String(c).trim();
+    });
+  });
+  /* 1행이 제목이다. 다만 맨 위가 비어 있으면 첫 유효 행을 제목으로 삼는다 */
+  var hi = -1;
+  for (var i = 0; i < clean.length; i++){
+    if (clean[i].some(function(c){ return c !== ''; })){ hi = i; break; }
+  }
+  if (hi < 0) return { headers:[], cards:[] };
+  var hd = clean[hi].slice();
+  while (hd.length && hd[hd.length-1] === '') hd.pop();   /* 뒤쪽 빈 열 정리 */
+  if (!hd.length) return { headers:[], cards:[] };
+
+  var out = [];
+  for (var j = hi + 1; j < clean.length; j++){
+    var row = clean[j];
+    if (!row.some(function(c){ return c !== ''; })) continue;   /* 빈 행은 건너뛴다 */
+    var cells = [];
+    for (var k = 0; k < hd.length; k++){
+      cells.push({ head: hd[k] || ('열 ' + (k+1)), value: row[k] || '' });
+    }
+    out.push({ no: out.length + 1, title: cells[0].value || '(제목 없음)',
+               titleHead: hd[0], cells: cells });
+  }
+  return { headers: hd, cards: out };
+}
+
+/* 줄바꿈과 마침표로 문장을 나눈다.
+   숫자 사이의 점은 문장 끝으로 보지 않아야 1.5억 같은 값이 잘리지 않는다 */
+function splitSentences(text){
+  var t = String(text || '').replace(/\r\n/g, '\n').trim();
+  if (!t) return [];
+  var out = [];
+  t.split('\n').forEach(function(line){
+    line = line.trim();
+    if (!line) return;
+    var buf = '', i = 0;
+    while (i < line.length){
+      buf += line[i];
+      if (/[.!?。]/.test(line[i])){
+        var j = i + 1;
+        /* 마침표 뒤에 공백이 오고 그 뒤에 내용이 있을 때만 끊는다 */
+        if (j < line.length && /\s/.test(line[j])){
+          while (j < line.length && /\s/.test(line[j])) j++;
+          if (j < line.length){ out.push(buf.trim()); buf = ''; i = j; continue; }
+        }
+      }
+      i++;
+    }
+    if (buf.trim()) out.push(buf.trim());
+  });
+  return out;
+}
+
+/* 값이 짧고 종류가 적은 열은 배지로, 긴 글은 문장으로 보여 준다 */
+function isShortField(colIdx){
+  var vals = cards.map(function(c){ return c.cells[colIdx] ? c.cells[colIdx].value : ''; })
+                  .filter(Boolean);
+  if (!vals.length) return true;
+  var longest = Math.max.apply(null, vals.map(function(v){ return v.length; }));
+  return longest <= 20;
+}
+
+/* ============================================================
+   그리기
+   ============================================================ */
+var shortCols = [];
+function render(){
+  var q = $('search').value.trim().toLowerCase();
+  var list = cards.filter(function(c){
+    if (filterCol >= 0 && filterVal){
+      var v = c.cells[filterCol] ? c.cells[filterCol].value : '';
+      if (v !== filterVal) return false;
+    }
+    if (!q) return true;
+    return c.cells.some(function(x){ return (x.value || '').toLowerCase().indexOf(q) >= 0; });
+  });
+
+  $('board').innerHTML = list.map(function(c, i){
+    var tone = TONES[(c.no - 1) % TONES.length];
+    var body = c.cells.slice(1).map(function(cell, ci){
+      var colIdx = ci + 1;
+      if (!cell.value) return '';
+      if (shortCols[colIdx]){
+        return '<span class="badge" data-v="' + esc(cell.value) + '">' +
+               '<span class="bk">' + esc(cell.head) + '</span>' + esc(cell.value) + '</span>';
+      }
+      var sents = splitSentences(cell.value);
+      return '<div class="field"><div class="fk">' + esc(cell.head) + '</div>' +
+        sents.map(function(s){
+          return '<div class="sent" data-v="' + esc(s) + '" title="눌러서 복사">' + esc(s) + '</div>';
+        }).join('') + '</div>';
+    }).filter(Boolean);
+
+    /* 배지끼리는 한 줄에 모아 둔다 */
+    var badges = body.filter(function(h){ return h.indexOf('<span class="badge"') === 0; });
+    var fields = body.filter(function(h){ return h.indexOf('<span class="badge"') !== 0; });
+    var inner = (badges.length ? '<div>' + badges.join('') + '</div>' : '') + fields.join('');
+
+    return '<article class="memo" style="background:' + tone.bg + '" data-no="' + c.no + '">' +
+      '<div class="mh">' +
+        '<span class="no">#' + c.no + '</span>' +
+        (c.titleHead ? '<div class="mk">' + esc(c.titleHead) + '</div>' : '') +
+        '<div class="mt sent" data-v="' + esc(c.title) + '" title="눌러서 복사">' + esc(c.title) + '</div>' +
+      '</div>' +
+      '<div class="mb">' + (inner || '<span class="empty">다른 내용이 없습니다</span>') + '</div>' +
+      '<button class="copyAll" data-no="' + c.no + '">전체 복사</button>' +
+    '</article>';
+  }).join('');
+
+  $('none').classList.toggle('on', list.length === 0 && cards.length > 0);
+  $('count').textContent = cards.length
+    ? (list.length === cards.length ? '카드 ' + cards.length + '장'
+       : list.length + ' / ' + cards.length + '장 보이는 중')
+    : '';
+}
+
+function buildFilters(){
+  var box = $('filters');
+  box.innerHTML = '';
+  if (!cards.length) return;
+  /* 값 종류가 적은 열을 골라 분류 단추를 만든다 */
+  var best = -1, bestVals = null;
+  for (var i = 1; i < headers.length; i++){
+    if (!shortCols[i]) continue;
+    var set = {};
+    cards.forEach(function(c){
+      var v = c.cells[i] ? c.cells[i].value : '';
+      if (v) set[v] = (set[v] || 0) + 1;
+    });
+    var keys = Object.keys(set);
+    if (keys.length >= 2 && keys.length <= 8){
+      if (best < 0 || keys.length < bestVals.length){ best = i; bestVals = keys; }
+    }
+  }
+  if (best < 0){ filterCol = -1; filterVal = ''; return; }
+  filterCol = best;
+  var html = '<span class="hint" style="margin:0;margin-right:4px">' + esc(headers[best]) + '</span>';
+  html += '<button class="chip on" data-v="">전체</button>';
+  bestVals.forEach(function(v){
+    html += '<button class="chip" data-v="' + esc(v) + '">' + esc(v) + '</button>';
+  });
+  box.innerHTML = html;
+}
+
+function apply(rows, label){
+  var r = buildCards(rows);
+  if (!r.cards.length){
+    showErr('읽을 수 있는 내용이 없습니다. 첫 행에 제목이 있고 둘째 행부터 내용이 있는지 확인해 주세요.');
+    busy(false);
+    return false;
+  }
+  headers = r.headers; cards = r.cards;
+  shortCols = headers.map(function(_, i){ return i === 0 ? false : isShortField(i); });
+  buildFilters();
+  filterVal = '';
+  $('tools').style.display = 'block';
+  clearErr(); busy(false);
+  render();
+  toast(label + ' · 카드 ' + cards.length + '장을 만들었습니다');
+  return true;
+}
+
+/* ============================================================
+   불러오기
+   ============================================================ */
+function loadUrl(u, silent){
+  var csv = toCsvUrl(u);
+  if (!csv){
+    showErr('주소를 알아볼 수 없습니다. 구글 시트 주소나 CSV 주소를 넣어 주세요.');
+    return;
+  }
+  if (typeof Papa === 'undefined'){
+    showErr('표를 읽는 기능을 불러오지 못했습니다. 연결을 확인한 뒤 새로고침해 주세요.');
+    return;
+  }
+  clearErr();
+  busy(true, '시트를 불러오는 중입니다');
+  lastUrl = u;
+  Papa.parse(csv, {
+    download: true,
+    skipEmptyLines: 'greedy',
+    complete: function(res){
+      if (!res || !res.data || !res.data.length){
+        busy(false);
+        showErr('내용을 받지 못했습니다. 시트가 링크로 공개되어 있는지 확인해 주세요.');
+        return;
+      }
+      $('sheetSel').style.display = 'none';
+      apply(res.data, silent ? '다시 불러왔습니다' : '시트를 읽었습니다');
+    },
+    error: function(){
+      busy(false);
+      showErr('시트를 받지 못했습니다. 공유 설정이 링크가 있는 사람은 볼 수 있음인지 확인해 주세요. 비공개 시트는 브라우저가 읽을 수 없습니다.');
+    }
+  });
+}
+$('loadBtn').addEventListener('click', function(){
+  var u = $('url').value.trim();
+  if (!u){ showErr('주소를 넣어 주세요.'); return; }
+  loadUrl(u);
+});
+$('url').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter'){ ev.preventDefault(); $('loadBtn').click(); }
+});
+
+function loadFile(file){
+  if (!file) return;
+  clearErr();
+  var name = file.name || '파일';
+  if (/\.(csv|tsv|txt)$/i.test(name)){
+    if (typeof Papa === 'undefined'){
+      showErr('표를 읽는 기능을 불러오지 못했습니다. 연결을 확인한 뒤 새로고침해 주세요.');
+      return;
+    }
+    busy(true, name + ' 을 읽는 중입니다');
+    Papa.parse(file, {
+      skipEmptyLines: 'greedy',
+      complete: function(res){
+        $('sheetSel').style.display = 'none';
+        workbook = null;
+        apply(res.data || [], name);
+      },
+      error: function(){ busy(false); showErr('파일을 읽지 못했습니다.'); }
+    });
+    return;
+  }
+  if (typeof XLSX === 'undefined'){
+    showErr('엑셀을 읽는 기능을 불러오지 못했습니다. 연결을 확인한 뒤 새로고침하시거나 CSV 로 저장해 넣어 주세요.');
+    return;
+  }
+  busy(true, name + ' 을 읽는 중입니다');
+  var fr = new FileReader();
+  fr.onload = function(e){
+    try {
+      workbook = XLSX.read(new Uint8Array(e.target.result), { type:'array' });
+      var names = workbook.SheetNames || [];
+      if (!names.length){ busy(false); showErr('시트를 찾지 못했습니다.'); return; }
+      /* 시트가 여럿이면 고를 수 있게 한다 */
+      var sel = $('sheetSel');
+      if (names.length > 1){
+        sel.innerHTML = names.map(function(n){
+          return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join('');
+        sel.style.display = '';
+      } else sel.style.display = 'none';
+      readSheet(names[0], name);
+    } catch(err){
+      busy(false);
+      console.error(err);
+      showErr('엑셀 파일을 읽지 못했습니다. 다른 형식으로 저장한 뒤 다시 시도해 주세요.');
+    }
+  };
+  fr.onerror = function(){ busy(false); showErr('파일을 읽지 못했습니다.'); };
+  fr.readAsArrayBuffer(file);
+}
+function readSheet(sheetName, label){
+  try {
+    var ws = workbook.Sheets[sheetName];
+    var rows = XLSX.utils.sheet_to_json(ws, { header:1, blankrows:false, defval:'', raw:false });
+    apply(rows, label || sheetName);
+  } catch(err){
+    busy(false);
+    showErr('시트를 읽지 못했습니다.');
+  }
+}
+$('sheetSel').addEventListener('change', function(){
+  if (workbook) readSheet(this.value, this.value + ' 시트');
+});
+
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) loadFile(f);
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+
+/* ============================================================
+   조작
+   ============================================================ */
+$('search').addEventListener('input', render);
+$('filters').addEventListener('click', function(ev){
+  var c = ev.target.closest('.chip');
+  if (!c) return;
+  this.querySelectorAll('.chip').forEach(function(x){ x.classList.toggle('on', x === c); });
+  filterVal = c.dataset.v || '';
+  render();
+});
+$('board').addEventListener('click', function(ev){
+  var all = ev.target.closest('.copyAll');
+  if (all){
+    var card = cards.filter(function(c){ return c.no === +all.dataset.no; })[0];
+    if (!card) return;
+    var txt = card.cells.filter(function(x){ return x.value; })
+      .map(function(x, i){ return i === 0 ? x.value : x.head + ': ' + x.value; }).join('\n');
+    copyText(txt, function(ok){ toast(ok ? '카드를 복사했습니다' : '복사가 막혔습니다'); });
+    return;
+  }
+  var one = ev.target.closest('[data-v]');
+  if (one){
+    copyText(one.dataset.v, function(ok){ if (ok) toast('복사했습니다'); });
+  }
+});
+$('copyAllBtn').addEventListener('click', function(){
+  var q = $('search').value.trim().toLowerCase();
+  var list = cards.filter(function(c){
+    if (filterCol >= 0 && filterVal){
+      var v = c.cells[filterCol] ? c.cells[filterCol].value : '';
+      if (v !== filterVal) return false;
+    }
+    if (!q) return true;
+    return c.cells.some(function(x){ return (x.value || '').toLowerCase().indexOf(q) >= 0; });
+  });
+  if (!list.length){ toast('복사할 카드가 없습니다'); return; }
+  var txt = list.map(function(c){
+    return c.cells.filter(function(x){ return x.value; })
+      .map(function(x, i){ return i === 0 ? '▸ ' + x.value : '   ' + x.head + ': ' + x.value; }).join('\n');
+  }).join('\n\n');
+  copyText(txt, function(ok){ toast(ok ? list.length + '장을 복사했습니다' : '복사가 막혔습니다'); });
+});
+$('csvBtn').addEventListener('click', function(){
+  if (!cards.length){ toast('저장할 내용이 없습니다'); return; }
+  function cell(s){
+    s = String(s == null ? '' : s);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }
+  var out = [headers.map(cell).join(',')];
+  cards.forEach(function(c){
+    out.push(c.cells.map(function(x){ return cell(x.value); }).join(','));
+  });
+  try {
+    var blob = new Blob(['\ufeff' + out.join('\n')], { type:'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'sheet2memo.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+    toast('CSV 파일로 저장했습니다');
+  } catch(e){ toast('저장이 막혔습니다'); }
+});
+$('reloadBtn').addEventListener('click', function(){
+  if (lastUrl) loadUrl(lastUrl, true);
+  else toast('시트 주소로 불러온 적이 없습니다');
+});
+$('resetBtn').addEventListener('click', function(){
+  cards = []; headers = []; workbook = null; lastUrl = '';
+  filterCol = -1; filterVal = '';
+  $('board').innerHTML = ''; $('filters').innerHTML = '';
+  $('search').value = ''; $('url').value = '';
+  $('tools').style.display = 'none';
+  $('sheetSel').style.display = 'none';
+  $('none').classList.remove('on');
+  clearErr();
+  toast('새로 시작합니다');
+});
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#fff;color:#374151;border-top:1px solid #E5E7EB;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#111827;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#374151;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#374151;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#6D28D9}
+.tk-guide code{background:#F3F4F6;border:1px solid #E5E7EB;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#111827;word-break:break-all}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E5E7EB}
+.tk-guide dt{font-size:15px;font-weight:700;color:#111827;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#374151;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E5E7EB;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#F9FAFB;border:1px solid #E5E7EB;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#6B7280;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E5E7EB}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#6D28D9;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#6D28D9}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>스프레드시트는 훑어보기에 좋은 모양이 아닙니다</h2>
+<p>업무 목록이나 문의 접수 내역을 시트로 관리하다 보면, 한 행의 내용을 확인하려고 가로로 스크롤을 계속 밀게 됩니다. 메모 열에 긴 글이 들어 있으면 칸 안에 잘려 보이고, 셀을 눌러 수식 입력줄에서 읽어야 합니다.</p>
+<p>이 도구는 <strong>한 행을 포스트잇 한 장</strong>으로 펼칩니다. 가로로 눕혀 있던 정보가 세로로 서서 한눈에 들어오고, 문장을 누르면 그 문장만 복사됩니다.</p>
+
+<h2>어떻게 읽어 내나</h2><dl>
+<dt>첫 행 = 제목</dt><dd>첫 행의 각 칸이 항목 이름이 됩니다. 카드 안에서 <code>담당자: 김철수</code>처럼 앞에 붙는 말이 여기서 나옵니다.</dd>
+<dt>둘째 행부터 = 카드</dt><dd>한 행이 카드 한 장입니다. 중간에 낀 빈 행은 건너뜁니다.</dd>
+<dt>첫 열 = 카드 제목</dt><dd>첫 열의 값이 카드 위쪽에 크게 올라갑니다. 업무명이나 제목을 첫 열에 두시면 보기 좋습니다.</dd>
+<dt>나머지 열 = 본문</dt><dd>값이 짧으면 배지로, 길면 항목별로 나뉘어 아래에 붙습니다.</dd>
+</dl>
+
+<h2>긴 글은 문장으로 나눕니다</h2>
+<p>메모나 비고 열에 든 긴 글은 <strong>줄바꿈과 마침표를 기준으로</strong> 문장을 나누어 한 줄씩 보여 줍니다. 그래야 필요한 문장만 골라 복사할 수 있습니다.</p>
+<p>숫자 사이에 찍힌 점은 문장 끝으로 보지 않습니다. <code>예산 1.5억원</code>이나 <code>v2.1.0 배포</code> 같은 값이 중간에 잘리지 않도록 처리했습니다.</p>
+
+<h2>구글 시트 연결하기</h2>
+<p>시트를 <strong>링크가 있는 사람은 볼 수 있음</strong>으로 공유한 뒤, 주소창의 주소를 그대로 붙여넣으시면 됩니다. 내려받기 주소로 알아서 바꿔 줍니다. 여러 탭이 있는 시트라면 보고 계신 탭이 그대로 반영됩니다.</p>
+<p>비공개 시트는 브라우저가 읽을 수 없습니다. 사내 자료라 공유가 곤란하시면 엑셀이나 CSV로 내려받아 넣으시면 됩니다. 그쪽이 밖으로 나갈 일도 없습니다.</p>
+
+<h2>이렇게 써 보세요</h2><ol>
+<li>시트 주소를 붙여넣거나 <strong>엑셀 파일을 끌어다 놓습니다.</strong></li>
+<li>카드가 펼쳐지면 <strong>검색</strong>으로 원하는 내용을 찾습니다.</li>
+<li>값이 몇 가지로 정해진 열이 있으면 <strong>분류 단추</strong>가 자동으로 만들어집니다. 상태나 담당자별로 나누어 보세요.</li>
+<li>필요한 <strong>문장을 눌러 복사</strong>하거나, 카드 오른쪽 아래 단추로 카드 전체를 가져갑니다.</li>
+<li>시트를 고치셨으면 <strong>다시 불러오기</strong>를 누르면 됩니다.</li>
+</ol>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>구글 시트는 어떻게 연결하나요</dt><dd>시트를 링크가 있는 사람은 볼 수 있도록 공유한 뒤 주소창의 주소를 그대로 붙여넣으시면 됩니다. 내려받기 주소로 알아서 바꿔 줍니다. 비공개 시트는 브라우저가 읽을 수 없으니 공유 설정을 먼저 바꿔 주세요.</dd>
+<dt>어느 행이 제목이 되나요</dt><dd>첫 행이 제목입니다. 둘째 행부터 각각 하나의 카드가 되고, 중간에 낀 빈 행은 건너뜁니다. 첫 열의 값이 카드 위쪽에 크게 올라가고 나머지 열은 아래에 항목별로 나뉘어 붙습니다.</dd>
+<dt>긴 글은 어떻게 보이나요</dt><dd>줄바꿈과 마침표를 기준으로 문장을 나누어 한 줄씩 보여 줍니다. 소수점이나 버전 번호처럼 숫자 사이에 찍힌 점은 문장 끝으로 보지 않으므로 값이 잘리지 않습니다.</dd>
+<dt>복사는 어떻게 하나요</dt><dd>문장을 누르면 그 문장만 복사됩니다. 카드 오른쪽 위 단추를 누르면 그 카드의 내용이 항목별로 정리되어 통째로 담깁니다. 화면에 보이는 카드 전부를 한 번에 가져가실 수도 있습니다.</dd>
+<dt>파일이 서버로 전송되나요</dt><dd>엑셀 파일은 전송되지 않고 브라우저가 직접 읽습니다. 구글 시트 주소를 쓰실 때는 브라우저가 구글에서 내용을 받아오지만, 그 내용이 저희 쪽으로 오지는 않습니다.</dd>
+<dt>카드가 너무 많으면 어떻게 찾나요</dt><dd>위쪽 검색칸에 글자를 넣으면 그 말이 든 카드만 남습니다. 값이 몇 가지로 정해진 열이 있으면 그 값으로 걸러 내는 단추가 자동으로 만들어지므로, 상태나 담당자별로 나누어 보실 수 있습니다.</dd>
+</dl>
+
+<p class="tk-guide-note">엑셀과 CSV 파일은 브라우저가 직접 읽으며 어떤 서버로도 전송되지 않습니다. 구글 시트 주소를 쓰실 때는 브라우저가 구글에서 직접 내용을 받아오며, 이때에도 그 내용이 저희 쪽을 거치지 않습니다. 페이지를 닫으면 불러온 내용도 함께 사라지므로 필요한 결과는 복사하거나 파일로 저장해 두시기 바랍니다.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/productivity/data-harvester_kr.html">스마트 데이터 수집·복원기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/smart-list_kr.html">스마트 리스트 변환기</a></li>
+<li><a href="https://mnledu.com/productivity/text-workbench.html">스마트 텍스트 워크벤치</a></li>
+<li><a href="https://mnledu.com/kr/productivity/receipt-to-excel_kr.html">영수증 지출결의서 변환기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/roster-maker_kr.html">공평무사 당직표 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/text-diff_kr.html">문서·계약서 정밀 비교기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/productivity/sheet2memo_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/productivity/sheet2memo_kr.html";
+  var TK_SHARE_TITLE = "시트 포스트잇 대시보드";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

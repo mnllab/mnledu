@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>올인원 템플릿 매칭기 · 템플릿 · 엑셀 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="대괄호 목록·엑셀 표·마크다운 표 어느 형태로 넣어도 문장 틀에 끼워 여러 건을 한 번에 만들어 냅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/productivity/templatemerger_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/templatemerger_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/templatemerger_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/templatemerger_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/productivity/templatemerger_kr.html" />
+<meta property="og:title" content="올인원 템플릿 매칭기 · 템플릿 · 엑셀 | TOOLKIT" />
+<meta property="og:description" content="대괄호 목록·엑셀 표·마크다운 표 어느 형태로 넣어도 문장 틀에 끼워 여러 건을 한 번에 만들어 냅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="올인원 템플릿 매칭기 · 템플릿 · 엑셀 | TOOLKIT" />
+<meta name="twitter:description" content="대괄호 목록·엑셀 표·마크다운 표 어느 형태로 넣어도 문장 틀에 끼워 여러 건을 한 번에 만들어 냅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "올인원 템플릿 매칭기",
+  "description": "대괄호 목록·엑셀 표·마크다운 표 어느 형태로 넣어도 문장 틀에 끼워 여러 건을 한 번에 만들어 냅니다.",
+  "url": "https://mnledu.com/kr/productivity/templatemerger_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "올인원 템플릿 매칭기",
+      "item": "https://mnledu.com/kr/productivity/templatemerger_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E4E5E3',
+          canvas: '#F6F6F4',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E4E5E3; --canvas:#F6F6F4; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:inherit; font-size:14px; line-height:1.75;
+  }
+  textarea::placeholder{ color:#A7ADA6; }
+  #data{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:13px; min-height:clamp(200px,26vh,320px); }
+  #tpl{ min-height:clamp(150px,20vh,260px); }
+
+  /* 모드 탭 */
+  .tab{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:6px; font-size:13px; line-height:1; padding:9px 13px;
+    cursor:pointer; transition:border-color .12s, color .12s, background .12s;
+  }
+  .tab:hover{ color:var(--ink); border-color:#CDCFCB; }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .tab input{ position:absolute; opacity:0; width:0; height:0; }
+  .tab:focus-within{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  /* 변수 칩 */
+  .chip{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:999px; font-size:12.5px; line-height:1;
+    padding:8px 13px; cursor:pointer;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{ border-color:var(--steel); color:var(--steel); background:#F3F8FC; }
+  .chip:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#CDCFCB; background:#FBFBFA; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  .panel{
+    border:1px solid var(--hair); border-radius:10px; background:#fff;
+    box-shadow:0 1px 2px rgba(38,56,75,.04);
+  }
+  .panel.over{ border-color:var(--steel); background:#F4F9FC; }
+
+  .card{
+    border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:16px 18px; position:relative;
+  }
+  .card pre{
+    margin:0; white-space:pre-wrap; word-break:break-word;
+    font-family:inherit; font-size:14px; line-height:1.75;
+  }
+  .card .idx{
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:11px; color:var(--muted);
+  }
+  .cardCopy{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:5px; font-size:11px; line-height:1; padding:6px 9px; cursor:pointer;
+    transition:border-color .12s, color .12s;
+  }
+  .cardCopy:hover{ border-color:var(--steel); color:var(--steel); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">올인원 템플릿 매칭기</h1>
+      <p class="mt-1 text-[13px] text-muted">데이터를 문장 틀에 끼워 한 번에 생성 · 저장되지 않음</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="copyFmt" class="btn" aria-label="복사 형식" title="복사·저장 형식">
+        <option value="plain" selected>메모장용</option>
+        <option value="word">워드·한글용</option>
+      </select>
+      <button id="sampleBtn" class="btn">예시</button>
+      <button id="saveBtn" class="btn">저장</button>
+    </div>
+  </header>
+
+  <!-- 1단 : 데이터 -->
+  <section id="panel1" class="panel">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-3">
+      <span class="text-[12px] font-medium tracking-wide text-muted">1 · 데이터 입력</span>
+      <button id="clearData" class="btn px-2.5 py-1.5 text-[12px]">지우기</button>
+    </div>
+
+    <div class="flex flex-wrap gap-2 px-5 pt-4">
+      <label class="tab on"><input type="radio" name="mode" value="bracket" checked>대괄호 리스트</label>
+      <label class="tab"><input type="radio" name="mode" value="tsv">엑셀·스프레드시트</label>
+      <label class="tab"><input type="radio" name="mode" value="md">마크다운 표</label>
+    </div>
+
+    <div class="px-5 pt-3 sm:px-6">
+      <textarea id="data" spellcheck="false"></textarea>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+      <span id="parseInfo">파일을 이 영역에 끌어다 놓아도 됩니다</span>
+      <span id="parseErr" class="hidden text-alert"></span>
+    </div>
+  </section>
+
+  <!-- 2단 : 템플릿 -->
+  <section class="panel mt-4">
+    <div class="border-b border-hair px-5 py-3 text-[12px] font-medium tracking-wide text-muted">2 · 템플릿 작성</div>
+
+    <div class="px-5 pt-4 sm:px-6">
+      <div id="chips" class="mb-3 flex flex-wrap gap-2"></div>
+      <textarea id="tpl" spellcheck="false"
+        placeholder="변수 칩을 눌러 넣거나 {변수명} 형태로 직접 적으세요"></textarea>
+    </div>
+    <div class="border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+      <span id="tplInfo">칩을 누르면 커서 위치에 들어갑니다</span>
+    </div>
+  </section>
+
+  <!-- 3단 : 결과 -->
+  <section class="panel mt-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-3">
+      <span class="text-[12px] font-medium tracking-wide text-muted">
+        3 · 결과 <b id="resCount" class="num ml-1 text-ink">0</b>건
+      </span>
+      <div class="flex flex-wrap items-center gap-2">
+        <select id="sep" class="btn py-1.5 text-[12px]" aria-label="결과 구분자">
+          <option value="blank" selected>빈 줄로 구분</option>
+          <option value="line">줄바꿈만</option>
+          <option value="rule">구분선으로 구분</option>
+        </select>
+        <button id="copyAll" class="btn btn-primary py-1.5 text-[12px]">전체 결과 복사</button>
+      </div>
+    </div>
+    <div id="results" class="grid gap-3 px-5 py-4 sm:px-6"></div>
+  </section>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const dataEl   = document.getElementById('data');
+  const tplEl    = document.getElementById('tpl');
+  const chipsEl  = document.getElementById('chips');
+  const resultsEl= document.getElementById('results');
+  const resCount = document.getElementById('resCount');
+  const parseInfo= document.getElementById('parseInfo');
+  const parseErr = document.getElementById('parseErr');
+  const tplInfo  = document.getElementById('tplInfo');
+  const panel1   = document.getElementById('panel1');
+  const sepSel   = document.getElementById('sep');
+  const copyFmt  = document.getElementById('copyFmt');
+
+  const PLACEHOLDER = {
+    bracket:
+      '[제품명]\n스마트 그리퍼\n서보 액추에이터\n\n[가격]\n1,200,000원\n980,000원',
+    tsv:
+      '제품명\t가격\t납기\n스마트 그리퍼\t1,200,000원\t2주\n서보 액추에이터\t980,000원\t3주\n\n(엑셀에서 범위를 복사해 그대로 붙여넣으면 됩니다)',
+    md:
+      '| 제품명 | 가격 | 납기 |\n|---|---|---|\n| 스마트 그리퍼 | 1,200,000원 | 2주 |\n| 서보 액추에이터 | 980,000원 | 3주 |'
+  };
+
+  const SAMPLE = {
+    bracket: '[제품명]\n스마트 그리퍼\n서보 액추에이터\n감속기 모듈\n\n[가격]\n1,200,000원\n980,000원\n1,750,000원\n\n[납기]\n2주\n3주\n4주',
+    tsv: '제품명\t가격\t납기\n스마트 그리퍼\t1,200,000원\t2주\n서보 액추에이터\t980,000원\t3주\n감속기 모듈\t1,750,000원\t4주',
+    md: '| 제품명 | 가격 | 납기 |\n|---|---|---|\n| 스마트 그리퍼 | 1,200,000원 | 2주 |\n| 서보 액추에이터 | 980,000원 | 3주 |\n| 감속기 모듈 | 1,750,000원 | 4주 |'
+  };
+
+  function mode() {
+    const r = document.querySelector('input[name="mode"]:checked');
+    return r ? r.value : 'bracket';
+  }
+
+  /* ---------- 파싱 : 세 방식 모두 { keys, rows } 형태로 통일 ---------- */
+
+  // 1) 대괄호 리스트 : [키] 아래 줄들이 그 키의 값 목록
+  function parseBracket(text) {
+    const keys = [], cols = {};
+    let cur = null;
+
+    text.split('\n').forEach(function (raw) {
+      const line = raw.trim();
+      const m = line.match(/^\[\s*(.+?)\s*\]$/);
+      if (m) {
+        cur = m[1];
+        if (keys.indexOf(cur) === -1) { keys.push(cur); cols[cur] = []; }
+        return;
+      }
+      if (cur && line) cols[cur].push(line);
+    });
+
+    const n = keys.reduce(function (mx, k) { return Math.max(mx, cols[k].length); }, 0);
+    const rows = [];
+    for (let i = 0; i < n; i++) {
+      const row = {};
+      keys.forEach(function (k) { row[k] = cols[k][i] !== undefined ? cols[k][i] : ''; });
+      rows.push(row);
+    }
+    return { keys: keys, rows: rows };
+  }
+
+  // 2) 엑셀·스프레드시트 : 첫 행이 키, 탭으로 열 구분
+  function parseTsv(text) {
+    const lines = text.split('\n').filter(function (l) { return l.trim() !== ''; });
+    if (!lines.length) return { keys: [], rows: [] };
+
+    const split = function (l) { return l.split('\t').map(function (c) { return c.trim(); }); };
+    const keys = split(lines[0]).filter(function (k, i, a) { return k !== '' || i < a.length; });
+    const rows = lines.slice(1).map(function (l) {
+      const cells = split(l);
+      const row = {};
+      keys.forEach(function (k, i) { row[k] = cells[i] !== undefined ? cells[i] : ''; });
+      return row;
+    });
+    return { keys: keys.filter(Boolean), rows: rows };
+  }
+
+  // 3) 마크다운 표 : 파이프로 구분, |---| 구분선은 버림
+  function parseMd(text) {
+    const rowsRaw = text.split('\n')
+      .map(function (l) { return l.trim(); })
+      .filter(function (l) { return l.indexOf('|') !== -1; })
+      .map(function (l) { return l.replace(/^\|/, '').replace(/\|$/, ''); })
+      .map(function (l) { return l.split('|').map(function (c) { return c.trim(); }); })
+      .filter(function (cells) {
+        // |---|:--:| 같은 구분선 행 제외
+        const isSep = cells.length && cells.every(function (c) { return /^:?-{1,}:?$/.test(c); });
+        return !isSep && cells.some(function (c) { return c !== ''; });
+      });
+
+    if (!rowsRaw.length) return { keys: [], rows: [] };
+    const keys = rowsRaw[0].filter(Boolean);
+    const rows = rowsRaw.slice(1).map(function (cells) {
+      const row = {};
+      keys.forEach(function (k, i) { row[k] = cells[i] !== undefined ? cells[i] : ''; });
+      return row;
+    });
+    return { keys: keys, rows: rows };
+  }
+
+  function parse() {
+    const text = dataEl.value;
+    if (!text.trim()) return { keys: [], rows: [] };
+    const m = mode();
+    if (m === 'tsv') return parseTsv(text);
+    if (m === 'md') return parseMd(text);
+    return parseBracket(text);
+  }
+
+  /* ---------- 치환 ---------- */
+  function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function fill(tpl, row, keys) {
+    let out = tpl;
+    keys.forEach(function (k) {
+      const re = new RegExp('\\{\\s*' + escapeRe(k) + '\\s*\\}', 'g');
+      out = out.replace(re, row[k] !== undefined ? row[k] : '');
+    });
+    return out;
+  }
+
+  /* ---------- 렌더링 ---------- */
+  let lastResults = [];
+
+  function render() {
+    parseErr.classList.add('hidden');
+    let parsed = { keys: [], rows: [] };
+
+    try {
+      parsed = parse();
+    } catch (e) {
+      parseErr.textContent = '데이터를 읽지 못했습니다 : ' + (e && e.message ? e.message : '형식 확인 필요');
+      parseErr.classList.remove('hidden');
+    }
+
+    const keys = parsed.keys || [];
+    const rows = parsed.rows || [];
+
+    // 안내 문구
+    if (!dataEl.value.trim()) {
+      parseInfo.textContent = '파일을 이 영역에 끌어다 놓아도 됩니다';
+    } else if (!keys.length) {
+      parseInfo.textContent = '변수를 찾지 못했습니다. 선택한 입력 방식과 데이터 형식이 맞는지 확인해 주세요';
+    } else {
+      parseInfo.textContent = '변수 ' + keys.length + '개 · 데이터 ' + rows.length + '세트';
+    }
+
+    // 변수 칩
+    chipsEl.innerHTML = '';
+    if (!keys.length) {
+      const hint = document.createElement('span');
+      hint.className = 'text-[12px] text-muted';
+      hint.textContent = '데이터를 입력하면 변수 칩이 여기에 나타납니다';
+      chipsEl.appendChild(hint);
+    } else {
+      keys.forEach(function (k) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'chip';
+        b.textContent = '{' + k + '}';
+        b.addEventListener('click', function () { insertAtCursor('{' + k + '}'); });
+        chipsEl.appendChild(b);
+      });
+    }
+
+    // 미정의 변수 안내
+    const used = (tplEl.value.match(/\{\s*[^{}]+\s*\}/g) || [])
+      .map(function (t) { return t.replace(/[{}]/g, '').trim(); });
+    const unknown = used.filter(function (u) { return keys.indexOf(u) === -1; })
+                        .filter(function (x, i, a) { return a.indexOf(x) === i; });
+    tplInfo.textContent = unknown.length
+      ? '데이터에 없는 변수 : ' + unknown.map(function (u) { return '{' + u + '}'; }).join(', ')
+      : '칩을 누르면 커서 위치에 들어갑니다';
+    tplInfo.className = unknown.length
+      ? 'text-alert' : 'text-muted';
+
+    // 결과 카드
+    resultsEl.innerHTML = '';
+    lastResults = [];
+
+    if (!rows.length || !tplEl.value.trim()) {
+      const empty = document.createElement('p');
+      empty.className = 'text-[13px] text-muted';
+      empty.textContent = !rows.length
+        ? '데이터를 입력하면 결과가 생성됩니다'
+        : '템플릿 문장을 적으면 결과가 생성됩니다';
+      resultsEl.appendChild(empty);
+      resCount.textContent = '0';
+      return;
+    }
+
+    rows.forEach(function (row, i) {
+      let text = '';
+      try {
+        text = fill(tplEl.value, row, keys);
+      } catch (e) {
+        text = '(치환 실패)';
+      }
+      lastResults.push(text);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const head = document.createElement('div');
+      head.className = 'mb-2 flex items-center justify-between gap-3';
+
+      const idx = document.createElement('span');
+      idx.className = 'idx';
+      idx.textContent = String(i + 1).padStart(2, '0');
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cardCopy';
+      btn.textContent = '개별 복사';
+      btn.addEventListener('click', function () { copy(convert(text), '복사되었습니다!'); });
+
+      head.appendChild(idx);
+      head.appendChild(btn);
+
+      const pre = document.createElement('pre');
+      pre.textContent = text;
+
+      card.appendChild(head);
+      card.appendChild(pre);
+      resultsEl.appendChild(card);
+    });
+
+    resCount.textContent = rows.length;
+  }
+
+  /* ---------- 칩 삽입 ---------- */
+  function insertAtCursor(text) {
+    const s = tplEl.selectionStart, e = tplEl.selectionEnd;
+    const v = tplEl.value;
+    tplEl.value = v.slice(0, s) + text + v.slice(e);
+    const pos = s + text.length;
+    tplEl.focus();
+    tplEl.setSelectionRange(pos, pos);
+    render();
+  }
+
+  /* ---------- 모드 전환 ---------- */
+  function applyMode() {
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.classList.toggle('on', t.querySelector('input').checked);
+    });
+    dataEl.placeholder = PLACEHOLDER[mode()];
+    render();
+  }
+
+  document.querySelectorAll('input[name="mode"]').forEach(function (r) {
+    r.addEventListener('change', applyMode);
+  });
+
+  dataEl.addEventListener('input', render);
+  tplEl.addEventListener('input', render);
+
+  /* ---------- 파일 드래그 앤 드롭 ---------- */
+  ['dragenter', 'dragover'].forEach(function (t) {
+    panel1.addEventListener(t, function (ev) { ev.preventDefault(); panel1.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    panel1.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && panel1.contains(ev.relatedTarget)) return;
+      panel1.classList.remove('over');
+    });
+  });
+  panel1.addEventListener('drop', function (ev) {
+    const f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (!f) return;
+    const ok = /\.(txt|csv|tsv|md|markdown)$/i.test(f.name);
+    if (!ok) { toast('txt, csv, tsv, md 파일만 불러올 수 있습니다'); return; }
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      dataEl.value = String(e.target.result).replace(/\r\n?/g, '\n');
+      render();
+      toast(f.name + ' 을 불러왔습니다');
+    };
+    reader.onerror = function () { toast('파일을 읽지 못했습니다'); };
+    reader.readAsText(f, 'UTF-8');
+  });
+  window.addEventListener('dragover', function (ev) {
+    if (!panel1.contains(ev.target)) ev.preventDefault();
+  });
+  window.addEventListener('drop', function (ev) {
+    if (!panel1.contains(ev.target)) ev.preventDefault();
+  });
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 복사 · 저장 ---------- */
+  // 워드·한글은 CRLF를 문단 구분으로 읽는다
+  function convert(text) {
+    const t = text.replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '');
+    if (copyFmt.value === 'plain') return t;
+    return t.split('\n').join('\r\n');
+  }
+
+  function joinAll() {
+    const sep = sepSel.value === 'line' ? '\n'
+              : sepSel.value === 'rule' ? '\n\n------------------------------\n\n'
+              : '\n\n';
+    return convert(lastResults.join(sep));
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  async function copy(text, msg) {
+    if (!text || !text.trim()) { toast('복사할 내용이 없습니다'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast(msg);
+    } catch (e) {
+      if (legacyCopy(text)) toast(msg);
+      else toast('브라우저가 막았습니다. 드래그해서 복사하세요');
+    }
+  }
+
+  document.getElementById('copyAll').addEventListener('click', function () {
+    copy(joinAll(), lastResults.length + '건을 모두 복사했습니다!');
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!lastResults.length) { toast('저장할 결과가 없습니다'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = '템플릿결과_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + joinAll()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('저장되었습니다!');
+    } catch (e) {
+      toast('브라우저가 다운로드를 막았습니다');
+    }
+  });
+
+  sepSel.addEventListener('change', render);
+  copyFmt.addEventListener('change', render);
+
+  document.getElementById('clearData').addEventListener('click', function () {
+    dataEl.value = '';
+    render();
+    dataEl.focus();
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    dataEl.value = SAMPLE[mode()];
+    if (!tplEl.value.trim()) {
+      tplEl.value = '안녕하세요. 문의하신 {제품명} 견적 안내드립니다.\n공급가는 {가격}이며, 납기는 발주 후 {납기}입니다.';
+    }
+    render();
+  });
+
+  applyMode();
+  render();
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>명단 형식이 제각각이라 매번 다시 다듬는 문제</h2>
+<p>어떤 명단은 엑셀에서 오고, 어떤 건 한글 문서의 대괄호 목록이고, 어떤 건 마크다운 표입니다. 문장 틀은 같은데 데이터 형식이 달라서 매번 손으로 정리하게 됩니다.</p>
+<p>이 도구는 어느 형태로 넣어도 받아들입니다. 붙여넣은 데이터의 구조를 알아서 파악하고, 준비한 문장 틀에 끼워 여러 건을 한 번에 만들어 냅니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>공문·안내문 다건 작성</dt><dd>수신처만 다른 공문을 여러 장 만들 때. 기관명과 담당자만 바꿔 끼우면 됩니다.</dd>
+<dt>평가 의견서 초안</dt><dd>심사 대상마다 항목은 같고 내용만 다른 문서. 틀을 잡아두고 데이터를 넣는 방식이 훨씬 빠릅니다.</dd>
+<dt>제품 설명 문구 대량 생성</dt><dd>쇼핑몰 상품 설명처럼 같은 구조에 모델명과 사양만 바뀌는 문구.</dd>
+<dt>SQL·설정 파일 만들기</dt><dd>반복되는 코드 줄에 값만 바뀌는 경우. 문장 틀에 변수를 넣어 여러 줄을 한 번에 뽑을 수 있습니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>데이터를 붙여넣습니다. 대괄호 리스트, 엑셀 표, 마크다운 표 중 무엇이든 됩니다.</li>
+<li>문장 틀을 작성합니다. 변수 칩을 눌러 넣거나 <strong>{변수명}</strong> 형태로 직접 적습니다.</li>
+<li>결과가 바로 만들어집니다. <strong>전체 결과 복사</strong>로 가져갑니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>결과 구분 방식</dt><dd>건과 건 사이를 줄바꿈만으로 나눌지, 빈 줄로 나눌지, 구분선을 넣을지 고릅니다. 문서에 붙일 때는 빈 줄, 코드로 쓸 때는 줄바꿈만이 편합니다.</dd>
+<dt>복사 형식</dt><dd>워드·한글용과 메모장용 중에 고릅니다. 워드·한글용은 서식이 유지되고, 메모장용은 순수 텍스트로 나갑니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>데이터 형식을 미리 맞춰야 하나요</dt><dd>아닙니다. 대괄호 목록, 엑셀에서 복사한 표, 마크다운 표를 모두 인식합니다. 첫 줄이 항목 이름이면 그것을 변수명으로 씁니다.</dd>
+<dt>변수 이름은 한글도 되나요</dt><dd>됩니다. {회사명} {담당자}처럼 한글로 적으시면 됩니다.</dd>
+<dt>반복 이메일 생성기와 뭐가 다른가요</dt><dd>이메일 생성기는 제목과 본문이 나뉜 메일 전용이고 조사 자동 교정이 들어갑니다. 이 도구는 형식을 가리지 않는 범용 문장 생성기입니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html">스마트 텍스트 가공 공장</a></li>
+<li><a href="https://mnledu.com/kr/productivity/data-slicer_kr.html">엑셀·CSV 원클릭 분할 압축기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/copy-desk_kr.html">원클릭 복붙 작업대</a></li>
+<li><a href="https://mnledu.com/kr/productivity/receipt-to-excel_kr.html">영수증 지출결의서 변환기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/roster-maker_kr.html">공평무사 당직표 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/sheet2memo_kr.html">시트 포스트잇 대시보드</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "데이터 형식을 미리 맞춰야 하나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아닙니다. 대괄호 목록, 엑셀에서 복사한 표, 마크다운 표를 모두 인식합니다. 첫 줄이 항목 이름이면 그것을 변수명으로 씁니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "변수 이름은 한글도 되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "됩니다. {회사명} {담당자}처럼 한글로 적으시면 됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "반복 이메일 생성기와 뭐가 다른가요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "이메일 생성기는 제목과 본문이 나뉜 메일 전용이고 조사 자동 교정이 들어갑니다. 이 도구는 형식을 가리지 않는 범용 문장 생성기입니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/productivity/templatemerger_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/productivity/templatemerger_kr.html";
+  var TK_SHARE_TITLE = "올인원 템플릿 매칭기";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+</body>
+</html>

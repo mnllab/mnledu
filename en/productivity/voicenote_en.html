@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline Voice Notes | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Dictate notes with speech recognition that runs inside your brows… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/voicenote_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/voicenote_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/voicenote_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/voicenote_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/voicenote_en.html" />
+<meta property="og:title" content="Offline Voice Notes · voice · dictation | TOOLKIT" />
+<meta property="og:description" content="Dictate notes with speech recognition that runs inside your brows… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Offline Voice Notes · voice · dictation | TOOLKIT" />
+<meta name="twitter:description" content="Dictate notes with speech recognition that runs inside your brows… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Offline Voice Notes",
+  "description": "Dictate notes with speech recognition that runs inside your browser, not on a server.",
+  "url": "https://mnledu.com/en/productivity/voicenote_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F6F8',
+          rec:    '#C0392B'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F6F8; --rec:#C0392B;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  #notepad{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:inherit; font-size:17px; line-height:1.8;
+    min-height:clamp(280px, 48vh, 560px);
+  }
+  #notepad::placeholder{ color:#9AA7B4; }
+
+  /* Listening 임시 결과 (회색) */
+  #interim{
+    color:var(--muted);
+    font-size:17px; line-height:1.8;
+    min-height:1.8em;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  #interim:empty::before{
+    content:attr(data-idle);
+    color:#B4BEC8;
+  }
+  .caret{
+    display:inline-block; width:2px; height:1em;
+    background:var(--rec); vertical-align:-2px; margin-left:2px;
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* 마이크 버튼 */
+  #micBtn{
+    position:relative; width:76px; height:76px; border-radius:999px;
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:background .16s, border-color .16s, color .16s, transform .1s;
+    box-shadow:0 1px 3px rgba(38,56,75,.08);
+  }
+  #micBtn:hover{ border-color:#C3CCD6; }
+  #micBtn:active{ transform:scale(.97); }
+  #micBtn:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+  #micBtn.rec{ background:var(--rec); border-color:var(--rec); color:#fff; }
+  #micBtn[disabled]{ opacity:.45; cursor:not-allowed; }
+
+  /* 녹음 중 파동 */
+  .wave{
+    position:absolute; inset:0; border-radius:999px;
+    border:2px solid var(--rec); opacity:0;
+    pointer-events:none;
+  }
+  #micBtn.rec .wave{ animation:pulse 1.8s ease-out infinite; }
+  #micBtn.rec .wave:nth-child(2){ animation-delay:.6s; }
+  #micBtn.rec .wave:nth-child(3){ animation-delay:1.2s; }
+  @keyframes pulse{
+    0%   { transform:scale(1);   opacity:.55; }
+    100% { transform:scale(1.85); opacity:0; }
+  }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:8px 12px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-3xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">Voice Notepad</h1>
+      <p class="mt-1 text-[13px] text-muted">A workbench for turning speech into text · nothing is stored</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="copyFmt" class="btn" aria-label="Copy format" title="Copy and save format">
+        <option value="plain" selected>Plain text</option>
+        <option value="word">For Word</option>
+        <option value="single">Single paragraph</option>
+      </select>
+      <button id="copyBtn" class="btn">Copy all</button>
+      <button id="saveBtn" class="btn">Save</button>
+      <button id="resetBtn" class="btn">Reset</button>
+    </div>
+  </header>
+
+  <!-- 노트 -->
+  <section class="rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.05)]">
+    <div class="flex items-center justify-between gap-3 border-b border-hair px-5 py-3">
+      <span class="text-[12px] font-medium tracking-wide text-muted">Dictation</span>
+      <span id="status" class="flex items-center gap-1.5 text-[12px] text-muted">
+        <span id="dot" class="inline-block h-1.5 w-1.5 rounded-full bg-hair"></span>
+        <span id="statusText">Idle</span>
+      </span>
+    </div>
+
+    <div class="px-5 pt-4 sm:px-7">
+      <textarea id="notepad" placeholder="Press the microphone and speak, or just type here" spellcheck="false"></textarea>
+      <div id="interim" class="pb-1" data-idle="Interim results appear here in grey"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-7">
+      <span>with spaces <b id="cAll" class="num ml-0.5 font-medium text-ink">0</b></span>
+      <span>without spaces <b id="cNoSp" class="num ml-0.5 font-medium text-ink">0</b></span>
+    </div>
+  </section>
+
+  <!-- 용어 사전 -->
+  <details id="dictPanel" class="mt-4 rounded-lg border border-hair bg-white">
+    <summary class="cursor-pointer px-5 py-3 text-[12px] font-medium tracking-wide text-muted hover:text-ink">
+      Correction dictionary <span id="dictCount" class="num ml-1 text-ink">0</span>
+    </summary>
+    <div class="border-t border-hair px-5 py-4">
+      <p class="mb-2 text-[12px] leading-relaxed text-muted">
+        List the names and technical terms you use often, one per line, and similar sounding results are corrected to them.
+        For a mistake you see repeatedly, write <span class="text-ink">misheard → correction</span>.
+      </p>
+      <textarea id="dictText" spellcheck="false" rows="6"
+        class="w-full rounded-md border border-hair px-3 py-2 text-[13px] leading-relaxed text-ink focus:border-steel focus:outline-none"
+        style="min-height:auto; resize:vertical;"
+        placeholder="One per line · misheard → correction">MNL
+SKU
+SaaS
+Kubernetes
+Anthropic
+roadmap
+onboarding
+procurement
+teh → the
+recieve → receive</textarea>
+
+      <div class="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-muted">
+        <label class="flex cursor-pointer select-none items-center gap-1.5">
+          <input type="checkbox" id="autoFix" checked style="accent-color:var(--steel);width:15px;height:15px;">Correct as I speak
+        </label>
+        <label for="strictness">Accuracy</label>
+        <select id="strictness" class="btn py-1.5 text-[12px]">
+          <option value="0.85">Strict</option>
+          <option value="0.75" selected>Normal</option>
+          <option value="0.65">Loose</option>
+        </select>
+        <button id="fixAllBtn" class="btn ml-auto">Clean up all</button>
+      </div>
+
+      <p id="fixLog" class="mt-2 hidden text-[12px] leading-relaxed text-steel"></p>
+    </div>
+  </details>
+
+  <!-- 마이크 -->
+  <div class="mt-8 flex flex-col items-center gap-3">
+    <button id="micBtn" aria-label="Start recognition">
+      <span class="wave"></span><span class="wave"></span><span class="wave"></span>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+        <path d="M5 11a7 7 0 0 0 14 0"></path>
+        <line x1="12" y1="18" x2="12" y2="22"></line>
+      </svg>
+    </button>
+
+    <div class="flex items-center gap-2">
+      <label for="lang" class="sr-only">Recognition language</label>
+      <select id="lang" class="btn">
+        <option value="en-US" selected>English</option>
+        <option value="ko-KR">한국어 (Korean)</option>
+      </select>
+      <label id="localWrap" class="btn hidden cursor-pointer select-none">
+        <input type="checkbox" id="localMode" class="mr-1.5 align-[-1px]">On-device
+      </label>
+      <button id="installBtn" class="btn hidden">Install model</button>
+      <span id="hint" class="text-[12px] text-muted">Press to start</span>
+    </div>
+
+    <p id="warn" class="hidden max-w-md text-center text-[12px] leading-relaxed text-rec"></p>
+
+    <details class="mt-2 w-full max-w-xl">
+      <summary class="cursor-pointer text-center text-[12px] text-muted hover:text-ink">Diagnostics</summary>
+      <div class="mt-2 rounded-lg border border-hair bg-white px-4 py-3">
+        <p id="envInfo" class="mb-2 text-[11px] leading-relaxed text-muted"></p>
+        <pre id="log" class="num m-0 max-h-52 overflow-auto whitespace-pre-wrap break-words text-[11px] leading-relaxed text-ink"></pre>
+      </div>
+    </details>
+  </div>
+
+  <footer class="mt-10 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const notepad   = document.getElementById('notepad');
+  const interimEl = document.getElementById('interim');
+  const micBtn    = document.getElementById('micBtn');
+  const langSel   = document.getElementById('lang');
+  const hint      = document.getElementById('hint');
+  const warn      = document.getElementById('warn');
+  const dot       = document.getElementById('dot');
+  const statusText= document.getElementById('statusText');
+  const cAll      = document.getElementById('cAll');
+  const cNoSp     = document.getElementById('cNoSp');
+  const logEl     = document.getElementById('log');
+  const envInfo   = document.getElementById('envInfo');
+
+  /* ---------- Diagnostics ---------- */
+  const t0 = Date.now();
+  function log(msg) {
+    const s = ((Date.now() - t0) / 1000).toFixed(1).padStart(5, ' ');
+    logEl.textContent += s + 's  ' + msg + '\n';
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  const inIframe = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+  const isFile = location.protocol === 'file:';
+  // 크롬은 file:// 을 보안 컨텍스트로 보고하지만, 출처가 없어 음성 인식 결과를 돌려주지 않는다
+  const insecure = !window.isSecureContext || isFile;
+  const ua = navigator.userAgent;
+  const isBrave = !!(navigator.brave && navigator.brave.isBrave);
+  const isEdge = /Edg\//.test(ua);
+  const isWhale = /Whale/.test(ua);
+  const isFirefox = /Firefox/.test(ua);
+  const isSafari = /Safari/.test(ua) && !/Chrome|Chromium|Edg\//.test(ua);
+
+  envInfo.textContent =
+    'secure context ' + (window.isSecureContext ? 'O' : 'X') +
+    ' · iframe ' + (inIframe ? 'O' : 'X') +
+    ' · protocol ' + location.protocol +
+    ' · online ' + (navigator.onLine ? 'O' : 'X') + '\n' + ua;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+  }
+
+  function showWarn(msg) { warn.textContent = msg; warn.classList.remove('hidden'); }
+  function clearWarn() { warn.textContent = ''; warn.classList.add('hidden'); }
+
+  /* ---------- 글자 수 ---------- */
+  function updateCount() {
+    const t = notepad.value.replace(/\r/g, '').replace(/\n/g, '');
+    cAll.textContent = Array.from(t).length.toLocaleString('ko-KR');
+    cNoSp.textContent = Array.from(t.replace(/\s/g, '')).length.toLocaleString('ko-KR');
+  }
+  notepad.addEventListener('input', updateCount);
+
+  function setStatus(state) {
+    if (state === 'rec') {
+      dot.className = 'inline-block h-1.5 w-1.5 rounded-full bg-rec';
+      statusText.textContent = 'Listening';
+      statusText.className = 'text-rec';
+    } else {
+      dot.className = 'inline-block h-1.5 w-1.5 rounded-full bg-hair';
+      statusText.textContent = 'Idle';
+      statusText.className = '';
+    }
+  }
+
+  /* ---------- Web Speech API ---------- */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition = null;
+  let recording = false;    // 사용자가 의도한 상태
+  let restarting = false;
+  let gotAudio = false;     // 오디오 스트림이 열렸는지
+  let gotResult = false;    // 결과를 한 번이라도 받았는지
+  let emptySessions = 0;
+  let audioTimer = null;
+  let silentTimer = null;
+  let fallbackTried = false;    // continuous 끄고 재시도했는지
+  let useContinuous = true;
+  let restartTimer = null;
+  let startAttempts = 0;
+  let watchdog = null;
+  let lastEvent = 0;            // 마지막으로 인식 이벤트를 받은 시각
+  let sessions = 0;             // 이어붙인 세션 수
+
+  function mark() { lastEvent = Date.now(); }
+
+  // 세션은 브라우저가 수시로 끊는다. 끊길 때마다 새 객체로 다시 붙인다.
+  // 이전 객체를 재사용하면 InvalidStateError가 나면서 그대로 죽어버린다.
+  function scheduleRestart(delay) {
+    if (!recording) return;
+    restarting = true;
+    clearTimeout(restartTimer);
+    restartTimer = setTimeout(function () {
+      if (!recording) { restarting = false; return; }
+      try { if (recognition) recognition.abort(); } catch (e) {}
+      recognition = buildRecognition();
+      try {
+        recognition.start();
+        sessions++;
+        startAttempts = 0;
+        mark();
+        log('session restart #' + sessions);
+      } catch (e) {
+        startAttempts++;
+        log('restart failed · ' + e.name + ' (attempt ' + startAttempts + ')');
+        if (startAttempts < 8) {
+          scheduleRestart(Math.min(300 * startAttempts, 2000));  // 점점 간격을 늘려 재시도
+        } else {
+          restarting = false;
+          recording = false;
+          micBtn.classList.remove('rec');
+          setStatus('idle');
+          hint.textContent = 'Press to start';
+          showWarn('The recognition session could not be reconnected. Press the microphone button again.');
+        }
+      }
+    }, delay);
+  }
+
+  // 감시 타이머 : 아무 이벤트도 없이 멈춰 있으면 강제로 다시 붙인다
+  function startWatchdog() {
+    clearInterval(watchdog);
+    watchdog = setInterval(function () {
+      if (!recording || restarting) return;
+      if (Date.now() - lastEvent > 12000) {
+        log('no response for 12s, forcing reconnect');
+        scheduleRestart(0);
+      }
+    }, 4000);
+  }
+  function stopWatchdog() { clearInterval(watchdog); watchdog = null; }
+
+  // 탭을 다시 보게 됐을 때 세션이 죽어 있으면 되살린다
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && recording && !restarting) {
+      if (Date.now() - lastEvent > 3000) {
+        log('tab refocused, reconnecting session');
+        scheduleRestart(0);
+      }
+    }
+  });
+
+  // Chrome 138+ On-device 인식 지원 여부
+  const localWrap  = document.getElementById('localWrap');
+  const localMode  = document.getElementById('localMode');
+  const installBtn = document.getElementById('installBtn');
+  const canLocal = !!(SR && ('processLocally' in SR.prototype));
+  let localState = 'unknown';   // unavailable | downloadable | downloading | available
+
+  if (canLocal) {
+    localWrap.classList.remove('hidden');
+    log('on-device recognition supported');
+    checkLocal();
+  }
+
+  function checkLocal() {
+    if (!canLocal || !SR.available) return;
+    SR.available({ langs: [langSel.value], processLocally: true }).then(function (v) {
+      localState = v;
+      log('on-device model (' + langSel.value + ') state · ' + v);
+      applyLocalState();
+    }).catch(function (e) {
+      log('model state check failed · ' + (e && e.name));
+    });
+  }
+
+  function applyLocalState() {
+    if (localState === 'available') {
+      installBtn.classList.add('hidden');
+      localMode.disabled = false;
+    } else if (localState === 'downloadable' || localState === 'downloading') {
+      installBtn.classList.remove('hidden');
+      installBtn.textContent = localState === 'downloading' ? 'Downloading model' : 'Install model';
+      installBtn.disabled = (localState === 'downloading');
+      localMode.checked = false;
+      localMode.disabled = true;
+    } else {
+      installBtn.classList.add('hidden');
+      localMode.disabled = true;
+      localMode.checked = false;
+    }
+  }
+
+  installBtn.addEventListener('click', function () {
+    if (!SR.install) { showWarn('This browser does not support installing the model.'); return; }
+    installBtn.disabled = true;
+    installBtn.textContent = 'Downloading';
+    log('model install started · ' + langSel.value);
+    showWarn('Downloading the recognition model. It is a large file and may take a few minutes, so please keep this window open.');
+
+    SR.install({ langs: [langSel.value], processLocally: true }).then(function (ok) {
+      log('install result · ' + ok);
+      if (ok) {
+        // 곧바로 true를 반환해도 실제 설치가 안 된 경우가 있어 상태를 다시 확인한다
+        SR.available({ langs: [langSel.value], processLocally: true }).then(function (v) {
+          log('recheck after install · ' + v);
+          localState = v;
+          applyLocalState();
+          if (v === 'available') {
+            localMode.disabled = false;
+            localMode.checked = true;
+            clearWarn();
+            toast('Model installed. Recognition now runs on your device.');
+          } else {
+            showWarn('Install reported success but the model is not ready (' + v + '). ' + envHint());
+          }
+        }).catch(function () {
+          localState = 'available';
+          applyLocalState();
+        });
+      } else {
+        installBtn.disabled = false;
+        installBtn.textContent = 'Install model';
+        showWarn('The model did not finish installing. Please try again shortly.');
+      }
+    }).catch(function (e) {
+      log('install failed · ' + (e && e.name) + ' / ' + (e && e.message));
+      installBtn.disabled = false;
+      installBtn.textContent = 'Install model';
+      showWarn('Model installation failed (' + (e && e.name) + '). Update Chrome and try again.');
+    });
+  });
+
+  log('SpeechRecognition ' + (SR ? 'available' : 'unavailable'));
+
+  function envHint() {
+    if (isFile) return 'Opened as a file:// page, recognition returns nothing even with microphone permission. Run python3 -m http.server in this folder and open it through localhost instead, then open http://localhost:8000/voice-notepad.html in Chrome.';
+    if (inIframe) return 'This page is inside a preview frame. Open it directly in a browser tab instead.';
+    if (insecure) return 'This only works over https or on localhost.';
+    if (isBrave) return 'Brave blocks the speech recognition server by default. Please use Chrome.';
+    if (isWhale) return 'Some Chromium browsers ship without a speech API key and return no results. Please use Chrome.';
+    if (isEdge) return 'Edge needs online speech recognition enabled under Windows Settings > Privacy > Speech.';
+    if (isFirefox) return 'Firefox does not support this feature. Please use Chrome.';
+    if (isSafari) return 'Safari support is limited. Please use Chrome.';
+    return 'Check the microphone permission under the padlock in the address bar.';
+  }
+
+  if (!SR) {
+    micBtn.disabled = true;
+    hint.textContent = 'This browser does not support speech recognition';
+    showWarn('This browser does not support the Web Speech API. Please use Chrome. Typing directly still works.');
+  }
+
+  // 확정 문장을 노트 끝에 누적
+  function appendFinal(text) {
+    let chunk = text.trim();
+    if (!chunk) return;
+
+    // 사전이 있으면 확정된 문장을 곧바로 다듬는다
+    if (typeof autoFix !== 'undefined' && autoFix.checked) {
+      const r = correct(chunk, parseDict(), parseFloat(strictness.value));
+      if (r.changes.length) { chunk = r.text; showFixes(r.changes); log('corrected: ' + r.changes.join(', ')); }
+    }
+
+    const cur = notepad.value;
+    const needsSpace = cur.length > 0 && !/\s$/.test(cur);
+    notepad.value = cur + (needsSpace ? ' ' : '') + chunk;
+    notepad.scrollTop = notepad.scrollHeight;
+    updateCount();
+  }
+
+  function buildRecognition() {
+    const r = new SR();
+    r.lang = langSel.value;
+    r.continuous = useContinuous;
+    r.interimResults = true;
+    r.maxAlternatives = 1;
+    if (canLocal && localMode.checked && localState === 'available') {
+      try { r.processLocally = true; log('starting in on-device mode'); } catch (e) {}
+    }
+
+    r.onstart = function () {
+      restarting = false;
+      startAttempts = 0;
+      mark();
+      setStatus('rec');
+      hint.textContent = 'Press again to stop';
+      log('onstart · lang=' + r.lang);
+
+      // 오디오가 실제로 열리는지 확인 : 2초 안에 audiostart가 없으면 환경 문제
+      clearTimeout(audioTimer);
+      audioTimer = setTimeout(function () {
+        if (recording && !gotAudio) {
+          log('warning: no audiostart');
+          showWarn('The microphone did not open. ' + envHint());
+        }
+      }, 2000);
+    };
+
+    r.onaudiostart  = function () { gotAudio = true; mark(); log('onaudiostart (microphone open)'); clearWarn(); };
+    r.onsoundstart  = function () { mark(); log('onsoundstart (sound detected)'); };
+    r.onspeechstart = function () {
+      mark();
+      log('onspeechstart (speech detected)');
+      // 음성이 감지된 뒤에도 결과가 오지 않으면 서버 응답이 없는 것이다
+      clearTimeout(silentTimer);
+      silentTimer = setTimeout(function () {
+        if (!recording || gotResult) return;
+        if (!fallbackTried) {
+          fallbackTried = true;
+          log('no results, retrying without continuous');
+          showWarn('No server response, so retrying in short bursts instead.');
+          useContinuous = false;
+          scheduleRestart(400);
+        } else {
+          log('still no results after fallback');
+          if (canLocal && localState !== 'available') {
+            showWarn('Audio is arriving but the recognition server is not responding. Install the on-device model below and it will work without a server.');
+          } else {
+            showWarn('Audio is arriving but no recognition results are coming back. ' + envHint());
+          }
+        }
+      }, 8000);
+    };
+    r.onspeechend   = function () { mark(); log('onspeechend'); };
+    r.onaudioend    = function () { mark(); log('onaudioend'); };
+    r.onnomatch     = function () { log('onnomatch (no match)'); };
+
+    r.onresult = function (ev) {
+      gotResult = true;
+      emptySessions = 0;
+      mark();
+      clearTimeout(silentTimer);
+      clearWarn();
+      let interim = '';
+      let finals = 0;
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const res = ev.results[i];
+        if (res.isFinal) { appendFinal(res[0].transcript); finals++; }
+        else interim += res[0].transcript;
+      }
+      log('onresult · ' + finals + ' final, ' + interim.length + ' interim chars');
+      interimEl.textContent = interim;
+      if (interim) {
+        const caret = document.createElement('span');
+        caret.className = 'caret';
+        interimEl.appendChild(caret);
+      }
+    };
+
+    r.onerror = function (ev) {
+      log('onerror · ' + ev.error + (ev.message ? ' / ' + ev.message : ''));
+      if (ev.error === 'aborted') return;
+
+      if (ev.error === 'no-speech') {
+        emptySessions++;
+        if (emptySessions >= 3 && !gotResult) {
+          showWarn('No sound detected. Check your input device and whether the microphone is muted.');
+        }
+        return;
+      }
+      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') {
+        stop();
+        showWarn('Microphone access is blocked. ' + envHint());
+      } else if (ev.error === 'network') {
+        stop();
+        showWarn('Could not reach the speech recognition server. In this mode audio is sent to Google for processing. ' + envHint());
+      } else if (ev.error === 'language-not-supported') {
+        showWarn('This browser does not support the selected language.');
+      } else {
+        showWarn('Recognition error: ' + ev.error);
+      }
+    };
+
+    r.onend = function () {
+      log('onend' + (recording ? ' → auto restart' : ''));
+      mark();
+      clearTimeout(audioTimer);
+      if (recording && !restarting) {
+        if (!gotResult) {
+          emptySessions++;
+          if (emptySessions >= 3) showWarn('Recognition keeps dropping as soon as it starts. ' + envHint());
+        }
+        scheduleRestart(250);
+        return;
+      }
+      if (!recording) {
+        setStatus('idle');
+        hint.textContent = 'Press to start';
+      }
+    };
+
+    return r;
+  }
+
+  // 사용자의 클릭 흐름 안에서 곧바로 start를 호출한다.
+  // (Promise 이후에 호출하면 일부 브라우저가 사용자 제스처로 인정하지 않는다)
+  function start() {
+    if (!SR || recording) return;
+    clearWarn();
+    gotAudio = false;
+    gotResult = false;
+    emptySessions = 0;
+    fallbackTried = false;
+    useContinuous = true;
+    recognition = buildRecognition();
+    recording = true;
+    sessions = 1;
+    startAttempts = 0;
+    mark();
+    startWatchdog();
+    micBtn.classList.add('rec');
+    micBtn.setAttribute('aria-label', 'Stop recognition');
+    try {
+      recognition.start();
+      log('start() called');
+    } catch (e) {
+      recording = false;
+      micBtn.classList.remove('rec');
+      log('start() threw · ' + e.name + ' / ' + e.message);
+      showWarn('Speech recognition would not start (' + e.name + '). Reload and try again.');
+    }
+  }
+
+  function stop() {
+    if (!recording) return;
+    recording = false;
+    restarting = false;
+    clearTimeout(audioTimer);
+    clearTimeout(silentTimer);
+    clearTimeout(restartTimer);
+    stopWatchdog();
+    micBtn.classList.remove('rec');
+    micBtn.setAttribute('aria-label', 'Start recognition');
+    setStatus('idle');
+    hint.textContent = 'Press to start';
+    log('stopped by user');
+
+    const pending = interimEl.textContent.trim();
+    if (pending) appendFinal(pending);
+    interimEl.textContent = '';
+
+    try { recognition.stop(); } catch (e) {}
+    // 서버 응답을 기다리며 onend가 오지 않는 경우가 있어 강제 종료를 예약한다
+    const stuck = recognition;
+    setTimeout(function () {
+      if (!recording && stuck) {
+        try { stuck.abort(); log('no response, aborting'); } catch (e) {}
+      }
+    }, 1200);
+  }
+
+  micBtn.addEventListener('click', function () {
+    if (recording) stop(); else start();
+  });
+
+  langSel.addEventListener('change', function () {
+    log('language changed · ' + langSel.value);
+    checkLocal();
+    if (recording) { stop(); setTimeout(start, 400); }
+    toast(langSel.value === 'ko-KR' ? 'Recognising in Korean' : 'Recognising in English');
+  });
+
+  localMode.addEventListener('change', function () {
+    if (localMode.checked && localState !== 'available') {
+      localMode.checked = false;
+      showWarn('The recognition model needs installing first. Use the install button beside this.');
+    }
+  });
+
+  /* ---------- 용어 사전 기반 교정 ---------- */
+  // Web Speech API에는 용어 힌트를 넣을 수 없어서, 인식된 뒤에 사전으로 바로잡는다.
+  // 한글은 자모로 분해해 비교해야 발음이 뭉개진 경우를 잡을 수 있다.
+  const CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  const JUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+  const JONG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  const TAIL = /^(은|는|이|가|을|를|와|과|에|에서|에게|으로|로|도|만|의|께|부터|까지|라도|이며|이고|입니다|이다|였다|한다|하고|해서|인데|지만)$/;
+
+  const dictText   = document.getElementById('dictText');
+  const dictCount  = document.getElementById('dictCount');
+  const autoFix    = document.getElementById('autoFix');
+  const strictness = document.getElementById('strictness');
+  const fixLog     = document.getElementById('fixLog');
+
+  function decompose(s) {
+    let o = '';
+    for (const ch of s) {
+      const c = ch.charCodeAt(0);
+      if (c >= 0xAC00 && c <= 0xD7A3) {
+        const b = c - 0xAC00;
+        o += CHO[Math.floor(b / 588)] + JUNG[Math.floor((b % 588) / 28)] + JONG[b % 28];
+      } else o += ch.toLowerCase();
+    }
+    return o;
+  }
+
+  function lev(a, b) {
+    const m = a.length, n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    let prev = Array.from({ length: n + 1 }, function (_, j) { return j; });
+    for (let i = 1; i <= m; i++) {
+      const cur = [i];
+      for (let j = 1; j <= n; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[n];
+  }
+
+  function simil(a, b) {
+    const A = decompose(a), B = decompose(b);
+    const m = Math.max(A.length, B.length);
+    return m ? 1 - lev(A, B) / m : 0;
+  }
+
+  function parseDict() {
+    const rules = [], terms = [];
+    dictText.value.split('\n').forEach(function (line) {
+      const t = line.trim();
+      if (!t || t.charAt(0) === '#') return;
+      const m = t.split(/\s*(?:→|->|=>|=)\s*/);
+      if (m.length === 2 && m[0] && m[1]) { rules.push({ from: m[0], to: m[1] }); terms.push(m[1]); }
+      else terms.push(t);
+    });
+    const uniq = terms.filter(function (x, i, a) { return x && x.length >= 2 && a.indexOf(x) === i; });
+    dictCount.textContent = uniq.length;
+    return { rules: rules, terms: uniq };
+  }
+
+  function correct(text, dict, threshold) {
+    const changes = [];
+    let out = text;
+    if (!dict.terms.length && !dict.rules.length) return { text: out, changes: changes };
+
+    // 명시 규칙은 그대로 치환
+    dict.rules.forEach(function (r) {
+      const esc = r.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const re = new RegExp(esc, 'gi');
+      if (re.test(out)) { out = out.replace(re, r.to); changes.push(r.from + ' → ' + r.to); }
+    });
+
+    const TOKEN = /[가-힣A-Za-z0-9]+/g;
+    const toks = [];
+    let m;
+    while ((m = TOKEN.exec(out)) !== null) toks.push({ s: m.index, e: m.index + m[0].length, t: m[0] });
+
+    // 짧은 단어일수록 기준을 높인다. 두 글자는 사실상 정확히 일치할 때만 손댄다.
+    // (투자↔부자, 측정↔측면처럼 멀쩡한 말을 끌어다 고치는 것을 막는다)
+    function thrFor(term, base) {
+      const L = term.length;
+      if (L <= 2) return 0.99;
+      if (L === 3) return Math.min(base + 0.12, 0.95);
+      if (L === 4) return Math.min(base + 0.05, 0.93);
+      return base;
+    }
+
+    function best(str, minRatio, thr) {
+      let bt = null, bs = 0;
+      dict.terms.forEach(function (term) {
+        const lr = Math.min(str.length, term.length) / Math.max(str.length, term.length);
+        if (lr < minRatio) return;
+        const s = simil(str, term);
+        if (s < thrFor(term, thr)) return;
+        if (s > bs) { bs = s; bt = term; }
+      });
+      return bt ? { term: bt, score: bs } : null;
+    }
+
+    // 조사·어미를 떼어낸 해석을 먼저 본다 (신용보증기금은 → 은이 지워지지 않도록)
+    function matchCore(str, minRatio, thr) {
+      for (let k = 1; k <= 4 && k < str.length; k++) {
+        const tail = str.slice(str.length - k), core = str.slice(0, str.length - k);
+        if (!TAIL.test(tail)) continue;
+        const c2 = best(core, minRatio, thr);
+        if (c2) return core === c2.term ? null : { to: c2.term + tail, from: str };
+      }
+      const c = best(str, minRatio, thr);
+      if (c) return str === c.term ? null : { to: c.term, from: str };
+      return null;
+    }
+
+    const edits = [], used = {};
+    const termSet = {};
+    dict.terms.forEach(function (t) { termSet[t] = true; });
+    for (let i = 0; i < toks.length; i++) {
+      if (used[i]) continue;
+      const tk = toks[i];
+
+      // 인접 두 토큰이 한 용어로 붙는 경우 (신용 보증기금 → 신용보증기금)
+      if (i + 1 < toks.length && !used[i + 1]) {
+        const joined = out.slice(tk.s, toks[i + 1].e);
+        const merged = tk.t + toks[i + 1].t;
+
+        // 붙였더니 사전 용어와 정확히 일치하면, 짧은 용어라도 띄어쓰기를 바로잡는다
+        let exact = termSet[merged] ? merged : null;
+        if (!exact) {
+          for (let k = 1; k <= 4 && k < merged.length; k++) {
+            const tl = merged.slice(merged.length - k), cr = merged.slice(0, merged.length - k);
+            if (TAIL.test(tl) && termSet[cr]) { exact = cr + tl; break; }
+          }
+        }
+        if (exact && joined !== exact) {
+          edits.push({ s: tk.s, e: toks[i + 1].e, to: exact, from: joined });
+          used[i] = used[i + 1] = true;
+          continue;
+        }
+
+        const c = matchCore(joined, 0.6, threshold + 0.08) || matchCore(merged, 0.6, threshold + 0.08);
+        if (c) {
+          edits.push({ s: tk.s, e: toks[i + 1].e, to: c.to, from: joined });
+          used[i] = used[i + 1] = true;
+          continue;
+        }
+      }
+
+      const c = matchCore(tk.t, 0.6, threshold);
+      if (c) { edits.push({ s: tk.s, e: tk.e, to: c.to, from: tk.t }); used[i] = true; }
+    }
+
+    edits.filter(function (ed) { return ed.to !== ed.from; })
+         .sort(function (a, b) { return b.s - a.s; })
+         .forEach(function (ed) {
+            out = out.slice(0, ed.s) + ed.to + out.slice(ed.e);
+            changes.push(ed.from + ' → ' + ed.to);
+         });
+
+    return { text: out, changes: changes };
+  }
+
+  function showFixes(changes) {
+    if (!changes.length) { fixLog.classList.add('hidden'); return; }
+    fixLog.textContent = changes.length + ' corrections · ' + changes.slice(-4).join(', ');
+    fixLog.classList.remove('hidden');
+  }
+
+  dictText.addEventListener('input', parseDict);
+
+  document.getElementById('fixAllBtn').addEventListener('click', function () {
+    if (!notepad.value.trim()) { toast('Nothing to clean up'); return; }
+    const r = correct(notepad.value, parseDict(), parseFloat(strictness.value));
+    notepad.value = r.text;
+    updateCount();
+    showFixes(r.changes);
+    toast(r.changes.length ? r.changes.length + ' corrections made' : 'Nothing needed changing');
+  });
+
+  /* ---------- 복사 · Save · Reset ---------- */
+  // 워드·한글은 CRLF를 문단 구분으로 읽는다. LF만 넘기면 문단이 붙거나 빈 줄이 더 생긴다.
+  const copyFmt = document.getElementById('copyFmt');
+
+  function formatted() {
+    const mode = copyFmt.value;
+    const text = notepad.value.replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '');
+    if (mode === 'plain') return text.replace(/\n{3,}/g, '\n\n').trim();
+
+    const lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+    if (mode === 'single') return lines.join(' ').replace(/[ \t]{2,}/g, ' ');
+    return lines.join('\r\n');
+  }
+
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    if (!notepad.value.trim()) { toast('Nothing to copy'); return; }
+    const text = formatted();
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast(copyFmt.value === 'word' ? 'Copied for Word' : 'Copied');
+    } catch (e) {
+      if (legacyCopy(text)) toast('Copied');
+      else toast('The browser blocked copying. Use Ctrl+A then Ctrl+C.');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!notepad.value.trim()) { toast('Nothing to save'); return; }
+    const d = new Date();
+    const p = function (n) { return String(n).padStart(2, '0'); };
+    const name = 'dictation_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob(['\uFEFF' + formatted()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('Saved');
+    } catch (e) {
+      toast('Your browser blocked the download');
+    }
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    if (!notepad.value.trim() || confirm('This clears everything you have written. Continue?')) {
+      notepad.value = '';
+      interimEl.textContent = '';
+      updateCount();
+      notepad.focus();
+    }
+  });
+
+  updateCount();
+  parseDict();
+  setStatus('idle');
+
+  if (SR && (inIframe || insecure)) {
+    showWarn('The microphone may be blocked in this environment. ' + envHint());
+  }
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Sometimes speaking is faster than typing</h2>
+<p>An idea arrives while you are walking. A meeting needs a note taken in real time. Your hands are busy. Dictation services handle all of these, but almost all of them send the audio to a server, which is a problem when the recording is a client conversation or an internal meeting.</p>
+<p>This tool can download a speech model into your browser and run recognition on your device. After the one time install, your audio never leaves your machine. There is also a correction dictionary for the names and technical terms that recognition consistently gets wrong.</p>
+<h2>When to use it</h2><dl>
+<dt>Meeting notes</dt><dd>Capturing points as they come up, without the recording leaving your device.</dd>
+<dt>Ideas while moving</dt><dd>Getting a thought down when typing is not practical.</dd>
+<dt>First drafts of long writing</dt><dd>Talking through the material and shaping it afterwards. It gets past a blank page faster than typing does.</dd>
+<dt>Domain-heavy vocabulary</dt><dd>Add the terms that keep coming out wrong to the dictionary and they are corrected automatically from then on.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>For on-device recognition, press <strong>Install model</strong> once and wait for the download.</li>
+<li>Press the microphone and speak. You can type alongside it at any time.</li>
+<li>Add repeated mistakes to the dictionary as <strong>misheard → correction</strong>.</li>
+<li>Use <strong>Clean up all</strong> to tidy the text, then copy it.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Accuracy: strict, normal, loose</dt><dd>How cautious the matching is. Strict is more accurate and slower, loose is quicker with more mistakes.</dd>
+<dt>Recognition language</dt><dd>English by default. Setting the right language noticeably improves accuracy.</dd>
+<dt>On-device</dt><dd>Runs recognition locally once the model is installed, so no audio is sent anywhere.</dd>
+<dt>Correction dictionary</dt><dd>Names and technical terms you use often. Stored in your browser, so it is still there next visit.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Is my audio sent to a server</dt><dd>With the on-device model installed, no. The model is downloaded once and recognition happens in your browser. Without it, the browser's built-in recognition does route audio through a speech service, which is why the on-device option exists.</dd>
+<dt>Why does the model take so long to install</dt><dd>It is a large file, so a few minutes is normal depending on your connection. Once downloaded it stays in your browser and starts instantly after that.</dd>
+<dt>Which browser should I use</dt><dd>Chrome is the most reliable. Firefox does not support the API at all, Safari support is limited, and Brave blocks the speech server by default.</dd>
+<dt>Recognition is poor. What can I do</dt><dd>Set accuracy to strict, get closer to the microphone and speak deliberately. If one particular word keeps failing, put it in the dictionary rather than fighting the recogniser.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/notepad_en.html">Rich Text Notepad</a></li>
+<li><a href="https://mnledu.com/en/productivity/emailgen_en.html">Bulk Email Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/templatemerger_en.html">Template Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/promptmerger_en.html">AI Prompt Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/listformat_en.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/textclean_en.html">Text Cleaner</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my audio sent to a server",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With the on-device model installed, no. The model is downloaded once and recognition happens in your browser. Without it, the browser's built-in recognition does route audio through a speech service, which is why the on-device option exists."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the model take so long to install",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is a large file, so a few minutes is normal depending on your connection. Once downloaded it stays in your browser and starts instantly after that."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which browser should I use",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Chrome is the most reliable. Firefox does not support the API at all, Safari support is limited, and Brave blocks the speech server by default."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Recognition is poor. What can I do",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Set accuracy to strict, get closer to the microphone and speak deliberately. If one particular word keeps failing, put it in the dictionary rather than fighting the recogniser."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/voicenote_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/voicenote_en.html";
+  var TK_SHARE_TITLE = "Offline Voice Notes";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

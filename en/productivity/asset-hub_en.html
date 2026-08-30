@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAFAFA">
+
+<title>One-Click Asset Hub · Keep What You Reuse, Click to Copy | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Keep the phrases, colours, logos and links you reuse in one place and click to copy. Images go onto the clipboard as images, so they paste straight into a document. Everything stays in your browser." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/asset-hub_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/asset-hub_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/asset-hub_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/asset-hub_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/asset-hub_en.html" />
+<meta property="og:title" content="One-Click Asset Hub · Keep What You Reuse, Click to Copy | TOOLKIT" />
+<meta property="og:description" content="Keep the phrases, colours, logos and links you reuse in one place and click to copy." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="One-Click Asset Hub | TOOLKIT" />
+<meta name="twitter:description" content="Keep the phrases, colours, logos and links you reuse in one place and click to copy." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "One-Click Asset Hub",
+ "description": "Stores the phrases, colours, images and links you reuse in your browser, one click away from the clipboard.",
+ "url": "https://mnledu.com/en/productivity/asset-hub_en.html",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "One-Click Asset Hub", "item": "https://mnledu.com/en/productivity/asset-hub_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is anything I save uploaded?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Everything including images stays inside this browser, and the tool works with the connection switched off. It will not appear on another device, so use the backup file to move things across." }
+  },
+  {
+   "@type": "Question",
+   "name": "Do images really paste into documents?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Yes. The image itself goes onto the clipboard, so it pastes straight into documents, slides or an image editor. If your browser blocks that or is too old, it downloads the file instead." }
+  },
+  {
+   "@type": "Question",
+   "name": "How many images can I store?",
+   "acceptedAnswer": { "@type": "Answer", "text": "They are kept in a much larger store than the text, so dozens of logos or signatures are fine. Large photos are scaled to 1200 pixels on the long edge, which keeps the size down." }
+  },
+  {
+   "@type": "Question",
+   "name": "What if I switch browsers?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Download a backup file and restore it in the new browser \u2014 images come across too. Clearing browser storage wipes everything, so it is worth taking a backup now and then." }
+  },
+  {
+   "@type": "Question",
+   "name": "What colour formats are accepted?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Six digits or three, with or without the hash. Pasting an rgb value works as well and gets converted. Clicking copies the six-digit form by default, and the rgb value is shown on the card." }
+  },
+  {
+   "@type": "Question",
+   "name": "Is there a search?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Type in the box at the top and it filters on both names and contents. Once you have a lot of items that beats switching between tabs." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#FAFAFA; --panel:#FFFFFF; --line:#E4E4E7; --line2:#F4F4F5; --sub:#FAFAFA;
+    --ink:#18181B; --ink2:#3F3F46; --muted:#71717A;
+    --accent:#18181B; --accent2:#27272A; --soft:#F4F4F5;
+    --ok:#16A34A;
+  }
+  html[data-t="dark"]{
+    --bg:#0C0C0E; --panel:#171719; --line:#2A2A2E; --line2:#1F1F23; --sub:#111113;
+    --ink:#FAFAFA; --ink2:#D4D4D8; --muted:#8A8A93;
+    --accent:#FAFAFA; --accent2:#E4E4E7; --soft:#232327;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;transition:background .16s,color .16s}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+  .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;
+    font-size:13.5px;font-weight:600;padding:8px 12px;cursor:pointer;min-height:38px;
+    font-family:inherit;white-space:nowrap;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:var(--muted);background:var(--soft)}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);
+    color:var(--panel)}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.ic{min-height:34px;padding:6px 9px;font-size:13px}
+  .btn.dan{color:#DC2626;border-color:#FCA5A5}
+  html[data-t="dark"] .btn.dan{color:#FCA5A5;border-color:#7F1D1D}
+
+  label.lab{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+  .hint{font-size:12px;color:var(--muted);line-height:1.7;margin:7px 0 0}
+  .fld{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+    font-size:14px;color:var(--ink);outline:none;background:var(--panel);min-height:42px;
+    font-family:inherit}
+  .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(113,113,122,.16)}
+  .fld::placeholder{color:var(--muted);opacity:.6}
+  textarea.fld{min-height:110px;resize:vertical;line-height:1.75;
+    font-family:ui-monospace,Consolas,monospace;font-size:13.5px}
+
+  /* ---------- 상단 ---------- */
+  #top{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
+  #tabs{display:flex;gap:3px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 0 0}
+  .tab{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:14px;
+    font-weight:700;padding:13px 15px;cursor:pointer;border-bottom:2px solid transparent;
+    margin-bottom:-1px;white-space:nowrap;transition:color .12s,border-color .12s}
+  .tab:hover{color:var(--ink2)}
+  .tab.on{color:var(--ink);border-bottom-color:var(--accent)}
+  .tab .c{font-size:11.5px;color:var(--muted);margin-left:5px;font-family:ui-monospace,monospace}
+
+  /* ---------- 격자 ---------- */
+  .grid{display:grid;gap:11px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    padding:18px 0 40px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    position:relative;cursor:pointer;overflow:hidden;
+    transition:border-color .12s,transform .09s,box-shadow .12s}
+  .card:hover{border-color:var(--muted);transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,0,0,.07)}
+  .card:active{transform:translateY(0)}
+  .card .nm{font-size:12.5px;font-weight:700;color:var(--ink);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card .bd{font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+    word-break:break-all;font-family:ui-monospace,Consolas,monospace}
+  .card .pad{padding:13px 13px 14px}
+  .acts{position:absolute;top:7px;right:7px;display:flex;gap:2px;opacity:0;
+    transition:opacity .12s;z-index:2}
+  .card:hover .acts,.card:focus-within .acts{opacity:1}
+  .acts button{border:0;background:rgba(250,250,250,.94);color:var(--ink2);cursor:pointer;
+    font-size:12px;padding:5px 7px;border-radius:6px;line-height:1;
+    box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  html[data-t="dark"] .acts button{background:rgba(35,35,39,.94);color:var(--ink2)}
+  .acts button:hover{background:var(--accent);color:var(--panel)}
+
+  /* 컬러 카드 */
+  .card.color .swatch{height:88px;display:flex;align-items:flex-end;justify-content:flex-end;
+    padding:8px 10px;font-size:11px;font-weight:800;font-family:ui-monospace,monospace}
+  /* 이미지 카드 */
+  .card.img .thumb{height:120px;display:flex;align-items:center;justify-content:center;
+    background:
+      linear-gradient(45deg,var(--line2) 25%,transparent 25%,transparent 75%,var(--line2) 75%),
+      linear-gradient(45deg,var(--line2) 25%,var(--panel) 25%,var(--panel) 75%,var(--line2) 75%);
+    background-size:16px 16px;background-position:0 0,8px 8px;padding:8px}
+  .card.img .thumb img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  /* 링크 카드 */
+  .card.link .pad{padding-right:40px}
+  .openBtn{position:absolute;bottom:9px;right:9px;border:1px solid var(--line);
+    background:var(--panel);color:var(--muted);border-radius:7px;cursor:pointer;
+    font-size:12px;padding:5px 7px;line-height:1;z-index:2}
+  .openBtn:hover{border-color:var(--accent);color:var(--ink)}
+
+  .addCard{border:1.5px dashed var(--line);background:transparent;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:5px;
+    min-height:104px;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;
+    border-radius:11px;font-family:inherit;transition:border-color .12s,color .12s}
+  .addCard:hover{border-color:var(--accent);color:var(--ink)}
+  .addCard .plus{font-size:20px}
+
+  #empty{display:none;padding:52px 20px;text-align:center;color:var(--muted);
+    font-size:14px;line-height:1.9}
+  #empty.on{display:block}
+
+  /* ---------- 모달 ---------- */
+  #modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;
+    justify-content:center;padding:18px;background:rgba(0,0,0,.45)}
+  #modal.on{display:flex}
+  #modalBox{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    width:100%;max-width:440px;max-height:88vh;overflow-y:auto;padding:20px;
+    box-shadow:0 20px 50px rgba(0,0,0,.28)}
+  #modalTitle{font-size:16px;font-weight:800;margin:0 0 15px}
+  #modalBody > div{margin-bottom:13px}
+  #dropZone{border:2px dashed var(--line);border-radius:10px;padding:26px 16px;
+    text-align:center;cursor:pointer;background:var(--sub);font-size:13.5px;color:var(--muted)}
+  #dropZone:hover{border-color:var(--accent);color:var(--ink)}
+  #dropZone.has{padding:12px}
+  #dropPv{max-width:100%;max-height:160px;object-fit:contain;display:none;margin:0 auto}
+  #colorRow{display:grid;gap:9px;grid-template-columns:1fr 54px}
+  #colorPick{width:100%;height:42px;border:1px solid var(--line);border-radius:8px;
+    background:none;cursor:pointer;padding:2px}
+
+  #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:var(--bg);border-radius:9px;padding:11px 19px;font-size:13.5px;
+    z-index:90;pointer-events:none;transition:opacity .16s,transform .16s;font-weight:700;
+    max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="top">
+  <div class="wrap">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 10px;flex-wrap:wrap">
+      <span style="font-size:15px;font-weight:800;letter-spacing:-.02em">🗂 Asset Hub</span>
+      <span class="hint" style="margin:0">click to copy</span>
+      <span style="flex:1"></span>
+      <input class="fld" id="search" placeholder="🔍 Search" style="max-width:180px;min-height:34px;font-size:13px;padding:6px 11px" autocomplete="off">
+      <button class="btn ic" id="themeBtn" title="Switch theme">🌙</button>
+      <button class="btn ic" id="backupBtn" title="Download a backup">💾</button>
+      <button class="btn ic" id="restoreBtn" title="Restore from a backup">📂</button>
+      <input type="file" id="restoreFile" accept=".json" style="display:none">
+    </div>
+    <div id="tabs" role="tablist">
+      <button class="tab on" data-k="texts" role="tab">📝 Text<span class="c" id="cTexts"></span></button>
+      <button class="tab" data-k="colors" role="tab">🎨 Colours<span class="c" id="cColors"></span></button>
+      <button class="tab" data-k="images" role="tab">🖼️ Images<span class="c" id="cImages"></span></button>
+      <button class="tab" data-k="links" role="tab">🔗 Links<span class="c" id="cLinks"></span></button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+  <div id="empty"></div>
+</div>
+
+<footer class="wrap" style="padding:20px 16px 40px;border-top:1px solid var(--line)">
+  <p style="font-size:12px;color:var(--muted);line-height:1.8;margin:0">
+    Everything is stored in this browser only and never sent to any server.
+    <span id="usage" class="mono"></span>
+  </p>
+</footer>
+
+<!-- Modal -->
+<div id="modal" role="dialog" aria-modal="true">
+  <div id="modalBox">
+    <h2 id="modalTitle">Add</h2>
+    <div id="modalBody"></div>
+    <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:16px">
+      <button class="btn p" id="mSave">Save</button>
+      <button class="btn" id="mCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 1800);
+}
+function fmtSize(b){
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(0) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+/* ============================================================
+   Storage
+   Text lives in localStorage, images in IndexedDB.
+   Encoding images as text would hit the 5MB ceiling almost immediately
+   ============================================================ */
+var LS_KEY = 'tk-asset-hub-v1';
+var DB_NAME = 'tk-asset-hub', STORE = 'images';
+var db = null, dbOk = true;
+
+function openDB(){
+  return new Promise(function(res){
+    if (!window.indexedDB){ dbOk = false; res(null); return; }
+    var rq = indexedDB.open(DB_NAME, 1);
+    rq.onupgradeneeded = function(e){
+      var d = e.target.result;
+      if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE, { keyPath: 'id' });
+    };
+    rq.onsuccess = function(e){ db = e.target.result; res(db); };
+    rq.onerror = function(){ dbOk = false; res(null); };
+  });
+}
+function tx(mode){
+  if (!db) return null;
+  try { return db.transaction(STORE, mode).objectStore(STORE); } catch(e){ return null; }
+}
+function dbAll(){
+  return new Promise(function(res){
+    var st = tx('readonly'); if (!st){ res([]); return; }
+    var rq = st.getAll();
+    rq.onsuccess = function(){ res(rq.result || []); };
+    rq.onerror = function(){ res([]); };
+  });
+}
+function dbPut(rec){
+  return new Promise(function(res, rej){
+    var st = tx('readwrite'); if (!st){ rej(new Error('no db')); return; }
+    var rq = st.put(rec);
+    rq.onsuccess = function(){ res(true); };
+    rq.onerror = function(){ rej(rq.error); };
+  });
+}
+function dbDel(id){
+  return new Promise(function(res){
+    var st = tx('readwrite'); if (!st){ res(false); return; }
+    var rq = st.delete(id);
+    rq.onsuccess = function(){ res(true); };
+    rq.onerror = function(){ res(false); };
+  });
+}
+function dbClear(){
+  return new Promise(function(res){
+    var st = tx('readwrite'); if (!st){ res(false); return; }
+    var rq = st.clear();
+    rq.onsuccess = function(){ res(true); };
+    rq.onerror = function(){ res(false); };
+  });
+}
+
+var state = { texts: [], colors: [], links: [], seq: 1, theme: 'light', tab: 'texts' };
+var images = [];
+var lsOk = true;
+
+function loadLS(){
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    var o = JSON.parse(raw);
+    if (o && typeof o === 'object'){
+      ['texts','colors','links'].forEach(function(k){
+        if (Array.isArray(o[k])) state[k] = o[k];
+      });
+      if (typeof o.seq === 'number') state.seq = o.seq;
+      if (o.theme) state.theme = o.theme;
+      if (o.tab) state.tab = o.tab;
+    }
+  } catch(e){ lsOk = false; }
+}
+function saveLS(){
+  if (!lsOk) return;
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  catch(e){ lsOk = false; toast('Storage is full'); }
+}
+
+/* ============================================================
+   Normalising input
+   ============================================================ */
+function normHex(v){
+  var s = String(v || '').trim();
+  /* Accept a pasted rgb(r,g,b) value too */
+  var m = s.match(/rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+  if (m){
+    var p = [+m[1], +m[2], +m[3]];
+    if (!p.every(function(n){ return n >= 0 && n <= 255; })) return null;
+    return '#' + p.map(function(n){ return n.toString(16).padStart(2, '0'); }).join('').toUpperCase();
+  }
+  s = s.replace(/^#/, '');
+  if (/^[0-9a-fA-F]{3}$/.test(s)) s = s.split('').map(function(c){ return c + c; }).join('');
+  if (!/^[0-9a-fA-F]{6}$/.test(s)) return null;
+  return '#' + s.toUpperCase();
+}
+function toRgb(hex){
+  var h = hex.replace('#', '');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function textOn(hex){
+  var c = toRgb(hex);
+  return (0.299*c[0] + 0.587*c[1] + 0.114*c[2]) > 150 ? '#111827' : '#FFFFFF';
+}
+function normUrl(v){
+  var s = String(v || '').trim();
+  if (!s) return null;
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = 'https://' + s;
+  try {
+    var u = new URL(s);
+    /* Only http and https, to keep out javascript: and friends */
+    if (!/^https?:$/.test(u.protocol)) return null;
+    return u.href;
+  } catch(e){ return null; }
+}
+
+/* ============================================================
+   Copying
+   ============================================================ */
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+/* The image itself has to go on the clipboard for it to paste into a document.
+   PNG is the only widely accepted format, so we convert on the way in */
+function copyImage(blob, name){
+  if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write){
+    saveBlob(blob, name);
+    toast('This browser blocks image copying, so it was downloaded');
+    return;
+  }
+  navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]).then(function(){
+    toast('Image copied \u00B7 paste it anywhere');
+  }, function(){
+    saveBlob(blob, name);
+    toast('Image copying was blocked, so it was downloaded');
+  });
+}
+function saveBlob(blob, name){
+  try {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name || 'image.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+  } catch(e){}
+}
+function download(text, name, mime){
+  try {
+    var blob = new Blob([text], { type: (mime || 'text/plain') + ';charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+    return true;
+  } catch(e){ return false; }
+}
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+var urlCache = {};
+function thumbUrl(rec){
+  if (!urlCache[rec.id]) urlCache[rec.id] = URL.createObjectURL(rec.blob);
+  return urlCache[rec.id];
+}
+function items(kind){
+  if (kind === 'images') return images;
+  return state[kind] || [];
+}
+function filtered(kind){
+  var q = $('search').value.trim().toLowerCase();
+  var list = items(kind);
+  if (!q) return list;
+  return list.filter(function(x){
+    return (x.name || '').toLowerCase().indexOf(q) >= 0 ||
+           (x.body || x.hex || x.url || '').toLowerCase().indexOf(q) >= 0;
+  });
+}
+var LABEL = { texts:'text', colors:'colour', images:'image', links:'link' };
+function render(){
+  var kind = state.tab;
+  var list = filtered(kind);
+  var html = list.map(function(x){
+    var acts = '<div class="acts">' +
+      '<button data-a="edit" data-id="' + x.id + '" title="edit">✎</button>' +
+      '<button data-a="del" data-id="' + x.id + '" title="delete">×</button></div>';
+    if (kind === 'colors'){
+      return '<div class="card color" data-id="' + x.id + '" role="button" tabindex="0">' + acts +
+        '<div class="swatch" style="background:' + esc(x.hex) + ';color:' + textOn(x.hex) + '">' +
+          esc(x.hex) + '</div>' +
+        '<div class="pad"><div class="nm">' + esc(x.name) + '</div>' +
+        '<div class="bd">rgb(' + toRgb(x.hex).join(', ') + ')</div></div></div>';
+    }
+    if (kind === 'images'){
+      return '<div class="card img" data-id="' + x.id + '" role="button" tabindex="0">' + acts +
+        '<div class="thumb"><img src="' + thumbUrl(x) + '" alt="' + esc(x.name) + '" loading="lazy"></div>' +
+        '<div class="pad"><div class="nm">' + esc(x.name) + '</div>' +
+        '<div class="bd">' + x.w + '×' + x.h + ' · ' + fmtSize(x.size) + '</div></div></div>';
+    }
+    if (kind === 'links'){
+      return '<div class="card link" data-id="' + x.id + '" role="button" tabindex="0">' + acts +
+        '<div class="pad"><div class="nm">' + esc(x.name) + '</div>' +
+        '<div class="bd">' + esc(x.url) + '</div></div>' +
+        '<button class="openBtn" data-a="open" data-id="' + x.id + '" title="open in a new tab">↗</button></div>';
+    }
+    return '<div class="card text" data-id="' + x.id + '" role="button" tabindex="0">' + acts +
+      '<div class="pad"><div class="nm">' + esc(x.name) + '</div>' +
+      '<div class="bd">' + esc(x.body) + '</div></div></div>';
+  }).join('');
+
+  var addBtn = '<button class="addCard" id="addCard"><span class="plus">＋</span>Add ' +
+    LABEL[kind] + '</button>';
+  $('grid').innerHTML = html + addBtn;
+
+  var q = $('search').value.trim();
+  $('empty').classList.toggle('on', list.length === 0 && !!q);
+  if (list.length === 0 && q) $('empty').textContent = 'Nothing matches "' + q + '".';
+
+  ['texts','colors','images','links'].forEach(function(k){
+    var n = items(k).length;
+    $('c' + k.charAt(0).toUpperCase() + k.slice(1)).textContent = n ? n : '';
+  });
+  updateUsage();
+}
+function updateUsage(){
+  var imgBytes = images.reduce(function(s, x){ return s + (x.size || 0); }, 0);
+  var n = state.texts.length + state.colors.length + state.links.length + images.length;
+  $('usage').textContent = n ? ' \u00B7 ' + n + ' items' + (imgBytes ? ' \u00B7 ' + fmtSize(imgBytes) + ' of images' : '') : '';
+}
+
+/* ============================================================
+   Tabs, search, theme
+   ============================================================ */
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click', function(){
+    state.tab = this.dataset.k;
+    document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('on', x === b); });
+    render(); saveLS();
+  });
+});
+$('search').addEventListener('input', render);
+function applyTheme(t){
+  document.documentElement.setAttribute('data-t', t);
+  $('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  document.querySelector('meta[name=theme-color]')
+    .setAttribute('content', t === 'dark' ? '#0C0C0E' : '#FAFAFA');
+  state.theme = t;
+}
+$('themeBtn').addEventListener('click', function(){
+  applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+  saveLS();
+});
+
+/* ============================================================
+   Card actions
+   ============================================================ */
+$('grid').addEventListener('click', function(ev){
+  if (ev.target.closest('#addCard')){ openModal(state.tab, null); return; }
+  var act = ev.target.closest('[data-a]');
+  if (act){
+    ev.stopPropagation();
+    var id = +act.dataset.id;
+    if (act.dataset.a === 'edit'){ openModal(state.tab, id); return; }
+    if (act.dataset.a === 'del'){ removeItem(state.tab, id); return; }
+    if (act.dataset.a === 'open'){
+      var l = state.links.filter(function(x){ return x.id === id; })[0];
+      if (l) window.open(l.url, '_blank', 'noopener');
+      return;
+    }
+  }
+  var card = ev.target.closest('.card');
+  if (card) useItem(state.tab, +card.dataset.id);
+});
+$('grid').addEventListener('keydown', function(ev){
+  if (ev.key !== 'Enter' && ev.key !== ' ') return;
+  var card = ev.target.closest('.card');
+  if (card){ ev.preventDefault(); useItem(state.tab, +card.dataset.id); }
+});
+function useItem(kind, id){
+  var x = items(kind).filter(function(v){ return v.id === id; })[0];
+  if (!x) return;
+  if (kind === 'images'){ copyImage(x.blob, x.name + '.png'); return; }
+  var val = kind === 'colors' ? x.hex : kind === 'links' ? x.url : x.body;
+  copyText(val, function(ok){ toast(ok ? 'Copied \u00B7 ' + x.name : 'Copy was blocked'); });
+}
+function removeItem(kind, id){
+  var x = items(kind).filter(function(v){ return v.id === id; })[0];
+  if (!x) return;
+  if (!window.confirm('Delete "' + x.name + '"?')) return;
+  if (kind === 'images'){
+    dbDel(id).then(function(){
+      if (urlCache[id]){ URL.revokeObjectURL(urlCache[id]); delete urlCache[id]; }
+      images = images.filter(function(v){ return v.id !== id; });
+      render(); toast('Deleted');
+    });
+    return;
+  }
+  state[kind] = state[kind].filter(function(v){ return v.id !== id; });
+  saveLS(); render(); toast('Deleted');
+}
+
+/* ============================================================
+   Modal
+   ============================================================ */
+var mKind = null, mId = null, mBlob = null, mW = 0, mH = 0;
+function openModal(kind, id){
+  mKind = kind; mId = id; mBlob = null;
+  var x = id ? items(kind).filter(function(v){ return v.id === id; })[0] : null;
+  $('modalTitle').textContent = (id ? 'Edit' : 'Add') + ' \u00B7 ' + LABEL[kind];
+
+  var h = '<div><label class="lab" for="mName">Name</label>' +
+    '<input class="fld" id="mName" value="' + esc(x ? x.name : '') + '" placeholder="Something you will recognise" autocomplete="off"></div>';
+  if (kind === 'texts'){
+    h += '<div><label class="lab" for="mBody">Content</label>' +
+      '<textarea class="fld" id="mBody" placeholder="A phrase, a signature, a set of hashtags">' +
+      esc(x ? x.body : '') + '</textarea></div>';
+  } else if (kind === 'colors'){
+    var hx = x ? x.hex : '#3B82F6';
+    h += '<div><label class="lab" for="mHex">Colour</label><div id="colorRow">' +
+      '<input class="fld mono" id="mHex" value="' + esc(hx) + '" placeholder="#3B82F6 or rgb(59,130,246)" autocomplete="off">' +
+      '<input type="color" id="colorPick" value="' + esc(hx) + '"></div>' +
+      '<p class="hint">Three digits or no hash both work.</p></div>';
+  } else if (kind === 'links'){
+    h += '<div><label class="lab" for="mUrl">Address</label>' +
+      '<input class="fld mono" id="mUrl" value="' + esc(x ? x.url : '') + '" placeholder="example.com or https://..." autocomplete="off">' +
+      '<p class="hint">The prefix is added for you if you leave it off.</p></div>';
+  } else {
+    h += '<div><label class="lab">Image</label>' +
+      '<div id="dropZone" role="button" tabindex="0">' +
+      (x ? '<img id="dropPv" style="display:block" src="' + thumbUrl(x) + '" alt="">' :
+           '\uD83D\uDCC1 Click, drag in, or paste<img id="dropPv" alt="">') +
+      '</div>' +
+      '<input type="file" id="mFile" accept="image/*" style="display:none">' +
+      '<p class="hint" id="imgNote">' + (x ? 'Leave it alone to keep the current image.' : 'Stored as PNG. Large images are scaled down.') + '</p></div>';
+  }
+  $('modalBody').innerHTML = h;
+  $('modal').classList.add('on');
+
+  if (kind === 'colors'){
+    var sync = function(v){
+      var n = normHex(v);
+      if (n){ $('colorPick').value = n; }
+    };
+    $('mHex').addEventListener('input', function(){ sync(this.value); });
+    $('colorPick').addEventListener('input', function(){ $('mHex').value = this.value.toUpperCase(); });
+  }
+  if (kind === 'images'){
+    $('dropZone').addEventListener('click', function(){ $('mFile').click(); });
+    $('dropZone').addEventListener('keydown', function(ev){
+      if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('mFile').click(); }
+    });
+    $('mFile').addEventListener('change', function(e){
+      var f = e.target.files && e.target.files[0];
+      this.value = '';
+      if (f) takeImage(f);
+    });
+    $('dropZone').addEventListener('dragover', function(e){ e.preventDefault(); });
+    $('dropZone').addEventListener('drop', function(e){
+      e.preventDefault();
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) takeImage(f);
+    });
+  }
+  setTimeout(function(){ if ($('mName')) $('mName').focus(); }, 40);
+}
+function closeModal(){
+  $('modal').classList.remove('on');
+  mKind = null; mId = null; mBlob = null;
+}
+$('mCancel').addEventListener('click', closeModal);
+$('modal').addEventListener('click', function(ev){ if (ev.target === this) closeModal(); });
+document.addEventListener('keydown', function(ev){
+  if (ev.key === 'Escape' && $('modal').classList.contains('on')) closeModal();
+});
+/* Paste an image while the modal is open */
+document.addEventListener('paste', function(e){
+  if (mKind !== 'images' || !$('modal').classList.contains('on')) return;
+  var dt = e.clipboardData; if (!dt) return;
+  var f = null;
+  if (dt.files && dt.files.length) f = dt.files[0];
+  if (!f && dt.items){
+    for (var i = 0; i < dt.items.length; i++){
+      if (dt.items[i].kind === 'file'){ f = dt.items[i].getAsFile(); break; }
+    }
+  }
+  if (f && /^image\//.test(f.type || '')){ e.preventDefault(); takeImage(f); }
+});
+
+/* Convert to PNG whatever comes in \u2014 it is the only format the clipboard takes.
+   Large images are scaled to 1200px on the long edge to save space */
+function takeImage(file){
+  if (!/^image\//.test(file.type || '')){ toast('That is not an image file'); return; }
+  var url = URL.createObjectURL(file);
+  var im = new Image();
+  im.onload = function(){
+    var MAX = 1200;
+    var k = Math.min(1, MAX / Math.max(im.naturalWidth, im.naturalHeight));
+    var w = Math.round(im.naturalWidth * k), h = Math.round(im.naturalHeight * k);
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    var ctx = c.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(im, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+    c.toBlob(function(b){
+      if (!b){ toast('Could not process that image'); return; }
+      mBlob = b; mW = w; mH = h;
+      var pv = $('dropPv');
+      if (pv){
+        pv.src = URL.createObjectURL(b);
+        pv.style.display = 'block';
+        $('dropZone').classList.add('has');
+        var t = $('dropZone').childNodes[0];
+        if (t && t.nodeType === 3) t.textContent = '';
+      }
+      if ($('imgNote')) $('imgNote').textContent = w + '×' + h + ' · ' + fmtSize(b.size) +
+        (k < 1 ? ' (scaled down)' : '');
+      if ($('mName') && !$('mName').value){
+        $('mName').value = String(file.name || 'image').replace(/\.[^.]+$/, '').slice(0, 30);
+      }
+    }, 'image/png');
+  };
+  im.onerror = function(){ URL.revokeObjectURL(url); toast('Could not read the image'); };
+  im.src = url;
+}
+
+$('mSave').addEventListener('click', function(){
+  var name = ($('mName').value || '').trim();
+  if (!name){ toast('Give it a name'); $('mName').focus(); return; }
+
+  if (mKind === 'images'){
+    if (!mBlob && mId === null){ toast('Add an image'); return; }
+    if (!mBlob && mId !== null){
+      /* Keep the image, change only the name */
+      var old = images.filter(function(v){ return v.id === mId; })[0];
+      if (!old) return;
+      old.name = name;
+      dbPut(old).then(function(){ render(); closeModal(); toast('Updated'); });
+      return;
+    }
+    var id = mId !== null ? mId : state.seq++;
+    var rec = { id: id, name: name, blob: mBlob, w: mW, h: mH, size: mBlob.size, at: Date.now() };
+    dbPut(rec).then(function(){
+      if (urlCache[id]){ URL.revokeObjectURL(urlCache[id]); delete urlCache[id]; }
+      images = images.filter(function(v){ return v.id !== id; });
+      images.push(rec);
+      saveLS(); render(); closeModal();
+      toast(mId !== null ? 'Updated' : 'Saved');
+    }, function(){ toast('Could not store the image'); });
+    return;
+  }
+
+  var obj = { id: mId !== null ? mId : state.seq++, name: name };
+  if (mKind === 'texts'){
+    var body = ($('mBody').value || '').trim();
+    if (!body){ toast('Add some content'); return; }
+    obj.body = body;
+  } else if (mKind === 'colors'){
+    var hex = normHex($('mHex').value);
+    if (!hex){ toast('That colour was not recognised'); return; }
+    obj.hex = hex;
+  } else if (mKind === 'links'){
+    var u = normUrl($('mUrl').value);
+    if (!u){ toast('That address was not recognised'); return; }
+    obj.url = u;
+  }
+  var arr = state[mKind];
+  var i = arr.findIndex(function(v){ return v.id === obj.id; });
+  if (i >= 0) arr[i] = obj; else arr.push(obj);
+  saveLS(); render();
+  toast(mId !== null ? 'Updated' : 'Saved');
+  closeModal();
+});
+
+/* ============================================================
+   Backup and restore
+   Images cannot go into JSON, so they are encoded as text just for this
+   ============================================================ */
+function blobToB64(blob){
+  return new Promise(function(res){
+    var fr = new FileReader();
+    fr.onload = function(){ res(fr.result); };
+    fr.onerror = function(){ res(null); };
+    fr.readAsDataURL(blob);
+  });
+}
+function b64ToBlob(d){
+  try {
+    var p = String(d).split(',');
+    var bin = atob(p[1]);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: 'image/png' });
+  } catch(e){ return null; }
+}
+$('backupBtn').addEventListener('click', function(){
+  toast('Building the backup');
+  Promise.all(images.map(function(x){
+    return blobToB64(x.blob).then(function(d){
+      return { id: x.id, name: x.name, data: d, w: x.w, h: x.h, size: x.size };
+    });
+  })).then(function(imgs){
+    var out = {
+      v: 1, at: new Date().toISOString(),
+      texts: state.texts, colors: state.colors, links: state.links,
+      images: imgs.filter(function(x){ return x.data; }), seq: state.seq
+    };
+    var txt = JSON.stringify(out);
+    var ok = download(txt, 'asset-hub-backup.json', 'application/json');
+    toast(ok ? 'Backed up \u00B7 ' + fmtSize(txt.length) : 'The download was blocked');
+  });
+});
+$('restoreBtn').addEventListener('click', function(){ $('restoreFile').click(); });
+$('restoreFile').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function(ev){
+    var o;
+    try { o = JSON.parse(ev.target.result); } catch(err){ toast('Could not read that backup file'); return; }
+    if (!o || typeof o !== 'object'){ toast('That is not a backup file'); return; }
+    if (!window.confirm('This replaces everything currently saved. Continue?')) return;
+
+    state.texts = Array.isArray(o.texts) ? o.texts : [];
+    state.colors = Array.isArray(o.colors) ? o.colors : [];
+    state.links = Array.isArray(o.links) ? o.links : [];
+    state.seq = typeof o.seq === 'number' ? o.seq : 1;
+
+    Object.keys(urlCache).forEach(function(k){ URL.revokeObjectURL(urlCache[k]); });
+    urlCache = {};
+    dbClear().then(function(){
+      var list = Array.isArray(o.images) ? o.images : [];
+      var recs = [];
+      list.forEach(function(x){
+        var b = x.data ? b64ToBlob(x.data) : null;
+        if (!b) return;
+        recs.push({ id: x.id, name: x.name, blob: b, w: x.w, h: x.h, size: b.size, at: Date.now() });
+      });
+      return Promise.all(recs.map(dbPut)).then(function(){ images = recs; });
+    }).then(function(){
+      saveLS(); render();
+      toast('Restored \u00B7 ' +
+        (state.texts.length + state.colors.length + state.links.length + images.length) + ' items');
+    }, function(){ toast('Could not restore the images'); });
+  };
+  fr.onerror = function(){ toast('Could not read the file'); };
+  fr.readAsText(f);
+});
+
+/* ============================================================
+   Startup
+   ============================================================ */
+loadLS();
+applyTheme(state.theme || 'light');
+document.querySelectorAll('.tab').forEach(function(x){
+  x.classList.toggle('on', x.dataset.k === state.tab);
+});
+openDB().then(dbAll).then(function(list){
+  images = (list || []).sort(function(a, b){ return (a.at || 0) - (b.at || 0); });
+  if (!dbOk) toast('This browser blocks image storage');
+  render();
+});
+render();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:var(--sub);color:var(--ink2);border-top:1px solid var(--line);
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:52px 20px 62px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:740px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:var(--ink);margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.95;color:var(--ink2);margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.9;color:var(--ink2);margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:var(--ink)}
+.tk-guide code{background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--ink)}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid var(--line)}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:var(--ink);margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.9;color:var(--ink2);margin:6px 0 18px;padding-bottom:18px;
+  border-bottom:1px solid var(--line);word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:17px 19px;background:var(--panel);border:1px solid var(--line);
+  border-radius:13px;font-size:13px;line-height:1.85;color:var(--muted);word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid var(--line)}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:var(--ink);text-decoration:none;font-weight:600}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:var(--ink)}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Hunting down the same things over and over</h2>
+<p>What was the company red again? You go digging through the brand guide. You need the signature image, so you trawl through folders. The email sign-off comes from copying an old message.</p>
+<p>Each is a thirty-second job that comes round several times a day. This puts <strong>all of it in one place, one click from the clipboard</strong>.</p>
+
+<h2>Click to copy, that is the whole thing</h2>
+<p>Click a card and it lands on your clipboard. No opening an editor, no dragging to select.</p>
+<ul>
+<li><strong>📝 Text</strong> — copies the phrase as it is. Good for sign-offs, hashtag sets, standard replies.</li>
+<li><strong>🎨 Colours</strong> — copies the six-digit form, with the rgb value shown on the card.</li>
+<li><strong>🖼️ Images</strong> — <strong>the image itself goes on the clipboard.</strong> Paste straight into a document or a deck.</li>
+<li><strong>🔗 Links</strong> — copies the address; the arrow opens it in a new tab.</li>
+</ul>
+
+<h2>Why the images actually paste</h2>
+<p>Usually copying an image gives you a file path or a URL. Here the <strong>image data itself</strong> goes onto the clipboard, which is why it drops into a slide without a detour through the file system.</p>
+<p>In practice PNG is the only format that gets accepted, so whatever you load is converted to PNG on the way in. If your browser blocks the feature, the file is downloaded instead.</p>
+
+<h2>Images are stored separately</h2>
+<p>Keeping text and images together fills up fast — browsers give text roughly 5MB, which a couple of photos will exhaust.</p>
+<p>So <strong>images go into a much larger store of their own.</strong> Dozens of logos or signatures are no trouble. Large photos are scaled to 1200 pixels on the long edge, so the size stays reasonable.</p>
+
+<h2>When you change browsers</h2>
+<p>Everything lives in this browser. It will not show up on another machine, and clearing browser storage removes it.</p>
+<p><strong>Backup</strong> downloads a single file with the images included, and <strong>restore</strong> brings it all back in a new browser. Worth taking one occasionally if you keep anything you would miss.</p>
+
+<h2>Made to sit beside your work</h2>
+<p>The cards reflow as the window narrows, so it parks happily alongside whatever you are working in. There is a dark mode too.</p>
+<p>Once you have a lot of items, use the search box at the top — it filters on names and contents.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Is anything I save uploaded?</dt><dd>No. Everything including images stays inside this browser, and the tool works with the connection switched off. It will not appear on another device, so use the backup file to move things across.</dd>
+<dt>Do images really paste into documents?</dt><dd>Yes. The image itself goes onto the clipboard, so it pastes straight into documents, slides or an image editor. If your browser blocks that or is too old, it downloads the file instead.</dd>
+<dt>How many images can I store?</dt><dd>They are kept in a much larger store than the text, so dozens of logos or signatures are fine. Large photos are scaled to 1200 pixels on the long edge, which keeps the size down.</dd>
+<dt>What if I switch browsers?</dt><dd>Download a backup file and restore it in the new browser — images come across too. Clearing browser storage wipes everything, so it is worth taking a backup now and then.</dd>
+<dt>What colour formats are accepted?</dt><dd>Six digits or three, with or without the hash. Pasting an rgb value works as well and gets converted. Clicking copies the six-digit form by default, and the rgb value is shown on the card.</dd>
+<dt>Is there a search?</dt><dd>Type in the box at the top and it filters on both names and contents. Once you have a lot of items that beats switching between tabs.</dd>
+</dl>
+
+<p class="tk-guide-note">Everything runs inside your browser and nothing you save is sent to any server. It uses this browser\u2019s storage, so it does not appear on other devices and disappears if that storage is cleared or you work in a private window. Think twice before storing anything sensitive on a shared machine, and keep a backup file of anything you would miss.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/palette-picker_en.html">Brand Palette Picker</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-workbench.html">Smart Text Workbench</a></li>
+<li><a href="https://mnledu.com/en/productivity/image-studio_en.html">Photo Studio</a></li>
+<li><a href="https://mnledu.com/en/productivity/smart-list_en.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/data-harvester_en.html">Data Harvester</a></li>
+<li><a href="https://mnledu.com/en/creative/uploader-toolkit.html">Uploader Toolkit</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/asset-hub_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/asset-hub_en.html";
+  var TK_SHARE_TITLE = "One-Click Asset Hub";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

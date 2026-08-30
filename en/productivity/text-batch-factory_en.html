@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Batch Factory | TOOLKIT</title>
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Cleans pasted text instantly in your browser. Combine markdown stripping, subtitle splitting and list numbering. Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/text-batch-factory_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/text-batch-factory_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/text-batch-factory_en.html" />
+<meta property="og:title" content="Text Batch Factory | TOOLKIT" />
+<meta property="og:description" content="Cleans pasted text instantly in your browser. Combine markdown stripping, subtitle splitting and list numbering. Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Text Batch Factory | TOOLKIT" />
+<meta name="twitter:description" content="Cleans pasted text instantly in your browser. Combine markdown stripping, subtitle splitting and list numbering. Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<!-- TOOLKIT:SEO_END -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{ui:['Pretendard','Apple SD Gothic Neo','Segoe UI',sans-serif],mono:['JetBrains Mono','SFMono-Regular',Consolas,monospace]}}}}</script>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Pretendard, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .app-shell { background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .panel { background: #111c31; border: 1px solid #263550; box-shadow: 0 18px 45px rgba(0,0,0,.18); }
+    .textarea { width: 100%; min-height: 530px; resize: vertical; border: 1px solid #334155; border-radius: 14px; background: #0a1222; color: #e2e8f0; padding: 16px; outline: none; font: 13px/1.85 'JetBrains Mono', Consolas, monospace; tab-size: 2; transition: border-color .18s, box-shadow .18s; }
+    .textarea:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
+    .control { width: 100%; border: 1px solid #334155; border-radius: 9px; background: #0a1222; color: inherit; padding: 8px 10px; outline: none; }
+    .control:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,.12); }
+    .option { border: 1px solid #2c3b56; border-radius: 10px; background: rgba(15, 29, 51, .78); transition: border-color .15s, background .15s; }
+    .option:has(input:checked) { border-color: rgba(56,189,248,.75); background: rgba(14,116,144,.14); }
+    .guide { border-top: 1px solid #263550; background: #0c1424; color: #cbd5e1; padding: 55px 20px 64px; }
+    .guide-inner { max-width: 790px; margin: auto; }
+    .guide h2 { margin: 44px 0 0; color: #f8fafc; font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+    .guide h2:first-child { margin-top: 0; }
+    .guide p { margin: 14px 0 0; font-size: 14.5px; line-height: 1.95; }
+    .guide strong { color: #38bdf8; }
+    .guide dl { margin: 15px 0 0; border-top: 1px solid #263550; }
+    .guide dt { margin-top: 18px; color: #f8fafc; font-weight: 800; }
+    .guide dd { margin: 6px 0 18px; padding-bottom: 18px; border-bottom: 1px solid #263550; font-size: 14.5px; line-height: 1.85; }
+    .guide code { border: 1px solid #334155; border-radius: 5px; background: #08101f; padding: 1px 6px; color: #e0f2fe; font-family: 'JetBrains Mono', Consolas, monospace; font-size: 12px; }
+    .guide-note { margin-top: 42px !important; border: 1px solid #334155; border-radius: 13px; background: #08101f; padding: 16px 18px; color: #94a3b8; font-size: 13px !important; }
+    body.light .app-shell { background: #f1f5f9; color: #172033; }
+    body.light .panel { background: #fff; border-color: #dbe3ef; box-shadow: 0 15px 35px rgba(15,23,42,.08); }
+    body.light .textarea, body.light .control { background: #f8fafc; color: #172033; border-color: #cbd5e1; }
+    body.light .option { background: #f8fafc; border-color: #dbe3ef; }
+    body.light .option:has(input:checked) { background: #f0f9ff; border-color: #38bdf8; }
+    body.light .guide { background: #fff; color: #475569; border-color: #dbe3ef; }
+    body.light .guide h2, body.light .guide dt { color: #172033; }
+    body.light .guide dl, body.light .guide dd { border-color: #e2e8f0; }
+    body.light .guide code, body.light .guide-note { background: #f8fafc; border-color: #dbe3ef; }
+    @media (max-width: 1023px) { .textarea { min-height: 310px; } }
+  </style>
+</head>
+<body class="bg-slate-950">
+  <div class="app-shell">
+    <header class="border-b border-slate-700/70 bg-slate-950/70 px-4 py-4 backdrop-blur sm:px-6">
+      <div class="mx-auto flex max-w-[1800px] items-center justify-between gap-4">
+        <div><div class="flex items-center gap-2"><span class="text-xl">🏭</span><h1 class="text-base font-black tracking-tight text-white sm:text-lg" data-i18n="title">Smart Text Batch Factory</h1></div><p class="mt-1 text-xs text-slate-400" data-i18n="subtitle">Cleans pasted text instantly in your browser · nothing is sent to a server</p></div>
+        <div class="flex items-center gap-2"><button id="themeButton" class="rounded-lg border border-slate-600 px-3 py-2 text-xs font-bold text-slate-300 transition hover:border-sky-400 hover:text-sky-200">◐ <span data-i18n="theme">Theme</span></button><button id="languageButton" class="rounded-lg border border-slate-600 px-3 py-2 text-xs font-bold text-slate-300 transition hover:border-sky-400 hover:text-sky-200">EN</button></div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-[1800px] px-4 py-6 sm:px-6">
+      <div class="mb-5 flex flex-wrap items-center justify-between gap-3"><p id="status" class="mono text-xs text-slate-400" aria-live="polite">READY · 0 chars</p><div class="flex gap-2"><button id="sampleButton" class="rounded-lg border border-slate-600 px-3 py-2 text-xs font-bold text-slate-300 transition hover:border-slate-400" data-i18n="sample">Load sample</button><button id="clearButton" class="rounded-lg border border-slate-600 px-3 py-2 text-xs font-bold text-slate-300 transition hover:border-rose-400 hover:text-rose-300" data-i18n="clear">Clear all</button></div></div>
+      <section class="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_340px_minmax(0,1.25fr)]">
+        <article class="panel rounded-2xl p-4 sm:p-5"><div class="mb-3 flex items-center justify-between"><div><p class="mono text-[11px] font-bold tracking-[.16em] text-sky-400">01 / INPUT</p><h2 class="mt-1 font-bold" data-i18n="source">Source text</h2></div><span id="inputCount" class="mono text-xs text-slate-500">0 chars</span></div><textarea id="inputText" class="textarea" spellcheck="false" placeholder="여기에 긁어온 텍스트, 대본, 엑셀 목록을 그대로 붙여 넣으세요." data-i18n-placeholder="inputPlaceholder"></textarea></article>
+
+        <aside class="panel rounded-2xl p-4 sm:p-5"><div class="mb-4"><p class="mono text-[11px] font-bold tracking-[.16em] text-sky-400">02 / PROCESS</p><h2 class="mt-1 font-bold" data-i18n="actions">Quick actions</h2><p class="mt-1 text-xs leading-5 text-slate-500" data-i18n="realtime">The result updates the moment you change an option.</p></div>
+          <div class="space-y-5">
+            <fieldset><legend class="mb-2 text-xs font-black tracking-[.08em] text-slate-400" data-i18n="cleaner">🧹 Cleaner &amp; formatter</legend><div class="space-y-2">
+              <label class="option flex cursor-pointer items-start gap-3 p-3"><input id="stripMarkdown" type="checkbox" class="mt-0.5 accent-sky-400" checked><span><b class="text-sm" data-i18n="stripMarkdown">Strip markdown symbols</b><small class="mt-1 block text-xs leading-5 text-slate-500" data-i18n="stripMarkdownDetail">Removes link, emphasis, heading and quote syntax only</small></span></label>
+              <label class="option flex cursor-pointer items-start gap-3 p-3"><input id="restoreLists" type="checkbox" class="mt-0.5 accent-sky-400" checked><span><b class="text-sm" data-i18n="restoreLists">Unbunch list items</b><small class="mt-1 block text-xs leading-5 text-slate-500" data-i18n="restoreListsDetail">Inserts a line break automatically before numbers and bullets</small></span></label>
+              <label class="option flex cursor-pointer items-start gap-3 p-3"><input id="normalizeSpace" type="checkbox" class="mt-0.5 accent-sky-400" checked><span><b class="text-sm" data-i18n="normalizeSpace">Remove blank lines and stray spaces</b><small class="mt-1 block text-xs leading-5 text-slate-500" data-i18n="normalizeSpaceDetail">Trims every line, then collapses runs of blank lines</small></span></label>
+            </div></fieldset>
+            <fieldset><legend class="mb-2 text-xs font-black tracking-[.08em] text-slate-400" data-i18n="subtitleChunker">🎬 Smart subtitle splitting</legend><label class="option flex cursor-pointer items-center gap-3 p-3"><input id="subtitleMode" type="checkbox" class="accent-sky-400"><span class="text-sm font-bold" data-i18n="enableSubtitle">Enable subtitle splitting</span></label><div id="subtitleSettings" class="mt-2 hidden space-y-3 rounded-xl border border-slate-700/80 p-3"><label class="block text-xs font-bold text-slate-400"><span data-i18n="maxCharacters">Max characters per line</span><span id="limitValue" class="mono float-right text-sky-400">24</span><input id="charLimit" class="mt-2 w-full accent-sky-400" type="range" min="10" max="40" value="24"></label><label class="option flex cursor-pointer items-center gap-3 p-3"><input id="twoLineGroups" type="checkbox" class="accent-sky-400"><span class="text-sm font-bold" data-i18n="twoLine">Pair into two-line subtitles</span></label></div></fieldset>
+            <fieldset><legend class="mb-2 text-xs font-black tracking-[.08em] text-slate-400" data-i18n="listTools">📑 Spreadsheet &amp; list processing</legend><div class="space-y-2"><select id="prefixMode" class="control text-sm"><option value="none" data-i18n="prefixNone">No prefix</option><option value="number" data-i18n="prefixNumber">1., 2., 3. numbering</option><option value="bullet" data-i18n="prefixBullet">Add a custom bullet</option></select><input id="bulletValue" class="control hidden mono text-sm" maxlength="8" value="- " aria-label="Bullet symbol"><label class="option flex cursor-pointer items-center gap-3 p-3"><input id="deduplicate" type="checkbox" class="accent-sky-400"><span class="text-sm font-bold" data-i18n="deduplicate">Remove exact duplicate lines</span></label><label class="option flex cursor-pointer items-center gap-3 p-3"><input id="extractContacts" type="checkbox" class="accent-sky-400"><span class="text-sm font-bold" data-i18n="extractContacts">Extract only URLs / emails</span></label></div></fieldset>
+          </div>
+        </aside>
+
+        <article class="panel rounded-2xl p-4 sm:p-5"><div class="mb-3 flex items-center justify-between gap-3"><div><p class="mono text-[11px] font-bold tracking-[.16em] text-emerald-400">03 / OUTPUT</p><h2 class="mt-1 font-bold" data-i18n="result">Result</h2></div><button id="copyButton" class="rounded-lg bg-sky-500 px-3 py-2 text-xs font-black text-slate-950 transition hover:bg-sky-300">📋 <span data-i18n="copy">Copy in one click</span></button></div><textarea id="outputText" class="textarea" spellcheck="false" readonly placeholder="Result가 여기에 실시간으로 나타납니다." data-i18n-placeholder="outputPlaceholder"></textarea><p id="copyNotice" class="mt-3 min-h-5 text-xs text-slate-500" aria-live="polite" data-i18n="sync">The input and result panels scroll together.</p></article>
+      </section>
+    </main>
+
+    <section id="guide" class="guide"><div class="guide-inner">
+      <h2>Paste your text and switch on whichever rules you need</h2><p>This tool is a workspace for quickly tidying text that arrives in mixed formats: web copy, meeting notes, video scripts, spreadsheet lists. Your text is processed by JavaScript inside the browser only, with no external API calls and nothing sent to a server.</p><p>Paste the original on the left and combine whichever features you need in the middle. The result on the right recalculates the moment you type or change an option, so there is no run button to press.</p>
+      <h2>The cleaning options can be combined</h2><p><strong>Strip markdown symbols</strong>removes the syntax for headings ( <code>#</code>), emphasis ( <code>**</code>), links ( <code>[text](url)</code>) and quote marks, leaving only readable prose. A link keeps its link text rather than its address.</p><p><strong>Unbunch list items</strong>looks for <code>1.</code>, <code>2.</code>, <code>-</code>, <code>•</code> inside a run-on sentence and breaks a new line before it. Turning on the whitespace cleanup at the end also trims each line and collapses repeated blank lines.</p>
+      <h2>Subtitle splitting keeps words whole</h2><p>With subtitle mode on and a limit set between 10 and 40 characters per line, it breaks at a space wherever possible. A single long word is never cut in half and stays on one line.</p><p><strong>Pair into two-line subtitles</strong>Turning this on keeps a line break between the two lines of a subtitle pair and separates the next pair with a blank line, ready to paste straight into a subtitle editor.</p>
+      <h2>List and spreadsheet processing works line by line</h2><p>Choosing number or custom bullet prefixes every non-blank line. Removing duplicates keeps only lines that match exactly, so similar-but-different data stays untouched.</p><p><strong>Extract only URLs / emails</strong>Turning this on finds every web address and email in the current text and lists them one per line, useful for pulling out a mailing list or a set of reference links.</p>
+      <h2>Frequently asked questions</h2><dl><dt>Is my text sent anywhere?</dt><dd>No. Every rule and pattern runs in your current browser. There are no network requests, API calls or account logins.</dd><dt>Can it handle long text?</dt><dd>Yes. Even with very long input, processing is batched so it does not re-run on every single keystroke. Text running into the hundreds of thousands of characters may still take a moment depending on your browser and device.</dd><dt>Can I compare the original and the result side by side?</dt><dd>The left and right panels sync their scroll position proportionally, so you can compare the same relative point even when the result has a different number of lines.</dd><dt>Can I edit the result directly?</dt><dd>The result panel is read-only to prevent accidental overwrites. Copy what you need and finish editing it in your own document or editor.</dd></dl>
+      <p class="guide-note">All text processing in this app happens in your local browser. The Tailwind CSS CDN is used only to load visual styling; the text you enter is never processed, analysed or stored on a separate server.</p>
+    </div></section>
+  </div>
+
+  <script>
+  (() => {
+    const $ = id => document.getElementById(id);
+    const isEnglish = document.documentElement.lang === 'en';
+    const t = {
+      title:'Text Batch Factory', subtitle:'Clean pasted text instantly inside your browser · no server transfer', theme:'Theme', sample:'Insert sample', clear:'Clear all', source:'Source text', inputPlaceholder:'Paste raw text, a script, or an Excel-style list here.', actions:'Quick-action panel', realtime:'The result refreshes as you change an option.', cleaner:'🧹 Cleaner & formatter', stripMarkdown:'Remove Markdown syntax', stripMarkdownDetail:'Remove link, emphasis, heading, and quote syntax', restoreLists:'Restore packed lists', restoreListsDetail:'Insert line breaks before numbers and bullets', normalizeSpace:'Trim blank lines and extra whitespace', normalizeSpaceDetail:'Trim every line and collapse repeated blank lines', subtitleChunker:'🎬 Smart subtitle chunker', enableSubtitle:'Enable subtitle chunking', maxCharacters:'Maximum characters per line', twoLine:'Group subtitles into two lines', listTools:'📑 Excel / list tools', prefixNone:'No prefix', prefixNumber:'Number lines: 1., 2., 3.', prefixBullet:'Add custom bullet', deduplicate:'Remove exact duplicate lines', extractContacts:'Extract URLs / emails only', result:'Processed result', copy:'Copy once', outputPlaceholder:'Processed text appears here in real time.', sync:'Source and output scroll together.', copied:'Copied to clipboard.', copyFailed:'Copy failed. Please select and copy manually.', ready:'READY', chars:'chars', sourceUpdated:'SOURCE UPDATED', sampleText:'**Project Memo** 1. First task is [review guide](https://example.com) 2. Email team@example.com - Check the schedule - Check the schedule\n\n> Please reply by Friday.'
+    };
+    const guideEn = `<div class="guide-inner"><h2>Paste text, then turn on only the rules you need</h2><p>This workspace quickly cleans text with mixed formatting: web documents, meeting notes, video scripts, and Excel-style lists. Your text is processed only with JavaScript inside this browser. It never calls an external API or sends content to a server.</p><p>Paste the original on the left and combine only the controls you need in the middle. The result on the right is recalculated when text or options change, so there is no separate run button.</p><h2>Cleaner rules can be combined</h2><p><strong>Remove Markdown syntax</strong> clears heading <code>#</code> marks, <code>**</code> emphasis, <code>[text](URL)</code> links, quote marks, and similar syntax while keeping readable plain text. Links keep their label rather than their address.</p><p><strong>Restore packed lists</strong> looks for <code>1.</code>, <code>2.</code>, <code>-</code>, and <code>•</code> that have been squeezed into a line, then starts them on new lines. Whitespace cleanup then trims each line and collapses repeated blank lines.</p><h2>Subtitle chunking protects words</h2><p>Enable subtitle mode and select a maximum of 10 to 40 characters per line. The tool breaks lines at spaces whenever possible, so a word is never cut in half. A single long word stays on one line instead of being arbitrarily split.</p><p>With <strong>Group subtitles into two lines</strong> enabled, each subtitle pair stays on adjacent lines and each next pair is separated by a blank line—ready to paste into a subtitle editor.</p><h2>List and Excel processing works line by line</h2><p>Numbering or a custom bullet is added to every non-empty line. Exact duplicate removal keeps one copy only when the full line matches, protecting lines that merely look similar.</p><p>Enable <strong>Extract URLs / emails only</strong> to collect web links and email addresses from the current text, one item per line. It is useful for separating a mailing list or reference links.</p><h2>Frequently asked questions</h2><dl><dt>Is my text sent anywhere?</dt><dd>No. All rules and regular expressions run in the current browser. There are no network requests for your text, API calls, accounts, or login features.</dd><dt>Can I use long text?</dt><dd>Yes. Updates are briefly grouped so the tool does not run several times for every keystroke. With hundreds of thousands of characters, processing can still take a moment depending on the browser and device.</dd><dt>Can I compare source and output?</dt><dd>The source and output areas synchronise their scroll position by progress ratio. You can compare the same point even when the result has a different number of lines.</dd><dt>Can I edit the processed result?</dt><dd>The output is read-only to prevent accidental overwrite. Copy it, then finish any manual edits in your preferred editor or document.</dd></dl><p class="guide-note">All text processing happens in your local browser. Tailwind CSS CDN is used only to load the visual style; processing, analysis, and storage of your pasted text never pass through a separate server.</p></div>`;
+    function translatePage(){ if(!isEnglish) return; document.title=t.title; document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t[el.dataset.i18n]||el.textContent); document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=t[el.dataset.i18nPlaceholder]||el.placeholder); $('guide').innerHTML=guideEn; $('languageButton').textContent='한국어'; }
+    translatePage();
+    const input=$('inputText'), output=$('outputText'), status=$('status'), inputCount=$('inputCount'), notice=$('copyNotice');
+    const options=['stripMarkdown','restoreLists','normalizeSpace','subtitleMode','charLimit','twoLineGroups','prefixMode','bulletValue','deduplicate','extractContacts'].map($);
+    function restorePackedLists(text){ return text.replace(/([^\n])(?:[ \t]+)(?=((?:\d{1,3}[.)]|[-•])\s+))/g,'$1\n'); }
+    function stripMarkdown(text){ return text.replace(/```[^\n`]*\n?([\s\S]*?)```/g,'$1').replace(/!\[([^\]]*)\]\([^)]*\)/g,'$1').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/^\s{0,3}#{1,6}\s+/gm,'').replace(/^\s*>\s?/gm,'').replace(/^\s*[*+-]\s+(?=\S)/gm,'').replace(/[`*_~]+/g,''); }
+    function tidy(text){ return text.split('\n').map(line=>line.trim().replace(/[ \t]{2,}/g,' ')).join('\n').replace(/\n{2,}/g,'\n').trim(); }
+    function chunkLine(line, limit){ const words=line.trim().split(/\s+/).filter(Boolean); if(!words.length) return []; const chunks=[]; let current=''; for(const word of words){ const next=current?current+' '+word:word; if(current && next.length>limit){ chunks.push(current); current=word; } else current=next; } if(current) chunks.push(current); return chunks; }
+    function subtitleChunk(text, limit, groups){ const lines=text.split('\n').flatMap(line=>line.trim()?chunkLine(line,limit):[]); if(!groups) return lines.join('\n'); const paired=[]; for(let i=0;i<lines.length;i+=2) paired.push(lines.slice(i,i+2).join('\n')); return paired.join('\n\n'); }
+    function extractLinks(text){ const found=text.match(/(?:https?:\/\/[^\s<>"']+|www\.[^\s<>"']+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi)||[]; return [...new Set(found.map(v=>v.replace(/[),.;]+$/,'')))].join('\n'); }
+    function lineTools(text){ let lines=text.split('\n'); if($('deduplicate').checked){ const seen=new Set(); lines=lines.filter(line=>{const key=line.trim(); if(!key||seen.has(key)) return !key; seen.add(key); return true;}); } const mode=$('prefixMode').value; if(mode!=='none'){ let n=0; lines=lines.map(line=>{if(!line.trim()) return line; n++; return mode==='number'?`${n}. ${line}`:`${$('bulletValue').value||'- '}${line}`;}); } return lines.join('\n'); }
+    let queued=false;
+    function process(){ queued=false; let text=input.value.replace(/\r\n?/g,'\n'); const rawLength=text.length; if($('restoreLists').checked) text=restorePackedLists(text); if($('stripMarkdown').checked) text=stripMarkdown(text); if($('normalizeSpace').checked) text=tidy(text); if($('subtitleMode').checked) text=subtitleChunk(text,Number($('charLimit').value),$('twoLineGroups').checked); if($('extractContacts').checked) text=extractLinks(text); else text=lineTools(text); output.value=text; inputCount.textContent=`${rawLength.toLocaleString()} ${t.chars}`; status.textContent=`${t.ready} · ${rawLength.toLocaleString()} ${t.chars} → ${text.length.toLocaleString()} ${t.chars}`; }
+    function schedule(){ if(!queued){queued=true; requestAnimationFrame(process);} }
+    input.addEventListener('input',schedule); options.forEach(el=>el.addEventListener('input',schedule)); options.forEach(el=>el.addEventListener('change',schedule));
+    $('subtitleMode').addEventListener('change',()=>{$('subtitleSettings').classList.toggle('hidden',!$('subtitleMode').checked);}); $('prefixMode').addEventListener('change',()=>{$('bulletValue').classList.toggle('hidden',$('prefixMode').value!=='bullet');}); $('charLimit').addEventListener('input',()=>{$('limitValue').textContent=$('charLimit').value;});
+    let syncing=false; function syncScroll(from,to){ if(syncing) return; syncing=true; const maxFrom=Math.max(1,from.scrollHeight-from.clientHeight), maxTo=Math.max(0,to.scrollHeight-to.clientHeight); to.scrollTop=(from.scrollTop/maxFrom)*maxTo; syncing=false; } input.addEventListener('scroll',()=>syncScroll(input,output)); output.addEventListener('scroll',()=>syncScroll(output,input));
+    $('copyButton').addEventListener('click',async()=>{ try{await navigator.clipboard.writeText(output.value); notice.textContent=t.copied;}catch{output.focus();output.select();document.execCommand('copy');notice.textContent=t.copyFailed;} setTimeout(()=>notice.textContent=t.sync,1800);});
+    $('sampleButton').addEventListener('click',()=>{input.value=t.sampleText;schedule();input.focus();}); $('clearButton').addEventListener('click',()=>{input.value='';schedule();input.focus();});
+    $('themeButton').addEventListener('click',()=>{document.body.classList.toggle('light');localStorage.setItem('tbf-theme',document.body.classList.contains('light')?'light':'dark');}); if(localStorage.getItem('tbf-theme')==='light') document.body.classList.add('light');
+    $('languageButton').addEventListener('click',()=>{location.href=isEnglish?'text-batch-factory_ko.html':'text-batch-factory_en.html';}); process();
+  })();
+  </script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Cleaning up text that arrives in mixed formats</h2>
+<p>Text copied from the web, meeting notes, video scripts and spreadsheet lists all carry their own habits: stray markdown symbols, list items bunched into one sentence, uneven blank lines.</p>
+<p>This tool combines the cleanup rules you need. Paste the original on the left, switch on a rule, and the result appears on the right immediately.</p>
+<h2>When to use it</h2><dl>
+<dt>Turning markdown into plain text</dt><dd>Stripping #, ** and [link](url) syntax and keeping only readable prose.</dd>
+<dt>Building a subtitle script</dt><dd>Splitting a long script to a character limit per line, ready to paste into a subtitle editor.</dd>
+<dt>Spreadsheet and list cleanup</dt><dd>Adding numbering or bullets, removing duplicate lines, or pulling out only the URLs and emails.</dd>
+<dt>Clearing leftover formatting</dt><dd>Tidying blank lines and stray spaces when merging text gathered from several places.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Paste your source text on the left.</li>
+<li>Switch on the cleanup rules you need. Several can run together.</li>
+<li>Copy the result from the right.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Strip markdown symbols</dt><dd>Removes heading, emphasis, link and quote syntax, leaving only the text.</dd>
+<dt>Smart subtitle splitting</dt><dd>Set a character limit per line and it breaks at a space. Long words are never cut.</dd>
+<dt>Spreadsheet / list processing</dt><dd>Add numbering or bullets, remove duplicates, or extract only URLs and emails.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Is my text sent anywhere</dt><dd>No. Every rule runs inside your current browser with no network requests.</dd>
+<dt>Can it handle long text</dt><dd>Yes, though text running into hundreds of thousands of characters may take a moment depending on your device.</dd>
+<dt>Can I edit the result directly</dt><dd>The result panel is read-only. Copy it and finish editing in your own document.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/data-slicer_en.html">Excel & CSV Data Slicer</a></li>
+<li><a href="https://mnledu.com/en/productivity/copy-desk_en.html">One-Click Copy Desk</a></li>
+<li><a href="https://mnledu.com/en/productivity/receipt-to-excel_en.html">Receipt to Expense Sheet</a></li>
+<li><a href="https://mnledu.com/en/productivity/roster-maker_en.html">Fair Roster Maker</a></li>
+<li><a href="https://mnledu.com/en/productivity/sheet2memo_en.html">Sheet2Memo</a></li>
+<li><a href="https://mnledu.com/en/productivity/smart-list_en.html">Smart List Formatter</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools &rarr;</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my text sent anywhere",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Every rule runs inside your current browser with no network requests."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it handle long text",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, though text running into hundreds of thousands of characters may take a moment depending on your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I edit the result directly",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The result panel is read-only. Copy it and finish editing in your own document."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/text-batch-factory_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/text-batch-factory_en.html";
+  var TK_SHARE_TITLE = "Text Batch Factory";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">최초 등록</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screenshot Beautifier | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Add background, padding, rounded corners and a window bar to plai… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/design-media/screendeco_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/design-media/screendeco_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/screendeco_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/design-media/screendeco_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/design-media/screendeco_en.html" />
+<meta property="og:title" content="Screenshot Beautifier · image · slides | TOOLKIT" />
+<meta property="og:description" content="Add background, padding, rounded corners and a window bar to plai… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Screenshot Beautifier · image · slides | TOOLKIT" />
+<meta name="twitter:description" content="Add background, padding, rounded corners and a window bar to plai… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Screenshot Beautifier",
+  "description": "Add background, padding, rounded corners and a window bar to plain screenshots.",
+  "url": "https://mnledu.com/en/design-media/screendeco_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+
+  /* 붙여넣기 안내 영역 */
+  #dropzone{
+    border:2px dashed #CBD4DE; border-radius:12px; background:#fff;
+    padding:64px 24px; text-align:center; cursor:pointer;
+    transition:border-color .14s, background .14s;
+  }
+  #dropzone:hover{ border-color:var(--steel); background:#FAFCFD; }
+  #dropzone.over{ border-color:var(--steel); background:#EDF4FA; }
+  #dropzone:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+
+  /* 미리보기 */
+  #stage{
+    background:
+      linear-gradient(45deg, #EFF1F4 25%, transparent 25%, transparent 75%, #EFF1F4 75%),
+      linear-gradient(45deg, #EFF1F4 25%, #fff 25%, #fff 75%, #EFF1F4 75%);
+    background-size:18px 18px;
+    background-position:0 0, 9px 9px;
+    border-radius:10px;
+  }
+  #canvas{ max-width:100%; height:auto; display:block; margin:0 auto; }
+
+  /* 슬라이더 */
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:3px; border-radius:999px; background:var(--hair);
+    outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:16px; height:16px; border-radius:999px;
+    background:var(--ink); border:2px solid #fff;
+    box-shadow:0 1px 3px rgba(38,56,75,.3); cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:16px; height:16px; border-radius:999px;
+    background:var(--ink); border:2px solid #fff; cursor:pointer;
+  }
+
+  input[type=color]{
+    width:38px; height:32px; padding:2px; cursor:pointer;
+    border:1px solid var(--hair); border-radius:6px; background:#fff;
+  }
+
+  .swatch{
+    width:22px; height:22px; border-radius:999px; border:1px solid rgba(38,56,75,.12);
+    cursor:pointer; padding:0; transition:transform .1s;
+  }
+  .swatch:hover{ transform:scale(1.12); }
+  .swatch:focus-visible{ outline:2px solid var(--steel); outline-offset:2px; }
+
+  .switch{ position:relative; width:38px; height:22px; flex:none; }
+  .switch input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+  .track{ position:absolute; inset:0; border-radius:999px; background:#D6DDE4; transition:background .16s; pointer-events:none; }
+  .knob{ position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:999px; background:#fff;
+         box-shadow:0 1px 2px rgba(38,56,75,.25); transition:transform .16s; pointer-events:none; }
+  .switch input:checked ~ .track{ background:var(--steel); }
+  .switch input:checked ~ .knob{ transform:translateX(16px); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">Screenshot Beautifier</h1>
+      <p class="mt-1 text-[13px] text-muted">Give a screenshot padding and a shadow · handled entirely in your browser</p>
+    </div>
+    <button id="newBtn" class="btn shrink-0">Another image</button>
+  </header>
+
+  <!-- 컨트롤 -->
+  <div id="controls" class="mb-4 hidden rounded-lg border border-hair bg-white px-5 py-4">
+    <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">Background</span>
+        <input type="color" id="bgColor" value="#26384B" aria-label="Background colour">
+        <div class="flex flex-wrap gap-1.5">
+          <button class="swatch" data-c="#26384B" style="background:#26384B" title="Deep slate"></button>
+          <button class="swatch" data-c="#2C6BA0" style="background:#2C6BA0" title="Steel blue"></button>
+          <button class="swatch" data-c="#5F7488" style="background:#5F7488" title="Muted slate"></button>
+          <button class="swatch" data-c="#F4F5F7" style="background:#F4F5F7" title="Light grey"></button>
+          <button class="swatch" data-c="#FFFFFF" style="background:#FFFFFF" title="White"></button>
+          <button class="swatch" data-c="#111827" style="background:#111827" title="Charcoal"></button>
+        </div>
+      </div>
+
+      <label class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">Traffic lights</span>
+        <span class="switch"><input type="checkbox" id="mac" checked><span class="track"></span><span class="knob"></span></span>
+        <span class="text-[13px]">Show a Mac window bar</span>
+      </label>
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">Shadow</span>
+        <input type="range" id="shadow" min="0" max="100" value="45">
+        <span id="shadowVal" class="num w-9 shrink-0 text-right text-[12px] text-muted">45</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">Padding</span>
+        <input type="range" id="pad" min="0" max="200" value="64">
+        <span id="padVal" class="num w-9 shrink-0 text-right text-[12px] text-muted">64</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="w-16 shrink-0 text-[12px] text-muted">Corners</span>
+        <input type="range" id="radius" min="0" max="48" value="12">
+        <span id="radiusVal" class="num w-9 shrink-0 text-right text-[12px] text-muted">12</span>
+      </div>
+
+      <div class="flex items-center gap-3 text-[12px] text-muted">
+        <span class="w-16 shrink-0">Size</span>
+        <span id="sizeInfo" class="num"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 붙여넣기 안내 -->
+  <div id="dropzone" tabindex="0" role="button" aria-label="Paste a screenshot">
+    <svg class="mx-auto mb-4" width="38" height="38" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"
+         style="color:var(--steel)" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.6"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+    <p class="text-[16px] font-medium">Paste a screenshot here (Ctrl + V)</p>
+    <p class="mt-2 text-[12.5px] text-muted">Use ⌘ + V on a Mac · you can also drop an image here or click to browse</p>
+    <input type="file" id="picker" accept="image/*" class="hidden">
+  </div>
+
+  <!-- 미리보기 -->
+  <div id="preview" class="hidden">
+    <div id="stage" class="border border-hair p-5">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="mt-4 flex flex-wrap items-center justify-end gap-2">
+      <button id="copyBtn" class="btn">이미지로 복사</button>
+      <button id="dlBtn" class="btn btn-primary">PNG 다운로드</button>
+    </div>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const dropzone = document.getElementById('dropzone');
+  const preview  = document.getElementById('preview');
+  const controls = document.getElementById('controls');
+  const picker   = document.getElementById('picker');
+  const canvas   = document.getElementById('canvas');
+  const ctx      = canvas.getContext('2d');
+
+  const bgColor  = document.getElementById('bgColor');
+  const mac      = document.getElementById('mac');
+  const shadow   = document.getElementById('shadow');
+  const pad      = document.getElementById('pad');
+  const radius   = document.getElementById('radius');
+  const sizeInfo = document.getElementById('sizeInfo');
+
+  let img = null;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 둥근 사각형 ---------- */
+  function roundRect(c, x, y, w, h, r) {
+    const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+    c.beginPath();
+    if (c.roundRect) { c.roundRect(x, y, w, h, rr); return; }
+    c.moveTo(x + rr, y);
+    c.lineTo(x + w - rr, y);
+    c.quadraticCurveTo(x + w, y, x + w, y + rr);
+    c.lineTo(x + w, y + h - rr);
+    c.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+    c.lineTo(x + rr, y + h);
+    c.quadraticCurveTo(x, y + h, x, y + h - rr);
+    c.lineTo(x, y + rr);
+    c.quadraticCurveTo(x, y, x + rr, y);
+    c.closePath();
+  }
+
+  /* ---------- 렌더링 ---------- */
+  function render() {
+    if (!img) return;
+
+    const p = parseInt(pad.value, 10);
+    const r = parseInt(radius.value, 10);
+    const sh = parseInt(shadow.value, 10);
+
+    // Traffic lights 헤더 : 이미지 폭에 맞춰 완만하게 커진다 (기본 30px)
+    const barH = mac.checked ? Math.round(Math.min(56, Math.max(30, img.width * 0.032))) : 0;
+
+    const frameW = img.width;
+    const frameH = img.height + barH;
+    const W = frameW + p * 2;
+    const H = frameH + p * 2;
+
+    canvas.width = W;
+    canvas.height = H;
+
+    // 1) 배경
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = bgColor.value;
+    ctx.fillRect(0, 0, W, H);
+
+    // 2) Shadow : 창 모양을 한 번 채워서 Shadow만 남긴다
+    if (sh > 0 && p > 0) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(15, 23, 35, ' + (sh / 100 * 0.45).toFixed(3) + ')';
+      ctx.shadowBlur = sh * 0.75;
+      ctx.shadowOffsetY = sh * 0.28;
+      ctx.fillStyle = '#000';
+      roundRect(ctx, p, p, frameW, frameH, r);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 3) 창 영역을 둥글게 잘라내고 그 안에 헤더와 이미지를 그린다
+    ctx.save();
+    roundRect(ctx, p, p, frameW, frameH, r);
+    ctx.clip();
+
+    if (barH > 0) {
+      ctx.fillStyle = '#EDEFF2';
+      ctx.fillRect(p, p, frameW, barH);
+      ctx.fillStyle = 'rgba(38,56,75,.10)';
+      ctx.fillRect(p, p + barH - 1, frameW, 1);
+
+      const cr = barH * 0.185;                 // Traffic lights 반지름
+      const cy = p + barH / 2;
+      const gap = cr * 3.4;
+      let cx = p + barH * 0.62;
+      ['#FF5F57', '#FEBC2E', '#28C840'].forEach(function (color) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, cr, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        cx += gap;
+      });
+    }
+
+    ctx.drawImage(img, p, p + barH, img.width, img.height);
+    ctx.restore();
+
+    sizeInfo.textContent = W + ' × ' + H + ' px  (original ' + img.width + ' × ' + img.height + ')';
+  }
+
+  /* ---------- 이미지 불러오기 ---------- */
+  function loadBlob(blob) {
+    if (!blob || blob.type.indexOf('image/') !== 0) {
+      toast('That is not an image file');
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const im = new Image();
+    im.onload = function () {
+      img = im;
+      dropzone.classList.add('hidden');
+      preview.classList.remove('hidden');
+      controls.classList.remove('hidden');
+      render();
+      URL.revokeObjectURL(url);
+      toast('Image loaded');
+    };
+    im.onerror = function () {
+      URL.revokeObjectURL(url);
+      toast('That image could not be read');
+    };
+    im.src = url;
+  }
+
+  // 붙여넣기 : 페이지 어디서든 동작
+  document.addEventListener('paste', function (ev) {
+    const items = ev.clipboardData && ev.clipboardData.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image/') === 0) {
+        ev.preventDefault();
+        loadBlob(items[i].getAsFile());
+        return;
+      }
+    }
+  });
+
+  // 파일 선택
+  dropzone.addEventListener('click', function () { picker.click(); });
+  dropzone.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+  });
+  picker.addEventListener('change', function (ev) {
+    if (ev.target.files && ev.target.files[0]) loadBlob(ev.target.files[0]);
+    picker.value = '';
+  });
+
+  // 드래그 앤 드롭
+  ['dragenter', 'dragover'].forEach(function (t) {
+    dropzone.addEventListener(t, function (ev) { ev.preventDefault(); dropzone.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    dropzone.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && dropzone.contains(ev.relatedTarget)) return;
+      dropzone.classList.remove('over');
+    });
+  });
+  dropzone.addEventListener('drop', function (ev) {
+    if (ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0]) {
+      loadBlob(ev.dataTransfer.files[0]);
+    }
+  });
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) {
+      if (dropzone.contains(ev.target)) return;
+      ev.preventDefault();
+    });
+  });
+
+  /* ---------- 컨트롤 ---------- */
+  [bgColor, mac].forEach(function (el) { el.addEventListener('input', render); });
+  mac.addEventListener('change', render);
+
+  [['shadow', shadow], ['pad', pad], ['radius', radius]].forEach(function (pair) {
+    const el = pair[1];
+    const out = document.getElementById(pair[0] + 'Val');
+    el.addEventListener('input', function () { out.textContent = el.value; render(); });
+  });
+
+  document.querySelectorAll('.swatch').forEach(function (s) {
+    s.addEventListener('click', function () { bgColor.value = s.dataset.c; render(); });
+  });
+
+  document.getElementById('newBtn').addEventListener('click', function () {
+    img = null;
+    preview.classList.add('hidden');
+    controls.classList.add('hidden');
+    dropzone.classList.remove('hidden');
+    dropzone.focus();
+  });
+
+  /* ---------- 내보내기 ---------- */
+  function stamp() {
+    const d = new Date();
+    const p2 = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + '_' + p2(d.getHours()) + p2(d.getMinutes());
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    if (!img) { toast('Paste an image first'); return; }
+
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      toast('This browser cannot copy images. Use download instead.');
+      return;
+    }
+
+    try {
+      // ClipboardItem에 Promise를 넘겨야 사파리에서도 사용자 제스처가 유지된다
+      const item = new ClipboardItem({
+        'image/png': new Promise(function (resolve, reject) {
+          canvas.toBlob(function (blob) {
+            blob ? resolve(blob) : reject(new Error('blob creation failed'));
+          }, 'image/png');
+        })
+      });
+      navigator.clipboard.write([item]).then(function () {
+        toast('Image copied. Paste it straight in.');
+      }).catch(function (e) {
+        toast('Copying was blocked (' + (e && e.name ? e.name : 'error') + '). Use download instead.');
+      });
+    } catch (e) {
+      toast('Copying failed. Use download instead.');
+    }
+  });
+
+  document.getElementById('dlBtn').addEventListener('click', function () {
+    if (!img) { toast('Paste an image first'); return; }
+    try {
+      canvas.toBlob(function (blob) {
+        if (!blob) { toast('The image could not be created'); return; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mockup_' + stamp() + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        toast('Saved');
+      }, 'image/png');
+    } catch (e) {
+      toast('Your browser blocked the download');
+    }
+  });
+
+  dropzone.focus();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Why a raw screenshot looks unfinished</h2>
+<p>Drop a screenshot into a slide and it tends to sit awkwardly. A white capture on a white background loses its edges entirely, and the cropped boundary is left exposed.</p>
+<p>Adding a background, some padding and a soft shadow changes the impression completely, without touching the content. This tool does that in a few clicks, and can add a Mac style window bar so the capture reads as an application rather than a fragment.</p>
+<h2>When to use it</h2><dl>
+<dt>Slides</dt><dd>Product screens and demo captures that need to sit properly on a slide.</dd>
+<dt>Blog and social posts</dt><dd>Tidying a capture so the surrounding article looks considered.</dd>
+<dt>Proposals and pitch decks</dt><dd>Work in progress screens read as more finished with a background and shadow behind them.</dd>
+<dt>Documentation</dt><dd>Giving every screenshot in a manual the same consistent treatment.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Paste or drop in an image.</li>
+<li>Adjust the background, padding, corners and shadow.</li>
+<li>Turn on the window bar if it suits the context.</li>
+<li>Use <strong>Copy image</strong> and paste it where you need it.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Background</dt><dd>The colour behind the capture. Choosing something that contrasts with your document is what gives the image an edge.</dd>
+<dt>Padding, corners and shadow</dt><dd>Padding relieves the crowding, while rounded corners and a shadow lift the capture off the page. Restraint reads better than maximum settings.</dd>
+<dt>Mac window bar and traffic lights</dt><dd>Adds a title bar above the capture. Suited to introducing a piece of software.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Is my image uploaded</dt><dd>No. Everything happens in your browser.</dd>
+<dt>Can I save it as a file</dt><dd>Yes, though copying and pasting directly into a document is usually quicker. Download is there when you need a file.</dd>
+<dt>Does it reduce the quality</dt><dd>The original is kept at full size and the background and padding are added around it, so there is no meaningful loss.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/design-media/mosaicmarker_en.html">Blur &amp; Highlight Tool</a></li>
+<li><a href="https://mnledu.com/en/design-media/teleprompter_en.html">Browser Teleprompter</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my image uploaded",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything happens in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I save it as a file",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, though copying and pasting directly into a document is usually quicker. Download is there when you need a file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it reduce the quality",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The original is kept at full size and the background and padding are added around it, so there is no meaningful loss."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/design-media/screendeco_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/design-media/screendeco_en.html";
+  var TK_SHARE_TITLE = "Screenshot Beautifier";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

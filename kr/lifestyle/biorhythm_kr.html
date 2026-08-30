@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F6">
+<title>힐링 바이오리듬 · 웰니스 · 컨디션 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="생년월일만 넣으면 오늘의 신체·감성·지성 리듬을 곡선으로 보여 줍니다. 흐름에 맞는 하루 보내는 법도 함께 안내합니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/lifestyle/biorhythm_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/lifestyle/biorhythm_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/biorhythm_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/lifestyle/biorhythm_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/lifestyle/biorhythm_kr.html" />
+<meta property="og:title" content="힐링 바이오리듬 · 웰니스 · 컨디션 | TOOLKIT" />
+<meta property="og:description" content="생년월일만 넣으면 오늘의 신체·감성·지성 리듬을 곡선으로 보여 줍니다. 흐름에 맞는 하루 보내는 법도 함께 안내합니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="힐링 바이오리듬 · 웰니스 · 컨디션 | TOOLKIT" />
+<meta name="twitter:description" content="생년월일만 넣으면 오늘의 신체·감성·지성 리듬을 곡선으로 보여 줍니다. 흐름에 맞는 하루 보내는 법도 함께 안내합니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "힐링 바이오리듬",
+  "description": "생년월일만 넣으면 오늘의 신체·감성·지성 리듬을 곡선으로 보여 줍니다. 흐름에 맞는 하루 보내는 법도 함께 안내합니다.",
+  "url": "https://mnledu.com/kr/lifestyle/biorhythm_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "LIFESTYLE",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "힐링 바이오리듬",
+      "item": "https://mnledu.com/kr/lifestyle/biorhythm_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  :root{
+    --bg:#FAF9F6; --card:#FFFFFF; --line:#F0EFEA; --ink:#2C2A26; --dim:#6E6A63;
+    --accent:#7C9A82; --soft:#F4F7F3;
+    --phy:#10B981; --emo:#F43F5E; --int:#3B82F6;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:18px;
+         box-shadow:0 1px 2px rgba(44,42,38,.03), 0 6px 20px rgba(44,42,38,.04); }
+
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:12px; font-size:14px; font-weight:600; padding:11px 14px; cursor:pointer;
+    min-height:46px; transition:border-color .12s, background .12s, transform .06s;
+  }
+  .btn:hover{ border-color:#DDD9D0; }
+  .btn:active{ transform:translateY(1px); }
+  .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  .fld{
+    width:100%; border:1px solid var(--line); border-radius:11px; background:#fff;
+    padding:11px 12px; font-size:14.5px; color:var(--ink); outline:none; min-height:46px;
+    font-family:inherit;
+  }
+  .fld:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(124,154,130,.16); }
+  .lab{ display:block; font-size:12.5px; font-weight:600; color:var(--dim); margin-bottom:7px; }
+
+  /* 게이지 */
+  .gauge{ margin-bottom:15px; }
+  .gauge:last-child{ margin-bottom:0; }
+  .gRow{ display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+  .gName{ font-size:14.5px; font-weight:700; flex:1; }
+  .gVal{ font-size:15px; font-weight:800; }
+  .gBadge{
+    font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px;
+    border:1px solid currentColor;
+  }
+  /* 가운데를 0으로 두는 막대 */
+  .gTrack{
+    position:relative; height:16px; border-radius:99px; background:#F2F1EC; overflow:hidden;
+  }
+  .gTrack::after{
+    content:''; position:absolute; left:50%; top:0; bottom:0; width:1px;
+    background:rgba(44,42,38,.16);
+  }
+  .gFill{ position:absolute; top:0; bottom:0; border-radius:99px; transition:all .6s cubic-bezier(.2,.8,.3,1); }
+  .gScale{ display:flex; justify-content:space-between; font-size:10.5px; color:var(--dim); margin-top:4px; }
+
+  .tip{
+    border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:10px;
+    background:#fff; font-size:14.5px; line-height:1.8;
+  }
+  .tip:last-child{ margin-bottom:0; }
+  .tip .h{ font-weight:700; margin-bottom:5px; display:flex; align-items:center; gap:7px; }
+  .msg{
+    background:var(--soft); border:1px solid #E4EDE5; border-radius:14px;
+    padding:15px 17px; font-size:14.5px; line-height:1.85;
+  }
+  h2.sec{ font-size:16px; font-weight:800; margin:0 0 13px; }
+
+  #chartBox{ position:relative; height:290px; }
+  @media(max-width:640px){ #chartBox{ height:250px; } }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--ink); color:#fff; border-radius:12px;
+    padding:11px 17px; font-size:13.5px; z-index:60;
+    pointer-events:none; transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-3xl px-4 py-6 sm:py-9">
+
+  <header class="mb-5 text-center">
+    <h1 class="text-[23px] font-bold tracking-tight" style="margin:0">🌱 힐링 바이오리듬</h1>
+    <p class="text-[13px] mt-2" style="color:var(--dim); margin:0; line-height:1.7">
+      오늘 내 몸과 마음이 어디쯤 와 있는지 살펴보고<br>
+      <span style="font-size:12px">그에 맞게 하루를 보내는 방법을 찾아 드립니다</span>
+    </p>
+  </header>
+
+  <div class="card" style="padding:18px; margin-bottom:16px">
+    <div class="grid gap-3" style="grid-template-columns:1fr 1fr">
+      <div>
+        <label class="lab" for="birth">생년월일</label>
+        <input class="fld" id="birth" type="date">
+      </div>
+      <div>
+        <label class="lab" for="target">언제를 볼까요</label>
+        <input class="fld" id="target" type="date">
+      </div>
+    </div>
+    <button class="btn p" id="goBtn" style="width:100%; margin-top:15px; min-height:52px; font-size:15.5px">
+      🌿 내 리듬 살펴보기
+    </button>
+    <p class="text-[11.5px]" style="color:var(--dim); margin:11px 0 0; line-height:1.7; text-align:center">
+      입력한 날짜는 이 브라우저 안에만 머무릅니다
+    </p>
+  </div>
+
+  <div id="result" style="display:none">
+
+    <div class="card" style="padding:18px; margin-bottom:14px">
+      <h2 class="sec" id="todayTitle">오늘의 에너지</h2>
+      <div id="gauges"></div>
+    </div>
+
+    <div class="card" style="padding:18px; margin-bottom:14px">
+      <h2 class="sec">📈 한 달의 흐름</h2>
+      <div id="chartBox"><canvas id="chart"></canvas></div>
+      <p class="text-[12px]" style="color:var(--dim); margin:11px 0 0; line-height:1.7">
+        가운데 세로 점선이 오늘입니다. 위로 올라간 구간은 에너지가 밖으로 나오는 때,
+        아래는 안으로 모으는 때입니다. 어느 쪽도 좋고 나쁨이 아닙니다.
+      </p>
+    </div>
+
+    <div class="card" style="padding:18px; margin-bottom:14px">
+      <h2 class="sec">🍵 오늘 이렇게 보내 보세요</h2>
+      <div id="tips"></div>
+    </div>
+
+    <div class="card" style="padding:18px; margin-bottom:16px">
+      <h2 class="sec">💌 오늘의 한마디</h2>
+      <div class="msg" id="cheer"></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="grid gap-2" style="grid-template-columns:1fr 1fr">
+        <button class="btn" id="copyBtn">💬 리포트 복사</button>
+        <button class="btn" id="imgBtn">💾 차트 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-[11.5px]" style="color:var(--dim); text-align:center; margin:20px 0 0; line-height:1.8">
+    바이오리듬은 생일로부터의 날수를 일정한 주기로 나눈 계산입니다.<br>
+    몸과 마음을 돌아보는 계기로 삼되, 하루를 정하는 기준으로 삼지는 마세요.
+  </p>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = function (id) { return document.getElementById(id); };
+
+  const RHY = [
+    { key: 'phy', icon: '🏃', name: '신체', period: 23, color: '#10B981',
+      tag: '몸의 활력', soft: 'rgba(16,185,129,.12)' },
+    { key: 'emo', icon: '💖', name: '감성', period: 28, color: '#F43F5E',
+      tag: '마음의 결', soft: 'rgba(244,63,94,.12)' },
+    { key: 'int', icon: '🧠', name: '지성', period: 33, color: '#3B82F6',
+      tag: '생각의 맑기', soft: 'rgba(59,130,246,.12)' }
+  ];
+
+  const toastEl = $('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 2200);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  /* ---------- 연산 ---------- */
+  function toUTC(str) {
+    const p = String(str).split('-');
+    return Date.UTC(+p[0], +p[1] - 1, +p[2]);
+  }
+  function daysBetween(b, t) { return Math.round((t - b) / 86400000); }
+  function wave(t, period) { return Math.sin(2 * Math.PI * t / period) * 100; }
+
+  // 어제·오늘·내일의 부호가 갈리는 날을 전환점으로 본다
+  function isTurning(t, period) {
+    const a = wave(t - 1, period), b = wave(t, period), c = wave(t + 1, period);
+    return (a < 0 && b >= 0) || (a > 0 && b <= 0) || (b < 0 && c >= 0) || (b > 0 && c <= 0);
+  }
+
+  // 점수와 전환 여부로 지금 상태를 정한다
+  function stateOf(v, turning) {
+    if (turning) return { key: 'turn', label: '터닝포인트', color: '#8B7BB8' };
+    if (v >= 60) return { key: 'high', label: '활력 뿜뿜', color: '#0EA37A' };
+    if (v > 0) return { key: 'up', label: '발현 중', color: '#3E9E86' };
+    if (v > -60) return { key: 'rest', label: '충전 모드', color: '#8A93A8' };
+    return { key: 'deep', label: '깊은 충전', color: '#6E7A94' };
+  }
+
+  /* ---------- 조언 자료 ---------- */
+  const ADVICE = {
+    phy: {
+      high: { h: '몸이 가장 잘 움직이는 때예요',
+        b: '미뤄 둔 운동이나 정리, 몸을 쓰는 일을 오늘 해치우기 좋습니다. 조금 더 걷거나 계단을 이용해 보세요. 다만 컨디션이 좋다고 무리해서 쓰면 다음 며칠이 힘들어지니, 기분 좋은 만큼만 쓰시면 딱 좋습니다.' },
+      up: { h: '몸이 서서히 깨어나는 중이에요',
+        b: '가벼운 산책이나 스트레칭으로 시동을 걸어 보세요. 한 번에 몰아서 하기보다 짧게 자주 움직이는 편이 오늘 몸에 잘 맞습니다.' },
+      turn: { h: '몸의 리듬이 방향을 바꾸는 날이에요',
+        b: '새로운 흐름으로 넘어가는 자리입니다. 큰일을 벌이기보다 평소 하던 일을 차분히 하시고, 따뜻한 물로 샤워하거나 일찍 잠자리에 들어 리듬이 자리 잡도록 도와주세요.' },
+      rest: { h: '몸이 쉬어 가자고 말하는 때예요',
+        b: '무리한 운동보다 따뜻한 차 한 잔과 가벼운 스트레칭이 오늘의 몸에 맞습니다. 평소보다 삼십 분 일찍 자는 것만으로도 다음 며칠이 달라집니다.' },
+      deep: { h: '몸이 깊이 충전하고 있어요',
+        b: '지금은 채우는 시간입니다. 할 일을 줄이고 잘 먹고 잘 자는 데 집중해 보세요. 이 시기를 잘 보내면 다음 상승 구간에서 훨씬 가볍게 움직일 수 있습니다.' }
+    },
+    emo: {
+      high: { h: '마음이 활짝 열려 있어요',
+        b: '사람을 만나거나 마음을 표현하기 좋은 날입니다. 미뤄 둔 연락, 하고 싶던 이야기를 오늘 꺼내 보세요. 함께 있는 사람도 그 온기를 느낄 겁니다.' },
+      up: { h: '마음이 밝아지고 있어요',
+        b: '좋아하는 음악을 틀거나 가까운 사람과 짧게라도 이야기를 나눠 보세요. 오늘의 마음은 나눌수록 더 넉넉해집니다.' },
+      turn: { h: '마음의 결이 바뀌는 날이에요',
+        b: '감정이 평소보다 크게 느껴질 수 있습니다. 그럴 땐 판단을 잠시 미루고, 오늘 느낀 것을 짧게 적어 두세요. 며칠 뒤에 다시 보면 훨씬 정리되어 보일 겁니다.' },
+      rest: { h: '마음이 안으로 모이는 때예요',
+        b: '혼자만의 조용한 시간이 필요합니다. 좋아하는 차를 내리거나 익숙한 책을 펼쳐 보세요. 사람을 만나기보다 나를 돌보는 쪽이 오늘은 더 편안합니다.' },
+      deep: { h: '마음이 깊이 쉬고 있어요',
+        b: '오늘은 나에게 너그러워지는 날로 삼아 보세요. 잘 해내지 못해도 괜찮습니다. 따뜻한 물로 손을 씻고 숨을 길게 세 번 쉬는 것만으로도 마음이 한결 놓입니다.' }
+    },
+    int: {
+      high: { h: '머리가 가장 맑은 때예요',
+        b: '복잡한 결정이나 새로 배우는 일을 오늘로 옮겨 보세요. 평소 어렵던 것도 실마리가 보일 겁니다. 중요한 문서를 읽거나 계획을 세우기에도 좋은 날입니다.' },
+      up: { h: '생각이 또렷해지고 있어요',
+        b: '아침에 오늘 할 일을 적어 두면 훨씬 수월하게 굴러갑니다. 집중이 필요한 일을 앞쪽에 배치해 보세요.' },
+      turn: { h: '생각의 흐름이 전환되는 날이에요',
+        b: '판단이 평소와 다르게 느껴질 수 있습니다. 중요한 결정은 하루만 미뤄 두시고, 오늘은 정보를 모으는 데 쓰시면 좋습니다.' },
+      rest: { h: '머리가 정리 중이에요',
+        b: '새로 배우기보다 이미 아는 것을 다듬기 좋은 날입니다. 메모를 정리하거나 책상을 치우는 단순한 일이 오히려 개운합니다.' },
+      deep: { h: '생각이 깊이 가라앉아 있어요',
+        b: '억지로 짜내지 마세요. 산책하거나 아무것도 하지 않는 시간을 두면 며칠 뒤 훨씬 좋은 답이 떠오릅니다. 지금 쉬는 것도 일의 일부입니다.' }
+    }
+  };
+
+  /* ---------- 상태 ---------- */
+  let chart = null, last = null;
+
+  function todayStr() {
+    const d = new Date();
+    const p = function (v) { return String(v).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  $('target').value = todayStr();
+  $('birth').max = todayStr();
+
+  /* ---------- 실행 ---------- */
+  $('goBtn').addEventListener('click', function () {
+    const b = $('birth').value, t = $('target').value || todayStr();
+    if (!b) { toast('생년월일을 입력해 주세요'); $('birth').focus(); return; }
+    const bd = toUTC(b), td = toUTC(t);
+    if (td < bd) { toast('조회할 날짜가 생일보다 앞설 수는 없어요'); return; }
+
+    const n = daysBetween(bd, td);
+    last = { birth: b, target: t, n: n };
+    render(last);
+    $('result').style.display = 'block';
+    const rb = $('result');
+    if (rb.scrollIntoView) {
+      try { rb.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      catch (e) { rb.scrollIntoView(true); }
+    }
+  });
+
+  function render(o) {
+    const n = o.n;
+
+    const scores = RHY.map(function (r) {
+      const v = wave(n, r.period);
+      const turn = isTurning(n, r.period);
+      return { r: r, v: v, turn: turn, st: stateOf(v, turn) };
+    });
+
+    const dd = new Date(toUTC(o.target));
+    const wd = ['일', '월', '화', '수', '목', '금', '토'][dd.getUTCDay()];
+    $('todayTitle').textContent =
+      (dd.getUTCMonth() + 1) + '월 ' + dd.getUTCDate() + '일(' + wd + ') · 태어난 지 ' +
+      n.toLocaleString() + '일째';
+
+    // 게이지
+    $('gauges').innerHTML = scores.map(function (s) {
+      const pct = Math.abs(s.v) / 2;                    // 0~50
+      const left = s.v >= 0 ? 50 : 50 - pct;
+      return '<div class="gauge">' +
+        '<div class="gRow">' +
+          '<span class="gName">' + s.r.icon + ' ' + s.r.name +
+            ' <span style="font-weight:400; font-size:12px; color:var(--dim)">' + s.r.tag +
+            ' · ' + s.r.period + '일 주기</span></span>' +
+          '<span class="gBadge" style="color:' + s.st.color + '">' + s.st.label + '</span>' +
+          '<span class="gVal mono" style="color:' + s.r.color + '">' +
+            (s.v >= 0 ? '+' : '') + Math.round(s.v) + '</span>' +
+        '</div>' +
+        '<div class="gTrack"><span class="gFill" style="left:' + left + '%; width:' +
+          Math.max(pct, 1.5) + '%; background:' + s.r.color + '"></span></div>' +
+        '<div class="gScale"><span>충전</span><span>0</span><span>발현</span></div>' +
+      '</div>';
+    }).join('');
+
+    drawChart(n);
+
+    // 조언
+    $('tips').innerHTML = scores.map(function (s) {
+      const a = ADVICE[s.r.key][s.st.key];
+      return '<div class="tip">' +
+        '<div class="h"><span>' + s.r.icon + '</span>' +
+        '<span style="color:' + s.r.color + '">' + esc(a.h) + '</span></div>' +
+        esc(a.b) + '</div>';
+    }).join('');
+
+    // 한마디
+    const best = scores.slice().sort(function (a, b) { return b.v - a.v; })[0];
+    const low = scores.slice().sort(function (a, b) { return a.v - b.v; })[0];
+    const turns = scores.filter(function (s) { return s.turn; });
+    const avg = scores.reduce(function (a, s) { return a + s.v; }, 0) / 3;
+
+    let head;
+    if (turns.length >= 2) head = '오늘은 여러 리듬이 함께 방향을 트는 날입니다. 새로운 흐름이 자리 잡는 중이니 서두르지 않으셔도 됩니다.';
+    else if (avg >= 40) head = '세 가지 리듬이 모두 위쪽에 있습니다. 오늘은 하고 싶던 일을 꺼내 보기 좋은 날이에요.';
+    else if (avg <= -40) head = '오늘은 세 리듬이 나란히 안으로 모이는 때입니다. 채우는 날이라고 생각하시면 마음이 한결 가볍습니다.';
+    else head = '오늘은 리듬마다 결이 다릅니다. 잘 되는 쪽에 기대고 쉬어 가는 쪽은 아껴 두시면 하루가 수월합니다.';
+
+    $('cheer').innerHTML =
+      head + '<br><br>' +
+      '가장 힘이 실린 쪽은 <b style="color:' + best.r.color + '">' + best.r.icon + ' ' + best.r.name + '</b>입니다. ' +
+      '오늘 무언가 해내야 한다면 이 힘을 빌리시면 좋습니다.<br>' +
+      '<b style="color:' + low.r.color + '">' + low.r.icon + ' ' + low.r.name + '</b>은 지금 안으로 모이는 중이니, ' +
+      '이쪽은 재촉하지 말고 기다려 주세요. 곧 다시 올라옵니다.<br><br>' +
+      '곡선은 오르내리기를 반복할 뿐, 어느 지점도 잘못된 자리가 아닙니다. ' +
+      '오늘의 나에게 맞는 속도로 보내시면 그걸로 충분합니다. 🌿';
+  }
+
+  /* ---------- 차트 ---------- */
+  function drawChart(n) {
+    if (typeof Chart === 'undefined') {
+      $('chartBox').innerHTML = '<p style="font-size:13.5px; color:var(--dim); text-align:center; padding-top:60px">' +
+        '차트를 불러오지 못했습니다. 위 점수만으로도 오늘의 흐름은 충분히 보실 수 있어요.</p>';
+      return;
+    }
+    const SPAN = 14;
+    const labels = [], sets = {};
+    RHY.forEach(function (r) { sets[r.key] = []; });
+
+    const base = new Date(toUTC(last.target));
+    for (let d = -SPAN; d <= SPAN; d++) {
+      const dt = new Date(base.getTime() + d * 86400000);
+      labels.push(d === 0 ? '오늘' : (dt.getUTCMonth() + 1) + '/' + dt.getUTCDate());
+      RHY.forEach(function (r) { sets[r.key].push(+wave(n + d, r.period).toFixed(1)); });
+    }
+
+    if (chart) { chart.destroy(); chart = null; }
+    const ctx = $('chart').getContext('2d');
+
+    // 오늘 위치에 세로 점선을 그린다
+    const todayLine = {
+      id: 'todayLine',
+      afterDraw: function (c) {
+        const x = c.scales.x.getPixelForValue(SPAN);
+        const top = c.chartArea.top, bot = c.chartArea.bottom;
+        const g = c.ctx;
+        g.save();
+        g.setLineDash([5, 4]);
+        g.lineWidth = 1.5;
+        g.strokeStyle = 'rgba(124,154,130,.85)';
+        g.beginPath(); g.moveTo(x, top); g.lineTo(x, bot); g.stroke();
+        g.restore();
+      }
+    };
+
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: RHY.map(function (r) {
+          return {
+            label: r.icon + ' ' + r.name,
+            data: sets[r.key],
+            borderColor: r.color,
+            backgroundColor: r.soft,
+            borderWidth: 2.4,
+            tension: 0.4,
+            pointRadius: function (c) { return c.dataIndex === SPAN ? 5 : 0; },
+            pointBackgroundColor: r.color,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            fill: false
+          };
+        })
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 7, padding: 14,
+                      font: { size: 12.5, family: 'Pretendard' } }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(44,42,38,.92)',
+            padding: 11, cornerRadius: 9,
+            titleFont: { size: 12.5, family: 'Pretendard' },
+            bodyFont: { size: 12.5, family: 'Pretendard' },
+            callbacks: {
+              label: function (c) {
+                const v = c.parsed.y;
+                const tone = v > 0 ? '발현' : (v < 0 ? '충전' : '전환');
+                return c.dataset.label + ' ' + (v >= 0 ? '+' : '') + Math.round(v) + ' · ' + tone;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            min: -110, max: 110,
+            ticks: {
+              stepSize: 50, font: { size: 11, family: 'Pretendard' }, color: '#8A857D',
+              callback: function (v) {
+                if (v === 100) return '발현';
+                if (v === 0) return '0';
+                if (v === -100) return '충전';
+                return '';
+              }
+            },
+            grid: { color: function (c) { return c.tick.value === 0 ? 'rgba(44,42,38,.18)' : 'rgba(44,42,38,.05)'; } }
+          },
+          x: {
+            ticks: { font: { size: 10.5, family: 'Pretendard' }, color: '#8A857D',
+                     maxRotation: 0, autoSkip: true, maxTicksLimit: 9 },
+            grid: { display: false }
+          }
+        }
+      },
+      plugins: [todayLine]
+    });
+  }
+
+  /* ---------- 내보내기 ---------- */
+  function reportText() {
+    if (!last) return '';
+    const n = last.n;
+    const dd = new Date(toUTC(last.target));
+    const wd = ['일', '월', '화', '수', '목', '금', '토'][dd.getUTCDay()];
+    const L = [];
+    L.push('🌱 오늘의 힐링 바이오리듬');
+    L.push((dd.getUTCMonth() + 1) + '월 ' + dd.getUTCDate() + '일(' + wd + ') · 태어난 지 ' + n.toLocaleString() + '일째');
+    L.push('');
+    RHY.forEach(function (r) {
+      const v = wave(n, r.period);
+      const st = stateOf(v, isTurning(n, r.period));
+      L.push(r.icon + ' ' + r.name + '  ' + (v >= 0 ? '+' : '') + Math.round(v) + '  · ' + st.label);
+    });
+    L.push('');
+    L.push('[ 오늘 이렇게 보내 보세요 ]');
+    RHY.forEach(function (r) {
+      const v = wave(n, r.period);
+      const st = stateOf(v, isTurning(n, r.period));
+      const a = ADVICE[r.key][st.key];
+      L.push('· ' + a.h);
+      L.push('  ' + a.b);
+    });
+    L.push('');
+    L.push('곡선은 오르내리기를 반복할 뿐, 어느 지점도 잘못된 자리가 아닙니다.');
+    L.push('오늘의 나에게 맞는 속도로 보내시면 충분합니다 🌿');
+    return L.join('\n');
+  }
+
+  $('copyBtn').addEventListener('click', async function () {
+    const t = reportText();
+    if (!t) { toast('먼저 리듬을 확인해 주세요'); return; }
+    let ok = false;
+    try {
+      if (navigator.clipboard) { await navigator.clipboard.writeText(t); ok = true; }
+      else throw new Error('x');
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) {}
+      document.body.removeChild(ta);
+    }
+    toast(ok ? '리포트를 복사했습니다' : '복사가 막혔습니다');
+  });
+
+  $('imgBtn').addEventListener('click', function () {
+    if (!chart) { toast('먼저 리듬을 확인해 주세요'); return; }
+    try {
+      // 배경이 비치지 않도록 흰 바탕을 깔아 저장한다
+      const src = $('chart');
+      const cv = document.createElement('canvas');
+      cv.width = src.width; cv.height = src.height;
+      const g = cv.getContext('2d');
+      g.fillStyle = '#FFFFFF';
+      g.fillRect(0, 0, cv.width, cv.height);
+      g.drawImage(src, 0, 0);
+      cv.toBlob(function (blob) {
+        if (!blob) { toast('이미지를 만들지 못했습니다'); return; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'biorhythm_' + last.target + '.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+        toast('차트를 저장했습니다');
+      }, 'image/png');
+    } catch (e) { toast('저장이 막혔습니다'); }
+  });
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#f7f6f2;color:#2C2A26;border-top:1px solid #EDEBE4;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#2C2A26;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#5A554D;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#5A554D;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#2C2A26}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #EDEBE4}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#2C2A26;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#5A554D;margin:6px 0 18px;padding-bottom:18px;border-bottom:1px solid #EDEBE4;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #EDEBE4;border-radius:12px;font-size:13px;line-height:1.75;color:#6E6A63;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #EDEBE4}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#5F7F68;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#5F7F68}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>어떤 날은 왜 유난히 더딜까</h2>
+<p>같은 일을 하는데도 손이 척척 붙는 날이 있고, 아무리 붙잡아도 진도가 안 나가는 날이 있습니다. 그럴 때 스스로를 탓하기 쉽지만, 몸과 마음에는 원래 오르내림이 있습니다.</p>
+<p>바이오리듬은 그 오르내림을 일정한 주기로 가정해 그려 본 것입니다. 맞고 틀리고를 가리는 예측이라기보다, 오늘의 나를 한 번 돌아보게 하는 계기로 쓰기 좋습니다.</p>
+
+<h2>세 가지 리듬</h2><dl>
+<dt>🏃 신체 · 23일 주기</dt><dd>몸의 활력과 지구력에 관한 흐름입니다. 위쪽에 있을 때 운동이나 몸 쓰는 일을 배치하면 수월합니다.</dd>
+<dt>💖 감성 · 28일 주기</dt><dd>기분과 사람을 대하는 결에 관한 흐름입니다. 위쪽이면 마음을 나누기 좋고, 아래쪽이면 혼자만의 시간이 편안합니다.</dd>
+<dt>🧠 지성 · 33일 주기</dt><dd>집중과 판단에 관한 흐름입니다. 위쪽일 때 복잡한 결정이나 새로 배우는 일을 앞으로 당겨 두면 좋습니다.</dd>
+</dl>
+
+<h2>곡선을 읽는 법</h2><dl>
+<dt>위쪽 구간 · 발현</dt><dd>에너지가 밖으로 나오는 때입니다. 하고 싶던 일을 꺼내 보기 좋지만, 컨디션이 좋다고 몰아 쓰면 다음이 힘들어집니다.</dd>
+<dt>아래쪽 구간 · 충전</dt><dd>에너지가 안으로 모이는 때입니다. 못하는 시기가 아니라 채우는 시기이니, 잘 자고 잘 먹는 데 신경 쓰면 다음 상승이 한결 가볍습니다.</dd>
+<dt>0을 지나는 날 · 터닝포인트</dt><dd>흐름이 방향을 바꾸는 자리입니다. 몸도 마음도 새 리듬에 적응하는 중이라, 무리한 일정보다 평소의 속도가 편안합니다.</dd>
+<dt>세 리듬이 엇갈릴 때</dt><dd>흔한 일입니다. 잘 되는 쪽에 기대고 쉬어 가는 쪽은 아껴 두시면 하루가 훨씬 수월해집니다.</dd>
+</dl>
+
+<h2>이렇게 써 보세요</h2><ol>
+<li>생년월일을 넣고 <strong>내 리듬 살펴보기</strong>를 누릅니다.</li>
+<li>오늘 세 리듬이 어디쯤 있는지 게이지로 확인합니다.</li>
+<li>차트에서 앞뒤 2주 흐름을 보고 중요한 일정을 어디에 둘지 가늠합니다.</li>
+<li>아래 조언 중 오늘 해볼 만한 것 하나만 골라 실천해 봅니다.</li>
+<li>날짜를 바꾸면 그날의 리듬도 미리 볼 수 있습니다.</li>
+</ol>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>바이오리듬은 어떻게 계산되나요</dt><dd>태어난 날부터 오늘까지의 날수를 세어, 신체는 23일, 감성은 28일, 지성은 33일 주기의 사인 곡선에 대입합니다. 계산은 모두 브라우저 안에서 이뤄지며 입력한 날짜는 어디로도 전송되지 않습니다.</dd>
+<dt>곡선이 아래쪽에 있으면 안 좋은 날인가요</dt><dd>그렇지 않습니다. 아래쪽 구간은 에너지가 안으로 모이는 충전의 시간입니다. 이 도구는 그 시기를 잘 쉬는 법으로 안내하며, 오르내림 자체에 좋고 나쁨을 두지 않습니다.</dd>
+<dt>터닝포인트는 무엇인가요</dt><dd>곡선이 0을 지나며 방향을 바꾸는 날입니다. 새로운 흐름이 자리 잡는 자리이므로, 큰일을 벌이기보다 평소 하던 일을 차분히 하며 리듬이 안정되도록 두는 편이 편안합니다.</dd>
+<dt>세 리듬이 서로 다르게 나오는데 무엇을 따라야 하나요</dt><dd>잘 되는 쪽에 기대고 쉬어 가는 쪽은 아껴 두시면 됩니다. 예를 들어 몸이 가볍고 생각이 무거운 날이면 몸을 쓰는 일을 앞에 두고, 판단이 필요한 일은 다음으로 미루는 식입니다.</dd>
+<dt>지난 날짜나 앞으로의 날짜도 볼 수 있나요</dt><dd>볼 수 있습니다. 조회 날짜를 바꾸면 그날의 리듬이 나오고, 차트에는 그 날을 가운데 두고 앞뒤 2주가 함께 그려집니다. 여행이나 중요한 일정을 앞두고 흐름을 가늠해 보기 좋습니다.</dd>
+</dl>
+
+<p class="tk-guide-note">바이오리듬은 과학적으로 입증된 예측 도구가 아니라, 생일로부터의 날수를 일정 주기로 나눈 계산입니다. 몸과 마음을 돌아보는 계기로 삼되 건강이나 중요한 결정의 근거로 쓰지 마시고, 몸이 계속 무겁거나 마음이 오래 가라앉는다면 전문가와 상담해 보시기 바랍니다. 입력한 날짜는 서버로 전송되지 않습니다.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/lifestyle/saju-studio_kr.html">힐링 만세력 · 강점 사주</a></li>
+<li><a href="https://mnledu.com/productivity/date-calc.html">만능 날짜 계산기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/slot-coordinator_kr.html">스마트 일정 코디네이터</a></li>
+<li><a href="https://mnledu.com/kr/productivity/meeting-minutes_kr.html">스마트 회의록</a></li>
+<li><a href="https://mnledu.com/kr/productivity/qr-studio_kr.html">맞춤형 QR코드 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/pdf-signature_kr.html">PDF 서명 스탬프</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/lifestyle/biorhythm_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/lifestyle/biorhythm_kr.html";
+  var TK_SHARE_TITLE = "힐링 바이오리듬";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (LIFESTYLE 최상단)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

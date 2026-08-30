@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Merger | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Combine several files into one prompt with clear boundaries and a… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/promptmerger_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/promptmerger_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/promptmerger_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/promptmerger_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/promptmerger_en.html" />
+<meta property="og:title" content="AI Prompt Merger · AI · text | TOOLKIT" />
+<meta property="og:description" content="Combine several files into one prompt with clear boundaries and a… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AI Prompt Merger · AI · text | TOOLKIT" />
+<meta name="twitter:description" content="Combine several files into one prompt with clear boundaries and a… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AI Prompt Merger",
+  "description": "Combine several files into one prompt with clear boundaries and a token estimate.",
+  "url": "https://mnledu.com/en/productivity/promptmerger_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  /* 드롭존 */
+  #drop{
+    border:2px dashed #CBD4DE; border-radius:12px; background:#fff;
+    padding:44px 24px; text-align:center; cursor:pointer;
+    transition:border-color .14s, background .14s, transform .1s;
+  }
+  #drop:hover{ border-color:var(--steel); background:#FAFCFD; }
+  #drop.over{ border-color:var(--steel); background:#EDF4FA; transform:scale(1.004); }
+  #drop:focus-visible{ outline:2px solid var(--steel); outline-offset:3px; }
+
+  /* 파일 칩 */
+  .chip{
+    display:inline-flex; align-items:center; gap:9px;
+    border:1px solid var(--hair); border-radius:999px; background:#fff;
+    padding:7px 8px 7px 14px; font-size:13px; max-width:100%;
+  }
+  .chip .nm{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
+  .chip .sz{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px; color:var(--muted); }
+  .chip button{
+    width:20px; height:20px; border-radius:999px; border:0; flex:none;
+    background:#EEF1F5; color:var(--muted); font-size:13px; line-height:1;
+    cursor:pointer; transition:background .12s, color .12s;
+  }
+  .chip button:hover{ background:#D9534F; color:#fff; }
+  .chip button:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+
+  textarea{
+    width:100%; border:0; outline:none; resize:vertical;
+    background:transparent; color:var(--ink);
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:13px; line-height:1.75;
+    min-height:clamp(320px, 55vh, 700px);
+  }
+  textarea::placeholder{ color:#9AA7B4; font-family:'Pretendard',sans-serif; font-size:15px; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1;
+    padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s;
+  }
+  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover{ background:#1D2C3B; border-color:#1D2C3B; }
+  select.btn{ padding-right:26px; cursor:pointer; }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-12">
+
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">AI Prompt Merger</h1>
+      <p class="mt-1 text-[13px] text-muted">Several files into one prompt · handled only in your browser</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center gap-2">
+      <select id="fmt" class="btn" aria-label="Merge format" title="Merge format">
+        <option value="line" selected>Rule separated</option>
+        <option value="fence">Code fences</option>
+      </select>
+      <button id="saveBtn" class="btn">Save</button>
+      <button id="clearBtn" class="btn">Clear all</button>
+    </div>
+  </header>
+
+  <!-- 드롭존 -->
+  <div id="drop" tabindex="0" role="button" aria-label="Add files">
+    <svg class="mx-auto mb-3" width="34" height="34" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+         style="color:var(--steel)" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 9 12 4 17 9"></polyline>
+      <line x1="12" y1="4" x2="12" y2="16"></line>
+    </svg>
+    <p class="text-[14px] font-medium">Drop text based files here, or click to add them</p>
+    <p class="mt-1.5 text-[12px] text-muted">.txt .md .csv .js .py .html .css .json .xml .yml .sql and more</p>
+    <input type="file" id="picker" multiple class="hidden">
+  </div>
+
+  <!-- 파일 목록 -->
+  <div id="listWrap" class="mt-4 hidden">
+    <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2 text-[12px] text-muted">
+      <span>Files added <b id="fileCount" class="num text-ink">0</b></span>
+      <span id="sizeInfo" class="num"></span>
+    </div>
+    <div id="chips" class="flex flex-wrap gap-2"></div>
+  </div>
+
+  <!-- Merged prompt -->
+  <section class="mt-5 rounded-lg border border-hair bg-white shadow-[0_1px_2px_rgba(38,56,75,.04)]">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
+      <span class="text-[12px] font-medium tracking-wide text-muted">Merged prompt</span>
+      <button id="copyBtn" class="btn btn-primary">Copy the whole prompt</button>
+    </div>
+    <div class="px-5 pt-4 sm:px-6">
+      <textarea id="output" readonly spellcheck="false"
+        placeholder="Add files and the merged prompt appears here"></textarea>
+    </div>
+    <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
+      <span>Characters <b id="chars" class="num ml-0.5 font-medium text-ink">0</b></span>
+      <span>Lines <b id="lines" class="num ml-0.5 font-medium text-ink">0</b></span>
+      <span>about <b id="tokens" class="num ml-0.5 font-medium text-ink">0</b> tokens</span>
+    </div>
+  </section>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const drop      = document.getElementById('drop');
+  const picker    = document.getElementById('picker');
+  const chips     = document.getElementById('chips');
+  const listWrap  = document.getElementById('listWrap');
+  const fileCount = document.getElementById('fileCount');
+  const sizeInfo  = document.getElementById('sizeInfo');
+  const output    = document.getElementById('output');
+  const fmt       = document.getElementById('fmt');
+  const charsEl   = document.getElementById('chars');
+  const linesEl   = document.getElementById('lines');
+  const tokensEl  = document.getElementById('tokens');
+
+  let files = [];   // { name, size, text }
+
+  // 텍스트로 읽어도 되는 확장자
+  const TEXT_EXT = [
+    'txt','md','markdown','csv','tsv','log','json','xml','yml','yaml','ini','conf','env',
+    'js','jsx','ts','tsx','mjs','cjs','py','rb','php','java','c','h','cpp','hpp','cs','go','rs','swift','kt',
+    'html','htm','css','scss','sass','less','vue','svelte',
+    'sql','sh','bash','zsh','bat','ps1','r','m','lua','pl','toml','gitignore','dockerfile','makefile'
+  ];
+  // 확실한 바이너리
+  const BIN_EXT = [
+    'pdf','png','jpg','jpeg','gif','webp','bmp','tif','tiff','svgz','ico','heic',
+    'zip','rar','7z','tar','gz','bz2','exe','dll','dmg','iso',
+    'mp3','wav','flac','m4a','mp4','avi','mov','mkv','webm',
+    'doc','docx','xls','xlsx','ppt','pptx','hwp','hwpx','key','pages','numbers','ttf','otf','woff','woff2'
+  ];
+
+  function ext(name) {
+    const i = name.lastIndexOf('.');
+    return i < 0 ? name.toLowerCase() : name.slice(i + 1).toLowerCase();
+  }
+
+  function isTextFile(f) {
+    const e = ext(f.name);
+    if (BIN_EXT.indexOf(e) !== -1) return false;
+    if (TEXT_EXT.indexOf(e) !== -1) return true;
+    if (f.type && f.type.indexOf('text/') === 0) return true;
+    if (f.type && /json|xml|javascript|csv/.test(f.type)) return true;
+    return false;   // 알 수 없는 확장자는 내용으로 한 번 더 판정한다
+  }
+
+  // 내용에 널 문자나 제어 문자가 많으면 바이너리로 본다
+  function looksBinary(text) {
+    if (text.indexOf('\u0000') !== -1) return true;
+    const sample = text.slice(0, 2000);
+    let bad = 0;
+    for (let i = 0; i < sample.length; i++) {
+      const c = sample.charCodeAt(i);
+      if (c === 65533) bad++;                                  // 디코딩 실패 문자
+      else if (c < 32 && c !== 9 && c !== 10 && c !== 13) bad++;
+    }
+    return sample.length > 0 && bad / sample.length > 0.1;
+  }
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  /* ---------- 파일 읽기 ---------- */
+  function addFiles(list) {
+    const arr = Array.from(list);
+    if (!arr.length) return;
+
+    const rejected = [];
+    const accepted = [];
+
+    arr.forEach(function (f) {
+      if (BIN_EXT.indexOf(ext(f.name)) !== -1) rejected.push(f.name);
+      else accepted.push(f);
+    });
+
+    let pending = accepted.length;
+    if (!pending) {
+      if (rejected.length) alert('Only text based files are supported\n\nSkipped: ' + rejected.join(', '));
+      return;
+    }
+
+    accepted.forEach(function (f) {
+      const reader = new FileReader();
+
+      reader.onload = function (ev) {
+        const text = String(ev.target.result);
+        // 확장자로 판정이 안 되면 내용으로 한 번 더 본다
+        if (!isTextFile(f) && looksBinary(text)) {
+          rejected.push(f.name);
+        } else {
+          files.push({ name: f.name, size: f.size, text: text });
+        }
+        done();
+      };
+
+      reader.onerror = function () { rejected.push(f.name); done(); };
+      reader.readAsText(f, 'UTF-8');
+    });
+
+    function done() {
+      pending--;
+      if (pending > 0) return;
+      render();
+      if (rejected.length) {
+        alert('Only text based files are supported\n\nSkipped: ' + rejected.join(', '));
+      }
+    }
+  }
+
+  /* ---------- 병합 ---------- */
+  function merge() {
+    if (!files.length) return '';
+    const useFence = fmt.value === 'fence';
+
+    return files.map(function (f) {
+      const body = f.text.replace(/\r\n?/g, '\n').replace(/\s+$/, '');
+      if (useFence) {
+        const lang = ext(f.name);
+        return '## ' + f.name + '\n\n```' + lang + '\n' + body + '\n```';
+      }
+      const bar = '=============================='.slice(0, 30);
+      return bar + '\n[FILE: ' + f.name + ']\n' + bar + '\n' + body;
+    }).join('\n\n');
+  }
+
+  function render() {
+    // 칩 목록
+    chips.innerHTML = '';
+    files.forEach(function (f, i) {
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = f.name;
+      nm.title = f.name;
+
+      const sz = document.createElement('span');
+      sz.className = 'sz';
+      sz.textContent = fmtSize(f.size);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.textContent = '×';
+      del.setAttribute('aria-label', 'Remove ' + f.name);
+      del.addEventListener('click', function () {
+        files.splice(i, 1);
+        render();
+      });
+
+      chip.appendChild(nm);
+      chip.appendChild(sz);
+      chip.appendChild(del);
+      chips.appendChild(chip);
+    });
+
+    listWrap.classList.toggle('hidden', files.length === 0);
+    fileCount.textContent = files.length;
+    const total = files.reduce(function (s, f) { return s + f.size; }, 0);
+    sizeInfo.textContent = files.length ? 'total ' + fmtSize(total) : '';
+
+    // Merged prompt
+    const text = merge();
+    output.value = text;
+
+    const chars = Array.from(text).length;
+    charsEl.textContent = chars.toLocaleString('ko-KR');
+    linesEl.textContent = (text ? text.split('\n').length : 0).toLocaleString('ko-KR');
+    // 한글이 섞인 문서 기준의 대략치 (정확한 값은 모델마다 다름)
+    tokensEl.textContent = Math.ceil(chars / 2.5).toLocaleString('ko-KR');
+  }
+
+  fmt.addEventListener('change', render);
+
+  /* ---------- 드래그 앤 드롭 ---------- */
+  drop.addEventListener('click', function () { picker.click(); });
+  drop.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+  });
+  picker.addEventListener('change', function (ev) {
+    addFiles(ev.target.files);
+    picker.value = '';   // 같은 파일을 다시 넣을 수 있도록 초기화
+  });
+
+  ['dragenter', 'dragover'].forEach(function (t) {
+    drop.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      drop.classList.add('over');
+    });
+  });
+  ['dragleave', 'drop'].forEach(function (t) {
+    drop.addEventListener(t, function (ev) {
+      ev.preventDefault();
+      if (t === 'dragleave' && drop.contains(ev.relatedTarget)) return;
+      drop.classList.remove('over');
+    });
+  });
+  drop.addEventListener('drop', function (ev) {
+    if (ev.dataTransfer && ev.dataTransfer.files) addFiles(ev.dataTransfer.files);
+  });
+
+  // 창 밖으로 파일을 놓쳤을 때 브라우저가 파일을 열어버리는 것을 막는다
+  ['dragover', 'drop'].forEach(function (t) {
+    window.addEventListener(t, function (ev) {
+      if (ev.target === drop || drop.contains(ev.target)) return;
+      ev.preventDefault();
+    });
+  });
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 복사 · Save · 비우기 ---------- */
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    const text = output.value;
+    if (!text.trim()) { toast('Nothing to copy'); return; }
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else throw new Error('no clipboard api');
+      toast('Prompt copied');
+    } catch (e) {
+      if (legacyCopy(text)) toast('Prompt copied');
+      else toast('The browser blocked copying. Select the text instead.');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    if (!output.value.trim()) { toast('Nothing to save'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const name = 'prompt_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+    try {
+      const blob = new Blob(['\uFEFF' + output.value], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('Saved');
+    } catch (e) {
+      toast('Your browser blocked the download');
+    }
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    if (!files.length || confirm('This removes every file you added. Continue?')) {
+      files = [];
+      render();
+    }
+  });
+
+  render();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>What goes wrong when you hand an AI several files</h2>
+<p>Uploading files one at a time blurs the line between them, and simply pasting them end to end removes it entirely. The model then answers about the wrong file, or merges two of them into a single confused explanation.</p>
+<p>This tool labels each file and marks its boundary with a code fence or a rule, then joins them into one prompt. It also shows the total character count and a rough token estimate, so you can tell before you paste whether you are near the model's input limit.</p>
+<h2>When to use it</h2><dl>
+<dt>Code review across files</dt><dd>Asking about a feature that spans several modules. Clear file boundaries are what make the answer specific.</dd>
+<dt>Summarising a set of documents</dt><dd>Handing over several meeting notes or reports and asking what they have in common.</dd>
+<dt>Checking the size first</dt><dd>Seeing the token estimate before you paste. Over the limit, it is better to split the question in two than to have the input silently truncated.</dd>
+<dt>Keeping a reference bundle</dt><dd>Saving a set of files as one text block so you do not have to gather them again next time.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Add your files. Several at once is fine.</li>
+<li>Choose whether to separate them with code fences or rules.</li>
+<li>Check the size, then use <strong>Copy the whole prompt</strong> and paste it into your AI tool.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Code fences</dt><dd>Wraps each file in triple backticks. The right choice for source code, since the model can tell code from commentary.</dd>
+<dt>Rule separated</dt><dd>Divides files with a plain rule. Easier to read for ordinary documents.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>How accurate is the token estimate</dt><dd>It is approximate. Every model counts tokens differently, so leave some headroom when you are near a limit.</dd>
+<dt>Are my files uploaded</dt><dd>No. Your browser reads them directly and joins them on screen. Nothing is transmitted.</dd>
+<dt>Which file types work</dt><dd>Anything that reads as text: source files, txt, md, csv, json, yml and similar. Compressed formats such as Word documents or PDFs need converting to text first.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/notepad_en.html">Rich Text Notepad</a></li>
+<li><a href="https://mnledu.com/en/productivity/emailgen_en.html">Bulk Email Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/templatemerger_en.html">Template Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/listformat_en.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/textclean_en.html">Text Cleaner</a></li>
+<li><a href="https://mnledu.com/en/productivity/anonymizer_en.html">Personal Data Redactor</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How accurate is the token estimate",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is approximate. Every model counts tokens differently, so leave some headroom when you are near a limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my files uploaded",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your browser reads them directly and joins them on screen. Nothing is transmitted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which file types work",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Anything that reads as text: source files, txt, md, csv, json, yml and similar. Compressed formats such as Word documents or PDFs need converting to text first."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/promptmerger_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/promptmerger_en.html";
+  var TK_SHARE_TITLE = "AI Prompt Merger";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

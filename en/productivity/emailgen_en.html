@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Email Generator | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Turn one template and a list of names into dozens of personalised… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/emailgen_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/emailgen_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/emailgen_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/emailgen_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/emailgen_en.html" />
+<meta property="og:title" content="Bulk Email Generator · writing · template | TOOLKIT" />
+<meta property="og:description" content="Turn one template and a list of names into dozens of personalised… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Bulk Email Generator · writing · template | TOOLKIT" />
+<meta name="twitter:description" content="Turn one template and a list of names into dozens of personalised… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Bulk Email Generator",
+  "description": "Turn one template and a list of names into dozens of personalised messages at once.",
+  "url": "https://mnledu.com/en/productivity/emailgen_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#26384B',
+          steel:  '#2C6BA0',
+          muted:  '#5F7488',
+          hair:   '#E3E7EC',
+          canvas: '#F4F5F7',
+          alert:  '#A34A3C'
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --ink:#26384B; --steel:#2C6BA0; --muted:#5F7488;
+    --hair:#E3E7EC; --canvas:#F4F5F7; --alert:#A34A3C;
+  }
+  html,body{ margin:0; }
+  body{
+    background:var(--canvas); color:var(--ink);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .btn{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:6px; font-size:13px; line-height:1; padding:9px 13px; cursor:pointer;
+    transition:border-color .12s, background .12s, color .12s;
+  }
+  .btn:hover:not([disabled]){ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--ink); background:var(--ink); color:#fff; }
+  .btn-primary:hover:not([disabled]){ background:#1D2C3B; border-color:#1D2C3B; }
+
+  .tab{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:6px; font-size:12.5px; line-height:1; padding:8px 12px;
+    cursor:pointer; transition:all .12s;
+  }
+  .tab:hover{ color:var(--ink); border-color:#C3CCD6; }
+  .tab.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  textarea, .fld{
+    width:100%; border:1px solid var(--hair); border-radius:8px; background:#fff;
+    padding:11px 13px; font-size:13.5px; line-height:1.75; color:var(--ink);
+    outline:none; transition:border-color .12s;
+  }
+  textarea:focus, .fld:focus{ border-color:var(--steel); }
+  textarea{ resize:vertical; font-family:'JetBrains Mono',ui-monospace,monospace; }
+  #tplBody{ min-height:clamp(220px,32vh,420px); }
+  #bulkData{ min-height:150px; }
+
+  .chip{
+    border:1px solid var(--hair); background:#fff; color:var(--ink);
+    border-radius:999px; font-size:11.5px; line-height:1; padding:6px 11px; cursor:pointer;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{ border-color:var(--steel); color:var(--steel); background:#F3F8FC; }
+
+  /* Save 목록 */
+  .tplRow{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--hair); border-radius:7px; background:#fff;
+    padding:8px 10px; font-size:13px;
+  }
+  .tplRow .nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+  .tplRow .nm:hover{ color:var(--steel); }
+  .mini{
+    border:1px solid var(--hair); background:#fff; color:var(--muted);
+    border-radius:5px; font-size:11px; line-height:1; padding:5px 7px; cursor:pointer; flex:none;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .mini:hover{ border-color:var(--steel); color:var(--steel); }
+  .mini.del:hover{ border-color:var(--alert); background:var(--alert); color:#fff; }
+
+  /* Preview */
+  #preview{
+    min-height:clamp(280px,42vh,560px); max-height:64vh; overflow:auto;
+    background:#fff; border:1px solid var(--hair); border-radius:8px;
+    padding:18px 20px; font-size:14px; line-height:1.8;
+  }
+  #preview.plain{ white-space:pre-wrap; word-break:break-word; font-family:'Pretendard',sans-serif; }
+  #preview.code{ white-space:pre-wrap; word-break:break-word; font-family:'JetBrains Mono',ui-monospace,monospace; font-size:13px; }
+  #preview h1{ font-size:1.5em; font-weight:700; margin:.6em 0 .4em; }
+  #preview h2{ font-size:1.28em; font-weight:700; margin:.6em 0 .4em; }
+  #preview h3{ font-size:1.12em; font-weight:600; margin:.6em 0 .3em; }
+  #preview p{ margin:0 0 .7em; }
+  #preview strong{ font-weight:700; color:var(--ink); }
+  #preview ul, #preview ol{ margin:.3em 0 .8em; padding-left:1.4em; }
+  #preview li{ margin:.2em 0; }
+  #preview a{ color:var(--steel); }
+  #preview hr{ border:0; border-top:1px solid var(--hair); margin:1.1em 0; }
+  #preview blockquote{ margin:.6em 0; padding-left:.9em; border-left:3px solid var(--hair); color:var(--muted); }
+
+  #toast{
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .2s ease, transform .2s ease; pointer-events:none;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body class="font-sans text-ink">
+
+<div class="mx-auto max-w-7xl px-4 sm:px-6 py-7 sm:py-10">
+
+  <header class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-[19px] font-semibold tracking-tight">Bulk Email Generator</h1>
+      <p class="mt-1 text-[13px] text-muted">One template, many messages · processed only in your browser</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] text-muted">Mode</span>
+        <div class="flex gap-1.5">
+          <button class="tab on" data-mode="single">Single</button>
+          <button class="tab" data-mode="bulk">Bulk</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] text-muted">Format</span>
+        <div class="flex gap-1.5">
+          <button class="tab on" data-fmt="txt">Plain text</button>
+          <button class="tab" data-fmt="md">Markdown</button>
+          <button class="tab" data-fmt="html">HTML</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+
+    <!-- 좌측 : 템플릿 -->
+    <section class="space-y-4">
+
+      <!-- Save소 -->
+      <div class="rounded-lg border border-hair bg-white">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hair px-4 py-2.5">
+          <span class="text-[12px] font-medium tracking-wide text-muted">
+            Saved templates <b id="tplCount" class="num ml-1 text-ink">0</b>
+          </span>
+          <div class="flex items-center gap-1.5">
+            <input id="tplName" class="fld py-1.5 text-[12px]" style="width:150px" placeholder="Template name" autocomplete="off">
+            <button id="tplSave" class="btn px-2.5 py-1.5 text-[12px]">Save</button>
+          </div>
+        </div>
+        <div id="tplList" class="grid gap-1.5 px-4 py-3"></div>
+      </div>
+
+      <!-- 에디터 -->
+      <div class="rounded-lg border border-hair bg-white">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hair px-4 py-2.5">
+          <span class="text-[12px] font-medium tracking-wide text-muted">Template</span>
+          <div class="flex gap-1.5">
+            <button id="sampleBtn" class="btn px-2.5 py-1.5 text-[12px]">Sample</button>
+            <button id="clearTpl" class="btn px-2.5 py-1.5 text-[12px]">Clear</button>
+          </div>
+        </div>
+
+        <div class="px-4 py-3">
+          <label for="subject" class="mb-1.5 block text-[11px] text-muted">Subject</label>
+          <input id="subject" class="fld" placeholder="[{Company}] Regarding {Subject}" autocomplete="off">
+
+          <label for="tplBody" class="mb-1.5 mt-3 block text-[11px] text-muted">Body</label>
+          <textarea id="tplBody" spellcheck="false"
+            placeholder="Dear {Name}, {Title} at {Company}&#10;&#10;This is {Sender}.&#10;{Subject} has been confirmed."></textarea>
+
+          <div id="varChips" class="mt-3 flex flex-wrap gap-1.5"></div>
+          <p class="mt-2 text-[11.5px] leading-relaxed text-muted">
+            Write fields in curly braces. Empty values are tidied away along with the spacing around them.
+            Rows with an empty value are tidied up so you never get a stray comma or blank line.
+          </p>
+        </div>
+      </div>
+
+      <!-- 입력 -->
+      <div class="rounded-lg border border-hair bg-white">
+        <div class="border-b border-hair px-4 py-2.5 text-[12px] font-medium tracking-wide text-muted">
+          <span id="inputTitle">Values</span>
+        </div>
+
+        <div id="singleWrap" class="grid gap-3 px-4 py-3 sm:grid-cols-2"></div>
+
+        <div id="bulkWrap" class="hidden px-4 py-3">
+          <p class="mb-2 text-[11.5px] leading-relaxed text-muted">
+            Put the field names on the first line and the values below. Pasting straight from a spreadsheet works, and commas are accepted too.
+          </p>
+          <textarea id="bulkData" spellcheck="false"
+            placeholder="Company&#9;Name&#9;Title&#9;Subject&#10;Aimlab Inc.&#9;Jordan Reyes&#9;CEO&#9;phase 2 review&#10;Eugene MS&#9;Priya Raman&#9;Team Lead&#9;kickoff report"></textarea>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <button id="bulkSample" class="btn px-2.5 py-1.5 text-[12px]">Sample data</button>
+            <span id="bulkInfo" class="num text-[11.5px] text-muted"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 우측 : 결과 -->
+    <section class="rounded-lg border border-hair bg-white">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hair px-4 py-2.5">
+        <span class="text-[12px] font-medium tracking-wide text-muted">
+          Preview <span id="fmtLabel" class="num ml-1 text-ink">TXT</span>
+        </span>
+        <div class="flex flex-wrap gap-1.5">
+          <button id="saveBtn" class="btn px-2.5 py-1.5 text-[12px]">Save as file</button>
+          <button id="copyBtn" class="btn btn-primary px-2.5 py-1.5 text-[12px]">Copy message</button>
+        </div>
+      </div>
+
+      <div class="px-4 py-3">
+        <div id="subjectLine" class="mb-2 hidden rounded-md border border-hair bg-canvas px-3 py-2 text-[13px]">
+          <span class="text-[11px] text-muted">Subject</span>
+          <span id="subjectText" class="ml-2 font-medium"></span>
+        </div>
+        <div id="preview" class="plain"></div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-hair px-4 py-2.5 text-[12px] text-muted">
+        <span>with spaces <b id="cAll" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span>without spaces <b id="cNoSp" class="num ml-0.5 font-medium text-ink">0</b></span>
+        <span id="mailCount" class="num"></span>
+        <span id="warnInfo" class="num text-alert"></span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="mt-8 text-center text-[11px] tracking-wide text-muted">
+    © 2026 Janggil Kim. All rights reserved.
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-8 left-1/2 rounded-md bg-ink px-4 py-2.5 text-[13px] font-medium text-white shadow-lg" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const subject   = document.getElementById('subject');
+  const tplBody   = document.getElementById('tplBody');
+  const varChips  = document.getElementById('varChips');
+  const singleWrap= document.getElementById('singleWrap');
+  const bulkWrap  = document.getElementById('bulkWrap');
+  const bulkData  = document.getElementById('bulkData');
+  const bulkInfo  = document.getElementById('bulkInfo');
+  const preview   = document.getElementById('preview');
+  const subjectLine = document.getElementById('subjectLine');
+  const subjectText = document.getElementById('subjectText');
+  const cAll      = document.getElementById('cAll');
+  const cNoSp     = document.getElementById('cNoSp');
+  const mailCount = document.getElementById('mailCount');
+  const warnInfo  = document.getElementById('warnInfo');
+  const fmtLabel  = document.getElementById('fmtLabel');
+  const inputTitle= document.getElementById('inputTitle');
+  const tplList   = document.getElementById('tplList');
+  const tplName   = document.getElementById('tplName');
+  const tplCount  = document.getElementById('tplCount');
+
+  const KEY = 'email-templates-v1';
+  const SEP = '----------------------------------------';
+
+  let mode = 'single';
+  let fmt  = 'txt';
+  let values = {};          // 1:1 입력값
+  let lastPlain = '';       // 복사·Save용 텍스트
+  let lastHtml = '';        // HTML 모드 복사용
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 한국어 조사 ---------- */
+  function jong(ch) {
+    if (!ch) return { has: false, rieul: false };
+    const c = ch.charCodeAt(0);
+    if (c >= 0xAC00 && c <= 0xD7A3) {
+      const j = (c - 0xAC00) % 28;
+      return { has: j !== 0, rieul: j === 8 };
+    }
+    if (/[0-9]/.test(ch)) return { has: '1367800'.indexOf(ch) >= 0, rieul: '1780'.indexOf(ch) >= 0 };
+    return { has: false, rieul: false };
+  }
+
+  const PTL = '은|는|이|가|을|를|과|와|으로|로|아|야';
+  const WITH_JONG = { '은': 1, '이': 1, '을': 1, '과': 1, '으로': 1, '아': 1 };
+
+  function fixParticles(text) {
+    // 앞말이 사라져 조사 표기만 남은 경우는 통째로 지운다
+    text = text.replace(new RegExp('^[ \\t]*\\((' + PTL + ')\\/(' + PTL + ')\\)[ \\t]*', 'gm'), '');
+    // 줄을 넘어가지 않도록 같은 줄의 앞 글자만 본다
+    return text.replace(new RegExp('(\\S)[ \\t]*\\((' + PTL + ')\\/(' + PTL + ')\\)', 'g'),
+      function (m, prev, a, b) {
+        const st = jong(prev);
+        const withJong = WITH_JONG[a] ? a : b;
+        const without  = WITH_JONG[a] ? b : a;
+        if (withJong === '으로' && st.rieul) return prev + '로';
+        return prev + (st.has ? withJong : without);
+      });
+  }
+
+  /* ---------- 공란 정돈 ---------- */
+  function tidyLine(line) {
+    let t = line.replace(/[ \t]{2,}/g, ' ');
+    t = t.replace(/\(\s*\)|\[\s*\]|「\s*」|《\s*》/g, '');   // 빈 괄호 제거
+    t = t.replace(/\s+([,.;!?])/g, '$1');                    // 문장부호 앞 공백 (콜론은 유지)
+    t = t.replace(/([,·\/])\s*\1+/g, '$1');                  // 중복 구분자
+    t = t.replace(/^\s*[,·:]\s*/, '').replace(/\s*[,·:]\s*$/, '');
+    return t.replace(/[ \t]{2,}/g, ' ').trim();
+  }
+
+  function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function render(tpl, row) {
+    const source = String(tpl == null ? '' : tpl);
+    let out = source;
+
+    Object.keys(row).forEach(function (k) {
+      out = out.replace(new RegExp('\\{\\s*' + escapeRe(k) + '\\s*\\}', 'g'),
+                        row[k] == null ? '' : String(row[k]));
+    });
+    out = out.replace(/\{[^{}]*\}/g, '');     // 값이 주어지지 않은 변수는 제거
+    out = fixParticles(out);
+
+    const origLines = source.split('\n');
+    const hadVar = /\{[^{}]*\}/;
+    const kept = [];
+
+    out.split('\n').forEach(function (l, i) {
+      const orig = origLines[i] !== undefined ? origLines[i] : '';
+      const had = l.trim() !== '';
+      const t = tidyLine(l);
+
+      if (had && t === '') return;                       // 치환으로 비어버린 줄은 버린다
+      // "- 준비 : " 처럼 항목 라벨만 남고 값이 사라진 줄도 버린다
+      if (hadVar.test(orig) && /^[-·*•\s]*[^:：]{0,24}[:：]\s*$/.test(t)) return;
+
+      kept.push(t);
+    });
+
+    return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  /* ---------- 변수 감지 ---------- */
+  function detectVars() {
+    const src = subject.value + '\n' + tplBody.value;
+    const found = (src.match(/\{\s*[^{}]+\s*\}/g) || [])
+      .map(function (t) { return t.replace(/[{}]/g, '').trim(); })
+      .filter(function (x, i, a) { return x && a.indexOf(x) === i; });
+    return found;
+  }
+
+  function renderVarUI() {
+    const vars = detectVars();
+
+    // 칩
+    varChips.innerHTML = '';
+    if (!vars.length) {
+      const s = document.createElement('span');
+      s.className = 'text-[11.5px] text-muted';
+      s.textContent = 'Fields you add in curly braces show up here';
+      varChips.appendChild(s);
+    } else {
+      vars.forEach(function (v) {
+        const b = document.createElement('button');
+        b.className = 'chip';
+        b.type = 'button';
+        b.textContent = '{' + v + '}';
+        b.title = 'Insert at the cursor';
+        b.addEventListener('click', function () { insertVar('{' + v + '}'); });
+        varChips.appendChild(b);
+      });
+    }
+
+    // 1:1 입력 상자
+    singleWrap.innerHTML = '';
+    if (!vars.length) {
+      const s = document.createElement('p');
+      s.className = 'text-[12.5px] text-muted';
+      s.textContent = 'Add a field to the template and an input appears here';
+      singleWrap.appendChild(s);
+    }
+    vars.forEach(function (v) {
+      const wrap = document.createElement('div');
+      const lab = document.createElement('label');
+      lab.className = 'mb-1.5 block text-[11px] text-muted';
+      lab.textContent = v;
+      lab.htmlFor = 'v_' + v;
+
+      const inp = document.createElement('input');
+      inp.className = 'fld';
+      inp.id = 'v_' + v;
+      inp.value = values[v] || '';
+      inp.placeholder = 'Leave blank and it tidies itself';
+      inp.autocomplete = 'off';
+      inp.addEventListener('input', function () { values[v] = inp.value; update(); });
+
+      wrap.appendChild(lab);
+      wrap.appendChild(inp);
+      singleWrap.appendChild(wrap);
+    });
+  }
+
+  function insertVar(text) {
+    const el = tplBody;
+    const s = el.selectionStart, e = el.selectionEnd;
+    el.value = el.value.slice(0, s) + text + el.value.slice(e);
+    el.focus();
+    el.setSelectionRange(s + text.length, s + text.length);
+    update();
+  }
+
+  /* ---------- Bulk data ---------- */
+  function parseBulk() {
+    const raw = bulkData.value.replace(/\r\n?/g, '\n').trim();
+    if (!raw) return { keys: [], rows: [] };
+
+    const lines = raw.split('\n').filter(function (l) { return l.trim() !== ''; });
+    const useTab = lines[0].indexOf('\t') !== -1;
+    const split = function (l) {
+      return (useTab ? l.split('\t') : l.split(',')).map(function (c) { return c.trim(); });
+    };
+
+    const keys = split(lines[0]).filter(Boolean);
+    const rows = lines.slice(1).map(function (l) {
+      const cells = split(l);
+      const row = {};
+      keys.forEach(function (k, i) { row[k] = cells[i] !== undefined ? cells[i] : ''; });
+      return row;
+    });
+    return { keys: keys, rows: rows };
+  }
+
+  /* ---------- Format 변환 ---------- */
+  // Plain text : Markdown 기호를 걷어내 메모장에 그대로 붙일 수 있게 한다
+  function stripMd(text) {
+    return text
+      .replace(/^#{1,6}\s+/gm, '')
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/__(.+?)__/g, '$1')
+      .replace(/\*(?!\s)(.+?)(?<!\s)\*/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/^\s*>\s?/gm, '')
+      .replace(/^\s*[-*]\s+/gm, '· ')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1($2)')
+      .replace(/^\s*[-*_]{3,}\s*$/gm, SEP);
+  }
+
+  function toHtml(text) {
+    try {
+      if (typeof marked === 'undefined') throw new Error('no marked');
+      return marked.parse ? marked.parse(text) : marked(text);
+    } catch (e) {
+      return '<p>' + text.replace(/[&<>]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+      }).replace(/\n/g, '<br>') + '</p>';
+    }
+  }
+
+  /* ---------- Body 생성 ---------- */
+  function buildBodies() {
+    const tpl = tplBody.value;
+    const subj = subject.value;
+
+    if (mode === 'single') {
+      return [{ subject: render(subj, values), body: render(tpl, values), who: values['Name'] || '' }];
+    }
+
+    const data = parseBulk();
+    bulkInfo.textContent = data.rows.length
+      ? data.keys.length + ' fields · ' + data.rows.length + ' rows'
+      : (bulkData.value.trim() ? 'That data could not be read' : '');
+
+    return data.rows.map(function (row) {
+      const who = row['Name'] || row[data.keys[0]] || '';
+      return { subject: render(subj, row), body: render(tpl, row), who: who };
+    });
+  }
+
+  function joinPlain(items) {
+    if (mode === 'single') return items.length ? items[0].body : '';
+    return items.map(function (it) {
+      const head = SEP + '\nMessage for: ' + (it.who || '(no name)') + '\n' + SEP;
+      const subj = it.subject ? 'Subject: ' + it.subject + '\n\n' : '';
+      return head + '\n' + subj + it.body;
+    }).join('\n\n');
+  }
+
+  /* ---------- 렌더링 ---------- */
+  function update() {
+    renderVarUI();
+    const items = buildBodies();
+
+    fmtLabel.textContent = fmt.toUpperCase();
+    inputTitle.textContent = mode === 'single' ? 'Values' : 'Bulk data';
+
+    // Subject 줄 (단일 모드에서만 별도 표시)
+    if (mode === 'single' && items.length && items[0].subject) {
+      subjectText.textContent = items[0].subject;
+      subjectLine.classList.remove('hidden');
+    } else {
+      subjectLine.classList.add('hidden');
+    }
+
+    const mdText = joinPlain(items);
+
+    if (fmt === 'txt') {
+      lastPlain = stripMd(mdText).replace(/\n{3,}/g, '\n\n').trim();
+      lastHtml = '';
+      preview.className = 'plain';
+      preview.textContent = lastPlain;
+    } else if (fmt === 'md') {
+      lastPlain = mdText;
+      lastHtml = '';
+      preview.className = 'code';
+      preview.textContent = lastPlain;
+    } else {
+      lastHtml = toHtml(mdText);
+      preview.className = '';
+      preview.innerHTML = lastHtml;
+      lastPlain = preview.innerText;
+    }
+
+    // 글자수는 화면에 보이는 텍스트 기준
+    const shown = (fmt === 'html' ? preview.innerText : lastPlain).replace(/\r/g, '');
+    const flat = shown.replace(/\n/g, '');
+    cAll.textContent = Array.from(flat).length.toLocaleString('ko-KR');
+    cNoSp.textContent = Array.from(flat.replace(/\s/g, '')).length.toLocaleString('ko-KR');
+    mailCount.textContent = mode === 'bulk' ? items.length + ' messages' : '';
+
+    // 값이 비어 있는 변수 안내
+    if (mode === 'single') {
+      const vars = detectVars();
+      const empty = vars.filter(function (v) { return !values[v] || !values[v].trim(); });
+      warnInfo.textContent = empty.length ? 'empty fields: ' + empty.length + ' (tidied automatically)' : '';
+    } else {
+      warnInfo.textContent = '';
+    }
+  }
+
+  [subject, tplBody, bulkData].forEach(function (el) { el.addEventListener('input', update); });
+
+  /* ---------- 모드 · Format 전환 ---------- */
+  document.querySelectorAll('[data-mode]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      mode = b.dataset.mode;
+      document.querySelectorAll('[data-mode]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      singleWrap.classList.toggle('hidden', mode !== 'single');
+      bulkWrap.classList.toggle('hidden', mode !== 'bulk');
+      document.getElementById('copyBtn').textContent = mode === 'bulk' ? 'Copy all messages' : 'Copy message';
+      update();
+    });
+  });
+
+  document.querySelectorAll('[data-fmt]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      fmt = b.dataset.fmt;
+      document.querySelectorAll('[data-fmt]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.getElementById('copyBtn').textContent =
+        fmt === 'html' ? 'Copy formatted' : (mode === 'bulk' ? 'Copy all messages' : 'Copy message');
+      update();
+    });
+  });
+
+  /* ---------- 복사 ---------- */
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    if (!lastPlain.trim() && !lastHtml.trim()) { toast('Nothing to copy'); return; }
+
+    // HTML 모드는 text/html과 text/plain을 함께 담아 Format이 살아 있게 한다
+    if (fmt === 'html' && navigator.clipboard && window.ClipboardItem) {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([lastHtml], { type: 'text/html' }),
+          'text/plain': new Blob([lastPlain], { type: 'text/plain' })
+        })]);
+        toast('Copied with formatting');
+        return;
+      } catch (e) { /* 아래 평문 복사로 넘어간다 */ }
+    }
+
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(lastPlain);
+      else throw new Error('no clipboard api');
+      toast('Copied');
+    } catch (e) {
+      if (legacyCopy(lastPlain)) toast('Copied');
+      else toast('The browser blocked copying. Select the text instead.');
+    }
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    const text = fmt === 'html' ? lastHtml : lastPlain;
+    if (!text.trim()) { toast('Nothing to save'); return; }
+    const d = new Date();
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    const ext = fmt === 'html' ? 'html' : (fmt === 'md' ? 'md' : 'txt');
+    const name = 'emails_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.' + ext;
+    try {
+      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
+      const blob = new Blob([(ext === 'html' ? '' : '\uFEFF') + text],
+                            { type: ext === 'html' ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      toast('Saved');
+    } catch (e) {
+      toast('Your browser blocked the download');
+    }
+  });
+
+  /* ---------- 템플릿 Save소 ---------- */
+  // Save이 막힌 환경(시크릿 모드, Preview 창)에서도 앱이 멈추지 않도록 감싼다
+  let storageOk = true;
+
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { storageOk = false; return {}; }
+  }
+  function saveAll(obj) {
+    try { localStorage.setItem(KEY, JSON.stringify(obj)); return true; }
+    catch (e) { storageOk = false; return false; }
+  }
+
+  function renderTplList() {
+    const all = loadAll();
+    const names = Object.keys(all).sort();
+    tplList.innerHTML = '';
+    tplCount.textContent = names.length;
+
+    if (!storageOk) {
+      const p = document.createElement('p');
+      p.className = 'text-[12px] text-alert';
+      p.textContent = 'Browser storage is blocked here, so save your template as a file instead.';
+      tplList.appendChild(p);
+      return;
+    }
+    if (!names.length) {
+      const p = document.createElement('p');
+      p.className = 'text-[12.5px] text-muted';
+      p.textContent = 'Name a template you use often and it will be here next time';
+      tplList.appendChild(p);
+      return;
+    }
+
+    names.forEach(function (n) {
+      const row = document.createElement('div');
+      row.className = 'tplRow';
+
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = n;
+      nm.title = 'Click to load';
+      nm.addEventListener('click', function () { loadTpl(n); });
+
+      const load = document.createElement('button');
+      load.className = 'mini';
+      load.textContent = 'Load';
+      load.addEventListener('click', function () { loadTpl(n); });
+
+      const del = document.createElement('button');
+      del.className = 'mini del';
+      del.textContent = 'Delete';
+      del.addEventListener('click', function () {
+        if (!confirm('"' + n + '" Delete this template?')) return;
+        const all2 = loadAll();
+        delete all2[n];
+        saveAll(all2);
+        renderTplList();
+        toast('Deleted');
+      });
+
+      row.appendChild(nm); row.appendChild(load); row.appendChild(del);
+      tplList.appendChild(row);
+    });
+  }
+
+  function loadTpl(n) {
+    const all = loadAll();
+    const t = all[n];
+    if (!t) return;
+    subject.value = t.subject || '';
+    tplBody.value = t.body || '';
+    tplName.value = n;
+    update();
+    toast('"' + n + '" template loaded');
+  }
+
+  document.getElementById('tplSave').addEventListener('click', function () {
+    const n = tplName.value.trim();
+    if (!n) { toast('Give the template a name'); tplName.focus(); return; }
+    if (!tplBody.value.trim()) { toast('The message body is empty'); return; }
+
+    const all = loadAll();
+    if (all[n] && !confirm('A template with that name exists. Overwrite it?')) return;
+
+    all[n] = { subject: subject.value, body: tplBody.value, at: Date.now() };
+    if (saveAll(all)) { renderTplList(); toast('"' + n + '" template saved'); }
+    else toast('Saving is blocked in this environment');
+  });
+
+  /* ---------- Sample · Clear ---------- */
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    subject.value = '[{Company}] {Subject} — schedule confirmed';
+    tplBody.value =
+      'Dear {Name}, {Title} at {Company}\n\n' +
+      'This is **{Sender}** from **{SenderCompany}**.\n\n' +
+      'I am writing to confirm the details for {Subject}.\n\n' +
+      '- Date : {Date}\n' +
+      '- Location : {Location}\n' +
+      '- Please bring : {Bring}\n\n' +
+      '{Notes}\n\n' +
+      'Do reply to this message if anything needs changing.\n\n' +
+      'Best regards,\n{Sender}';
+    values = {
+      Company: 'Aimlab Inc.', Name: 'Jordan Reyes', Title: 'CEO',
+      SenderCompany: 'SNU Engineering Research Institute', Sender: 'Janggil Kim',
+      Subject: 'the phase 2 review', Date: 'Thu 3 Sep 2026, 2:00 pm',
+      Location: 'Head office meeting room', Bring: '', Notes: ''
+    };
+    tplName.value = 'Consulting schedule notice';
+    update();
+    toast('Sample template loaded');
+  });
+
+  document.getElementById('bulkSample').addEventListener('click', function () {
+    bulkData.value =
+      'Company\tName\tTitle\tSubject\tDate\tLocation\tSenderCompany\tSender\tBring\tNotes\n' +
+      'Aimlab Inc.\tJordan Reyes\tCEO\tthe phase 2 review\tThu 3 Sep, 2:00 pm\tHead office\tSNU ERI\tJanggil Kim\t\t\n' +
+      'Eugene MS\tPriya Raman\tTeam Lead\tthe kickoff report\tSat 5 Sep, 10:00 am\tOnline\tSNU ERI\tJanggil Kim\tBusiness plan\t\n' +
+      '\tSam Okafor\t\tthe interim check\tThu 10 Sep, 3:00 pm\tInnovation Centre\tSNU ERI\tJanggil Kim\t\tMaterials shared in advance';
+    update();
+    toast('Sample data loaded');
+  });
+
+  document.getElementById('clearTpl').addEventListener('click', function () {
+    if (!tplBody.value.trim() || confirm('This clears the template you are editing. Continue?')) {
+      subject.value = '';
+      tplBody.value = '';
+      values = {};
+      update();
+    }
+  });
+
+  renderTplList();
+  update();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>When the same email has to go out twenty times</h2>
+<p>Twenty recipients, the same message, but each one needs their own name, company and meeting time. Mail merge means installing something and wiring up a data source. Doing it by hand means twenty rounds of find and replace, and a real chance that message fourteen still says someone else's name.</p>
+<p>This tool sits in the middle. Write the message once with fields in curly braces, paste your list straight out of a spreadsheet, and every message is built at once. Empty fields are removed along with the spacing around them, so a missing value never leaves a dangling comma or an empty line.</p>
+<h2>When to use it</h2><dl>
+<dt>Event and meeting invitations</dt><dd>Paste a spreadsheet of attendees and get one message per person, each with their own time and location.</dd>
+<dt>Review and application outcomes</dt><dd>The wording is fixed and only the company and contact change. A typical merge, and a bad place for a copy and paste mistake.</dd>
+<dt>Scheduling across a list</dt><dd>Send everyone the same instructions with a different slot in each message.</dd>
+<dt>Recurring client notices</dt><dd>Price changes, holiday hours, anything that goes out regularly. Save the template and it is ready next time.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Write your subject and body in <strong>Template</strong>. Mark anything that changes as <strong>{Company}</strong> or similar.</li>
+<li>Paste your list into the data box. Copying a range out of a spreadsheet keeps the tab separation, so it just works.</li>
+<li>Check the preview, then use <strong>Copy message</strong> for one at a time or <strong>Bulk</strong> for the whole set.</li>
+<li>Send them from your own mail client.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Single and Bulk</dt><dd>Single builds one message from values you type in. Bulk runs the template over every row of your list and shows all the results together.</dd>
+<dt>Plain text and Markdown</dt><dd>Plain text suits an ordinary mail client or a web form. Markdown keeps the bold and list formatting for Slack, Notion and similar tools.</dd>
+<dt>Saved templates</dt><dd>Give a template a name and it stays in your browser for next time. It is stored on your device rather than on a server, so clearing browser data clears it.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Can I paste directly from a spreadsheet</dt><dd>Yes. Copying a range gives tab separated text, which is read as columns automatically. Comma separated data works too.</dd>
+<dt>What happens if a value is missing</dt><dd>The field is removed along with the surrounding spacing, so you do not end up with a stray comma or a blank line. The count of empty fields is shown above the preview.</dd>
+<dt>Does it send the emails</dt><dd>No. It only builds the text. Sending happens in your own mail client, which keeps your contacts and credentials out of this page entirely.</dd>
+<dt>Is my recipient list uploaded anywhere</dt><dd>No. The list stays in your browser and is never transmitted. That matters, because a recipient list is personal data.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/notepad_en.html">Rich Text Notepad</a></li>
+<li><a href="https://mnledu.com/en/productivity/templatemerger_en.html">Template Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/promptmerger_en.html">AI Prompt Merger</a></li>
+<li><a href="https://mnledu.com/en/productivity/listformat_en.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/textclean_en.html">Text Cleaner</a></li>
+<li><a href="https://mnledu.com/en/productivity/anonymizer_en.html">Personal Data Redactor</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I paste directly from a spreadsheet",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Copying a range gives tab separated text, which is read as columns automatically. Comma separated data works too."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if a value is missing",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The field is removed along with the surrounding spacing, so you do not end up with a stray comma or a blank line. The count of empty fields is shown above the preview."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it send the emails",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It only builds the text. Sending happens in your own mail client, which keeps your contacts and credentials out of this page entirely."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my recipient list uploaded anywhere",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The list stays in your browser and is never transmitted. That matters, because a recipient list is personal data."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/emailgen_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/emailgen_en.html";
+  var TK_SHARE_TITLE = "Bulk Email Generator";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

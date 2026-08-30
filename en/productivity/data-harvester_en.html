@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>Data Harvester · File Lists, Link Extraction, URL Decoding | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Drop a folder to turn its contents into a table, pull every link and email address out of messy text, and decode URLs that arrived as unreadable percent codes. Files are never uploaded — only names and sizes are read." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/data-harvester_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/data-harvester_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/data-harvester_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/data-harvester_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/data-harvester_en.html" />
+<meta property="og:title" content="Data Harvester · File Lists, Link Extraction, URL Decoding | TOOLKIT" />
+<meta property="og:description" content="File lists, link and email extraction, and URL decoding — all in the browser." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Data Harvester | TOOLKIT" />
+<meta name="twitter:description" content="File lists, link and email extraction, and URL decoding — all in the browser." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Data Harvester",
+ "description": "Builds file lists, extracts links and email addresses, and decodes percent-encoded URLs, all in the browser.",
+ "url": "https://mnledu.com/en/productivity/data-harvester_en.html",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "Data Harvester", "item": "https://mnledu.com/en/productivity/data-harvester_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Are the files I drop in uploaded?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. The browser reads only each file\u2019s name, size and modified date to build the table; the contents are never opened. The tool works with the connection switched off." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I drop a whole folder?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drop a folder and it walks through everything inside, following nested subfolders however deep they go, and records the path each file came from." }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens to the full stop after a link?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Sentence punctuation and closing brackets are trimmed off the end of a URL. Where brackets are genuinely part of the address, as in many Wikipedia links, the pairs are counted and kept. Repeated addresses are collapsed into one." }
+  },
+  {
+   "@type": "Question",
+   "name": "Why do URLs turn into percent codes?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Addresses can only carry a limited set of characters, so anything outside that set is rewritten as percent-prefixed codes. This tool reverses the process to show the original text, and it unwinds addresses that were encoded more than once." }
+  },
+  {
+   "@type": "Question",
+   "name": "How do I move the list into a spreadsheet?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Copy for spreadsheet puts the table on your clipboard with tabs between the cells. Paste it into Excel or Sheets and every value lands in its own cell. Use the CSV download to keep it as a file instead." }
+  },
+  {
+   "@type": "Question",
+   "name": "Opening all links sometimes gets blocked",
+   "acceptedAnswer": { "@type": "Answer", "text": "Browsers treat several windows opening at once as pop-ups. Allow pop-ups for this site from the prompt in the address bar and they will open. With a long list it is safer to open them in batches." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9; --th:#F1F5F9;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#10B981; --accent2:#059669; --soft:#ECFDF5;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:15px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14.5px;font-weight:600;padding:11px 15px;cursor:pointer;min-height:46px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:#CBD5E1;background:#F8FAFC}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+
+  /* ---------- 탭 ---------- */
+  #tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:20px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:15px;
+    font-weight:700;padding:14px 18px;cursor:pointer;border-bottom:3px solid transparent;
+    margin-bottom:-1px;white-space:nowrap;transition:color .12s,border-color .12s}
+  .tab:hover{color:var(--ink2)}
+  .tab.on{color:var(--accent2);border-bottom-color:var(--accent)}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:8px}
+  .panel{display:none}
+  .panel.on{display:block}
+
+  label.lab{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:8px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  textarea{width:100%;min-height:200px;border:1px solid var(--line);border-radius:11px;padding:13px;
+    font-size:14.5px;line-height:1.85;color:var(--ink);outline:none;background:#fff;resize:vertical;
+    font-family:ui-monospace,Consolas,monospace}
+  textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,185,129,.16)}
+  textarea::placeholder{color:#CBD5E1}
+
+  /* ---------- 드롭 ---------- */
+  #drop{border:2px dashed var(--line);border-radius:16px;padding:42px 20px;text-align:center;
+    cursor:pointer;background:#FCFDFC;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--accent);background:var(--soft)}
+  #drop .ic{font-size:40px;margin-bottom:12px}
+  #drop p{margin:0;font-size:15.5px;color:var(--ink2);line-height:1.9}
+  #drop small{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+  body.dragging #drop{border-color:var(--accent);background:var(--soft)}
+
+  /* ---------- 표 ---------- */
+  .tblWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);
+    border-radius:12px;max-height:56vh;overflow-y:auto}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:700px}
+  thead th{background:var(--th);text-align:left;padding:11px;font-size:12.5px;font-weight:700;
+    color:var(--ink2);border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;z-index:1}
+  tbody td{padding:11px;border-bottom:1px solid var(--line2);color:var(--ink2)}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#FCFDFC}
+  td.num{text-align:right;font-family:ui-monospace,Consolas,monospace;white-space:nowrap}
+  td.nm{color:var(--ink);font-weight:600;word-break:break-all}
+  .path{font-size:11.5px;color:var(--muted);margin-top:3px;word-break:break-all}
+  .ext{display:inline-block;background:var(--soft);color:var(--accent2);border-radius:6px;
+    padding:2px 8px;font-size:11.5px;font-weight:700;font-family:ui-monospace,Consolas,monospace}
+  .ext.none{background:var(--line2);color:var(--muted)}
+
+  .sum{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;padding:13px 16px;
+    background:var(--soft);border:1px solid #A7F3D0;border-radius:11px;margin-top:12px;font-size:13.5px}
+  .sum b{font-size:17px;font-weight:800;color:var(--accent2)}
+  .sum .dim{color:var(--muted)}
+
+  /* ---------- 목록 ---------- */
+  .listBox{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .listHead{background:var(--th);padding:11px 14px;font-size:13px;font-weight:700;color:var(--ink2);
+    border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+  .listBody{max-height:320px;overflow-y:auto}
+  .item{padding:11px 14px;border-bottom:1px solid var(--line2);font-size:13.5px;
+    font-family:ui-monospace,Consolas,monospace;word-break:break-all;cursor:pointer;
+    display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .item:last-child{border-bottom:0}
+  .item:hover{background:var(--soft)}
+  .item .go{color:var(--muted);font-size:12px;flex:none;opacity:0}
+  .item:hover .go{opacity:1}
+  .none{padding:26px 16px;text-align:center;color:var(--muted);font-size:13.5px}
+
+  /* ---------- 복원 ---------- */
+  #decOut{background:#0F172A;color:#A7F3D0;border-radius:12px;padding:18px;min-height:110px;
+    font-family:ui-monospace,Consolas,monospace;font-size:15px;line-height:1.9;
+    white-space:pre-wrap;word-break:break-all;margin:0;cursor:pointer}
+  #decOut.empty{color:#475569;cursor:default;font-size:14px}
+  #decWarn{display:none;margin-top:10px;padding:11px 14px;background:#FFFBEB;border:1px solid #FDE68A;
+    border-radius:10px;font-size:13px;color:#92400E;line-height:1.75}
+  #decWarn.on{display:block}
+  .chip{display:inline-block;background:var(--line2);border-radius:7px;padding:5px 10px;
+    font-size:12.5px;color:var(--ink2);cursor:pointer;margin:0 6px 6px 0;
+    font-family:ui-monospace,Consolas,monospace}
+  .chip:hover{background:var(--soft);color:var(--accent2)}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  .grid2{display:grid;gap:14px;grid-template-columns:1fr}
+  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:44px 18px 8px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin:0 0 10px">Data Harvester</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Data Harvester</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:740px">
+    Turn a folder into a table, pull the links and addresses out of messy text, and decode URLs that
+    arrived as gibberish. <b>Everything runs in the browser</b>, so no file leaves your machine.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:22px">
+  <div id="tabs" role="tablist">
+    <button class="tab on" data-p="files" role="tab" aria-selected="true">📁 File list</button>
+    <button class="tab" data-p="links" role="tab" aria-selected="false">🔗 Links & emails</button>
+    <button class="tab" data-p="decode" role="tab" aria-selected="false">🌐 URL decoder</button>
+  </div>
+
+  <!-- ========== 파일 목록 ========== -->
+  <div class="panel on" id="p-files" role="tabpanel">
+    <div id="drop" role="button" tabindex="0">
+      <div class="ic">📁</div>
+      <p>Drop files or folders here
+        <small>Several at once is fine, and a folder is walked all the way through</small>
+        <small>Nothing is uploaded — only names and sizes are read</small>
+      </p>
+    </div>
+    <input type="file" id="fileInput" multiple style="display:none">
+    <input type="file" id="dirInput" webkitdirectory directory multiple style="display:none">
+
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn sm" id="pickFiles">Choose files</button>
+      <button class="btn sm" id="pickDir">Choose folder</button>
+      <button class="btn sm" id="clearFiles">Clear</button>
+      <button class="btn sm" id="renameToggle">✏️ Tidy names</button>
+      <span style="flex:1"></span>
+      <select class="btn sm" id="sortBy" style="padding-right:12px" aria-label="Sort by">
+        <option value="order">As added</option>
+        <option value="name">By name</option>
+        <option value="size">Largest first</option>
+        <option value="ext">By type</option>
+      </select>
+    </div>
+
+    <div id="renamePanel" class="card" style="display:none;padding:18px;margin-top:12px">
+      <p class="lab" style="margin-bottom:12px">✏️ Tidy the names for this list <span style="font-weight:400;color:var(--muted)">(the files on disk are untouched)</span></p>
+
+      <div style="display:grid;gap:12px;grid-template-columns:1fr">
+        <div>
+          <label class="lab" style="font-size:12px" for="rnFind">Find and replace</label>
+          <div style="display:grid;gap:8px;grid-template-columns:1fr auto 1fr;align-items:center">
+            <input class="fld mono" id="rnFind" placeholder="e.g. FINAL_" autocomplete="off">
+            <span style="color:var(--muted)">→</span>
+            <input class="fld mono" id="rnRepl" placeholder="leave empty to delete" autocomplete="off">
+          </div>
+          <label class="chk" style="margin-top:6px"><input type="checkbox" id="rnRegex"><span style="font-size:13px">Treat as a regular expression</span></label>
+        </div>
+
+        <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr">
+          <div>
+            <label class="lab" style="font-size:12px" for="rnPrefix">Prefix</label>
+            <input class="fld mono" id="rnPrefix" placeholder="e.g. 2025_" autocomplete="off">
+          </div>
+          <div>
+            <label class="lab" style="font-size:12px" for="rnSuffix">Suffix</label>
+            <input class="fld mono" id="rnSuffix" placeholder="goes before the extension" autocomplete="off">
+          </div>
+        </div>
+
+        <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr 1fr">
+          <div>
+            <label class="lab" style="font-size:12px" for="rnSeq">Numbering</label>
+            <select class="fld" id="rnSeq">
+              <option value="">None</option>
+              <option value="pre1">01_ in front</option>
+              <option value="pre3">001_ in front</option>
+              <option value="post1">_01 at the end</option>
+            </select>
+          </div>
+          <div>
+            <label class="lab" style="font-size:12px" for="rnCase">Letter case</label>
+            <select class="fld" id="rnCase">
+              <option value="">Unchanged</option>
+              <option value="lower">lowercase</option>
+              <option value="upper">UPPERCASE</option>
+            </select>
+          </div>
+          <div>
+            <label class="lab" style="font-size:12px" for="rnSpace">Spaces</label>
+            <select class="fld" id="rnSpace">
+              <option value="">Unchanged</option>
+              <option value="under">To underscores</option>
+              <option value="dash">To hyphens</option>
+              <option value="none">Remove</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="chk"><input type="checkbox" id="rnKeepExt" checked><span style="font-size:13px">Leave the extension alone</span></label>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn sm p" id="rnApply">Apply these rules</button>
+        <button class="btn sm" id="rnReset">Back to original</button>
+        <span style="flex:1"></span>
+        <span class="hint mono" style="margin:0;align-self:center" id="rnPreview"></span>
+      </div>
+      <p class="hint">The new names appear in the table and in every export. Files on your computer are never renamed.</p>
+    </div>
+
+    <div id="fileEmpty" class="card" style="padding:38px 20px;text-align:center;color:var(--muted);
+      font-size:14.5px;line-height:1.9;margin-top:14px">
+      Nothing here yet.<br>Drop some files or a folder into the area above.
+    </div>
+
+    <div id="fileResult" style="display:none;margin-top:14px">
+      <div class="tblWrap">
+        <table>
+          <thead><tr>
+            <th style="width:56px">#</th>
+            <th style="min-width:240px">File name</th>
+            <th style="width:96px">Type</th>
+            <th style="width:100px;text-align:right">Size</th>
+            <th style="width:130px">Modified</th>
+          </tr></thead>
+          <tbody id="fileBody"></tbody>
+        </table>
+      </div>
+      <div class="sum">
+        <span><b id="fCount">0</b> files</span>
+        <span class="dim" id="fSize"></span>
+        <span class="dim" id="fKinds"></span>
+      </div>
+      <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr;margin-top:14px">
+        <button class="btn p" id="fTsv">📋 Copy for spreadsheet</button>
+        <button class="btn" id="fCsv">💾 Download CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 링크 · 메일 ========== -->
+  <div class="panel" id="p-links" role="tabpanel">
+    <label class="lab" for="srcText">📝 Paste your text</label>
+    <textarea id="srcText" placeholder="Paste an email thread or a document.&#10;The links and addresses get pulled out for you."></textarea>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn sm" id="lSample">Load sample</button>
+      <button class="btn sm" id="lClear">Clear</button>
+      <span class="hint" style="margin:0" id="lInfo"></span>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div>
+        <div class="listBox">
+          <div class="listHead"><span>🔗 Links</span><span class="mono" id="uCount">0</span></div>
+          <div class="listBody" id="urlList"><div class="none">No links found yet</div></div>
+        </div>
+        <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:10px">
+          <button class="btn sm" id="uCopy">📋 Copy links</button>
+          <button class="btn sm" id="uOpen">🌐 Open all</button>
+        </div>
+      </div>
+      <div>
+        <div class="listBox">
+          <div class="listHead"><span>✉️ Email addresses</span><span class="mono" id="mCount">0</span></div>
+          <div class="listBody" id="mailList"><div class="none">No addresses found yet</div></div>
+        </div>
+        <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:10px">
+          <button class="btn sm" id="mCopy">📋 Copy addresses</button>
+          <button class="btn sm" id="mOutlook">📧 Outlook format</button>
+        </div>
+      </div>
+    </div>
+    <p class="hint">Click any entry to copy it on its own. Repeats are collapsed into one.</p>
+  </div>
+
+  <!-- ========== 주소 복원 ========== -->
+  <div class="panel" id="p-decode" role="tabpanel">
+    <label class="lab" for="decIn">🔤 Paste the encoded URL</label>
+    <textarea id="decIn" style="min-height:130px"
+      placeholder="https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD"></textarea>
+    <p class="hint">It decodes as you paste. Several lines at once is fine.</p>
+
+    <div style="margin-top:8px">
+      <span class="hint" style="display:block;margin-bottom:8px">Click for an example</span>
+      <span class="chip" data-s="https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD">Wikipedia URL</span>
+      <span class="chip" data-s="https://search.naver.com/search.naver?query=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8">Search URL</span>
+      <span class="chip" data-s="%ED%9A%8C%EC%9D%98%EB%A1%9D_2025%EB%85%84_3%EC%9B%94.pdf">Attachment name</span>
+    </div>
+
+    <label class="lab" style="margin-top:18px">✨ Decoded <span style="font-weight:400;color:var(--muted)">(click to copy)</span></label>
+    <pre id="decOut" class="empty">Paste a URL above and the result appears here.</pre>
+    <div id="decWarn"></div>
+
+    <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr;margin-top:12px">
+      <button class="btn p" id="dCopy">📋 Copy result</button>
+      <button class="btn" id="dEncode">🔁 Encode instead</button>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:30px 18px 46px;border-top:1px solid var(--line);margin-top:34px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Everything runs inside your browser. Neither your files nor anything you type is sent to a server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2400);
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+function download(text, name, mime){
+  try {
+    var blob = new Blob(['\ufeff' + text], { type: (mime || 'text/plain') + ';charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+    return true;
+  } catch(e){ return false; }
+}
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){
+      var on = (x === b);
+      x.classList.toggle('on', on);
+      x.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.panel').forEach(function(p){
+      p.classList.toggle('on', p.id === 'p-' + b.dataset.p);
+    });
+  });
+});
+
+/* ============================================================
+   1. File list
+   ============================================================ */
+var files = [], seq = 0;
+
+function fmtSize(b){
+  if (b === null || b === undefined) return '';
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  if (b < 1073741824) return (b/1048576).toFixed(2) + ' MB';
+  return (b/1073741824).toFixed(2) + ' GB';
+}
+function extOf(name){
+  /* A leading dot, as in .gitignore, is not an extension */
+  var m = String(name || '').match(/^.+\.([A-Za-z0-9]+)$/);
+  return m ? m[1].toLowerCase() : '';
+}
+function fmtDate(ts){
+  if (!ts) return '';
+  var d = new Date(ts);
+  if (isNaN(d.getTime())) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' +
+         String(d.getDate()).padStart(2,'0');
+}
+
+function addFiles(list, pathMap){
+  var added = 0;
+  Array.prototype.forEach.call(list, function(f){
+    files.push({
+      no: ++seq,
+      name: f.name,
+      orig: f.name,          /* used when reverting the tidy-up */
+      path: (pathMap && pathMap.get ? pathMap.get(f) : '') || f.webkitRelativePath || '',
+      ext: extOf(f.name),
+      size: f.size,
+      mtime: f.lastModified
+    });
+    added++;
+  });
+  renderFiles();
+  if (added) toast(added.toLocaleString('en-US') + ' file(s) read');
+}
+
+/* Walk a dropped folder all the way down.
+   readEntries returns at most 100 at a time, so it must be called until empty. */
+function readEntry(entry, base, out){
+  return new Promise(function(resolve){
+    if (!entry){ resolve(); return; }
+    if (entry.isFile){
+      entry.file(function(f){
+        out.push({ file: f, path: base + entry.name });
+        resolve();
+      }, function(){ resolve(); });
+      return;
+    }
+    if (!entry.isDirectory){ resolve(); return; }
+    var reader = entry.createReader();
+    var all = [];
+    (function readMore(){
+      reader.readEntries(function(batch){
+        if (!batch.length){
+          Promise.all(all.map(function(e){
+            return readEntry(e, base + entry.name + '/', out);
+          })).then(function(){ resolve(); });
+          return;
+        }
+        all = all.concat(Array.prototype.slice.call(batch));
+        readMore();
+      }, function(){ resolve(); });
+    })();
+  });
+}
+
+/* Receives the entries and files the drop handler already pulled out */
+async function handleDrop(entries, plain){
+  if (!entries.length){
+    if (plain.length) addFiles(plain);
+    else toast('No readable files found');
+    return;
+  }
+  var out = [];
+  try {
+    await Promise.all(entries.map(function(e){ return readEntry(e, '', out); }));
+  } catch(err){ console.error(err); }
+
+  if (!out.length){
+    /* If the entries yielded nothing, fall back to the plain file list */
+    if (plain.length) addFiles(plain);
+    else toast('No readable files found');
+    return;
+  }
+  var map = new Map();
+  out.forEach(function(o){ map.set(o.file, o.path); });
+  addFiles(out.map(function(o){ return o.file; }), map);
+}
+
+function sortedFiles(){
+  var by = $('sortBy').value;
+  var a = files.slice();
+  if (by === 'name') a.sort(function(x, y){ return x.name.localeCompare(y.name, 'en'); });
+  else if (by === 'size') a.sort(function(x, y){ return y.size - x.size; });
+  else if (by === 'ext') a.sort(function(x, y){
+    return (x.ext || 'zzz').localeCompare(y.ext || 'zzz') || x.name.localeCompare(y.name, 'en');
+  });
+  return a;
+}
+function renderFiles(){
+  var has = files.length > 0;
+  $('fileEmpty').style.display = has ? 'none' : 'block';
+  $('fileResult').style.display = has ? 'block' : 'none';
+  if (!has) return;
+
+  var a = sortedFiles();
+  $('fileBody').innerHTML = a.map(function(f, i){
+    return '<tr><td class="num">' + (i+1) + '</td>' +
+      '<td class="nm">' + esc(f.name) +
+        (f.orig && f.orig !== f.name ? '<div class="path">was \u00B7 ' + esc(f.orig) + '</div>' : '') +
+        (f.path ? '<div class="path">' + esc(f.path) + '</div>' : '') + '</td>' +
+      '<td>' + (f.ext ? '<span class="ext">' + esc(f.ext) + '</span>'
+                      : '<span class="ext none">none</span>') + '</td>' +
+      '<td class="num">' + fmtSize(f.size) + '</td>' +
+      '<td class="num">' + fmtDate(f.mtime) + '</td></tr>';
+  }).join('');
+
+  var total = files.reduce(function(s, f){ return s + (f.size || 0); }, 0);
+  var kinds = {};
+  files.forEach(function(f){ var k = f.ext || 'none'; kinds[k] = (kinds[k] || 0) + 1; });
+  var top = Object.keys(kinds).sort(function(x, y){ return kinds[y] - kinds[x]; }).slice(0, 4);
+  $('fCount').textContent = files.length.toLocaleString('en-US');
+  $('fSize').textContent = fmtSize(total) + ' total';
+  $('fKinds').textContent = top.map(function(k){ return k + ' ' + kinds[k]; }).join(' · ');
+}
+
+var F_HEAD = ['#','File name','Original name','Type','Size','Bytes','Path','Modified'];
+function fileRows(){
+  return sortedFiles().map(function(f, i){
+    return [i+1, f.name, f.orig || f.name, f.ext, fmtSize(f.size), f.size, f.path, fmtDate(f.mtime)];
+  });
+}
+$('fTsv').addEventListener('click', function(){
+  if (!files.length){ toast('Add some files first'); return; }
+  /* Tabs make the spreadsheet split cells correctly; tabs and newlines inside values become spaces */
+  var out = [F_HEAD.join('\t')];
+  fileRows().forEach(function(r){
+    out.push(r.map(function(c){ return String(c == null ? '' : c).replace(/[\t\r\n]/g, ' '); }).join('\t'));
+  });
+  copyText(out.join('\n'), function(ok){
+    toast(ok ? files.length + ' rows copied \u00B7 paste into your spreadsheet' : 'Copy was blocked');
+  });
+});
+$('fCsv').addEventListener('click', function(){
+  if (!files.length){ toast('Add some files first'); return; }
+  function cell(s){
+    s = String(s == null ? '' : s);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }
+  var out = [F_HEAD.map(cell).join(',')];
+  fileRows().forEach(function(r){ out.push(r.map(cell).join(',')); });
+  var ok = download(out.join('\n'), 'file-list.csv', 'text/csv');
+  toast(ok ? 'CSV downloaded' : 'The download was blocked');
+});
+$('clearFiles').addEventListener('click', function(){
+  if (!files.length){ toast('Already empty'); return; }
+  files = []; seq = 0; renderFiles();
+  toast('Cleared');
+});
+$('sortBy').addEventListener('change', function(){ renderFiles(); previewRule(); });
+/* ---------- Tidy file names ----------
+   Only the names used in the table and exports change; files on disk are untouched */
+function splitName(n){
+  var m = String(n).match(/^(.+)(\.[A-Za-z0-9]+)$/);
+  return m ? { base:m[1], ext:m[2] } : { base:String(n), ext:'' };
+}
+function buildRule(){
+  return {
+    find:   $('rnFind').value,
+    repl:   $('rnRepl').value,
+    regex:  $('rnRegex').checked,
+    prefix: $('rnPrefix').value,
+    suffix: $('rnSuffix').value,
+    seq:    $('rnSeq').value,
+    kase:   $('rnCase').value,
+    space:  $('rnSpace').value,
+    keepExt:$('rnKeepExt').checked
+  };
+}
+function applyRule(name, idx, r){
+  var p = r.keepExt ? splitName(name) : { base:String(name), ext:'' };
+  var b = p.base;
+
+  if (r.find){
+    try {
+      var re = r.regex ? new RegExp(r.find, 'g')
+                       : new RegExp(r.find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      b = b.replace(re, r.repl);
+    } catch(e){ /* 정규식이 잘못되면 그대로 둔다 */ }
+  }
+  if (r.space === 'under') b = b.replace(/\s+/g, '_');
+  else if (r.space === 'dash') b = b.replace(/\s+/g, '-');
+  else if (r.space === 'none') b = b.replace(/\s+/g, '');
+
+  if (r.kase === 'lower') b = b.toLowerCase();
+  else if (r.kase === 'upper') b = b.toUpperCase();
+
+  if (r.prefix) b = r.prefix + b;
+  if (r.suffix) b = b + r.suffix;
+
+  if (r.seq){
+    var n = String(idx + 1);
+    if (r.seq === 'pre1') b = n.padStart(2, '0') + '_' + b;
+    else if (r.seq === 'pre3') b = n.padStart(3, '0') + '_' + b;
+    else if (r.seq === 'post1') b = b + '_' + n.padStart(2, '0');
+  }
+  return b + p.ext;
+}
+function previewRule(){
+  if (!files.length){ $('rnPreview').textContent = ''; return; }
+  var r = buildRule();
+  var src = sortedFiles()[0];
+  var out = applyRule(src.orig || src.name, 0, r);
+  $('rnPreview').textContent = 'e.g. ' + src.orig + '  \u2192  ' + out;
+}
+$('renameToggle').addEventListener('click', function(){
+  var b = $('renamePanel');
+  var on = b.style.display === 'none';
+  b.style.display = on ? 'block' : 'none';
+  this.classList.toggle('on', on);
+  if (on) previewRule();
+});
+['rnFind','rnRepl','rnPrefix','rnSuffix'].forEach(function(id){
+  $(id).addEventListener('input', previewRule);
+});
+['rnRegex','rnSeq','rnCase','rnSpace','rnKeepExt'].forEach(function(id){
+  $(id).addEventListener('change', previewRule);
+});
+$('rnApply').addEventListener('click', function(){
+  if (!files.length){ toast('Add some files first'); return; }
+  var r = buildRule();
+  var order = sortedFiles();
+  var changed = 0;
+  order.forEach(function(f, i){
+    var out = applyRule(f.orig || f.name, i, r);
+    if (out !== f.name){ f.name = out; f.ext = extOf(out); changed++; }
+  });
+  renderFiles(); previewRule();
+  toast(changed ? changed + ' name(s) tidied' : 'Nothing changed');
+});
+$('rnReset').addEventListener('click', function(){
+  if (!files.length){ toast('Add some files first'); return; }
+  files.forEach(function(f){ f.name = f.orig || f.name; f.ext = extOf(f.name); });
+  renderFiles(); previewRule();
+  toast('Reverted to the original names');
+});
+
+$('pickFiles').addEventListener('click', function(){ $('fileInput').click(); });
+$('pickDir').addEventListener('click', function(){ $('dirInput').click(); });
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+['fileInput','dirInput'].forEach(function(id){
+  $(id).addEventListener('change', function(e){
+    if (e.target.files && e.target.files.length) addFiles(e.target.files);
+    this.value = '';
+  });
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var dt = e.dataTransfer;
+  if (!dt) return;
+
+  /* DataTransfer empties once this handler returns, so pull the entries
+     and files out right now and deal with them afterwards */
+  var entries = [], plain = [];
+  var items = dt.items;
+  if (items && items.length && typeof items[0].webkitGetAsEntry === 'function'){
+    for (var i = 0; i < items.length; i++){
+      try {
+        var en = items[i].webkitGetAsEntry();
+        if (en) entries.push(en);
+      } catch(err){}
+    }
+  }
+  if (dt.files && dt.files.length){
+    for (var k = 0; k < dt.files.length; k++) plain.push(dt.files[k]);
+  }
+
+  /* Switch to the file tab for them */
+  var t = document.querySelector('.tab[data-p="files"]');
+  if (t && !t.classList.contains('on')) t.click();
+
+  handleDrop(entries, plain);
+});
+
+/* ============================================================
+   2. Links and emails
+   ============================================================ */
+var URL_RE = /https?:\/\/[^\s<>"'`\]\[{}|\\^]+/gi;
+var MAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+var urls = [], mails = [];
+
+function trimUrl(u){
+  /* Trim sentence punctuation that came along with the URL */
+  var t = u.replace(/[.,;:!?)\]}>'"]+$/, '');
+  /* Put a bracket back when it pairs up, as Wikipedia URLs often do */
+  var open = (t.match(/\(/g) || []).length, close = (t.match(/\)/g) || []).length;
+  if (open > close && /^\)/.test(u.slice(t.length))) t = u.slice(0, t.length + (open - close));
+  return t;
+}
+function uniq(a){
+  var seen = {}, out = [];
+  a.forEach(function(x){ if (!Object.prototype.hasOwnProperty.call(seen, x)){ seen[x] = 1; out.push(x); } });
+  return out;
+}
+function parseText(){
+  var t = $('srcText').value;
+  urls = uniq((t.match(URL_RE) || []).map(trimUrl).filter(Boolean));
+  var m = t.match(MAIL_RE) || [];
+  /* An address embedded in a URL is not counted separately */
+  m = m.filter(function(x){
+    return !urls.some(function(u){ return u.indexOf(x) >= 0; });
+  });
+  mails = uniq(m.map(function(x){ return x.toLowerCase(); }));
+
+  $('uCount').textContent = urls.length;
+  $('mCount').textContent = mails.length;
+  $('urlList').innerHTML = urls.length
+    ? urls.map(function(u){
+        return '<div class="item" data-v="' + esc(u) + '"><span>' + esc(u) + '</span><span class="go">copy</span></div>';
+      }).join('')
+    : '<div class="none">No links found yet</div>';
+  $('mailList').innerHTML = mails.length
+    ? mails.map(function(x){
+        return '<div class="item" data-v="' + esc(x) + '"><span>' + esc(x) + '</span><span class="go">copy</span></div>';
+      }).join('')
+    : '<div class="none">No addresses found yet</div>';
+
+  var v = $('srcText').value;
+  $('lInfo').textContent = v
+    ? (v.length.toLocaleString('en-US') + ' chars \u00B7 ' + v.split(/\n/).length.toLocaleString('en-US') + ' lines')
+    : '';
+  ['uCopy','uOpen'].forEach(function(id){ $(id).disabled = !urls.length; });
+  ['mCopy','mOutlook'].forEach(function(id){ $(id).disabled = !mails.length; });
+}
+$('srcText').addEventListener('input', parseText);
+[['urlList'],['mailList']].forEach(function(p){
+  $(p[0]).addEventListener('click', function(ev){
+    var el = ev.target.closest('.item');
+    if (!el) return;
+    copyText(el.dataset.v, function(ok){ if (ok) toast('Copied'); });
+  });
+});
+$('uCopy').addEventListener('click', function(){
+  copyText(urls.join('\n'), function(ok){ toast(ok ? urls.length + ' link(s) copied' : 'Copy was blocked'); });
+});
+$('mCopy').addEventListener('click', function(){
+  copyText(mails.join('\n'), function(ok){ toast(ok ? mails.length + ' address(es) copied' : 'Copy was blocked'); });
+});
+$('mOutlook').addEventListener('click', function(){
+  copyText(mails.join('; '), function(ok){ toast(ok ? 'Copied in Outlook format' : 'Copy was blocked'); });
+});
+$('uOpen').addEventListener('click', function(){
+  if (!urls.length) return;
+  var LIMIT = 12;
+  var list = urls.slice(0, LIMIT);
+  if (urls.length > LIMIT &&
+      !window.confirm('There are ' + urls.length + ' links. Open the first ' + LIMIT + '?')) return;
+  var blocked = 0;
+  list.forEach(function(u){
+    var wnd = null;
+    try { wnd = window.open(u, '_blank', 'noopener'); } catch(e){}
+    if (!wnd) blocked++;
+  });
+  if (blocked) toast(blocked + ' blocked as pop-ups \u00B7 allow them in the address bar');
+  else toast(list.length + ' opened');
+});
+$('lClear').addEventListener('click', function(){
+  if (!$('srcText').value){ toast('Already empty'); return; }
+  $('srcText').value = ''; parseText(); toast('Cleared');
+});
+$('lSample').addEventListener('click', function(){
+  $('srcText').value = [
+    'Hi all \u2014 the attachment is at https://example.com/docs/report.pdf for anyone who needs it.',
+    'Questions go to hong@company.co.kr.',
+    'Background reading: https://en.wikipedia.org/wiki/Data_(computing) (encyclopedia)',
+    'Contacts \u2014 Lee@Company.co.kr, admin@sub.domain.com',
+    'The earlier notice is still up. http://test.org/notice?id=12&page=3.',
+    'Same link again: https://example.com/docs/report.pdf'
+  ].join('\n');
+  parseText();
+  toast('Sample loaded');
+});
+
+/* ============================================================
+   3. URL decoder
+   ============================================================ */
+function decodeAll(s){
+  var t = String(s || '');
+  if (!t.trim()) return { ok:true, out:'', changed:false };
+  try {
+    var out = t;
+    /* Unwind repeatedly in case the URL was encoded more than once */
+    for (var i = 0; i < 5; i++){
+      var next = decodeURIComponent(out.replace(/\+/g, ' '));
+      if (next === out) break;
+      out = next;
+    }
+    return { ok:true, out:out, changed: out !== t };
+  } catch(e){
+    /* With broken fragments mixed in, recover only the intact parts */
+    try {
+      var partial = t.replace(/(?:%[0-9A-Fa-f]{2})+/g, function(m){
+        try { return decodeURIComponent(m); } catch(e2){ return m; }
+      });
+      return { ok:false, out:partial, changed: partial !== t };
+    } catch(e3){ return { ok:false, out:t, changed:false }; }
+  }
+}
+function runDecode(){
+  var r = decodeAll($('decIn').value);
+  var box = $('decOut'), warn = $('decWarn');
+  if (!r.out){
+    box.textContent = 'Paste a URL above and the result appears here.';
+    box.classList.add('empty');
+    warn.classList.remove('on');
+    $('dCopy').disabled = true;
+    return;
+  }
+  box.textContent = r.out;
+  box.classList.remove('empty');
+  $('dCopy').disabled = false;
+  if (!r.ok){
+    warn.textContent = '\u26A0 Some fragments could not be decoded, so only the readable parts were converted. Check whether the URL was truncated when it was copied.';
+    warn.classList.add('on');
+  } else if (!r.changed){
+    warn.textContent = '\u2139 This is already readable \u2014 there was nothing to decode.';
+    warn.classList.add('on');
+  } else warn.classList.remove('on');
+}
+$('decIn').addEventListener('input', function(){
+  encMode = false; setEncLabel();
+  runDecode();
+});
+$('decOut').addEventListener('click', function(){
+  if (this.classList.contains('empty')) return;
+  copyText(this.textContent, function(ok){ if (ok) toast('Copied'); });
+});
+$('dCopy').addEventListener('click', function(){
+  var v = $('decOut').textContent;
+  if ($('decOut').classList.contains('empty')){ toast('Enter a URL first'); return; }
+  copyText(v, function(ok){ toast(ok ? 'Result copied' : 'Copy was blocked'); });
+});
+/* Each press flips the direction. The result becomes the next input, so you can go back and forth */
+var encMode = false;
+$('dEncode').addEventListener('click', function(){
+  var v = $('decIn').value.trim();
+  if (!v){ toast('Enter a URL first'); return; }
+  encMode = !encMode;
+  var out;
+  try {
+    if (encMode){
+      /* Leave the URL structure alone and encode only the non-ASCII parts */
+      out = v.replace(/[^\x00-\x7F]+/g, function(m){ return encodeURIComponent(m); });
+    } else {
+      out = decodeAll(v).out;
+    }
+  } catch(e){ toast('Could not convert that'); encMode = !encMode; return; }
+
+  $('decOut').textContent = out;
+  $('decOut').classList.remove('empty');
+  $('decWarn').classList.remove('on');
+  $('dCopy').disabled = false;
+  setEncLabel();
+
+  /* Put the result back in the input so the next press reverses it */
+  $('decIn').value = out;
+
+  copyText(out, function(ok){
+    var name = encMode ? 'Encoded' : 'Decoded';
+    toast(ok ? name + ' \u00B7 copied' : name);
+  });
+});
+function setEncLabel(){
+  $('dEncode').textContent = encMode ? '\uD83D\uDD01 Decode back' : '\uD83D\uDD01 Encode instead';
+}
+setEncLabel();
+
+document.querySelectorAll('.chip').forEach(function(c){
+  c.addEventListener('click', function(){
+    $('decIn').value = this.dataset.s;
+    encMode = false; setEncLabel();
+    runDecode();
+  });
+});
+
+parseText();
+renderFiles();
+runDecode();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#047857}
+.tk-guide code{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#0F172A;word-break:break-all}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#047857;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#047857}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Three small office chores that keep coming back</h2>
+<p>They look unrelated but they turn up in the same afternoon. A list of deliverables has to be typed out, links have to be picked out of an email thread, and a URL someone pasted has arrived as unreadable gibberish.</p>
+<p>None of it is hard. All of it is tedious. Thirty files means typing thirty names, links get hunted down and copied one by one, and an encoded address gives you nothing to work with.</p>
+<p>These three sit together here. Switch tabs and use whichever you need.</p>
+
+<h2>📁 File list</h2>
+<p>For deliverable lists and submission indexes. Drop files in and it lays out <strong>name, type, size and modified date</strong> as a table.</p>
+<p><strong>Folders work too.</strong> Drop one and it walks through the nested subfolders, finds everything inside, and notes the path each file came from.</p>
+<p>The important part: <strong>nothing is uploaded.</strong> The browser reads names and sizes; it never opens the contents. Confidential material can go in without leaving your machine.</p>
+<p>Copy for spreadsheet puts tabs between the cells, so pasting into Excel or Sheets drops every value into its own cell.</p>
+
+<h2>🔗 Links and emails</h2>
+<p>For long email threads and meeting notes where the addresses are scattered through the text. Paste the whole thing and links and email addresses come back as two separate lists.</p>
+<p>A few awkward cases are handled:</p>
+<ul>
+<li><strong>Sentence punctuation is trimmed.</strong> In <code>http://a.com/b.</code> the final stop is not part of the address.</li>
+<li><strong>Brackets are counted in pairs.</strong> Where they belong to the URL, as in many Wikipedia links, they stay.</li>
+<li><strong>Repeats collapse to one.</strong> Addresses differing only in capitalisation count as the same.</li>
+<li><strong>Emails inside URLs are skipped</strong> so a string in a link is not mistaken for an address.</li>
+</ul>
+<p>The collected addresses can be copied in Outlook format, ready to paste into a recipients field.</p>
+
+<h2>🌐 URL decoder</h2>
+<p>Addresses can only carry a limited set of characters, so anything else is rewritten as <code>%EC%95%88%EB%85%95</code>-style codes. The address bar shows it back as text, but copy it out and the codes come with it.</p>
+<p>This tab reverses that. It decodes as you paste, and clicking the result copies it.</p>
+<ul>
+<li><strong>Doubly encoded addresses</strong> are unwound automatically.</li>
+<li><strong>Broken fragments</strong> do not stop it — the readable parts are converted and you are told about the rest.</li>
+<li><strong>It goes the other way too</strong>, for when you need to encode an address instead.</li>
+</ul>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Are the files I drop in uploaded?</dt><dd>No. The browser reads only each file’s name, size and modified date to build the table; the contents are never opened. The tool works with the connection switched off.</dd>
+<dt>Can I drop a whole folder?</dt><dd>Yes. Drop a folder and it walks through everything inside, following nested subfolders however deep they go, and records the path each file came from.</dd>
+<dt>What happens to the full stop after a link?</dt><dd>Sentence punctuation and closing brackets are trimmed off the end of a URL. Where brackets are genuinely part of the address, as in many Wikipedia links, the pairs are counted and kept. Repeated addresses are collapsed into one.</dd>
+<dt>Why do URLs turn into percent codes?</dt><dd>Addresses can only carry a limited set of characters, so anything outside that set is rewritten as percent-prefixed codes. This tool reverses the process to show the original text, and it unwinds addresses that were encoded more than once.</dd>
+<dt>How do I move the list into a spreadsheet?</dt><dd>Copy for spreadsheet puts the table on your clipboard with tabs between the cells. Paste it into Excel or Sheets and every value lands in its own cell. Use the CSV download to keep it as a file instead.</dd>
+<dt>Opening all links sometimes gets blocked</dt><dd>Browsers treat several windows opening at once as pop-ups. Allow pop-ups for this site from the prompt in the address bar and they will open. With a long list it is safer to open them in batches.</dd>
+</dl>
+
+<p class="tk-guide-note">Everything runs inside your browser and neither your files nor anything you type is transmitted to a server. The file list reads only metadata such as names and sizes; file contents are never opened. Closing the page clears the work, so copy or download anything you need to keep.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/smart-list_en.html">Smart List Formatter</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-diff_en.html">Secure Text Diff Checker</a></li>
+<li><a href="https://mnledu.com/en/productivity/receipt-to-excel_en.html">Receipt to Expense Sheet</a></li>
+<li><a href="https://mnledu.com/en/productivity/palette-picker_en.html">Brand Palette Picker</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio_en.html">QR Code Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/roster-maker_en.html">Fair Roster Maker</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/data-harvester_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/data-harvester_en.html";
+  var TK_SHARE_TITLE = "Data Harvester";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY), 영문판 초기 표시값 &quot;0개&quot;→&quot;0&quot; 수정</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browser Teleprompter | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Scroll your script at a set pace so you can keep looking at the c… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/design-media/teleprompter_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/design-media/teleprompter_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/teleprompter_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/design-media/teleprompter_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/design-media/teleprompter_en.html" />
+<meta property="og:title" content="Browser Teleprompter · video · presenting | TOOLKIT" />
+<meta property="og:description" content="Scroll your script at a set pace so you can keep looking at the c… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Browser Teleprompter · video · presenting | TOOLKIT" />
+<meta name="twitter:description" content="Scroll your script at a set pace so you can keep looking at the c… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Browser Teleprompter",
+  "description": "Scroll your script at a set pace so you can keep looking at the camera.",
+  "url": "https://mnledu.com/en/design-media/teleprompter_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/en/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/en/"
+  }
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+  /* ---------- 테마 ---------- */
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --fg:#F2F5F8; --dim:#8A97A6;
+    --bold:#FFD54A;          /* 볼드 : 노랑 */
+    --head:#5EE6C5;          /* 제목 : 민트 */
+    --accent:#5EE6C5;
+    --panel:rgba(22,29,38,.92); --line:rgba(255,255,255,.14);
+    --guide:rgba(94,230,197,.30); --guideEdge:rgba(94,230,197,.55);
+  }
+  :root[data-theme="light"]{
+    --bg:#FFFFFF; --fg:#111827; --dim:#5F7488;
+    --bold:#1D5FBF;          /* 볼드 : 파랑 */
+    --head:#0F4C81;
+    --accent:#2C6BA0;
+    --panel:rgba(255,255,255,.94); --line:rgba(38,56,75,.14);
+    --guide:rgba(44,107,160,.22); --guideEdge:rgba(44,107,160,.5);
+  }
+
+  html,body{ margin:0; height:100%; }
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:'Pretendard',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+    transition:background .25s, color .25s;
+  }
+  .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  /* ---------- 프롬프터 화면 ---------- */
+  #viewport{
+    position:fixed; inset:0; overflow-y:auto; overflow-x:hidden;
+    scrollbar-width:none;
+  }
+  #viewport::-webkit-scrollbar{ display:none; }
+
+  #script{
+    margin:0 auto;
+    padding:50vh 0;                      /* 위아래 여백으로 첫 줄과 끝 줄도 중앙에 올 수 있게 */
+    max-width:900px;
+    font-size:44px; line-height:1.55;
+    word-break:keep-all;
+    transition:max-width .2s, font-size .12s;
+  }
+  #script.mirrorX{ transform:scaleX(-1); }
+  #script.mirrorY{ transform:scaleY(-1); }
+  #script.mirrorX.mirrorY{ transform:scale(-1,-1); }
+
+  #script h1, #script h2, #script h3{
+    color:var(--head); font-weight:700; line-height:1.35;
+    margin:1.1em 0 .5em;
+  }
+  #script h1{ font-size:1.35em; }
+  #script h2{ font-size:1.2em; }
+  #script h3{ font-size:1.08em; }
+  #script p{ margin:0 0 .75em; }
+  #script strong, #script b{ color:var(--bold); font-weight:700; }
+  #script em{ color:var(--dim); font-style:normal; }
+  #script ul, #script ol{ margin:.4em 0 .8em; padding-left:1.4em; }
+  #script li{ margin:.25em 0; }
+  #script hr{ border:0; border-top:2px solid var(--line); margin:1.2em 0; }
+  #script blockquote{
+    margin:.8em 0; padding:.2em 0 .2em 1em;
+    border-left:4px solid var(--accent); color:var(--dim);
+  }
+  #script code{ font-family:'JetBrains Mono',monospace; font-size:.85em; color:var(--accent); }
+
+  /* ---------- 시선 유도선 ---------- */
+  #guide{
+    position:fixed; left:0; right:0; top:50%; transform:translateY(-50%);
+    height:calc(1.55em * 1); pointer-events:none; z-index:20;
+    background:var(--guide);
+    border-top:2px solid var(--guideEdge);
+    border-bottom:2px solid var(--guideEdge);
+    transition:opacity .2s;
+  }
+  #guide.off{ opacity:0; }
+
+  /* ---------- 컨트롤 ---------- */
+  #panel{
+    position:fixed; left:50%; bottom:20px; transform:translateX(-50%);
+    z-index:40; max-width:calc(100vw - 24px);
+    background:var(--panel); color:var(--fg);
+    border:1px solid var(--line); border-radius:12px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 6px 24px rgba(0,0,0,.22);
+    transition:opacity .25s, transform .25s;
+  }
+  #panel.hide{ opacity:0; transform:translate(-50%, 20px); pointer-events:none; }
+
+  .ctl{
+    border:1px solid var(--line); background:transparent; color:var(--fg);
+    border-radius:6px; font-size:12.5px; line-height:1; padding:8px 11px;
+    cursor:pointer; transition:border-color .12s, background .12s, color .12s;
+    font-family:inherit;
+  }
+  .ctl:hover{ border-color:var(--accent); color:var(--accent); }
+  .ctl.on{ background:var(--accent); border-color:var(--accent); color:var(--bg); }
+  .ctl:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  #playBtn{
+    min-width:96px; font-size:13px; font-weight:600; padding:10px 14px;
+    background:var(--accent); border-color:var(--accent); color:var(--bg);
+  }
+  #playBtn:hover{ opacity:.88; color:var(--bg); }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:104px; height:3px; border-radius:999px; background:var(--line); outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:14px; height:14px; border-radius:999px; background:var(--accent); cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:14px; height:14px; border-radius:999px; background:var(--accent); border:0; cursor:pointer;
+  }
+
+  /* ---------- 진행 막대 ---------- */
+  #progress{
+    position:fixed; left:0; top:0; height:3px; width:0;
+    background:var(--accent); z-index:50; transition:width .1s linear;
+  }
+
+  /* ---------- 안내 · 드래그 ---------- */
+  #intro{
+    position:fixed; inset:0; z-index:30; display:flex;
+    align-items:center; justify-content:center; padding:24px;
+    background:var(--bg);
+  }
+  #introCard{
+    border:2px dashed var(--line); border-radius:14px;
+    padding:48px 32px; text-align:center; max-width:640px; width:100%;
+    transition:border-color .14s, background .14s;
+  }
+  #intro.over #introCard{ border-color:var(--accent); background:rgba(127,127,127,.06); }
+
+  #editor{
+    width:100%; min-height:180px; margin-top:18px;
+    background:transparent; color:var(--fg);
+    border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; font-size:14px; line-height:1.7;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    outline:none; resize:vertical;
+  }
+  #editor:focus{ border-color:var(--accent); }
+
+  #topBtn{
+    position:fixed; left:50%; top:calc(50% + 90px); transform:translateX(-50%);
+    z-index:45; font-size:13px; padding:10px 18px; border-radius:999px;
+    background:var(--accent); color:var(--bg); border:0; cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,.25);
+  }
+
+  kbd{
+    font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px;
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:4px;
+    padding:1px 5px; color:var(--dim);
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:110px; transform:translate(-50%, 10px);
+    z-index:60; opacity:0; pointer-events:none;
+    background:var(--panel); border:1px solid var(--line); color:var(--fg);
+    border-radius:8px; padding:10px 16px; font-size:13px; font-weight:500;
+    transition:opacity .2s, transform .2s;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+
+<div id="progress"></div>
+
+<!-- 프롬프터 -->
+<div id="viewport">
+  <div id="script"></div>
+</div>
+
+<div id="guide"></div>
+
+<button id="topBtn" class="hidden">Back to top</button>
+
+<!-- 시작 화면 -->
+<div id="intro">
+  <div id="introCard">
+    <p class="text-[20px] font-semibold" style="color:var(--fg)">Load a script</p>
+    <p class="mt-2 text-[13.5px]" style="color:var(--dim)">
+      Drop an .md or .txt file onto this screen, or paste your script below
+    </p>
+
+    <textarea id="editor" spellcheck="false" placeholder="# Presentation title&#10;&#10;Text wrapped in **double asterisks** is highlighted.&#10;&#10;- First point&#10;- Second point"></textarea>
+
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+      <button id="fileBtn" class="ctl">Choose a file</button>
+      <button id="sampleBtn" class="ctl">Sample script</button>
+      <button id="startBtn" class="ctl" style="background:var(--accent);border-color:var(--accent);color:var(--bg)">Load script</button>
+      <input type="file" id="picker" accept=".md,.txt,.markdown,text/plain,text/markdown" class="hidden">
+    </div>
+
+    <p class="mt-5 text-[12px] leading-relaxed" style="color:var(--dim)">
+      <kbd>Space</kbd> play/pause · <kbd>↑</kbd><kbd>↓</kbd> speed · <kbd>Home</kbd> top · <kbd>M</kbd> mirror · <kbd>T</kbd> theme · <kbd>H</kbd> hide panel
+    </p>
+  </div>
+</div>
+
+<!-- 컨트롤 패널 -->
+<div id="panel" class="px-4 py-3">
+  <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+
+    <button id="playBtn" class="ctl">Play</button>
+
+    <div class="flex items-center gap-2">
+      <span class="text-[11px]" style="color:var(--dim)">Speed</span>
+      <input type="range" id="speed" min="10" max="320" step="5" value="70">
+      <span id="speedVal" class="num w-10 text-right text-[11px]" style="color:var(--dim)">70</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="text-[11px]" style="color:var(--dim)">Text</span>
+      <input type="range" id="size" min="20" max="110" step="2" value="44">
+      <span id="sizeVal" class="num w-10 text-right text-[11px]" style="color:var(--dim)">44</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="text-[11px]" style="color:var(--dim)">Width</span>
+      <input type="range" id="width" min="480" max="1600" step="20" value="900">
+      <span id="widthVal" class="num w-11 text-right text-[11px]" style="color:var(--dim)">900</span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-1.5">
+      <button id="mirrorX" class="ctl">Mirror ↔</button>
+      <button id="mirrorY" class="ctl">Mirror ↕</button>
+      <button id="guideBtn" class="ctl on">Guide line</button>
+      <button id="themeBtn" class="ctl">Light</button>
+      <button id="fsBtn" class="ctl">Full screen</button>
+      <button id="editBtn" class="ctl">Script</button>
+    </div>
+
+    <span id="timeInfo" class="num text-[11px]" style="color:var(--dim)"></span>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const viewport = document.getElementById('viewport');
+  const script   = document.getElementById('script');
+  const intro    = document.getElementById('intro');
+  const editor   = document.getElementById('editor');
+  const picker   = document.getElementById('picker');
+  const playBtn  = document.getElementById('playBtn');
+  const speedEl  = document.getElementById('speed');
+  const sizeEl   = document.getElementById('size');
+  const widthEl  = document.getElementById('width');
+  const guide    = document.getElementById('guide');
+  const panel    = document.getElementById('panel');
+  const topBtn   = document.getElementById('topBtn');
+  const progress = document.getElementById('progress');
+  const timeInfo = document.getElementById('timeInfo');
+  const root     = document.documentElement;
+
+  let playing = false;
+  let lastTs = 0;
+  let carry = 0;        // 소수점 이하 스크롤 누적분
+  let hasScript = false;
+
+  /* ---------- 토스트 ---------- */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  /* ---------- Load script ---------- */
+  function setScript(text) {
+    if (!text || !text.trim()) { toast('The script is empty'); return; }
+    try {
+      script.innerHTML = (typeof marked !== 'undefined')
+        ? (marked.parse ? marked.parse(text) : marked(text))
+        : text.split('\n').map(function (l) {
+            return '<p>' + l.replace(/[&<>]/g, function (c) {
+              return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+            }) + '</p>';
+          }).join('');
+    } catch (e) {
+      script.textContent = text;
+    }
+    hasScript = true;
+    intro.style.display = 'none';
+    viewport.scrollTop = 0;
+    stop();
+    updateInfo();
+    toast('Script loaded. Press Space to start.');
+  }
+
+  document.getElementById('startBtn').addEventListener('click', function () { setScript(editor.value); });
+  document.getElementById('fileBtn').addEventListener('click', function () { picker.click(); });
+
+  picker.addEventListener('change', function (ev) {
+    const f = ev.target.files && ev.target.files[0];
+    if (f) readFile(f);
+    picker.value = '';
+  });
+
+  function readFile(f) {
+    if (!/\.(md|markdown|txt)$/i.test(f.name) && f.type.indexOf('text/') !== 0) {
+      toast('Only md and txt files can be opened');
+      return;
+    }
+    const r = new FileReader();
+    r.onload = function (e) {
+      editor.value = String(e.target.result);
+      setScript(editor.value);
+    };
+    r.onerror = function () { toast('That file could not be read'); };
+    r.readAsText(f, 'UTF-8');
+  }
+
+  // 화면 어디에 떨어뜨려도 받는다
+  ['dragenter', 'dragover'].forEach(function (t) {
+    window.addEventListener(t, function (ev) { ev.preventDefault(); intro.classList.add('over'); });
+  });
+  window.addEventListener('dragleave', function (ev) {
+    if (ev.relatedTarget) return;
+    intro.classList.remove('over');
+  });
+  window.addEventListener('drop', function (ev) {
+    ev.preventDefault();
+    intro.classList.remove('over');
+    const f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    editor.value =
+      '# Starting a company: the first step\n\n' +
+      'Today I want to talk about **where a company actually begins**.\n\n' +
+      '## First, define the problem\n\n' +
+      'Most teams start with the technology. That order is **backwards**.\n' +
+      'Find the difficulty your customer lives with first.\n\n' +
+      '- Who has this problem\n' +
+      '- How often do they run into it\n' +
+      '- What do they do about it today\n\n' +
+      '## Second, design the smallest test\n\n' +
+      '> Not a finished product. The smallest thing that answers the question.\n\n' +
+      'What validation needs is **speed**.\n\n' +
+      '---\n\n' +
+      '## To close\n\n' +
+      'Two things to take away: **define the problem** and **run a small test**.\n' +
+      'Thank you.';
+    setScript(editor.value);
+  });
+
+  document.getElementById('editBtn').addEventListener('click', function () {
+    stop();
+    intro.style.display = 'flex';
+    editor.focus();
+  });
+
+  /* ---------- 자동 스크롤 ---------- */
+  function maxScroll() { return viewport.scrollHeight - viewport.clientHeight; }
+
+  function tick(ts) {
+    if (!playing) return;
+    if (!lastTs) lastTs = ts;
+    const dt = Math.min(100, ts - lastTs) / 1000;   // 탭 전환 후 튀는 것 방지
+    lastTs = ts;
+
+    // 초당 픽셀 값을 누적해 소수점 손실 없이 부드럽게 움직인다
+    carry += parseFloat(speedEl.value) * dt;
+    const step = Math.floor(carry);
+    if (step > 0) {
+      carry -= step;
+      viewport.scrollTop += step;
+    }
+
+    updateInfo();
+
+    if (viewport.scrollTop >= maxScroll() - 1) {
+      stop();
+      topBtn.classList.remove('hidden');
+      toast('End of script');
+      return;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function play() {
+    if (!hasScript) { toast('Load a script first'); return; }
+    if (viewport.scrollTop >= maxScroll() - 1) { viewport.scrollTop = 0; }
+    playing = true;
+    lastTs = 0;
+    carry = 0;
+    playBtn.textContent = 'Pause';
+    topBtn.classList.add('hidden');
+    requestAnimationFrame(tick);
+  }
+
+  function stop() {
+    playing = false;
+    lastTs = 0;
+    playBtn.textContent = 'Play';
+  }
+
+  function toggle() { playing ? stop() : play(); }
+
+  playBtn.addEventListener('click', toggle);
+  viewport.addEventListener('click', function (ev) {
+    if (ev.target.closest('#panel') || !hasScript) return;
+    toggle();
+  });
+
+  function updateInfo() {
+    const max = maxScroll();
+    const pct = max > 0 ? viewport.scrollTop / max : 0;
+    progress.style.width = (pct * 100).toFixed(1) + '%';
+
+    const remain = Math.max(0, max - viewport.scrollTop) / parseFloat(speedEl.value);
+    const m = Math.floor(remain / 60), s = Math.round(remain % 60);
+    timeInfo.textContent = hasScript ? 'time left ' + m + ':' + String(s).padStart(2, '0') : '';
+  }
+
+  viewport.addEventListener('scroll', function () {
+    updateInfo();
+    if (viewport.scrollTop < maxScroll() - 1) topBtn.classList.add('hidden');
+  });
+
+  topBtn.addEventListener('click', function () {
+    viewport.scrollTop = 0;
+    topBtn.classList.add('hidden');
+    updateInfo();
+  });
+
+  /* ---------- 슬라이더 ---------- */
+  speedEl.addEventListener('input', function () {
+    document.getElementById('speedVal').textContent = speedEl.value;
+    updateInfo();
+  });
+  sizeEl.addEventListener('input', function () {
+    script.style.fontSize = sizeEl.value + 'px';
+    document.getElementById('sizeVal').textContent = sizeEl.value;
+    guide.style.height = (sizeEl.value * 1.55) + 'px';
+    updateInfo();
+  });
+  widthEl.addEventListener('input', function () {
+    script.style.maxWidth = widthEl.value + 'px';
+    document.getElementById('widthVal').textContent = widthEl.value;
+    updateInfo();
+  });
+
+  /* ---------- 토글 ---------- */
+  function flip(btn, cls) {
+    const on = script.classList.toggle(cls);
+    btn.classList.toggle('on', on);
+    return on;
+  }
+  document.getElementById('mirrorX').addEventListener('click', function () {
+    toast(flip(this, 'mirrorX') ? 'Horizontal mirror on' : 'Horizontal mirror off');
+  });
+  document.getElementById('mirrorY').addEventListener('click', function () {
+    toast(flip(this, 'mirrorY') ? 'Vertical mirror on' : 'Vertical mirror off');
+  });
+
+  document.getElementById('guideBtn').addEventListener('click', function () {
+    const off = guide.classList.toggle('off');
+    this.classList.toggle('on', !off);
+  });
+
+  const themeBtn = document.getElementById('themeBtn');
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? 'Light' : 'Dark';
+  }
+  themeBtn.addEventListener('click', function () {
+    setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  document.getElementById('fsBtn').addEventListener('click', function () {
+    if (!document.fullscreenElement) {
+      (document.documentElement.requestFullscreen || function () {}).call(document.documentElement);
+      this.textContent = 'Exit full screen';
+    } else {
+      document.exitFullscreen();
+      this.textContent = 'Full screen';
+    }
+  });
+
+  /* ---------- 단축키 ---------- */
+  document.addEventListener('keydown', function (ev) {
+    const typing = /^(INPUT|TEXTAREA)$/.test(ev.target.tagName);
+    if (typing) return;
+
+    const k = ev.key;
+    if (k === ' ' || k === 'Spacebar') { ev.preventDefault(); toggle(); return; }
+
+    if (k === 'ArrowUp' || k === 'ArrowDown') {
+      ev.preventDefault();
+      const d = k === 'ArrowUp' ? 5 : -5;
+      speedEl.value = Math.min(320, Math.max(10, parseFloat(speedEl.value) + d));
+      document.getElementById('speedVal').textContent = speedEl.value;
+      updateInfo();
+      toast('speed ' + speedEl.value);
+      return;
+    }
+
+    if (k === 'ArrowRight' || k === 'ArrowLeft') {
+      ev.preventDefault();
+      viewport.scrollTop += (k === 'ArrowRight' ? 1 : -1) * viewport.clientHeight * 0.25;
+      return;
+    }
+
+    if (k === 'Home') { ev.preventDefault(); viewport.scrollTop = 0; stop(); return; }
+    if (k === 'End')  { ev.preventDefault(); viewport.scrollTop = maxScroll(); stop(); return; }
+
+    const low = k.toLowerCase();
+    if (low === 'm') { document.getElementById('mirrorX').click(); }
+    else if (low === 't') { themeBtn.click(); }
+    else if (low === 'h') { panel.classList.toggle('hide'); }
+    else if (low === 'g') { document.getElementById('guideBtn').click(); }
+    else if (low === 'f') { document.getElementById('fsBtn').click(); }
+    else if (k === '+' || k === '=') { sizeEl.value = Math.min(110, +sizeEl.value + 2); sizeEl.dispatchEvent(new Event('input')); }
+    else if (k === '-') { sizeEl.value = Math.max(20, +sizeEl.value - 2); sizeEl.dispatchEvent(new Event('input')); }
+  });
+
+  /* ---------- 시작 상태 ---------- */
+  setTheme('dark');
+  script.style.fontSize = sizeEl.value + 'px';
+  script.style.maxWidth = widthEl.value + 'px';
+  guide.style.height = (sizeEl.value * 1.55) + 'px';
+  editor.focus();
+})();
+</script>
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Reading a script pulls your eyes down</h2>
+<p>Whether you are filming or presenting, glancing at notes takes your gaze off the camera, and to the person watching it reads as avoiding eye contact. Memorising everything is a lot to ask.</p>
+<p>A teleprompter scrolls the script near the top of the screen so your eyeline stays where it should be. This one does that in a browser, so a laptop or tablet propped beside the camera is all the equipment you need.</p>
+<h2>When to use it</h2><dl>
+<dt>Recording video</dt><dd>Keeping your gaze on the lens while working from a script.</dd>
+<dt>Rehearsing a talk</dt><dd>Adjusting the pace to find out how long the material actually runs.</dd>
+<dt>Speaking on a call</dt><dd>Prepared remarks near the top of the screen so you can look at the camera.</dd>
+<dt>Mirror rigs</dt><dd>Hardware prompters that use a beam splitter need the image reversed, which the mirror controls handle.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Paste your script or load a file. Markdown formatting is applied.</li>
+<li>Press <strong>Load script</strong>.</li>
+<li>Set the text size, width and speed.</li>
+<li>Go <strong>full screen</strong> and press <strong>Play</strong>, or just tap Space.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Speed</dt><dd>How fast the text moves. Start slightly slower than you expect to speak and adjust from there.</dd>
+<dt>Text size and width</dt><dd>The further you sit from the screen, the larger the text and the narrower the column should be.</dd>
+<dt>Mirror horizontally and vertically</dt><dd>For beam splitter prompter hardware. Leave both off when reading directly from the screen.</dd>
+<dt>Guide line</dt><dd>Marks the reading position, which helps keep your eyes anchored in one place.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>What does markdown do here</dt><dd>Headings render larger and text wrapped in double asterisks is highlighted in colour. Marking your key phrases means you will not skate past them.</dd>
+<dt>Can I change speed while it is running</dt><dd>Yes, with the arrow keys or the control. Adjust as you go if your pace drifts.</dd>
+<dt>Is my script saved</dt><dd>It stays in your browser but never reaches a server, so keep your own copy of the script.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/design-media/screendeco_en.html">Screenshot Beautifier</a></li>
+<li><a href="https://mnledu.com/en/design-media/mosaicmarker_en.html">Blur &amp; Highlight Tool</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does markdown do here",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Headings render larger and text wrapped in double asterisks is highlighted in colour. Marking your key phrases means you will not skate past them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I change speed while it is running",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, with the arrow keys or the control. Adjust as you go if your pace drifts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my script saved",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It stays in your browser but never reaches a server, so keep your own copy of the script."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/design-media/teleprompter_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/design-media/teleprompter_en.html";
+  var TK_SHARE_TITLE = "Browser Teleprompter";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+</body>
+</html>

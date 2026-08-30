@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#18181B">
+
+<title>Fashion Police · Outfit Incident Report · Rate Today’s Colour Combo | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Upload a full-length photo and it pulls the colours from your top, bottom and shoes, then delivers a verdict. 50 tongue-in-cheek outcomes based on the colour combination. Made for laughs; nothing is uploaded." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/entertainment/fashion-detector_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/fashion-detector_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/entertainment/fashion-detector_en.html" />
+<meta property="og:title" content="Fashion Police · Outfit Incident Report · Rate Today’s Colour Combo | TOOLKIT" />
+<meta property="og:description" content="Pulls the colours from your outfit and delivers a verdict. Made for laughs." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Fashion Police · Outfit Incident Report | TOOLKIT" />
+<meta name="twitter:description" content="Pulls the colours from your outfit and delivers a verdict. Made for laughs." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Fashion Police · Outfit Incident Report",
+ "description": "A joke tool that extracts colours from a full-length photo and classifies the outfit\u2019s colour combination.",
+ "url": "https://mnledu.com/en/entertainment/fashion-detector_en.html",
+ "applicationCategory": "EntertainmentApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "FUN", "item": "https://mnledu.com/en/#fun" },
+  { "@type": "ListItem", "position": 3, "name": "Fashion Police · Outfit Incident Report", "item": "https://mnledu.com/en/entertainment/fashion-detector_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is my photo uploaded anywhere?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Extracting the colours and reaching a verdict both happen in your browser, so it works with the connection switched off. Closing the page clears the photo with it." }
+  },
+  {
+   "@type": "Question",
+   "name": "How does it tell top from bottom?",
+   "acceptedAnswer": { "@type": "Answer", "text": "The photo is divided vertically \u2014 upper section for the top, middle for the bottom, lower for the shoes. It recognises position, not people, so it needs a full-length shot where you fill the frame. The dividing lines can be dragged." }
+  },
+  {
+   "@type": "Question",
+   "name": "The result looks wrong",
+   "acceptedAnswer": { "@type": "Answer", "text": "If a lot of background is in shot, it picks up the wall or floor instead of your clothes. A photo where you fill the frame works far better. Dragging the dividers onto the actual garments changes the result." }
+  },
+  {
+   "@type": "Question",
+   "name": "What are the criteria?",
+   "acceptedAnswer": { "@type": "Answer", "text": "The hue, saturation and lightness of the three colours are compared and matched to one of 50 outcomes. Extreme saturation reads as fluorescent, primaries far apart in hue read as a clash, all three dark reads as all-black, and so on. These are joke criteria, so do not take them seriously." }
+  },
+  {
+   "@type": "Question",
+   "name": "What does the score mean?",
+   "acceptedAnswer": { "@type": "Answer", "text": "It is a made-up number for how safe the combination is, and has nothing to do with whether you dress well. A low score might just be a distinctive outfit; a high one might just be unremarkable." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I send the result to a friend?",
+   "acceptedAnswer": { "@type": "Answer", "text": "The copy button puts the title, the score and the extracted colours on your clipboard as text, ready to paste into a chat." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+<style>
+  :root{
+    --bg:#18181B; --panel:#212124; --line:#3F3F46; --line2:#2A2A2E;
+    --ink:#FAFAFA; --ink2:#D4D4D8; --muted:#8B8B93;
+    --yellow:#FACC15; --red:#EF4444; --green:#22C55E;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+  /* 폴리스 라인 */
+  .tapeline{height:26px;background:repeating-linear-gradient(45deg,
+    var(--yellow) 0 22px, #18181B 22px 44px);
+    box-shadow:inset 0 -1px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(0,0,0,.3)}
+
+  .btn{border:2px solid var(--line);background:#26262A;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:800;padding:10px 15px;cursor:pointer;min-height:44px;
+    font-family:inherit;white-space:nowrap;letter-spacing:-.01em;
+    transition:border-color .12s,background .12s,transform .07s}
+  .btn:hover:not(:disabled){border-color:var(--yellow);background:#2E2E33}
+  .btn:active:not(:disabled){transform:translateY(2px)}
+  .btn:disabled{opacity:.36;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+  .btn.p{background:var(--yellow);border-color:var(--yellow);color:#18181B;
+    box-shadow:0 4px 0 #A16207}
+  .btn.p:hover:not(:disabled){filter:brightness(1.07)}
+  .btn.p:active:not(:disabled){box-shadow:0 1px 0 #A16207;transform:translateY(3px)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px;border-width:1px}
+
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+
+  /* ---------- 업로드 ---------- */
+  #drop{border:3px dashed var(--line);border-radius:16px;padding:44px 20px;text-align:center;
+    cursor:pointer;background:#1E1E22;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--yellow);background:#232327}
+  body.dragging #drop{border-color:var(--yellow);background:#232327}
+  #drop .ic{font-size:44px;margin-bottom:12px}
+  #drop p{margin:0;font-size:15.5px;color:var(--ink2);line-height:1.9;font-weight:700}
+  #drop small{display:block;font-size:12.5px;color:var(--muted);margin-top:7px;font-weight:400}
+
+  /* ---------- 스캔 ---------- */
+  #stage{display:none}
+  #stage.on{display:block}
+  #photoBox{position:relative;border-radius:14px;overflow:hidden;background:#0E0E10;
+    display:flex;justify-content:center;max-height:min(64vh,600px)}
+  #photo{max-width:100%;max-height:min(64vh,600px);object-fit:contain;display:block}
+  .zone{position:absolute;left:0;right:0;pointer-events:none;
+    border-bottom:2px dashed rgba(250,204,21,.65)}
+  .zone .tag{position:absolute;left:8px;top:6px;font-size:11.5px;font-weight:800;
+    background:rgba(24,24,27,.82);color:var(--yellow);padding:2px 8px;border-radius:5px}
+  .grip{position:absolute;left:0;right:0;height:16px;cursor:ns-resize;z-index:5;
+    display:flex;align-items:center;justify-content:center}
+  .grip::after{content:'';width:52px;height:5px;border-radius:99px;background:var(--yellow);
+    box-shadow:0 0 0 2px rgba(24,24,27,.7)}
+  .grip:hover::after{width:72px}
+  .cropBox{position:absolute;border:2px solid rgba(250,204,21,.9);border-radius:10px;
+    pointer-events:none;z-index:3;box-shadow:0 0 0 9999px rgba(0,0,0,.18)}
+  .cropGrip{position:absolute;z-index:7;display:flex;align-items:center;justify-content:center}
+  .cropGrip.h{left:0;right:0;height:18px;cursor:ns-resize}
+  .cropGrip.h::after{content:'';width:64px;height:5px;border-radius:99px;background:#FAFAFA;
+    box-shadow:0 0 0 2px rgba(24,24,27,.78)}
+  .cropGrip.v{top:0;bottom:0;width:18px;cursor:ew-resize}
+  .cropGrip.v::after{content:'';width:5px;height:64px;border-radius:99px;background:#FAFAFA;
+    box-shadow:0 0 0 2px rgba(24,24,27,.78)}
+  .cropGrip:hover::after{background:var(--yellow)}
+  .cropTag{position:absolute;right:8px;top:7px;z-index:4;font-size:10.5px;font-weight:900;
+    color:#18181B;background:var(--yellow);padding:2px 7px;border-radius:5px;pointer-events:none}
+
+  #laser{position:absolute;left:0;right:0;height:3px;background:var(--red);
+    box-shadow:0 0 18px 4px rgba(239,68,68,.75);display:none;z-index:6}
+  #laser.on{display:block;animation:scan 1.1s ease-in-out infinite}
+  @keyframes scan{0%{top:0}50%{top:calc(100% - 3px)}100%{top:0}}
+  #scanMask{position:absolute;inset:0;background:rgba(24,24,27,.55);display:none;z-index:4;
+    align-items:center;justify-content:center;flex-direction:column;gap:10px}
+  #scanMask.on{display:flex}
+  #scanMask b{font-size:15px;font-weight:900;color:var(--yellow);letter-spacing:.06em}
+
+  /* 타격감 */
+  @keyframes shake{
+    0%,100%{transform:translate(0,0)} 12%{transform:translate(-10px,4px)}
+    25%{transform:translate(9px,-5px)} 38%{transform:translate(-8px,-3px)}
+    50%{transform:translate(7px,5px)} 62%{transform:translate(-5px,-4px)}
+    75%{transform:translate(4px,3px)} 88%{transform:translate(-2px,1px)}
+  }
+  body.shake{animation:shake .4s cubic-bezier(.36,.07,.19,.97)}
+  #flash{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;background:#fff}
+  @keyframes flashOut{0%{opacity:.72}100%{opacity:0}}
+  #flash.on{animation:flashOut .32s ease-out}
+
+  /* ---------- 색상 ---------- */
+  .colors{display:grid;gap:10px;grid-template-columns:repeat(3,1fr);margin-top:14px}
+  .cbox{border:2px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+    transition:border-color .12s,transform .08s}
+  .cbox:hover{border-color:var(--yellow);transform:translateY(-2px)}
+  .cbox .sw{height:66px}
+  .cbox .info{padding:9px 10px;background:#26262A}
+  .cbox .nm{font-size:12.5px;font-weight:800}
+  .cbox .hx{font-size:11.5px;color:var(--muted);margin-top:3px;
+    font-family:ui-monospace,Consolas,monospace}
+
+  /* ---------- 결과 ---------- */
+  #verdict{display:none;margin-top:18px}
+  #verdict.on{display:block}
+  #vCard{border:3px solid var(--yellow);border-radius:18px;overflow:hidden;background:#1E1E22}
+  #vTop{padding:24px 20px;text-align:center;border-bottom:3px solid var(--yellow);
+    background:repeating-linear-gradient(45deg,rgba(250,204,21,.08) 0 14px,transparent 14px 28px)}
+  #vEmoji{font-size:clamp(46px,9vw,72px);line-height:1;margin-bottom:8px}
+  #vTitle{font-size:clamp(21px,4.4vw,32px);font-weight:900;letter-spacing:-.03em;
+    line-height:1.32;word-break:keep-all}
+  #vScoreRow{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:16px}
+  #vScore{font-size:clamp(34px,7vw,54px);font-weight:900;line-height:1;letter-spacing:-.04em}
+  #vScoreLb{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.14em}
+  #vBar{height:10px;background:#2E2E33;border-radius:99px;overflow:hidden;margin:14px auto 0;
+    max-width:340px}
+  #vBarF{height:100%;width:0;border-radius:99px;transition:width .7s cubic-bezier(.2,.9,.3,1)}
+  #vBody{padding:20px}
+  #vMsg{font-size:15px;line-height:1.95;color:var(--ink2);word-break:keep-all;
+    text-align:center;max-width:620px;margin:0 auto}
+  #vWhy{margin-top:16px;padding:13px 15px;background:#26262A;border-radius:11px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  #vWhy b{color:var(--yellow)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+  #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);opacity:0;
+    background:var(--yellow);color:#18181B;border-radius:10px;padding:12px 20px;font-size:14px;
+    z-index:90;pointer-events:none;transition:opacity .18s,transform .18s;font-weight:800;
+    max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="flash"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="tapeline"></div>
+
+<header class="wrap" style="padding:32px 18px 6px">
+  <p style="font-size:12px;letter-spacing:.2em;color:var(--red);font-weight:900;margin:0 0 10px">⚠️ FASHION POLICE</p>
+  <h1 style="font-size:clamp(26px,5.4vw,40px);font-weight:900;letter-spacing:-.03em;margin:0 0 12px;line-height:1.2">
+    Fashion Police · Outfit Incident Report
+  </h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:680px">
+    Photograph what you are wearing and it <b style="color:var(--yellow)">looks at three colours and files an unnecessarily serious incident report</b>.
+    It cannot judge fashion. It can, however, give your outfit a ridiculous nickname.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div id="drop" role="button" tabindex="0">
+    <div class="ic">🕵️</div>
+    <p>Drop a full-length photo here
+      <small>Click to browse · drag and drop · paste with <b class="mono">Ctrl</b>+<b class="mono">V</b></small>
+      <small>Your photo is never uploaded — everything runs in this browser</small>
+    </p>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
+
+  <div id="stage">
+    <div class="card" style="padding:14px">
+      <div id="photoBox">
+        <img id="photo" alt="Uploaded photo">
+        <div class="cropBox" id="cropBox"></div>
+        <span class="cropTag" id="cropTag">OUTFIT AREA</span>
+        <div class="zone" id="zTop"><span class="tag">👕 Top</span></div>
+        <div class="zone" id="zBot"><span class="tag">👖 Bottom</span></div>
+        <div class="zone" id="zSho" style="border-bottom:0"><span class="tag">👟 Shoes</span></div>
+        <div class="grip" id="grip1"></div>
+        <div class="grip" id="grip2"></div>
+        <div class="cropGrip h" id="cropTop"></div>
+        <div class="cropGrip h" id="cropBottom"></div>
+        <div class="cropGrip v" id="cropLeft"></div>
+        <div class="cropGrip v" id="cropRight"></div>
+        <div id="laser"></div>
+        <div id="scanMask"><b>🔍 SCANNING…</b></div>
+      </div>
+      <p class="hint" id="photoNote">Yellow handles set the top/bottom/shoes boundaries. White handles set the outfit area on all four sides. A rough box is detected automatically from the background colour.</p>
+
+      <div class="colors" id="colors"></div>
+
+      <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:14px">
+        <button class="btn p" id="scanBtn">🔍 Scan this area</button>
+        <button class="btn" id="newBtn">📷 New photo</button>
+      </div>
+    </div>
+
+    <div id="verdict">
+      <div id="vCard">
+        <div id="vTop">
+          <div id="vEmoji"></div>
+          <div id="vTitle"></div>
+          <div id="vScoreRow">
+            <span id="vScoreLb">CALM INDEX</span>
+            <span id="vScore">0</span>
+            <span style="font-size:15px;font-weight:800;color:var(--muted)">/ 100</span>
+          </div>
+          <div id="vBar"><div id="vBarF"></div></div>
+        </div>
+        <div id="vBody">
+          <p id="vMsg"></p>
+          <div id="vWhy"></div>
+        </div>
+      </div>
+      <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:12px">
+        <button class="btn p" id="copyBtn">📋 Copy incident report to the group chat</button>
+        <button class="btn" id="shotBtn">🖼 Save this fashion evidence</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:26px 18px 40px;border-top:1px solid var(--line);margin-top:30px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    This does not judge fashion; it turns three colours into a joke. Photos are processed in your browser and are not uploaded.
+  </p>
+</footer>
+<div class="tapeline"></div>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2100);
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+
+/* ============================================================
+   Colour maths
+   ============================================================ */
+function rgbToHsl(r, g, b){
+  r /= 255; g /= 255; b /= 255;
+  var mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+  var h = 0, s = 0, l = (mx + mn) / 2;
+  if (mx !== mn){
+    var d = mx - mn;
+    s = l > 0.5 ? d/(2-mx-mn) : d/(mx+mn);
+    if (mx === r) h = (g-b)/d + (g<b?6:0);
+    else if (mx === g) h = (b-r)/d + 2;
+    else h = (r-g)/d + 4;
+    h *= 60;
+  }
+  return { h: Math.round(h), s: Math.round(s*100), l: Math.round(l*100) };
+}
+function toHex(c){
+  return '#' + c.map(function(v){
+    return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0');
+  }).join('').toUpperCase();
+}
+/* Real distance between two angles on the colour wheel */
+function hueDist(a, b){
+  var d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+}
+function isVivid(c){ return c.s >= 55 && c.l >= 25 && c.l <= 75; }
+/* Fluorescent means extreme saturation and high perceived brightness.
+   Pure red is also saturation 100, so saturation alone cannot tell them apart */
+function isNeon(c, rgb){
+  if (c.s < 82) return false;
+  if (c.l < 40 || c.l > 88) return false;
+  /* Yellows and yellow-greens are naturally bright, so exclude that band */
+  if (c.h >= 45 && c.h <= 95) return false;
+  if (!rgb) return c.s >= 92 && c.l >= 55;
+  var lum = 0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2];
+  var sorted = rgb.slice().sort(function(a,b){ return b-a; });
+  /* Neon pinks have a big gap to the second channel and almost no third */
+  var twoBright = sorted[0] >= 245 && sorted[1] >= 100 &&
+                  sorted[1]/sorted[0] < 0.75 && sorted[2] <= 60;
+  return lum >= 118 || twoBright;
+}
+/* Saturation is unreliable at the extremes, so widen the threshold */
+function isGray(c){
+  if (c.l >= 88 || c.l <= 12) return c.s <= 22;
+  return c.s <= 14;
+}
+function family(c){
+  if (isGray(c)) return 'gray';
+  var h = c.h;
+  if (h < 15 || h >= 345) return 'red';
+  if (h < 45) return 'orange';
+  if (h < 70) return 'yellow';
+  if (h < 170) return 'green';
+  if (h < 200) return 'cyan';
+  if (h < 260) return 'blue';
+  if (h < 290) return 'purple';
+  return 'pink';
+}
+function isEarth(c){
+  return (c.h >= 15 && c.h <= 50) && c.s >= 8 && c.s <= 65 && c.l >= 15 && c.l <= 80;
+}
+var FAM_KO = { red:'red', orange:'orange', yellow:'yellow', green:'green',
+  cyan:'cyan', blue:'blue', purple:'purple', pink:'pink', gray:'neutral' };
+
+/* ============================================================
+   Verdict
+   Checked top to bottom, so the order is the priority
+   ============================================================ */
+var DB = {
+  neon1:{emoji:'🪩',score:8,title:'🪩 Human Glow Stick · No Power-Saving Mode',msg:'One colour is doing considerably more work than the others. Subtle was clearly not invited. On the plus side, losing you in a crowd will be difficult.',color:'#EF4444'},
+  neon2:{emoji:'🔦',score:11,title:'🔦 The Outfit Arrives Before You Do',msg:'One colour enters the room half a second before the rest of you. Presence is not the issue here. Introductions may be unnecessary.',color:'#EF4444'},
+  neon3:{emoji:'🚨',score:6,title:'🚨 Built-In Attention Beacon',msg:'The accent colour has promoted itself to management. It is no longer a detail. It is now the department.',color:'#EF4444'},
+  clash1:{emoji:'🚦',score:16,title:'🚦 Every Colour Is Running For Office',msg:'Nobody is giving up the microphone. This is less a palette and more a coalition negotiation with excellent visibility.',color:'#EF4444'},
+  clash2:{emoji:'📢',score:19,title:'📢 Three Colours, Three Microphones',msg:'No clear supporting actor here. Everyone wants top billing. A moderator would help.',color:'#EF4444'},
+  clash3:{emoji:'🥊',score:13,title:'🥊 Colour Team Fight Confirmed',msg:'Each colour makes sense alone. Together, they appear to have scheduled a match. There may be no winner, but there will be spectators.',color:'#EF4444'},
+  clash4:{emoji:'🧨',score:10,title:'🧨 The Clash Arrives Before The Outfit',msg:'The hues are a long way apart. If the contrast was intentional, congratulations. If not, it is somehow even more intentional-looking.',color:'#EF4444'},
+  black1:{emoji:'🖤',score:74,title:'🖤 Triple Insurance On Playing It Safe',msg:'Safe is definitely the word. So safe, in fact, that the wardrobe appears to have stopped thinking. Risk is low. Memorability has also been responsibly insured.',color:'#A1A1AA'},
+  black2:{emoji:'🕶️',score:78,title:'🕶️ Black Has Been Given Full Authority',msg:'Every colour decision was delegated to black. Efficient, decisive, and probably very quick in the morning.',color:'#A1A1AA'},
+  black3:{emoji:'⬛',score:71,title:'⬛ The Colour Meeting Was Cancelled',msg:'Top: quiet. Bottom: quiet. Shoes: quiet. Perfect agreement is easy when nobody submits an alternative.',color:'#A1A1AA'},
+  white1:{emoji:'🍦',score:67,title:'🍦 Human Vanilla Latte',msg:'Cream, ivory and white have reached a peaceful settlement. Clean, yes. Spend too long in a cafe and you may begin to match the order.',color:'#FACC15'},
+  white2:{emoji:'🥛',score:70,title:'🥛 Milk Styled With More Milk',msg:'You committed to bright neutrals and did not blink. Very clean. Today may be a sensible day to avoid tomato sauce.',color:'#FACC15'},
+  white3:{emoji:'☁️',score:65,title:'☁️ A Cloud Dressed For Work',msg:'Everything is bright and low-saturation. Soft and calm. Against a white wall, however, parts of you may briefly resign from the photograph.',color:'#FACC15'},
+  beige1:{emoji:'🥐',score:82,title:'🥐 Beige Is Persuading More Beige',msg:'You chose a safe colour, then another safe colour, then stayed disciplined. The wardrobe meeting probably ended ahead of schedule.',color:'#D6A85F'},
+  beige2:{emoji:'☕',score:84,title:'☕ Fully Approved By Cafe Interiors',msg:'Beige and brown are cooperating very professionally. You are unlikely to fight the furniture. The furniture may, however, claim you as part of the scheme.',color:'#D6A85F'},
+  beige3:{emoji:'🍪',score:80,title:'🍪 The Wardrobe Smells Faintly Of Biscuits',msg:'Warm low-saturation colours have stacked up neatly. Comfortable, certainly. One shade darker and an espresso would complete the set.',color:'#D6A85F'},
+  beige4:{emoji:'📦',score:77,title:'📦 Premium Cardboard Edition',msg:'Brown and beige are organised and dependable. Hard to fail. Slightly easier to imagine someone looking for where the parcel opens.',color:'#D6A85F'},
+  pastel1:{emoji:'🧼',score:76,title:'🧼 Three Seconds From A Fabric-Softener Ad',msg:'Everything is bright, soft and refusing to argue. Peaceful, yes. Any softer and the fragrance may become visible.',color:'#E9A8C8'},
+  pastel2:{emoji:'🍬',score:73,title:'🍬 Sweet Wrappers Getting Along Nicely',msg:'Light, gentle colours have gathered without incident. Very civilised. One of them could probably afford to misbehave a little.',color:'#E9A8C8'},
+  pastel3:{emoji:'🍼',score:79,title:'🍼 Baby Filter Applied To The Palette',msg:'Low saturation, high lightness, no raised voices. The colour meeting was exceptionally well behaved.',color:'#E9A8C8'},
+  pastel4:{emoji:'🌸',score:75,title:'🌸 Spring Has Clocked In Very Seriously',msg:'The pale colours are all heading the same way. Fresh and orderly. If the season matches too, people may assume you planned this.',color:'#E9A8C8'},
+  denim1:{emoji:'👖',score:50,title:'👖 Double Denim Is Innocent. Time Is The Problem.',msg:'Blue above, blue below. Not wrong, but an undated photo may accidentally become a guessing game about the year.',color:'#FACC15'},
+  denim2:{emoji:'📼',score:54,title:'📼 Quick Question: What Year Was This Taken?',msg:'Top and bottom are both blue-family. The outfit works. Add a film filter and it may start appearing in family albums.',color:'#FACC15'},
+  denim3:{emoji:'🧢',score:57,title:'🧢 Denim Has Been Promoted To Team Lead',msg:'Blue has taken control of both top and bottom. Consistency acknowledged. The other colours appear to be on leave.',color:'#FACC15'},
+  nature1:{emoji:'🪴',score:58,title:'🪴 Slightly More Houseplant Than Person',msg:'Green has met an earth tone. Natural, yes, though in the specific direction of someone who could be included in the garden-centre display.',color:'#22C55E'},
+  nature2:{emoji:'🌲',score:62,title:'🌲 No Hike Planned, Yet The Mountain Arrived',msg:'Green and brown are cooperating nicely. Comfortable and grounded. A trail sign would not look entirely out of place.',color:'#22C55E'},
+  nature3:{emoji:'🪵',score:60,title:'🪵 Eco-Friendly With Excessive Commitment',msg:'Earth tones and green agree very well. Perhaps too well. Stand near a bench and landscaping may begin to claim you.',color:'#22C55E'},
+  red1:{emoji:'🌶️',score:31,title:'🌶️ One Spoon Of Chilli Became Two',msg:'Red or pink appears in more than one area. The accent colour has brought relatives. The theme is now fully understood.',color:'#EF4444'},
+  red2:{emoji:'🍓',score:36,title:'🍓 The Accent Colour Brought Its Family',msg:'Red or pink did not stop at one appearance. Repeat an accent often enough and it becomes a policy.',color:'#EF4444'},
+  red3:{emoji:'📮',score:28,title:'📮 Red Has Exceeded Its Job Description',msg:'The red family is working several departments at once. Energetic, certainly. Overtime pay may now be required.',color:'#EF4444'},
+  blue1:{emoji:'🧊',score:69,title:'🧊 Cool Was Prepared With Great Professionalism',msg:'Blue repeats across the outfit. Dependable, calm, and giving roughly the same confidence as opening a well-organised refrigerator.',color:'#60A5FA'},
+  blue2:{emoji:'🌊',score:66,title:'🌊 Blue Owns A Suspiciously Large Share',msg:'Blue and cyan appear repeatedly. Cool and coherent. The remaining colours are essentially minority shareholders.',color:'#60A5FA'},
+  blue3:{emoji:'🧴',score:72,title:'🧴 Cool Tones Are Taking Their Duties Very Seriously',msg:'The cool palette keeps its direction from top to bottom. Stable. A skincare packaging team would approve immediately.',color:'#60A5FA'},
+  accent1:{emoji:'📍',score:61,title:'📍 The Accent Colour Is Working Overtime',msg:'Two areas are quiet and one is carrying the entire presentation. The intention is clear. So is the staffing shortage.',color:'#F59E0B'},
+  accent2:{emoji:'🧯',score:64,title:'🧯 One Enthusiastic Person In A Quiet Meeting',msg:'Most of the outfit is calm, while one colour keeps raising its voice. The highlight is very successfully highlighted.',color:'#F59E0B'},
+  accent3:{emoji:'📌',score:59,title:'📌 The Accent Is Almost Too Well Placed',msg:'One strong colour is pinned neatly between neutrals. The outfit has helpfully explained exactly where to look.',color:'#F59E0B'},
+  accent4:{emoji:'🙋',score:63,title:'🙋 One Colour Keeps Raising Its Hand',msg:'The rest are sitting quietly. One colour is still volunteering answers. Excellent work ethic. It may take a break now.',color:'#F59E0B'},
+  neutral1:{emoji:'🗂️',score:91,title:'🗂️ Fashion Equivalent Of An Approved Document',msg:'Mostly neutral, very few reasons to reject. No incident, no controversy, and therefore not much to put in the meeting minutes.',color:'#A1A1AA'},
+  neutral2:{emoji:'🧾',score:88,title:'🧾 Organised Like A Receipt',msg:'Black, grey and white have lined up neatly. Nothing is wrong. The excitement is approximately the size of an advert at the bottom of a receipt.',color:'#A1A1AA'},
+  neutral3:{emoji:'🖨️',score:86,title:'🖨️ Colour Printer, Monochrome Setting',msg:'Colour was available. You simply chose not to use it. Call it restraint for elegance, or convenience for accuracy.',color:'#A1A1AA'},
+  neutral4:{emoji:'📎',score:89,title:'📎 The Neutrals Agreed Not To Disturb One Another',msg:'Everything is calm and organised. So cooperative that this detector has very little work left to do.',color:'#A1A1AA'},
+  tone1:{emoji:'🧁',score:86,title:'🧁 Unanimous Colour Meeting',msg:'All three colours are heading in the same direction. Harmonious, yes. Also suspiciously free of dissent.',color:'#22C55E'},
+  tone2:{emoji:'👨‍👩‍👧',score:84,title:'👨‍👩‍👧 The Colours Appear To Be Related',msg:'The hues sit close together. They look enough alike to avoid arguments. There is a slight coordinated-family-photo energy.',color:'#22C55E'},
+  tone3:{emoji:'📚',score:83,title:'📚 Three Volumes From The Same Series',msg:'The colours stay in one family. Cohesive and tidy. A box-set sticker would not be unreasonable.',color:'#22C55E'},
+  tone4:{emoji:'🧦',score:81,title:'🧦 The Socks Probably Match Too',msg:'The overall colour direction is remarkably consistent. Planned, perhaps. Or the wardrobe simply has one opinion.',color:'#22C55E'},
+  tone5:{emoji:'🧱',score:79,title:'🧱 Built One Shade At A Time',msg:'Small tone changes, same overall family. Stable and deliberate. Variation was permitted, but only under supervision.',color:'#22C55E'},
+  contrast1:{emoji:'🧩',score:46,title:'🧩 Fine Individually, Meeting Required Together',msg:'Each colour is reasonable on its own. Together, they raise one small question: who invited whom?',color:'#FACC15'},
+  contrast2:{emoji:'🤝',score:49,title:'🤝 Acting Friendly, Still Slightly Awkward',msg:'The colours are not fighting. They are not old friends either. Think first team dinner: polite, functional, still learning names.',color:'#FACC15'},
+  contrast3:{emoji:'📝',score:43,title:'📝 A Short Design Note Would Help',msg:'There is probably a reason for this combination. One sentence of creative direction would make the meeting much easier.',color:'#FACC15'},
+  contrast4:{emoji:'🪑',score:52,title:'🪑 Three Good Chairs, Not Quite A Set',msg:'Each colour is useful. Together, they feel a little like three separately chosen chairs placed around the same table.',color:'#FACC15'}
+};
+
+function judge(parts){
+  var hsl = parts.map(function(x){ return x.hsl; });
+  var rgb = parts.map(function(x){ return x.rgb; });
+  var why = [];
+  var fam = hsl.map(family);
+  var neutralIdx = [], chromaIdx = [];
+  hsl.forEach(function(c,i){ (isGray(c) ? neutralIdx : chromaIdx).push(i); });
+
+  function countFam(names){ return fam.filter(function(f){ return names.indexOf(f) >= 0; }).length; }
+  function all(fn){ return hsl.every(fn); }
+  function isBeige(c){ return c.h >= 18 && c.h <= 55 && c.s >= 7 && c.s <= 42 && c.l >= 48 && c.l <= 88; }
+  function isPastel(c){ return c.s >= 10 && c.s <= 48 && c.l >= 67 && c.l <= 90; }
+  function choose(keys){
+    var seed = 0;
+    hsl.forEach(function(c,i){ seed += (c.h+17)*(i+3) + c.s*7 + c.l*11; });
+    return keys[Math.abs(seed) % keys.length];
+  }
+
+  for (var n=0;n<hsl.length;n++) if (isNeon(hsl[n],rgb[n])){
+    why.push('one area is unusually high in saturation and brightness');
+    return {key:choose(['neon1','neon2','neon3']),why:why};
+  }
+
+  var dark = hsl.filter(function(c){ return c.l <= 23; });
+  if (dark.length === 3){ why.push('all three areas are very dark'); return {key:choose(['black1','black2','black3']),why:why}; }
+
+  if (all(function(c){ return c.l >= 78 && c.s <= 24; })){
+    why.push('all three areas are bright and low in saturation'); return {key:choose(['white1','white2','white3']),why:why};
+  }
+
+  if (all(isBeige)){
+    why.push('all three areas sit in a low-saturation beige or brown range'); return {key:choose(['beige1','beige2','beige3','beige4']),why:why};
+  }
+
+  if (all(isPastel)){
+    why.push('all three areas sit in a bright, soft pastel range'); return {key:choose(['pastel1','pastel2','pastel3','pastel4']),why:why};
+  }
+
+  if (family(hsl[0]) === 'blue' && family(hsl[1]) === 'blue' && hsl[0].s >= 18 && hsl[1].s >= 18){
+    why.push('top and bottom are both in the blue family'); return {key:choose(['denim1','denim2','denim3']),why:why};
+  }
+
+  var greenAt=-1, earthAt=-1;
+  hsl.forEach(function(c,k){ if(greenAt<0 && family(c)==='green' && c.s>=15) greenAt=k; if(earthAt<0 && isEarth(c)) earthAt=k; });
+  if(greenAt>=0 && earthAt>=0 && greenAt!==earthAt){
+    why.push('green and earth-tone areas appear together'); return {key:choose(['nature1','nature2','nature3']),why:why};
+  }
+
+  if (countFam(['red','pink']) >= 2){
+    why.push('red or pink repeats across at least two areas'); return {key:choose(['red1','red2','red3']),why:why};
+  }
+
+  if (countFam(['blue','cyan']) >= 2){
+    why.push('blue or cyan repeats across at least two areas'); return {key:choose(['blue1','blue2','blue3']),why:why};
+  }
+
+  if (neutralIdx.length >= 2 && chromaIdx.length === 1 && hsl[chromaIdx[0]].s >= 28){
+    why.push('one strongly coloured area is acting as the accent against two neutrals'); return {key:choose(['accent1','accent2','accent3','accent4']),why:why};
+  }
+
+  if (neutralIdx.length === 3){
+    why.push('all three areas are neutral'); return {key:choose(['neutral1','neutral2','neutral3','neutral4']),why:why};
+  }
+
+  var maxD=0, vividClash=false;
+  for(var a=0;a<hsl.length;a++) for(var b=a+1;b<hsl.length;b++){
+    var d=hueDist(hsl[a].h,hsl[b].h); maxD=Math.max(maxD,d);
+    if(isVivid(hsl[a]) && isVivid(hsl[b]) && d>=95) vividClash=true;
+  }
+  if(vividClash || maxD>=125){
+    why.push('the widest hue gap reaches <b>' + maxD + '°</b>'); return {key:choose(['clash1','clash2','clash3','clash4']),why:why};
+  }
+
+  if(chromaIdx.length <= 1){
+    why.push('very little strong colour is present, so the overall palette stays calm'); return {key:choose(['neutral1','neutral2','neutral3','neutral4']),why:why};
+  }
+  if(maxD<=42){
+    why.push('the widest hue gap is only <b>' + maxD + '°</b>, keeping the colours in one family'); return {key:choose(['tone1','tone2','tone3','tone4','tone5']),why:why};
+  }
+
+  why.push('the hue gap is <b>' + maxD + '°</b>, neither close enough to match nor wide enough to clash hard');
+  return {key:choose(['contrast1','contrast2','contrast3','contrast4']),why:why};
+}
+
+/* ============================================================
+   Photo
+   ============================================================ */
+var imgSrc = '', parts = [], lastKey = '';
+/* Store the outfit box and garment dividers as ratios of the full image */
+var cropL = 0.18, cropR = 0.82, cropT = 0.04, cropB = 0.96;
+var cut1 = 0.38, cut2 = 0.78;
+var bgPalette = [];
+
+function loadBlob(blob){
+  if (!blob || !/^image\//.test(blob.type || '')){ toast('That is not an image file'); return; }
+  var url = URL.createObjectURL(blob);
+  var im = new Image();
+  im.onload = function(){
+    if (imgSrc && imgSrc.indexOf('blob:') === 0) try { URL.revokeObjectURL(imgSrc); } catch(e){}
+    imgSrc = url;
+    $('photo').src = url;
+    $('drop').style.display = 'none';
+    $('stage').classList.add('on');
+    $('verdict').classList.remove('on');
+    detectPersonBox(im);
+    bgPalette = buildBackgroundPalette(im);
+    layoutZones();
+    parts = []; lastKey = '';
+    $('colors').innerHTML = '';
+  };
+  im.onerror = function(){ URL.revokeObjectURL(url); toast('Could not read the photo'); };
+  im.src = url;
+}
+
+/* With a reasonably simple background, estimate the outfit box from pixels unlike the edge colour. */
+function detectPersonBox(im){
+  try {
+    var maxW = 240, maxH = 320;
+    var sc = Math.min(1, maxW / im.naturalWidth, maxH / im.naturalHeight);
+    var w = Math.max(24, Math.round(im.naturalWidth * sc));
+    var h = Math.max(32, Math.round(im.naturalHeight * sc));
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var x = c.getContext('2d', {willReadFrequently:true});
+    x.drawImage(im, 0, 0, w, h);
+    var d = x.getImageData(0, 0, w, h).data;
+
+    var edge = Math.max(2, Math.round(Math.min(w,h) * 0.045));
+    var sr=0, sg=0, sb=0, n=0;
+    function acc(px, py){ var k=(py*w+px)*4; if(d[k+3]<160)return; sr+=d[k];sg+=d[k+1];sb+=d[k+2];n++; }
+    for (var yy=0; yy<h; yy+=2){ for(var xx=0; xx<w; xx+=2){
+      if (xx<edge || xx>=w-edge || yy<edge || yy>=h-edge) acc(xx,yy);
+    }}
+    if (!n) throw new Error('no edge');
+    var br=sr/n, bg=sg/n, bb=sb/n;
+    var ptsX=[], ptsY=[];
+    for (var y=0; y<h; y++){
+      for (var x0=0; x0<w; x0++){
+        var k=(y*w+x0)*4; if(d[k+3]<160) continue;
+        var dr=d[k]-br, dg=d[k+1]-bg, db=d[k+2]-bb;
+        var dist=Math.sqrt(dr*dr+dg*dg+db*db);
+        var centerBias = 1 - Math.min(0.35, Math.abs((x0/w)-0.5)*0.45);
+        if (dist*centerBias > 46){ ptsX.push(x0); ptsY.push(y); }
+      }
+    }
+    if (ptsX.length < w*h*0.035) throw new Error('weak foreground');
+    ptsX.sort(function(a,b){return a-b}); ptsY.sort(function(a,b){return a-b});
+    function q(a,p){ return a[Math.max(0, Math.min(a.length-1, Math.floor((a.length-1)*p)))]; }
+    var l=q(ptsX,.035)/w, r=(q(ptsX,.965)+1)/w;
+    var t=q(ptsY,.025)/h, b=(q(ptsY,.985)+1)/h;
+    var padX=Math.max(.025,(r-l)*.05), padY=Math.max(.015,(b-t)*.025);
+    l=Math.max(.02,l-padX); r=Math.min(.98,r+padX); t=Math.max(.01,t-padY); b=Math.min(.99,b+padY);
+    if (r-l < .22 || b-t < .42 || r-l > .94){ throw new Error('bad box'); }
+    cropL=l; cropR=r; cropT=t; cropB=b;
+  } catch(e){
+    cropL=.18; cropR=.82; cropT=.04; cropB=.96;
+  }
+  var ch=cropB-cropT;
+  cut1=cropT+ch*.38;
+  cut2=cropT+ch*.80;
+}
+
+/* Pick a few recurring colours from the image edges as background candidates. No person recognition involved. */
+function buildBackgroundPalette(im){
+  try {
+    var maxW=260, maxH=360;
+    var sc=Math.min(1,maxW/im.naturalWidth,maxH/im.naturalHeight);
+    var w=Math.max(24,Math.round(im.naturalWidth*sc));
+    var h=Math.max(32,Math.round(im.naturalHeight*sc));
+    var c=document.createElement('canvas'); c.width=w; c.height=h;
+    var ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(im,0,0,w,h);
+    var d=ctx.getImageData(0,0,w,h).data;
+    var edge=Math.max(3,Math.round(Math.min(w,h)*.075));
+    var bins={};
+    function add(x,y){
+      var k=(y*w+x)*4; if(d[k+3]<160)return;
+      var qr=Math.round(d[k]/24)*24, qg=Math.round(d[k+1]/24)*24, qb=Math.round(d[k+2]/24)*24;
+      var key=qr+','+qg+','+qb;
+      var o=bins[key]||(bins[key]={n:0,r:0,g:0,b:0});
+      o.n++; o.r+=d[k]; o.g+=d[k+1]; o.b+=d[k+2];
+    }
+    for(var y=0;y<h;y+=2) for(var x=0;x<w;x+=2){
+      if(x<edge||x>=w-edge||y<edge||y>=h-edge) add(x,y);
+    }
+    return Object.keys(bins).map(function(k){var o=bins[k];return {n:o.n,r:o.r/o.n,g:o.g/o.n,b:o.b/o.n};})
+      .sort(function(a,b){return b.n-a.n;}).slice(0,7)
+      .map(function(o){return [o.r,o.g,o.b];});
+  }catch(e){ return []; }
+}
+function colorDist(a,b){var dr=a[0]-b[0],dg=a[1]-b[1],db=a[2]-b[2];return Math.sqrt(dr*dr+dg*dg+db*db);}
+function looksLikeBackground(rgb){
+  for(var i=0;i<bgPalette.length;i++) if(colorDist(rgb,bgPalette[i])<43) return true;
+  return false;
+}
+/* Reject pixels similar to the background candidates, then use the largest remaining colour cluster. */
+function foregroundColor(canvas){
+  try{
+    var ctx=canvas.getContext('2d',{willReadFrequently:true});
+    var d=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    var bins={}, kept=0, total=0;
+    var step=Math.max(4,Math.floor(d.length/4/10000)*4);
+    for(var i=0;i<d.length;i+=step){
+      if(d[i+3]<160)continue; total++;
+      var rgb=[d[i],d[i+1],d[i+2]];
+      if(looksLikeBackground(rgb))continue;
+      kept++;
+      var qr=Math.floor(rgb[0]/28),qg=Math.floor(rgb[1]/28),qb=Math.floor(rgb[2]/28);
+      var key=qr+','+qg+','+qb, o=bins[key]||(bins[key]={n:0,r:0,g:0,b:0});
+      o.n++;o.r+=rgb[0];o.g+=rgb[1];o.b+=rgb[2];
+    }
+    if(kept<Math.max(24,total*.08)) return null;
+    var arr=Object.keys(bins).map(function(k){return bins[k];}).sort(function(a,b){return b.n-a.n;});
+    if(!arr.length)return null;
+    var best=arr[0];
+    return [Math.round(best.r/best.n),Math.round(best.g/best.n),Math.round(best.b/best.n)];
+  }catch(e){return null;}
+}
+
+function layoutZones(){
+  var img = $('photo');
+  var iw = img.clientWidth, ih = img.clientHeight;
+  if (!iw || !ih) return;
+  var left = img.offsetLeft || 0, top = img.offsetTop || 0;
+  var x1=left+iw*cropL, x2=left+iw*cropR;
+  var y0=top+ih*cropT, y1=top+ih*cut1, y2=top+ih*cut2, y3=top+ih*cropB;
+  var cw=x2-x1;
+  $('cropBox').style.left=x1+'px'; $('cropBox').style.top=y0+'px';
+  $('cropBox').style.width=cw+'px'; $('cropBox').style.height=(y3-y0)+'px';
+  $('cropTag').style.left=Math.max(left+4,x2-82)+'px'; $('cropTag').style.top=(y0+7)+'px';
+  [['zTop',y0,y1],['zBot',y1,y2],['zSho',y2,y3]].forEach(function(z){
+    var el=$(z[0]); el.style.left=x1+'px'; el.style.right='auto'; el.style.width=cw+'px';
+    el.style.top=z[1]+'px'; el.style.height=Math.max(1,z[2]-z[1])+'px';
+  });
+  $('grip1').style.left=x1+'px'; $('grip1').style.right='auto'; $('grip1').style.width=cw+'px'; $('grip1').style.top=(y1-8)+'px';
+  $('grip2').style.left=x1+'px'; $('grip2').style.right='auto'; $('grip2').style.width=cw+'px'; $('grip2').style.top=(y2-8)+'px';
+  $('cropTop').style.left=x1+'px'; $('cropTop').style.right='auto'; $('cropTop').style.width=cw+'px'; $('cropTop').style.top=(y0-9)+'px';
+  $('cropBottom').style.left=x1+'px'; $('cropBottom').style.right='auto'; $('cropBottom').style.width=cw+'px'; $('cropBottom').style.top=(y3-9)+'px';
+  $('cropLeft').style.top=y0+'px'; $('cropLeft').style.bottom='auto'; $('cropLeft').style.height=(y3-y0)+'px'; $('cropLeft').style.left=(x1-9)+'px';
+  $('cropRight').style.top=y0+'px'; $('cropRight').style.bottom='auto'; $('cropRight').style.height=(y3-y0)+'px'; $('cropRight').style.left=(x2-9)+'px';
+}
+window.addEventListener('resize', function(){ if (imgSrc) layoutZones(); });
+$('photo').addEventListener('load', layoutZones);
+
+/* ---------- Dragging boundaries ---------- */
+var dragGrip = null;
+function gripStart(which){ return function(ev){ ev.preventDefault(); dragGrip=which; }; }
+['grip1','grip2','cropTop','cropBottom','cropLeft','cropRight'].forEach(function(id){
+  $(id).addEventListener('mousedown', gripStart(id));
+  $(id).addEventListener('touchstart', gripStart(id), {passive:false});
+});
+function gripMove(ev){
+  if (!dragGrip) return;
+  var img=$('photo'), r=img.getBoundingClientRect();
+  var pt=ev.touches ? ev.touches[0] : ev;
+  var px=(pt.clientX-r.left)/r.width, py=(pt.clientY-r.top)/r.height;
+  px=Math.max(.01,Math.min(.99,px)); py=Math.max(.01,Math.min(.99,py));
+  var minY=.055, minX=.10;
+  if (dragGrip==='grip1') cut1=Math.max(cropT+minY,Math.min(py,cut2-minY));
+  else if (dragGrip==='grip2') cut2=Math.max(cut1+minY,Math.min(py,cropB-minY));
+  else if (dragGrip==='cropTop') { cropT=Math.min(py,cut1-minY); }
+  else if (dragGrip==='cropBottom') { cropB=Math.max(py,cut2+minY); }
+  else if (dragGrip==='cropLeft') cropL=Math.min(px,cropR-minX);
+  else if (dragGrip==='cropRight') cropR=Math.max(px,cropL+minX);
+  layoutZones();
+}
+window.addEventListener('mousemove', gripMove);
+window.addEventListener('touchmove', gripMove, {passive:false});
+function gripEnd(){
+  if (!dragGrip) return;
+  dragGrip=null;
+  $('photoNote').textContent='Area adjusted. Press “Scan this area” when you are ready.';
+}
+window.addEventListener('mouseup', gripEnd);
+window.addEventListener('touchend', gripEnd);
+
+/* ---------- Ways to load a photo ---------- */
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) loadBlob(f);
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadBlob(f);
+});
+document.addEventListener('paste', function(e){
+  var dt = e.clipboardData; if (!dt) return;
+  if (dt.files && dt.files.length){
+    for (var i = 0; i < dt.files.length; i++){
+      if (/^image\//.test(dt.files[i].type || '')){ e.preventDefault(); loadBlob(dt.files[i]); return; }
+    }
+  }
+  var items = dt.items || [];
+  for (var k = 0; k < items.length; k++){
+    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
+      var f = items[k].getAsFile();
+      if (f){ e.preventDefault(); loadBlob(f); return; }
+    }
+  }
+});
+
+/* ============================================================
+   Scanning
+   ============================================================ */
+var ZONES = [
+  { name:'Top', icon:'\uD83D\uDC55' },
+  { name:'Bottom', icon:'\uD83D\uDC56' },
+  { name:'Shoes', icon:'\uD83D\uDC5F' }
+];
+function scan(){
+  if (!imgSrc) return;
+  $('laser').classList.add('on');
+  $('scanMask').classList.add('on');
+  setTimeout(function(){
+    try { doScan(); }
+    catch(e){ console.error(e); toast('Could not extract colours \u00B7 try another photo'); }
+    $('laser').classList.remove('on');
+    $('scanMask').classList.remove('on');
+  }, 900);
+}
+function doScan(){
+  var im = new Image();
+  im.onload = function(){
+    var W = im.naturalWidth, H = im.naturalHeight;
+    var bands = [[cropT, cut1], [cut1, cut2], [cut2, cropB]];
+    parts = [];
+    var ct = (typeof ColorThief !== 'undefined') ? new ColorThief() : null;
+
+    bands.forEach(function(bd, i){
+      var y = Math.floor(H * bd[0]);
+      var hh = Math.max(1, Math.floor(H * (bd[1] - bd[0])));
+      var c = document.createElement('canvas');
+      /* Use only the adjustable outfit box horizontally to reduce background contamination */
+      var sx = Math.floor(W * cropL), sw = Math.max(1, Math.floor(W * (cropR-cropL)));
+      c.width = sw; c.height = hh;
+      c.getContext('2d').drawImage(im, sx, y, sw, hh, 0, 0, sw, hh);
+
+      var rgb = foregroundColor(c);
+      if (!rgb && ct){
+        try { rgb = ct.getColor(c, 5); } catch(e){ rgb = null; }
+      }
+      if (!rgb) rgb = averageOf(c);
+      parts.push({
+        name: ZONES[i].name, icon: ZONES[i].icon,
+        rgb: rgb, hsl: rgbToHsl(rgb[0], rgb[1], rgb[2])
+      });
+    });
+    renderColors();
+    $('photoNote').textContent='Scan complete. Adjust the handles if needed, then scan again.';
+    var r = judge(parts);
+    lastKey = r.key;
+    renderVerdict(r);
+  };
+  im.onerror = function(){ toast('Could not read the photo'); };
+  im.src = imgSrc;
+}
+/* Fallback average when Color Thief fails */
+function averageOf(canvas){
+  try {
+    var ctx = canvas.getContext('2d');
+    var d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    var r = 0, g = 0, b = 0, n = 0;
+    var step = Math.max(4, Math.floor(d.length / 4 / 4000) * 4);
+    for (var i = 0; i < d.length; i += step){
+      if (d[i+3] < 128) continue;
+      r += d[i]; g += d[i+1]; b += d[i+2]; n++;
+    }
+    if (!n) return [128,128,128];
+    return [Math.round(r/n), Math.round(g/n), Math.round(b/n)];
+  } catch(e){ return [128,128,128]; }
+}
+function renderColors(){
+  $('colors').innerHTML = parts.map(function(p){
+    var hex = toHex(p.rgb);
+    return '<div class="cbox" data-hex="' + hex + '" role="button" tabindex="0" title="click to copy">' +
+      '<div class="sw" style="background:' + hex + '"></div>' +
+      '<div class="info"><div class="nm">' + p.icon + ' ' + p.name + '</div>' +
+      '<div class="hx">' + hex + '</div>' +
+      '<div class="hx">H' + p.hsl.h + ' S' + p.hsl.s + ' L' + p.hsl.l + '</div></div></div>';
+  }).join('');
+}
+$('colors').addEventListener('click', function(ev){
+  var b = ev.target.closest('[data-hex]');
+  if (!b) return;
+  copyText(b.dataset.hex, function(ok){ if (ok) toast(b.dataset.hex + ' copied'); });
+});
+function renderVerdict(r){
+  var d = DB[r.key];
+  $('vEmoji').textContent = d.emoji;
+  $('vTitle').textContent = d.title;
+  $('vScore').textContent = d.score;
+  $('vScore').style.color = d.color;
+  $('vBarF').style.background = d.color;
+  $('vCard').style.borderColor = d.color;
+  $('vTop').style.borderBottomColor = d.color;
+  $('vMsg').textContent = d.msg;
+  $('vWhy').innerHTML = '🧾 <b>Highly questionable evidence</b> · ' + r.why.join(' · ') +
+    '<br>This is a joke built from three colours, not an assessment of anyone’s style.';
+  $('verdict').classList.add('on');
+  setTimeout(function(){ $('vBarF').style.width = d.score + '%'; }, 60);
+  hit();
+}
+function hit(){
+  var f = $('flash');
+  f.classList.remove('on');
+  void f.offsetWidth;        /* a reflow is needed to replay the animation */
+  f.classList.add('on');
+  document.body.classList.remove('shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake');
+  setTimeout(function(){ document.body.classList.remove('shake'); }, 420);
+}
+
+$('scanBtn').addEventListener('click', scan);
+$('newBtn').addEventListener('click', function(){
+  imgSrc = ''; parts = []; lastKey = ''; bgPalette = [];
+  $('photo').src = '';
+  $('stage').classList.remove('on');
+  $('verdict').classList.remove('on');
+  $('drop').style.display = '';
+  $('vBarF').style.width = '0';
+  toast('Load another photo');
+});
+
+/* ---------- Export ---------- */
+function resultText(){
+  var d = DB[lastKey];
+  if (!d) return '';
+  var L = ['🚨 FASHION POLICE INCIDENT REPORT 🚨', ''];
+  L.push(d.title);
+  L.push('Calm index: ' + d.score + ' / 100');
+  L.push('');
+  L.push(d.msg);
+  L.push('');
+  L.push('[ Colours recovered from the scene ]');
+  parts.forEach(function(p){
+    L.push(p.icon + ' ' + p.name + ': ' + toHex(p.rgb) +
+      '  (H' + p.hsl.h + ' S' + p.hsl.s + ' L' + p.hsl.l + ')');
+  });
+  L.push('');
+  L.push('※ A joke generated from three colours. Not fashion advice.');
+  return L.join('\n');
+}
+$('copyBtn').addEventListener('click', function(){
+  var t = parts.length ? resultText() : '';
+  if (!t){ toast('Load a photo and scan it first'); return; }
+  copyText(t, function(ok){ toast(ok ? 'Copied \u00B7 go annoy someone' : 'Copy was blocked'); });
+});
+/* Draw the verdict as a single image */
+$('shotBtn').addEventListener('click', function(){
+  var d = DB[lastKey];
+  if (!d || !parts.length){ toast('Load a photo and scan it first'); return; }
+  try {
+    var W = 720, H = 620, s = 2;
+    var c = document.createElement('canvas');
+    c.width = W*s; c.height = H*s;
+    var x = c.getContext('2d');
+    x.scale(s, s);
+    x.fillStyle = '#18181B'; x.fillRect(0, 0, W, H);
+    /* Police tape, top and bottom */
+    for (var t = 0; t < 2; t++){
+      var yy = t === 0 ? 0 : H - 22;
+      for (var i = -30; i < W + 30; i += 44){
+        x.fillStyle = '#FACC15';
+        x.beginPath();
+        x.moveTo(i, yy); x.lineTo(i+22, yy); x.lineTo(i+22-22, yy+22); x.lineTo(i-22+22, yy+22);
+        x.closePath(); x.fill();
+      }
+    }
+    x.textAlign = 'center';
+    x.fillStyle = '#EF4444';
+    x.font = '900 13px Pretendard, sans-serif';
+    x.fillText('⚠️ FASHION POLICE INCIDENT REPORT', W/2, 58);
+    x.font = '900 54px Pretendard, sans-serif';
+    x.fillText(d.emoji, W/2, 122);
+    x.fillStyle = '#FAFAFA';
+    x.font = '900 26px Pretendard, sans-serif';
+    wrap(x, d.title, W/2, 168, W - 80, 34, 2);
+    x.fillStyle = d.color;
+    x.font = '900 62px Pretendard, sans-serif';
+    x.fillText(String(d.score), W/2, 268);
+    x.fillStyle = '#8B8B93';
+    x.font = '800 13px Pretendard, sans-serif';
+    x.fillText('CALM INDEX / 100', W/2, 292);
+    /* Score bar */
+    x.fillStyle = '#2E2E33';
+    rr(x, W/2 - 160, 308, 320, 10, 5); x.fill();
+    x.fillStyle = d.color;
+    rr(x, W/2 - 160, 308, 320 * d.score / 100, 10, 5); x.fill();
+
+    x.fillStyle = '#D4D4D8';
+    x.font = '400 15px Pretendard, sans-serif';
+    wrap(x, d.msg, W/2, 352, W - 90, 26, 4);
+
+    /* Extracted colours */
+    var bw = 150, gap = 22;
+    var startX = W/2 - (bw*3 + gap*2)/2;
+    parts.forEach(function(p, i){
+      var px = startX + i*(bw+gap);
+      x.fillStyle = toHex(p.rgb);
+      rr(x, px, 470, bw, 62, 10); x.fill();
+      x.strokeStyle = 'rgba(250,250,250,.14)'; x.lineWidth = 1;
+      rr(x, px, 470, bw, 62, 10); x.stroke();
+      x.fillStyle = '#FAFAFA';
+      x.font = '800 13px Pretendard, sans-serif';
+      x.fillText(p.icon + ' ' + p.name, px + bw/2, 552);
+      x.fillStyle = '#8B8B93';
+      x.font = '400 12px ui-monospace, monospace';
+      x.fillText(toHex(p.rgb), px + bw/2, 570);
+    });
+    x.fillStyle = '#8B8B93';
+    x.font = '400 11.5px Pretendard, sans-serif';
+    x.fillText('Three colours, one unnecessary verdict · mnledu.com', W/2, 596);
+
+    c.toBlob(function(b){
+      if (!b){ toast('Could not build the image'); return; }
+      var url = URL.createObjectURL(b);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'fashion-verdict.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+      toast('Verdict saved as an image');
+    }, 'image/png');
+  } catch(e){ toast('The download was blocked'); }
+});
+function rr(x, a, b, w, h, r){
+  x.beginPath();
+  x.moveTo(a+r, b); x.lineTo(a+w-r, b); x.quadraticCurveTo(a+w, b, a+w, b+r);
+  x.lineTo(a+w, b+h-r); x.quadraticCurveTo(a+w, b+h, a+w-r, b+h);
+  x.lineTo(a+r, b+h); x.quadraticCurveTo(a, b+h, a, b+h-r);
+  x.lineTo(a, b+r); x.quadraticCurveTo(a, b, a+r, b); x.closePath();
+}
+/* Canvas has no automatic wrapping, so break the lines by hand */
+function wrap(x, text, cx, cy, maxW, lh, maxLines){
+  var words = String(text).split(' ');
+  var line = '', lines = [];
+  words.forEach(function(w){
+    var test = line ? line + ' ' + w : w;
+    if (x.measureText(test).width > maxW && line){ lines.push(line); line = w; }
+    else line = test;
+  });
+  if (line) lines.push(line);
+  if (lines.length > maxLines){
+    lines = lines.slice(0, maxLines);
+    lines[maxLines-1] = lines[maxLines-1].slice(0, -1) + '…';
+  }
+  lines.forEach(function(l, i){ x.fillText(l, cx, cy + i*lh); });
+}
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#212124;color:#D4D4D8;border-top:1px solid #3F3F46;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:54px 20px 62px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:750px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:900;letter-spacing:-.01em;color:#FAFAFA;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.95;color:#D4D4D8;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.9;color:#D4D4D8;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:800;color:#FACC15}
+.tk-guide code{background:#18181B;border:1px solid #3F3F46;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#FAFAFA}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #3F3F46}
+.tk-guide dt{font-size:14.5px;font-weight:800;color:#FAFAFA;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.9;color:#D4D4D8;margin:6px 0 18px;padding-bottom:18px;
+  border-bottom:1px solid #3F3F46;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:17px 19px;background:#18181B;border:1px solid #3F3F46;
+  border-radius:13px;font-size:13px;line-height:1.85;color:#8B8B93;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #3F3F46}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#FACC15;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:800;color:#FACC15}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>It cannot judge fashion. It can name the incident.</h2>
+<p>This tool sees exactly <strong>three colours</strong>: top, bottom and shoes. It knows nothing about fit, fabric, occasion, your face, or what is currently fashionable.</p>
+<p>So the result is not advice. It deliberately over-interprets those three colours and assigns the outfit an <strong>unnecessarily specific comedy label</strong>. Good outfit, bad outfit, expensive outfit, borrowed outfit — everyone gets treated with the same mild disrespect.</p>
+
+<h2>First it makes a rough guess at where the outfit is</h2>
+<p>When a photo is loaded, colours that frequently appear around the outer edges are treated as likely background. Pixels that differ from those colours help form a rough outfit box. This is <strong>simple colour-and-position logic, not AI person recognition</strong>.</p>
+<p>Use the four white handles to adjust the top, bottom, left and right edges, and the two yellow handles to divide top, bottom and shoes. Moving handles does not run another scan. Adjust as much as you like, then press <strong>Scan this area</strong> when you are ready.</p>
+
+<h2>50 case names</h2>
+<p>The detector still starts from broad colour situations — fluorescent, hard clash, all-black, bright neutrals, beige, pastel, double denim, nature tones, repeated reds, repeated blues, accent colour, neutrals, close tones and awkward contrast. Inside those groups, hue, saturation and lightness select from <strong>50 different case names</strong>.</p>
+<p>So all-black does not always return the same joke. It may become <strong>Triple Insurance On Playing It Safe</strong>, <strong>Black Has Been Given Full Authority</strong>, or <strong>The Colour Meeting Was Cancelled</strong>. The choice is deterministic from the colour values, so the same photo and crop produce the same result.</p>
+<p>The <strong>Calm Index</strong> is not a style score. It is just a joke number for how quietly the colours coexist. A 90 is not praise and a 10 is not failure.</p>
+
+<h2>Background colours are filtered where possible</h2>
+<p>The scanner builds a small palette from colours repeatedly found near the image edges, then ignores similar pixels inside the selected outfit area before choosing representative colours. This helps when a wall or floor occupies a large part of the photo.</p>
+<p>It is not perfect segmentation. Busy streets, multiple people or patterned backgrounds can still confuse it. In those cases, pulling the handles closer to the actual clothes is the quickest fix.</p>
+
+<h2>Even a perfectly coordinated outfit still gets teased</h2>
+<p>If the palette is calm, the tool will not simply say “Great match.” Cream-on-cream may become a human vanilla latte, all-black may be accused of taking out triple insurance on playing it safe, and one-tone dressing may become a unanimous colour meeting.</p>
+<p>The success condition here is not accurate fashion consulting. It is someone reading the result and saying, “What on earth is this?” before laughing.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Is my photo uploaded anywhere?</dt><dd>No. Photo processing and colour extraction happen in your browser. The page may load external style or script resources, but the photo you choose is not uploaded to a server by this tool.</dd>
+<dt>Does moving a handle rescan the photo?</dt><dd>No. The handles only change the selected area. Press “Scan this area” when you actually want the colours recalculated.</dd>
+<dt>Why is the verdict so ridiculous?</dt><dd>That is the intended behaviour. It takes three colours and invents an incident name. It is not measuring whether the outfit is actually good.</dd>
+<dt>Does a high Calm Index mean I dress well?</dt><dd>No. It means the colours are relatively similar or subdued. A low number means they have more to argue about. Neither one is a fashion grade.</dd>
+<dt>Can I use a friend’s photo?</dt><dd>Only with their agreement, and ideally while laughing together. This was not built to attack anyone’s appearance or clothes.</dd>
+</dl>
+
+<p class="tk-guide-note">This is an entertainment tool that turns colour combinations into jokes. The verdict is not an assessment of fashion, appearance or taste. Photo processing happens in the browser; if you use somebody else’s photo, get their permission first.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/entertainment/aggro-match_en.html">Aggro Match</a></li>
+<li><a href="https://mnledu.com/en/productivity/palette-picker_en.html">Brand Palette Picker</a></li>
+<li><a href="https://mnledu.com/en/design-media/thumb-mockup_en.html">Thumbnail &amp; Shorts Preview</a></li>
+<li><a href="https://mnledu.com/en/productivity/image-studio_en.html">Photo Studio</a></li>
+<li><a href="https://mnledu.com/en/design-media/uploader-toolkit_en.html">Uploader Toolkit</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio_en.html">QR Code Generator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/entertainment/fashion-detector_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/entertainment/fashion-detector_en.html";
+  var TK_SHARE_TITLE = "Fashion Police";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">최초 등록</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+</body>
+</html>

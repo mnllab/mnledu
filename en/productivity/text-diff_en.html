@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>Secure Text Diff Checker · Compare Documents Safely | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Put an original and a revised contract side by side and see exactly what changed. Compare by word or by character, and filter out differences in spacing or letter case. Nothing is ever uploaded." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/text-diff_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/text-diff_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/text-diff_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/text-diff_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/text-diff_en.html" />
+<meta property="og:title" content="Secure Text Diff Checker · Compare Documents Safely | TOOLKIT" />
+<meta property="og:description" content="See exactly what changed between an original and a revised document. Nothing is ever uploaded." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Secure Text Diff Checker | TOOLKIT" />
+<meta name="twitter:description" content="See exactly what changed between two documents, entirely in your browser." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Secure Text Diff Checker",
+ "description": "Compares two documents and highlights what changed, entirely inside the browser.",
+ "url": "https://mnledu.com/en/productivity/text-diff_en.html",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "Secure Text Diff Checker", "item": "https://mnledu.com/en/productivity/text-diff_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is the text I paste in sent anywhere?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. The comparison itself runs inside your browser, so the tool works with the connection switched off. Close the page and what you pasted goes with it." }
+  },
+  {
+   "@type": "Question",
+   "name": "When should I use word rather than character comparison?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Word comparison reads better when whole sentences or clauses have been rewritten, which is the usual case in a redlined contract. Character comparison catches a single letter \u2014 a typo, or a changed suffix. It breaks the display into small pieces, so it suits a close look at one clause rather than a whole document." }
+  },
+  {
+   "@type": "Question",
+   "name": "Why would I ignore whitespace?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Text copied out of a word processor and text copied out of a PDF carry different spacing and indentation. Compared literally, sentences that are actually identical light up red across the whole document. Ignoring whitespace skips that noise and leaves the real changes visible." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I jump between the changes?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Previous and next buttons step through the changes one at a time, and the counter shows where you are. In side-by-side view the two panes scroll together, so the matching passage stays opposite." }
+  },
+  {
+   "@type": "Question",
+   "name": "How do I keep a record of the result?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Copy summary puts the removals and additions on your clipboard as paired entries. Print produces a report with the highlighting intact, which you can save as a PDF and attach for approval." }
+  },
+  {
+   "@type": "Question",
+   "name": "How long a document can it handle?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Ordinary contracts and reports are no trouble. Character comparison on a very long document can get slow, so scan it by word first and then pull out just the clause you need for a character-level look." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.1.0/diff.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#0F172A; --accent2:#1E293B;
+    --delbg:#FEE2E2; --delfg:#DC2626;
+    --addbg:#DCFCE7; --addfg:#16A34A;
+    --focus:#FDE68A;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1400px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:600;padding:10px 14px;cursor:pointer;min-height:44px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:#CBD5E1;background:#F8FAFC}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+  .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px;
+    letter-spacing:.02em}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  textarea{width:100%;min-height:230px;border:1px solid var(--line);border-radius:11px;padding:13px;
+    font-size:14px;line-height:1.85;font-family:ui-monospace,Consolas,monospace;color:var(--ink);
+    outline:none;resize:vertical;background:#fff}
+  textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,23,42,.08)}
+  textarea::placeholder{color:#CBD5E1}
+  .chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:8px 0;margin-right:20px}
+  .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+  .rad{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:8px 0;margin-right:20px}
+  .rad input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+
+  /* ---------- 결과 ---------- */
+  #out{display:none}
+  #out.on{display:block}
+  .panes{display:grid;gap:14px;grid-template-columns:1fr}
+  .panes.side{grid-template-columns:1fr}
+  @media(min-width:1000px){.panes.side{grid-template-columns:1fr 1fr}}
+  .pane{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  .ph{background:var(--line2);padding:10px 14px;font-size:12.5px;font-weight:700;color:var(--ink2);
+    border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+  .pb{padding:16px;overflow-y:auto;max-height:62vh;font-size:14.5px;line-height:2;
+    white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Consolas,monospace}
+
+  del{background:var(--delbg);color:var(--delfg);text-decoration:line-through;
+    border-radius:3px;padding:1px 2px}
+  ins{background:var(--addbg);color:var(--addfg);font-weight:700;text-decoration:none;
+    border-radius:3px;padding:1px 2px}
+  del.hit, ins.hit{outline:2px solid #B45309;outline-offset:1px;background:var(--focus)}
+  .gap{opacity:.28}
+
+  #stat{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;padding:13px 16px;
+    background:var(--line2);border-radius:11px;margin-bottom:14px;font-size:13.5px}
+  #stat b{font-size:17px;font-weight:800}
+  #stat .g{color:var(--addfg)}
+  #stat .r{color:var(--delfg)}
+  #same{display:none;padding:26px 20px;text-align:center;background:#F0FDF4;border:1px solid #BBF7D0;
+    border-radius:12px;color:#15803D;font-size:15px;line-height:1.85;margin-bottom:14px}
+  #same.on{display:block}
+
+  #nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  #navPos{font-size:13px;color:var(--muted);min-width:74px}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  .err{font-size:13px;color:#B91C1C;margin:8px 0 0;display:none}
+  .err.on{display:block}
+
+  .sec{padding:32px 0}
+  .sec h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
+  .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+
+  /* ---------- 인쇄 ---------- */
+  @media print{
+    body{background:#fff}
+    .noprint{display:none !important}
+    .wrap{max-width:none;padding:0}
+    #printHead{display:block !important;margin-bottom:18px;padding-bottom:14px;
+      border-bottom:2px solid #0F172A}
+    .pane{break-inside:auto;border:1px solid #94A3B8}
+    .pb{max-height:none;overflow:visible;font-size:11pt;line-height:1.75}
+    .panes.side{grid-template-columns:1fr 1fr}
+    .ph{background:#F1F5F9 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    del{background:#FEE2E2 !important;color:#B91C1C !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    ins{background:#DCFCE7 !important;color:#15803D !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    del.hit, ins.hit{outline:none;background:inherit}
+    #stat{background:#F1F5F9 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    @page{margin:14mm}
+  }
+  #printHead{display:none}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap noprint" style="padding:44px 18px 8px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px">Secure Text Diff</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Secure Text Diff Checker</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:740px">
+    Paste the original and the revision and it points out exactly what moved. Nothing is <b>ever uploaded</b> —
+    the comparison happens in this browser, so confidential drafts are safe to work with.
+  </p>
+</header>
+
+<!-- 인쇄용 머리말 -->
+<div class="wrap" id="printHead">
+  <h2 style="font-size:18pt;font-weight:800;margin:0 0 6px">Document Comparison</h2>
+  <p class="mono" style="font-size:10pt;color:#475569;margin:0" id="printMeta"></p>
+</div>
+
+<section class="wrap noprint" style="padding-top:20px">
+  <div class="panes side">
+    <div>
+      <label class="lab" for="ta">📄 Original (before)</label>
+      <textarea id="ta" placeholder="Paste the original document"></textarea>
+      <p class="hint mono" id="taInfo"></p>
+    </div>
+    <div>
+      <label class="lab" for="tb">📝 Revised (after)</label>
+      <textarea id="tb" placeholder="Paste the revised document"></textarea>
+      <p class="hint mono" id="tbInfo"></p>
+    </div>
+  </div>
+
+  <div class="card" style="padding:18px;margin-top:16px">
+    <div style="display:grid;gap:16px;grid-template-columns:1fr">
+      <div>
+        <p class="lab" style="margin-bottom:4px">🔍 Compare by</p>
+        <label class="rad"><input type="radio" name="mode" value="word" checked><span>Word <span style="color:var(--muted);font-size:12.5px">· rewritten sentences</span></span></label>
+        <label class="rad"><input type="radio" name="mode" value="char"><span>Character <span style="color:var(--muted);font-size:12.5px">· typos and single letters</span></span></label>
+      </div>
+      <div style="border-top:1px solid var(--line2);padding-top:14px">
+        <p class="lab" style="margin-bottom:4px">⚙️ Ignore</p>
+        <label class="chk"><input type="checkbox" id="igSpace" checked><span>Spacing and indentation</span></label>
+        <label class="chk"><input type="checkbox" id="igNewline"><span>Line breaks</span></label>
+        <label class="chk"><input type="checkbox" id="igCase"><span>Letter case</span></label>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:9px;grid-template-columns:1fr;margin-top:16px">
+      <button class="btn p" id="runBtn" style="min-height:52px;font-size:15.5px">🔍 Compare</button>
+      <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr">
+        <button class="btn" id="swapBtn">⇅ Swap sides</button>
+        <button class="btn" id="clearBtn">Clear all</button>
+      </div>
+    </div>
+    <p class="err" id="err" role="alert"></p>
+  </div>
+</section>
+
+<div id="out">
+  <section class="wrap sec" style="padding-bottom:0">
+    <div id="same">✅ The documents match. Nothing differs under the conditions you set.</div>
+
+    <div id="stat">
+      <span><b id="stBlocks">0</b> changes</span>
+      <span class="g">+<b id="stAdd">0</b> chars</span>
+      <span class="r">−<b id="stDel">0</b> chars</span>
+      <span style="color:var(--muted)" id="stMode"></span>
+    </div>
+
+    <div class="noprint" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div id="nav">
+        <button class="btn sm" id="prevBtn">▲ Previous</button>
+        <button class="btn sm" id="nextBtn">▼ Next</button>
+        <span id="navPos" class="mono"></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn sm on" id="viewSide">↔️ Side by side</button>
+        <button class="btn sm" id="viewInline">↕️ Inline</button>
+      </div>
+    </div>
+
+    <div class="panes side" id="panes">
+      <div class="pane" id="paneA">
+        <div class="ph"><span>📄 Original (before)</span><span class="r mono" id="hdrDel"></span></div>
+        <div class="pb" id="bodyA"></div>
+      </div>
+      <div class="pane" id="paneB">
+        <div class="ph"><span>📝 Revised (after)</span><span class="g mono" id="hdrAdd"></span></div>
+        <div class="pb" id="bodyB"></div>
+      </div>
+      <div class="pane" id="paneU" style="display:none">
+        <div class="ph"><span>↕️ Inline</span><span class="mono" id="hdrU"></span></div>
+        <div class="pb" id="bodyU"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sec noprint" style="padding-top:22px">
+    <h2>📤 Export</h2>
+    <p class="sub">Attach it for approval, or send it on by email.</p>
+    <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr">
+      <button class="btn p" id="copyBtn">📋 Copy summary</button>
+      <button class="btn" id="printBtn">🖨️ Print / PDF</button>
+    </div>
+    <div class="card" style="padding:18px;margin-top:14px">
+      <p class="lab" style="margin-bottom:10px">Summary preview</p>
+      <pre id="sumPv" class="mono" style="margin:0;font-size:13px;line-height:1.9;color:var(--ink2);white-space:pre-wrap;word-break:break-word;max-height:260px;overflow-y:auto"></pre>
+    </div>
+  </section>
+</div>
+
+<footer class="wrap noprint" style="padding:28px 18px 46px;border-top:1px solid var(--line);margin-top:30px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Every comparison runs inside your browser. Nothing you paste is sent to any server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2400);
+}
+function showErr(m){ var e = $('err'); e.textContent = m; e.classList.add('on'); }
+function clearErr(){ $('err').classList.remove('on'); }
+
+var parts = [];        /* jsdiff 결과 */
+var hits = [];         /* 변경 부분 요소 목록 */
+var hitIdx = -1;
+var sideView = true;
+
+/* ---------- 전처리 ----------
+   jsdiff 의 옵션만으로는 글자 단위 비교에서 공백과 줄바꿈이 걸러지지 않는다.
+   그래서 비교 전에 텍스트를 손질해 두 방식의 결과를 맞춘다 */
+function prep(text, o){
+  var t = String(text == null ? '' : text);
+  t = t.replace(/\r\n/g, '\n');
+  if (o.ignoreNewline) t = t.replace(/\n+/g, ' ');
+  if (o.ignoreSpace) t = t.replace(/[ \t]+/g, ' ').replace(/^[ \t]+|[ \t]+$/gm, '');
+  return t;
+}
+
+function readOpts(){
+  var mode = 'word';
+  document.querySelectorAll('input[name=mode]').forEach(function(r){ if (r.checked) mode = r.value; });
+  return {
+    mode: mode,
+    ignoreSpace: $('igSpace').checked,
+    ignoreNewline: $('igNewline').checked,
+    ignoreCase: $('igCase').checked
+  };
+}
+
+function runDiff(a, b, o){
+  var A = prep(a, o), B = prep(b, o);
+  var opt = o.ignoreCase ? { ignoreCase: true } : {};
+  if (o.mode === 'char') return Diff.diffChars(A, B, opt);
+  /* 공백을 무시하지 않을 때는 공백까지 보는 쪽을 쓴다.
+     diffWords 는 원래 공백 차이를 무시하기 때문이다 */
+  return o.ignoreSpace ? Diff.diffWords(A, B, opt) : Diff.diffWordsWithSpace(A, B, opt);
+}
+
+/* ---------- 그리기 ---------- */
+function renderPanes(){
+  var A = [], B = [], U = [], n = 0;
+  parts.forEach(function(p){
+    var v = esc(p.value);
+    if (p.removed){
+      var id = 'd' + (n++);
+      A.push('<del data-h="' + id + '">' + v + '</del>');
+      B.push('<span class="gap"></span>');
+      U.push('<del data-h="u' + id + '">' + v + '</del>');
+    } else if (p.added){
+      var id2 = 'a' + (n++);
+      A.push('<span class="gap"></span>');
+      B.push('<ins data-h="' + id2 + '">' + v + '</ins>');
+      U.push('<ins data-h="u' + id2 + '">' + v + '</ins>');
+    } else {
+      A.push(v); B.push(v); U.push(v);
+    }
+  });
+  $('bodyA').innerHTML = A.join('');
+  $('bodyB').innerHTML = B.join('');
+  $('bodyU').innerHTML = U.join('');
+  collectHits();
+}
+function collectHits(){
+  var box = sideView ? $('panes') : $('bodyU');
+  hits = Array.prototype.slice.call(box.querySelectorAll('del[data-h], ins[data-h]'))
+    .filter(function(el){ return el.offsetParent !== null || !sideView; });
+  if (sideView){
+    /* 좌우 보기에서는 한 쌍이 두 번 세지 않도록 순서대로 모은다 */
+    hits = Array.prototype.slice.call(document.querySelectorAll('#paneA del[data-h], #paneB ins[data-h]'));
+    hits.sort(function(x, y){
+      return (+String(x.dataset.h).slice(1)) - (+String(y.dataset.h).slice(1));
+    });
+  }
+  hitIdx = -1;
+  updateNav();
+}
+function updateNav(){
+  var n = hits.length;
+  $('navPos').textContent = n ? ((hitIdx < 0 ? 0 : hitIdx + 1) + ' / ' + n) : '0 / 0';
+  $('prevBtn').disabled = !n;
+  $('nextBtn').disabled = !n;
+}
+function gotoHit(dir){
+  if (!hits.length) return;
+  hits.forEach(function(el){ el.classList.remove('hit'); });
+  hitIdx += dir;
+  if (hitIdx < 0) hitIdx = hits.length - 1;
+  if (hitIdx >= hits.length) hitIdx = 0;
+  var el = hits[hitIdx];
+  el.classList.add('hit');
+  /* 짝이 되는 반대쪽도 함께 표시한다 */
+  if (sideView){
+    var mate = document.querySelector('[data-h="' + el.dataset.h + '"]');
+    if (mate && mate !== el) mate.classList.add('hit');
+  }
+  scrollTo(el, 'center');
+  updateNav();
+}
+
+/* 브라우저마다 지원 범위가 달라 단계적으로 시도한다 */
+function scrollTo(el, block){
+  if (!el || typeof el.scrollIntoView !== 'function') return;
+  try { el.scrollIntoView({ behavior:'smooth', block: block }); return; } catch(e){}
+  try { el.scrollIntoView(true); } catch(e){}
+}
+
+/* ---------- 스크롤 동기화 ---------- */
+var syncing = false;
+function linkScroll(a, b){
+  function on(src, dst){
+    return function(){
+      if (syncing) return;
+      syncing = true;
+      var max = src.scrollHeight - src.clientHeight;
+      var ratio = max > 0 ? src.scrollTop / max : 0;
+      var dmax = dst.scrollHeight - dst.clientHeight;
+      dst.scrollTop = ratio * dmax;
+      requestAnimationFrame(function(){ syncing = false; });
+    };
+  }
+  a.addEventListener('scroll', on(a, b), { passive:true });
+  b.addEventListener('scroll', on(b, a), { passive:true });
+}
+linkScroll($('bodyA'), $('bodyB'));
+
+/* ---------- 실행 ---------- */
+function run(){
+  clearErr();
+  if (typeof Diff === 'undefined'){
+    showErr('The comparison engine did not load. Check your connection and refresh.');
+    return;
+  }
+  var a = $('ta').value, b = $('tb').value;
+  if (!a.trim() && !b.trim()){ showErr('Paste a document into both boxes.'); return; }
+  if (!a.trim()){ showErr('The original box is empty.'); return; }
+  if (!b.trim()){ showErr('The revised box is empty.'); return; }
+
+  var o = readOpts();
+  var big = Math.max(a.length, b.length);
+  if (o.mode === 'char' && big > 120000){
+    showErr('That is long for a character-level comparison. Try word level first, or split it into clauses.');
+    return;
+  }
+  if (big > 800000){ showErr('The document is too long. Please compare it in sections.'); return; }
+
+  try {
+    parts = runDiff(a, b, o);
+  } catch(e){
+    console.error(e);
+    showErr('Something went wrong during the comparison. Try splitting the document.');
+    return;
+  }
+
+  var add = 0, del = 0, blocks = 0;
+  parts.forEach(function(p){
+    if (p.added){ add += p.value.length; blocks++; }
+    else if (p.removed){ del += p.value.length; blocks++; }
+  });
+  $('stBlocks').textContent = blocks;
+  $('stAdd').textContent = add.toLocaleString('en-US');
+  $('stDel').textContent = del.toLocaleString('en-US');
+  $('hdrDel').textContent = del ? '\u2212' + del.toLocaleString('en-US') : '';
+  $('hdrAdd').textContent = add ? '+' + add.toLocaleString('en-US') : '';
+  $('hdrU').textContent = blocks ? blocks + ' changes' : '';
+
+  var names = [];
+  names.push(o.mode === 'char' ? 'character level' : 'word level');
+  if (o.ignoreSpace) names.push('spacing ignored');
+  if (o.ignoreNewline) names.push('line breaks ignored');
+  if (o.ignoreCase) names.push('case ignored');
+  $('stMode').textContent = names.join(' · ');
+
+  $('same').classList.toggle('on', blocks === 0);
+  renderPanes();
+  $('sumPv').textContent = summaryText();
+  $('printMeta').textContent = new Date().toLocaleString('en-US') +
+    ' \u00B7 ' + names.join(' \u00B7 ') + ' \u00B7 ' + blocks + ' changes';
+  $('out').classList.add('on');
+
+  var el = $('out');
+  setTimeout(function(){
+    scrollTo(el, 'start');
+  }, 40);
+  toast(blocks ? blocks + ' change(s) found' : 'No differences found');
+}
+
+/* ---------- 요약 ---------- */
+function summaryText(){
+  var o = readOpts();
+  var L = [];
+  L.push('\uD83D\uDCCB Document comparison summary');
+  L.push(new Date().toLocaleString('en-US'));
+  var names = [o.mode === 'char' ? 'character level' : 'word level'];
+  if (o.ignoreSpace) names.push('spacing ignored');
+  if (o.ignoreNewline) names.push('line breaks ignored');
+  if (o.ignoreCase) names.push('case ignored');
+  L.push('Settings \u00B7 ' + names.join(' \u00B7 '));
+  L.push('');
+
+  /* 삭제와 추가가 이어 붙은 것은 한 쌍으로 묶어 보여 준다 */
+  var no = 0, i = 0;
+  while (i < parts.length){
+    var p = parts[i];
+    if (!p.added && !p.removed){ i++; continue; }
+    var nxt = parts[i+1];
+    if (p.removed && nxt && nxt.added){
+      no++;
+      L.push(no + '. Changed');
+      L.push('   [-] removed: ' + one(p.value));
+      L.push('   [+] added:   ' + one(nxt.value));
+      i += 2;
+    } else if (p.removed){
+      no++;
+      L.push(no + '. Removed');
+      L.push('   [-] ' + one(p.value));
+      i++;
+    } else {
+      no++;
+      L.push(no + '. Added');
+      L.push('   [+] ' + one(p.value));
+      i++;
+    }
+    L.push('');
+  }
+  if (!no) L.push('No differences were found between the two documents.');
+  return L.join('\n');
+}
+function one(s){
+  var t = String(s).replace(/\s+/g, ' ').trim();
+  return t.length > 160 ? t.slice(0, 160) + ' \u2026' : (t || '(blank)');
+}
+
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+
+/* ---------- 이벤트 ---------- */
+$('runBtn').addEventListener('click', run);
+$('prevBtn').addEventListener('click', function(){ gotoHit(-1); });
+$('nextBtn').addEventListener('click', function(){ gotoHit(1); });
+
+$('viewSide').addEventListener('click', function(){
+  sideView = true;
+  $('panes').classList.add('side');
+  $('paneA').style.display = ''; $('paneB').style.display = '';
+  $('paneU').style.display = 'none';
+  this.classList.add('on'); $('viewInline').classList.remove('on');
+  collectHits();
+});
+$('viewInline').addEventListener('click', function(){
+  sideView = false;
+  $('panes').classList.remove('side');
+  $('paneA').style.display = 'none'; $('paneB').style.display = 'none';
+  $('paneU').style.display = '';
+  this.classList.add('on'); $('viewSide').classList.remove('on');
+  collectHits();
+});
+
+$('swapBtn').addEventListener('click', function(){
+  var t = $('ta').value;
+  $('ta').value = $('tb').value;
+  $('tb').value = t;
+  updateInfo();
+  if ($('out').classList.contains('on')) run();
+  toast('Sides swapped');
+});
+$('clearBtn').addEventListener('click', function(){
+  if (!$('ta').value && !$('tb').value){ toast('Already empty'); return; }
+  if (!window.confirm('Clear both boxes?')) return;
+  $('ta').value = ''; $('tb').value = '';
+  $('out').classList.remove('on');
+  clearErr(); updateInfo();
+  toast('Cleared');
+});
+$('copyBtn').addEventListener('click', function(){
+  copyText(summaryText(), function(ok){
+    toast(ok ? 'Summary copied' : 'Copy was blocked');
+  });
+});
+$('printBtn').addEventListener('click', function(){
+  try { window.print(); } catch(e){ toast('Printing was blocked'); }
+});
+
+function updateInfo(){
+  [['ta','taInfo'],['tb','tbInfo']].forEach(function(p){
+    var v = $(p[0]).value;
+    $(p[1]).textContent = v ? (v.length.toLocaleString('en-US') + ' chars \u00B7 ' +
+      v.split(/\n/).length.toLocaleString('en-US') + ' lines') : '';
+  });
+}
+['ta','tb'].forEach(function(id){
+  $(id).addEventListener('input', function(){ updateInfo(); clearErr(); });
+});
+/* 조건을 바꾸면 곧바로 다시 대조한다 */
+document.querySelectorAll('input[name=mode], #igSpace, #igNewline, #igCase').forEach(function(el){
+  el.addEventListener('change', function(){
+    if ($('out').classList.contains('on')) run();
+  });
+});
+document.addEventListener('keydown', function(ev){
+  if (/TEXTAREA|INPUT/.test((ev.target && ev.target.tagName) || '')) return;
+  if (!$('out').classList.contains('on')) return;
+  if (ev.key === 'ArrowDown' || ev.key === 'n'){ ev.preventDefault(); gotoHit(1); }
+  else if (ev.key === 'ArrowUp' || ev.key === 'p'){ ev.preventDefault(); gotoHit(-1); }
+});
+
+updateInfo();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#0F172A}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#0F172A;text-decoration:none;font-weight:600}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#0F172A}
+</style>
+<section class="tk-guide noprint"><div class="tk-guide-inner">
+<h2>A revision that does not say what changed</h2>
+<p>The other side sends the contract back, reviewed. Nothing marks what they touched. You put the two files up next to each other and work through clause by clause, and somewhere in there you miss the line that matters — the one where payment moved from thirty days to sixty.</p>
+<p>This tool does that comparison for you. Paste the original and the revision and removals show in red, additions in green, with buttons to step from one change to the next.</p>
+
+<h2>How confidential drafts are handled</h2>
+<p>Uploading a contract or an internal document to somewhere on the internet is a problem in itself, because the terms under negotiation go with it.</p>
+<p>Here the <strong>comparison runs inside your browser.</strong> Nothing is sent anywhere, so the tool works with the connection switched off. Close the page and what you pasted goes with it.</p>
+
+<h2>Choosing a comparison level</h2><dl>
+<dt>Word</dt><dd>The default. Good for seeing where a sentence or a clause was rewritten, since the highlighting groups into readable chunks.</dd>
+<dt>Character</dt><dd>Catches a single letter — a typo, a changed suffix, a digit. The display breaks into small pieces, so it suits one clause at a time rather than a whole document.</dd>
+</dl>
+
+<h2>Why filter out differences</h2>
+<p>Text copied from a word processor and text copied from a PDF carry different spacing and line breaks. Compared literally, <strong>sentences that are actually identical light up red</strong> and bury the real changes.</p>
+<ul>
+<li><strong>Spacing and indentation</strong> — on by default. Needed whenever the two documents came out of different tools.</li>
+<li><strong>Line breaks</strong> — turn on when paragraphs were reflowed. It looks at content only.</li>
+<li><strong>Letter case</strong> — for English contracts where only the capitalisation differs.</li>
+</ul>
+<p>Changing a setting re-runs the comparison immediately, so you can toggle them and watch the difference.</p>
+
+<h2>How to use it</h2><ol>
+<li>Paste the <strong>original</strong> on the left and the <strong>revision</strong> on the right.</li>
+<li>Pick a comparison level, choose what to ignore, then press <strong>Compare</strong>.</li>
+<li>Step through with <strong>Next</strong>. Arrow keys work too.</li>
+<li>Switch to <strong>Inline</strong> to read it as one continuous document.</li>
+<li><strong>Copy summary</strong> for an email, or <strong>Print</strong> to make a PDF for approval.</li>
+</ol>
+<p>In side-by-side view the panes scroll together, so scrolling one keeps the matching passage opposite.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Is the text I paste in sent anywhere?</dt><dd>No. The comparison itself runs inside your browser, so the tool works with the connection switched off. Close the page and what you pasted goes with it.</dd>
+<dt>When should I use word rather than character comparison?</dt><dd>Word comparison reads better when whole sentences or clauses have been rewritten, which is the usual case in a redlined contract. Character comparison catches a single letter — a typo, or a changed suffix. It breaks the display into small pieces, so it suits a close look at one clause rather than a whole document.</dd>
+<dt>Why would I ignore whitespace?</dt><dd>Text copied out of a word processor and text copied out of a PDF carry different spacing and indentation. Compared literally, sentences that are actually identical light up red across the whole document. Ignoring whitespace skips that noise and leaves the real changes visible.</dd>
+<dt>Can I jump between the changes?</dt><dd>Previous and next buttons step through the changes one at a time, and the counter shows where you are. In side-by-side view the two panes scroll together, so the matching passage stays opposite.</dd>
+<dt>How do I keep a record of the result?</dt><dd>Copy summary puts the removals and additions on your clipboard as paired entries. Print produces a report with the highlighting intact, which you can save as a PDF and attach for approval.</dd>
+<dt>How long a document can it handle?</dt><dd>Ordinary contracts and reports are no trouble. Character comparison on a very long document can get slow, so scan it by word first and then pull out just the clause you need for a character-level look.</dd>
+</dl>
+
+<p class="tk-guide-note">Every comparison runs inside your browser and nothing you paste is transmitted to any server. The tool finds textual differences mechanically; it does not judge what a changed clause means in legal terms. Decisions about contract content should be confirmed with the responsible party or a legal professional.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/receipt-to-excel_en.html">Receipt to Expense Sheet</a></li>
+<li><a href="https://mnledu.com/en/productivity/roster-maker_en.html">Fair Roster Maker</a></li>
+<li><a href="https://mnledu.com/en/productivity/pdf-signature_en.html">PDF Signature Stamp</a></li>
+<li><a href="https://mnledu.com/en/productivity/meeting-minutes_en.html">Smart Meeting Minutes</a></li>
+<li><a href="https://mnledu.com/en/productivity/image-studio_en.html">Photo Studio</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/text-diff_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/text-diff_en.html";
+  var TK_SHARE_TITLE = "Secure Text Diff Checker";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

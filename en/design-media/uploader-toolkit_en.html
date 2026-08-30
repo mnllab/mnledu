@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>Uploader Toolkit · Date Variables and Description Builder | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Pick a date and your title and filename are built from your own rules. Save the blocks of text you reuse and tick the ones this video needs. Week numbers and variables fill themselves in." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/design-media/uploader-toolkit_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/design-media/uploader-toolkit_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/uploader-toolkit_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/design-media/uploader-toolkit_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/design-media/uploader-toolkit_en.html" />
+<meta property="og:title" content="Uploader Toolkit · Date Variables and Description Builder | TOOLKIT" />
+<meta property="og:description" content="Build titles and filenames from date variables, and assemble descriptions from saved blocks." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Uploader Toolkit | TOOLKIT" />
+<meta name="twitter:description" content="Build titles and filenames from date variables, and assemble descriptions from saved blocks." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Uploader Toolkit",
+ "description": "Builds titles and filenames from date variables and assembles video descriptions from saved text blocks.",
+ "url": "https://mnledu.com/en/design-media/uploader-toolkit_en.html",
+ "applicationCategory": "MultimediaApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "CREATIVE", "item": "https://mnledu.com/en/#creative" },
+  { "@type": "ListItem", "position": 3, "name": "Uploader Toolkit", "item": "https://mnledu.com/en/design-media/uploader-toolkit_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "How is the week number calculated?",
+   "acceptedAnswer": { "@type": "Answer", "text": "There are three options. The default matches the row you would count on a calendar starting Monday; there is also a Sunday-start version and a simple one that divides the day by seven. The same date gives different answers under each, so set it to whatever your channel already uses." }
+  },
+  {
+   "@type": "Question",
+   "name": "Which variables are available?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Year, month and day in two or four digits, plus week number, weekday and quarter. The variable list shows what each one resolves to for the date you picked, and clicking one inserts it into the field you were last editing." }
+  },
+  {
+   "@type": "Question",
+   "name": "Will my saved settings persist?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Templates and text blocks save to this browser on every edit, so closing the tab or refreshing leaves them intact. They will not appear on another device and are lost if you clear browser storage, so use the export button to keep a file." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I use variables in the description too?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Yes. Put them anywhere in a text block or in the summary and they resolve against the date you picked. For a recurring series where only the date changes, set it up once and just pick the date each week." }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens to characters filenames cannot use?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Slashes, question marks and the like are replaced with underscores. Titles can use them freely, which is why keeping separate rules for the title and the filename is convenient." }
+  },
+  {
+   "@type": "Question",
+   "name": "Is there a length limit on the description?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Five thousand characters. The current count is shown and you are warned when it is exceeded. Only about the first three lines show before the reader expands it, so put the important things near the top." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9; --sub:#F8FAFC;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#0EA5E9; --accent2:#0284C7; --soft:#F0F9FF;
+    --ok:#059669; --warn:#D97706;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:600;padding:10px 14px;cursor:pointer;min-height:44px;
+    font-family:inherit;white-space:nowrap;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+  .btn.dan{color:#B91C1C;border-color:#FECACA}
+  .btn.dan:hover:not(:disabled){background:#FEF2F2;border-color:#FCA5A5}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  .fld{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-size:14.5px;color:var(--ink);outline:none;background:#fff;min-height:46px;font-family:inherit}
+  .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,.15)}
+  .fld::placeholder{color:#CBD5E1}
+  .fld.mono{font-family:ui-monospace,Consolas,monospace;font-size:14px}
+  textarea.fld{min-height:110px;resize:vertical;line-height:1.8}
+  select.fld{appearance:none;cursor:pointer;padding-right:36px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 19px) 53%,calc(100% - 14px) 53%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+  /* ---------- 변수 칩 ---------- */
+  .vars{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+  .vchip{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;
+    font-size:12px;cursor:pointer;font-family:ui-monospace,Consolas,monospace;
+    color:var(--ink2);transition:border-color .12s,background .12s;line-height:1.5}
+  .vchip:hover{border-color:var(--accent);background:var(--soft)}
+  .vchip b{color:var(--accent2);font-weight:800}
+  .vchip i{font-style:normal;color:var(--muted);margin-left:5px}
+
+  /* ---------- 결과칸 ---------- */
+  .outRow{display:grid;gap:8px;grid-template-columns:1fr auto;align-items:center;
+    background:var(--soft);border:1px solid #BAE6FD;border-radius:10px;padding:11px 13px;margin-top:8px}
+  .outRow .v{font-family:ui-monospace,Consolas,monospace;font-size:14.5px;font-weight:700;
+    color:var(--ink);word-break:break-all;line-height:1.6}
+  .outRow .v.empty{color:var(--muted);font-weight:400}
+
+  /* ---------- 블록 ---------- */
+  .blk{border:1px solid var(--line);border-radius:11px;padding:12px 13px;background:#fff;
+    margin-bottom:9px;transition:border-color .12s}
+  .blk.on{border-color:var(--accent);background:var(--soft)}
+  .blkTop{display:flex;align-items:center;gap:9px}
+  .blkTop input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+  .blkTop .nm{font-size:14px;font-weight:700;flex:1;min-width:0;cursor:pointer;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .blkTop .ac{display:flex;gap:4px}
+  .blkTop button{border:0;background:transparent;color:var(--muted);cursor:pointer;
+    font-size:14px;padding:5px 6px;border-radius:6px;line-height:1}
+  .blkTop button:hover{background:var(--line2);color:var(--ink)}
+  .blkPv{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.65;
+    white-space:pre-wrap;word-break:break-word;max-height:52px;overflow:hidden;
+    font-family:ui-monospace,Consolas,monospace}
+  .blkEd{margin-top:10px;display:none}
+  .blkEd.on{display:block}
+
+  #preview{background:#0F172A;color:#E2E8F0;border-radius:12px;padding:16px;
+    font-family:ui-monospace,Consolas,monospace;font-size:13.5px;line-height:1.85;
+    white-space:pre-wrap;word-break:break-word;margin:0;min-height:280px;
+    max-height:60vh;overflow-y:auto;cursor:pointer}
+  #preview.empty{color:#64748B;cursor:default}
+  #pvHead{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    flex-wrap:wrap;margin-bottom:9px}
+  .fold{border-top:1px dashed #334155;margin:2px 0;padding-top:2px;
+    font-size:11px;color:#64748B;text-align:center}
+
+  .split{display:grid;gap:16px;grid-template-columns:1fr}
+  @media(min-width:1000px){.split{grid-template-columns:1fr 1fr;align-items:start}}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:12px 20px;font-size:14px;
+    z-index:90;pointer-events:none;transition:opacity .18s,transform .18s;font-weight:600;
+    max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  .saveDot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22C55E;
+    margin-right:5px;opacity:0;transition:opacity .2s}
+  .saveDot.on{opacity:1}
+  .sec{padding:22px 0}
+  .sec h2{font-size:18px;font-weight:800;margin:0 0 5px}
+  .sec .sub{font-size:13.5px;color:var(--muted);margin:0 0 14px;line-height:1.75}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:42px 18px 6px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin:0 0 10px">Uploader Toolkit</p>
+  <h1 style="font-size:clamp(25px,4.6vw,34px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Uploader Toolkit</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:740px">
+    Pick a date and your title and filename are built from your own rules. Save the text you reuse as
+    blocks and <b>tick only what this video needs</b>.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div class="card" style="padding:20px">
+    <div class="split" style="gap:14px">
+      <div>
+        <label class="lab" for="baseDate">📅 Reference date</label>
+        <div style="display:grid;gap:8px;grid-template-columns:1fr auto auto">
+          <input class="fld" type="date" id="baseDate">
+          <button class="btn" id="todayBtn">Today</button>
+          <button class="btn" id="nextWeekBtn" title="One week later">+7d</button>
+        </div>
+        <p class="hint mono" id="dateInfo"></p>
+      </div>
+      <div>
+        <label class="lab" for="weekMode">🗓 Week numbering</label>
+        <select class="fld" id="weekMode">
+          <option value="mon">Calendar row (Monday start)</option>
+          <option value="sun">Calendar row (Sunday start)</option>
+          <option value="simple">Simple (days 1–7 = week 1)</option>
+        </select>
+        <p class="hint" id="weekInfo"></p>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--line2);margin-top:16px;padding-top:14px">
+      <p class="lab" style="margin-bottom:4px">🔤 Available variables <span style="font-weight:400">— click to insert</span></p>
+      <div class="vars" id="varChips"></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:20px;margin-top:14px">
+    <p class="lab" style="margin-bottom:12px">✏️ Title and filename rules</p>
+
+    <label class="lab" style="font-size:12px" for="tplTitle">Video title</label>
+    <input class="fld mono" id="tplTitle" placeholder="[YYYY] Week [W] — weekly episode" autocomplete="off">
+    <div class="outRow">
+      <span class="v empty" id="outTitle">Enter a rule to see the result</span>
+      <button class="btn sm p" id="copyTitle">📋 Copy</button>
+    </div>
+
+    <label class="lab" style="font-size:12px;margin-top:16px" for="tplFile">Filename</label>
+    <input class="fld mono" id="tplFile" placeholder="[YY][MM][DD]_weekly_w[W].mp4" autocomplete="off">
+    <div class="outRow">
+      <span class="v empty" id="outFile">Enter a rule to see the result</span>
+      <button class="btn sm p" id="copyFile">📋 Copy</button>
+    </div>
+    <p class="hint" id="fileNote"></p>
+  </div>
+</section>
+
+<div class="wrap sec">
+  <div class="split">
+    <!-- Left: builder -->
+    <div>
+      <div class="card" style="padding:20px">
+        <label class="lab" for="summary">📝 This video\u2019s summary <span style="font-weight:400">— goes at the top</span></label>
+        <textarea class="fld" id="summary" placeholder="Describe what this video covers.&#10;Variables like [YYYY] work here too."></textarea>
+      </div>
+
+      <div class="card" style="padding:20px;margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+          <p class="lab" style="margin:0">🧱 Text blocks <span class="mono" id="blkCount" style="color:var(--ink)"></span></p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn sm" id="addBlk">+ Add block</button>
+            <button class="btn sm" id="checkAll">Select all</button>
+            <button class="btn sm" id="uncheckAll">Clear all</button>
+          </div>
+        </div>
+        <div id="blocks"></div>
+        <p class="hint" id="blkHint">Ticked blocks go into the description in this order. Use ↑↓ to rearrange them.</p>
+
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line2)">
+          <button class="btn sm" id="exportBtn">💾 Export settings</button>
+          <button class="btn sm" id="importBtn">📂 Import settings</button>
+          <input type="file" id="importFile" accept=".json" style="display:none">
+          <span style="flex:1"></span>
+          <button class="btn sm dan" id="resetBtn">Reset</button>
+        </div>
+        <p class="hint"><span class="saveDot" id="dot"></span><span id="saveState">Saves itself</span></p>
+      </div>
+    </div>
+
+    <!-- Right: preview -->
+    <div class="card" style="padding:20px;position:sticky;top:16px">
+      <div id="pvHead">
+        <p class="lab" style="margin:0">👁 Description preview <span style="font-weight:400">— click to copy</span></p>
+        <span class="hint mono" style="margin:0" id="pvLen"></span>
+      </div>
+      <pre id="preview" class="empty">Write a summary or tick a block and it appears here.</pre>
+      <div style="display:grid;gap:8px;grid-template-columns:1fr auto;margin-top:12px">
+        <button class="btn p" id="copyDesc">📋 Copy full description</button>
+        <button class="btn" id="txtBtn" title="Save as txt">💾</button>
+      </div>
+      <p class="hint" id="pvNote"></p>
+    </div>
+  </div>
+</div>
+
+<footer class="wrap" style="padding:24px 18px 44px;border-top:1px solid var(--line);margin-top:10px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Your templates and text blocks are stored in this browser only and never sent to any server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2100);
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+
+/* ============================================================
+   Date variables
+   ============================================================ */
+var DAY_KO = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+/* Week-of-month differs by method, so let the reader choose */
+function weekOfMonth(d, mode){
+  var day = d.getDate();
+  if (mode === 'simple') return Math.ceil(day / 7);
+  var first = new Date(d.getFullYear(), d.getMonth(), 1);
+  if (mode === 'sun') return Math.ceil((day + first.getDay()) / 7);
+  var off = (first.getDay() + 6) % 7;      /* treat Monday as 0 */
+  return Math.ceil((day + off) / 7);
+}
+/* Week of the year (ISO 8601) */
+function isoWeek(d){
+  var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  var dn = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - dn);
+  var y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  return Math.ceil(((t - y0) / 86400000 + 1) / 7);
+}
+function p2(n){ return String(n).padStart(2, '0'); }
+
+var VAR_DESC = {
+  'YYYY':'four-digit year', 'YY':'two-digit year', 'MM':'two-digit month', 'M':'month',
+  'DD':'two-digit day', 'D':'day', 'W':'week of month', 'WW':'week of year',
+  'DAY':'weekday', 'Q':'quarter', 'DATE':'year-month-day', 'DOT':'year.month.day'
+};
+function buildVars(){
+  var d = currentDate(), mode = $('weekMode').value;
+  var y = d.getFullYear(), m = d.getMonth() + 1, dd = d.getDate();
+  return {
+    'YYYY': String(y), 'YY': String(y).slice(-2),
+    'MM': p2(m), 'M': String(m),
+    'DD': p2(dd), 'D': String(dd),
+    'W': String(weekOfMonth(d, mode)), 'WW': String(isoWeek(d)),
+    'DAY': DAY_KO[d.getDay()], 'Q': String(Math.floor((m-1)/3) + 1),
+    'DATE': y + '-' + p2(m) + '-' + p2(dd),
+    'DOT': y + '.' + p2(m) + '.' + p2(dd)
+  };
+}
+/* Replace [XXX] with its value; unknown names are left alone */
+function applyVars(text, vars){
+  return String(text || '').replace(/\[([A-Za-z]+)\]/g, function(mm, k){
+    var up = k.toUpperCase();
+    return Object.prototype.hasOwnProperty.call(vars, up) ? vars[up] : mm;
+  });
+}
+/* Replace characters filenames cannot use with underscores */
+var BAD_NAME = /[\\\/:*?"<>|]/g;
+function safeName(s){
+  return String(s || '').replace(BAD_NAME, '_').replace(/\s+/g, ' ').trim();
+}
+function currentDate(){
+  var v = $('baseDate').value;
+  if (!v) return new Date();
+  var p = v.split('-');
+  var d = new Date(+p[0], +p[1] - 1, +p[2]);
+  return isNaN(d.getTime()) ? new Date() : d;
+}
+
+/* ============================================================
+   State
+   ============================================================ */
+var KEY = 'tk-uploader-v1';
+var state = {
+  tplTitle: '', tplFile: '', summary: '', weekMode: 'mon',
+  blocks: [
+    { id: 1, name: 'Greeting', body: 'Hi everyone \u2014 thanks for watching!\nGood to have you here again.', on: true },
+    { id: 2, name: 'Timestamps', body: '00:00 Intro\n01:30 Main section\n08:00 Wrap-up', on: false },
+    { id: 3, name: 'Social links', body: '\uD83D\uDCF7 Instagram: https://instagram.com/\n\uD83D\uDC26 X: https://x.com/', on: false },
+    { id: 4, name: 'Business enquiries', body: '\uD83D\uDCE7 Business: biz@example.com', on: true }
+  ],
+  seq: 5
+};
+var editing = null, saveT = null, storeOk = true;
+
+function load(){
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    var o = JSON.parse(raw);
+    if (o && typeof o === 'object'){
+      ['tplTitle','tplFile','summary','weekMode'].forEach(function(k){
+        if (typeof o[k] === 'string') state[k] = o[k];
+      });
+      if (Array.isArray(o.blocks)) state.blocks = o.blocks.filter(function(b){
+        return b && typeof b.name === 'string';
+      });
+      if (typeof o.seq === 'number') state.seq = o.seq;
+    }
+  } catch(e){
+    storeOk = false;
+    $('saveState').textContent = 'Storage is blocked in this browser';
+  }
+}
+function save(){
+  if (!storeOk) return;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+    var d = $('dot'); d.classList.add('on');
+    $('saveState').textContent = 'Saved \u00B7 ' + new Date().toLocaleTimeString('en-US');
+    setTimeout(function(){ d.classList.remove('on'); }, 900);
+  } catch(e){
+    storeOk = false;
+    $('saveState').textContent = 'Storage is full';
+    toast('Could not save your settings');
+  }
+}
+function saveSoon(){ clearTimeout(saveT); saveT = setTimeout(save, 350); }
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+function renderVars(){
+  var v = buildVars();
+  $('varChips').innerHTML = Object.keys(v).map(function(k){
+    return '<button class="vchip" data-v="[' + k + ']" title="' + esc(VAR_DESC[k] || '') + '">' +
+      '<b>[' + k + ']</b><i>' + esc(v[k]) + '</i></button>';
+  }).join('');
+}
+function renderBlocks(){
+  $('blocks').innerHTML = state.blocks.map(function(b, i){
+    var pv = applyVars(b.body || '', buildVars());
+    return '<div class="blk' + (b.on ? ' on' : '') + '" data-id="' + b.id + '">' +
+      '<div class="blkTop">' +
+        '<input type="checkbox" ' + (b.on ? 'checked' : '') + ' aria-label="use ' + esc(b.name) + '">' +
+        '<span class="nm">' + esc(b.name || '(unnamed)') + '</span>' +
+        '<span class="ac">' +
+          '<button data-a="up" title="move up"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+          '<button data-a="down" title="move down"' + (i === state.blocks.length-1 ? ' disabled' : '') + '>↓</button>' +
+          '<button data-a="edit" title="edit">✎</button>' +
+          '<button data-a="del" title="delete">×</button>' +
+        '</span>' +
+      '</div>' +
+      (pv ? '<div class="blkPv">' + esc(pv) + '</div>' : '') +
+      '<div class="blkEd' + (editing === b.id ? ' on' : '') + '">' +
+        '<input class="fld" data-f="name" value="' + esc(b.name) + '" placeholder="Block name" style="margin-bottom:8px">' +
+        '<textarea class="fld mono" data-f="body" placeholder="Text for this block">' + esc(b.body) + '</textarea>' +
+        '<div style="display:flex;gap:6px;margin-top:8px">' +
+          '<button class="btn sm p" data-a="done">Done</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  $('blkCount').textContent = '(' + state.blocks.filter(function(b){ return b.on; }).length +
+    ' / ' + state.blocks.length + ')';
+}
+
+function assemble(){
+  var v = buildVars();
+  var parts = [];
+  var s = applyVars($('summary').value, v).trim();
+  if (s) parts.push(s);
+  state.blocks.forEach(function(b){
+    if (!b.on) return;
+    var t = applyVars(b.body || '', v).trim();
+    if (t) parts.push(t);          /* skip empty blocks so blank lines do not stack up */
+  });
+  return parts.join('\n\n');
+}
+
+function update(){
+  var d = currentDate(), v = buildVars(), mode = $('weekMode').value;
+  $('dateInfo').textContent = v.DATE + ' (' + v.DAY + ') \u00B7 week ' + v.W + ' of the month \u00B7 week ' + v.WW + ' of the year';
+  var modeTxt = { mon:'The week containing the 1st is week 1 (Monday start)',
+                  sun:'The week containing the 1st is week 1 (Sunday start)',
+                  simple:'Days 1\u20137 are week 1, days 8\u201314 are week 2' };
+  $('weekInfo').textContent = modeTxt[mode] + ' \u00B7 currently week ' + v.W;
+
+  var t = applyVars($('tplTitle').value, v);
+  var f = safeName(applyVars($('tplFile').value, v));
+  var et = $('outTitle'), ef = $('outFile');
+  if (t.trim()){ et.textContent = t; et.classList.remove('empty'); }
+  else { et.textContent = 'Enter a rule to see the result'; et.classList.add('empty'); }
+  if (f.trim()){ ef.textContent = f; ef.classList.remove('empty'); }
+  else { ef.textContent = 'Enter a rule to see the result'; ef.classList.add('empty'); }
+
+  var rawFile = applyVars($('tplFile').value, v);
+  $('fileNote').textContent = (rawFile !== f && rawFile.trim())
+    ? 'Characters filenames cannot use were replaced with underscores.'
+    : '';
+  $('copyTitle').disabled = !t.trim();
+  $('copyFile').disabled = !f.trim();
+
+  var desc = assemble();
+  var pv = $('preview');
+  if (desc){
+    /* Mark where the fold sits before expanding */
+    var lines = desc.split('\n');
+    var head = lines.slice(0, 3).join('\n');
+    var tail = lines.slice(3).join('\n');
+    pv.innerHTML = esc(head) +
+      (tail ? '\n<div class="fold">this much shows before expanding</div>' + esc(tail) : '');
+    pv.classList.remove('empty');
+  } else {
+    pv.textContent = 'Write a summary or tick a block and it appears here.';
+    pv.classList.add('empty');
+  }
+  $('pvLen').textContent = desc.length.toLocaleString('en-US') + ' / 5,000';
+  $('pvNote').textContent = desc.length > 5000
+    ? '\u26A0 Over 5,000 characters \u2014 trim ' + (desc.length - 5000) + '.'
+    : (desc ? 'Only about the first three lines show before expanding, so lead with what matters.' : '');
+  $('copyDesc').disabled = !desc;
+  $('txtBtn').disabled = !desc;
+
+  renderVars();
+  renderBlocks();
+}
+
+/* ============================================================
+   Controls
+   ============================================================ */
+$('varChips').addEventListener('click', function(ev){
+  var c = ev.target.closest('.vchip');
+  if (!c) return;
+  var tag = c.dataset.v;
+  /* Insert into whichever field was last focused */
+  var el = lastField || $('tplTitle');
+  var st = el.selectionStart, en = el.selectionEnd;
+  if (typeof st === 'number'){
+    el.value = el.value.slice(0, st) + tag + el.value.slice(en);
+    el.selectionStart = el.selectionEnd = st + tag.length;
+  } else el.value += tag;
+  el.focus();
+  syncField(el);
+  update();
+});
+var lastField = null;
+['tplTitle','tplFile','summary'].forEach(function(id){
+  var el = $(id);
+  el.addEventListener('focus', function(){ lastField = el; });
+  el.addEventListener('input', function(){ syncField(el); update(); saveSoon(); });
+});
+function syncField(el){
+  if (el.id === 'tplTitle') state.tplTitle = el.value;
+  else if (el.id === 'tplFile') state.tplFile = el.value;
+  else if (el.id === 'summary') state.summary = el.value;
+}
+['baseDate','weekMode'].forEach(function(id){
+  $(id).addEventListener('change', function(){
+    if (id === 'weekMode') state.weekMode = this.value;
+    update(); saveSoon();
+  });
+});
+$('todayBtn').addEventListener('click', function(){
+  var n = new Date();
+  $('baseDate').value = n.getFullYear() + '-' + p2(n.getMonth()+1) + '-' + p2(n.getDate());
+  update(); toast('Set to today');
+});
+$('nextWeekBtn').addEventListener('click', function(){
+  var d = currentDate();
+  d.setDate(d.getDate() + 7);
+  $('baseDate').value = d.getFullYear() + '-' + p2(d.getMonth()+1) + '-' + p2(d.getDate());
+  update(); toast('Moved forward one week');
+});
+
+$('blocks').addEventListener('change', function(ev){
+  var cb = ev.target.closest('input[type=checkbox]');
+  if (cb){
+    var id = +cb.closest('.blk').dataset.id;
+    var b = state.blocks.filter(function(x){ return x.id === id; })[0];
+    if (b){ b.on = cb.checked; update(); saveSoon(); }
+  }
+});
+$('blocks').addEventListener('input', function(ev){
+  var f = ev.target.closest('[data-f]');
+  if (!f) return;
+  var id = +f.closest('.blk').dataset.id;
+  var b = state.blocks.filter(function(x){ return x.id === id; })[0];
+  if (!b) return;
+  b[f.dataset.f] = f.value;
+  /* Do not re-render while editing — it would move the caret */
+  var desc = assemble();
+  $('pvLen').textContent = desc.length.toLocaleString('en-US') + ' / 5,000';
+  var pv = $('preview');
+  if (desc){ pv.textContent = desc; pv.classList.remove('empty'); }
+  saveSoon();
+});
+$('blocks').addEventListener('click', function(ev){
+  var btn = ev.target.closest('[data-a]');
+  if (btn){
+    var wrap = btn.closest('.blk');
+    var id = +wrap.dataset.id;
+    var i = state.blocks.findIndex(function(x){ return x.id === id; });
+    if (i < 0) return;
+    var a = btn.dataset.a;
+    if (a === 'up' && i > 0){
+      var tmp = state.blocks[i-1]; state.blocks[i-1] = state.blocks[i]; state.blocks[i] = tmp;
+    } else if (a === 'down' && i < state.blocks.length-1){
+      var t2 = state.blocks[i+1]; state.blocks[i+1] = state.blocks[i]; state.blocks[i] = t2;
+    } else if (a === 'edit'){
+      editing = (editing === id) ? null : id;
+    } else if (a === 'done'){
+      editing = null;
+    } else if (a === 'del'){
+      if (!window.confirm('Delete the "' + state.blocks[i].name + '" block?')) return;
+      state.blocks.splice(i, 1);
+      if (editing === id) editing = null;
+      toast('Block deleted');
+    }
+    update(); saveSoon();
+    return;
+  }
+  var nm = ev.target.closest('.nm');
+  if (nm){
+    var bid = +nm.closest('.blk').dataset.id;
+    var cb2 = nm.closest('.blk').querySelector('input[type=checkbox]');
+    cb2.checked = !cb2.checked;
+    var bb = state.blocks.filter(function(x){ return x.id === bid; })[0];
+    if (bb){ bb.on = cb2.checked; update(); saveSoon(); }
+  }
+});
+$('addBlk').addEventListener('click', function(){
+  var b = { id: state.seq++, name: 'New block', body: '', on: false };
+  state.blocks.push(b);
+  editing = b.id;
+  update(); saveSoon();
+  var el = $('blocks').querySelector('.blk[data-id="' + b.id + '"] [data-f=name]');
+  if (el){ el.focus(); el.select(); }
+});
+$('checkAll').addEventListener('click', function(){
+  state.blocks.forEach(function(b){ b.on = true; });
+  update(); saveSoon(); toast('All selected');
+});
+$('uncheckAll').addEventListener('click', function(){
+  state.blocks.forEach(function(b){ b.on = false; });
+  update(); saveSoon(); toast('All cleared');
+});
+
+/* ---------- Copy and save ---------- */
+$('copyTitle').addEventListener('click', function(){
+  var t = applyVars($('tplTitle').value, buildVars());
+  if (!t.trim()){ toast('Enter a title rule first'); return; }
+  copyText(t, function(ok){ toast(ok ? 'Title copied' : 'Copy was blocked'); });
+});
+$('copyFile').addEventListener('click', function(){
+  var f = safeName(applyVars($('tplFile').value, buildVars()));
+  if (!f.trim()){ toast('Enter a filename rule first'); return; }
+  copyText(f, function(ok){ toast(ok ? 'Filename copied' : 'Copy was blocked'); });
+});
+$('copyDesc').addEventListener('click', function(){
+  var d = assemble();
+  if (!d){ toast('Nothing to copy'); return; }
+  copyText(d, function(ok){ toast(ok ? 'Description copied' : 'Copy was blocked'); });
+});
+$('preview').addEventListener('click', function(){
+  if (this.classList.contains('empty')) return;
+  copyText(assemble(), function(ok){ if (ok) toast('Copied'); });
+});
+function download(text, name, mime){
+  try {
+    var blob = new Blob(['\ufeff' + text], { type: (mime || 'text/plain') + ';charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+    return true;
+  } catch(e){ return false; }
+}
+$('txtBtn').addEventListener('click', function(){
+  var d = assemble();
+  if (!d){ toast('Nothing to save'); return; }
+  var f = safeName(applyVars($('tplFile').value, buildVars())).replace(/\.[^.]+$/, '') || 'description';
+  toast(download(d, f + '_description.txt') ? 'Saved as a text file' : 'The download was blocked');
+});
+$('exportBtn').addEventListener('click', function(){
+  var ok = download(JSON.stringify(state, null, 2), 'uploader-toolkit.json', 'application/json');
+  toast(ok ? 'Settings exported' : 'The download was blocked');
+});
+$('importBtn').addEventListener('click', function(){ $('importFile').click(); });
+$('importFile').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function(ev){
+    try {
+      var o = JSON.parse(ev.target.result);
+      if (!o || typeof o !== 'object' || !Array.isArray(o.blocks)) throw new Error('bad');
+      state = {
+        tplTitle: String(o.tplTitle || ''), tplFile: String(o.tplFile || ''),
+        summary: String(o.summary || ''), weekMode: o.weekMode || 'mon',
+        blocks: o.blocks.filter(function(b){ return b && typeof b.name === 'string'; })
+          .map(function(b, i){
+            return { id: i+1, name: String(b.name), body: String(b.body || ''), on: !!b.on };
+          }),
+        seq: (o.blocks.length || 0) + 1
+      };
+      fill(); update(); save();
+      toast('Settings imported');
+    } catch(err){ toast('Could not read that settings file'); }
+  };
+  fr.onerror = function(){ toast('Could not read the file'); };
+  fr.readAsText(f);
+});
+$('resetBtn').addEventListener('click', function(){
+  if (!window.confirm('Delete every saved template and block? This cannot be undone.')) return;
+  try { localStorage.removeItem(KEY); } catch(e){}
+  state = { tplTitle:'', tplFile:'', summary:'', weekMode:'mon', blocks:[], seq:1 };
+  editing = null;
+  fill(); update();
+  toast('Reset');
+});
+window.addEventListener('beforeunload', function(){ clearTimeout(saveT); save(); });
+
+/* ============================================================
+   Startup
+   ============================================================ */
+function fill(){
+  $('tplTitle').value = state.tplTitle;
+  $('tplFile').value = state.tplFile;
+  $('summary').value = state.summary;
+  $('weekMode').value = state.weekMode || 'mon';
+}
+(function init(){
+  var n = new Date();
+  $('baseDate').value = n.getFullYear() + '-' + p2(n.getMonth()+1) + '-' + p2(n.getDate());
+  load();
+  if (!state.tplTitle && !state.tplFile){
+    state.tplTitle = '[YYYY] Week [W] \u2014 weekly episode';
+    state.tplFile = '[YY][MM][DD]_weekly_w[W].mp4';
+  }
+  fill();
+  lastField = $('tplTitle');
+  update();
+})();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#0284C7}
+.tk-guide code{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#0F172A;word-break:break-all}
+.tk-guide table{width:100%;border-collapse:collapse;margin-top:15px;font-size:14px}
+.tk-guide th{background:#fff;text-align:left;padding:9px 11px;border:1px solid #E2E8F0;
+  font-weight:700;color:#0F172A;font-size:13px}
+.tk-guide td{padding:9px 11px;border:1px solid #E2E8F0;color:#334155}
+.tk-guide td:first-child{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:#0284C7}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#0284C7;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#0284C7}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Retyping the same things every week</h2>
+<p>Every episode you edit the date in the title, recall the filename convention, and paste the greeting, the gear list and the business email into the description again. Fifteen minutes gone each time, and occasionally last week\u2019s date goes out untouched.</p>
+<p>This reduces that to one step. <strong>Set the rules once and just pick the date.</strong></p>
+
+<h2>Date variables</h2>
+<p>Put a name in square brackets into your title or filename and it resolves against the date you picked.</p>
+<table>
+<tr><th>Variable</th><th>Meaning</th><th>e.g. 2026-08-30</th></tr>
+<tr><td>[YYYY]</td><td>four-digit year</td><td>2026</td></tr>
+<tr><td>[YY]</td><td>two-digit year</td><td>26</td></tr>
+<tr><td>[MM] / [M]</td><td>month</td><td>08 / 8</td></tr>
+<tr><td>[DD] / [D]</td><td>day</td><td>30 / 30</td></tr>
+<tr><td>[W]</td><td>week of the month</td><td>5</td></tr>
+<tr><td>[WW]</td><td>week of the year</td><td>35</td></tr>
+<tr><td>[DAY]</td><td>weekday</td><td>Sun</td></tr>
+<tr><td>[Q]</td><td>quarter</td><td>3</td></tr>
+</table>
+<p>Write <code>[YY][MM][DD]_weekly_w[W].mp4</code> and you get <code>260830_weekly_w5.mp4</code>.</p>
+
+<h2>Why three ways to count weeks</h2>
+<p>The same date lands in different weeks depending on the method. 30 August 2026 is <strong>week 5 by calendar rows but week 6 counting from Sunday</strong>.</p>
+<ul>
+<li><strong>Calendar row, Monday start</strong> — the default. Matches the row you would count by eye.</li>
+<li><strong>Calendar row, Sunday start</strong> — for calendars that begin the week on Sunday.</li>
+<li><strong>Simple</strong> — days 1–7 are week 1, 8–14 week 2. Independent of weekday, so it is easy to predict.</li>
+</ul>
+<p>Neither is more correct; match whatever your channel already uses. Switching updates the result immediately, so try them side by side.</p>
+
+<h2>Building the description from blocks</h2>
+<p>Save the things you reuse — greeting, timestamps, gear list, social links, business email — as <strong>blocks</strong>, then tick the ones this video needs.</p>
+<p>Your summary for this episode goes at the top, with the ticked blocks following in order. <strong>Arrows move them around.</strong></p>
+<p>Blocks can contain date variables too, so anything where only the date changes is a one-time setup.</p>
+
+<h2>What shows before the fold</h2>
+<p>Only about the first three lines of a description are visible before the reader expands it. The preview marks that boundary with a line, so keep <strong>important links and notices above it</strong>.</p>
+<p>The total limit is 5,000 characters. The current count is shown and you are warned if you go over.</p>
+
+<h2>Saved in this browser</h2>
+<p>Templates and blocks save on every edit, so they survive closing the tab. They will not appear on another device, though, and clearing browser storage removes them.</p>
+<p>For anything you want to keep, use <strong>export settings</strong> to download a file. Import it on another machine and everything comes across.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>How is the week number calculated?</dt><dd>There are three options. The default matches the row you would count on a calendar starting Monday; there is also a Sunday-start version and a simple one that divides the day by seven. The same date gives different answers under each, so set it to whatever your channel already uses.</dd>
+<dt>Which variables are available?</dt><dd>Year, month and day in two or four digits, plus week number, weekday and quarter. The variable list shows what each one resolves to for the date you picked, and clicking one inserts it into the field you were last editing.</dd>
+<dt>Will my saved settings persist?</dt><dd>Templates and text blocks save to this browser on every edit, so closing the tab or refreshing leaves them intact. They will not appear on another device and are lost if you clear browser storage, so use the export button to keep a file.</dd>
+<dt>Can I use variables in the description too?</dt><dd>Yes. Put them anywhere in a text block or in the summary and they resolve against the date you picked. For a recurring series where only the date changes, set it up once and just pick the date each week.</dd>
+<dt>What happens to characters filenames cannot use?</dt><dd>Slashes, question marks and the like are replaced with underscores. Titles can use them freely, which is why keeping separate rules for the title and the filename is convenient.</dd>
+<dt>Is there a length limit on the description?</dt><dd>Five thousand characters. The current count is shown and you are warned when it is exceeded. Only about the first three lines show before the reader expands it, so put the important things near the top.</dd>
+</dl>
+
+<p class="tk-guide-note">Everything runs inside your browser and nothing you type is sent to any server. Saved settings use this browser\u2019s storage, so they do not appear on other devices and disappear if that storage is cleared. Export anything important to a file.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/creative/thumb-mockup.html">Thumbnail &amp; Shorts Preview</a></li>
+<li><a href="https://mnledu.com/en/productivity/palette-picker_en.html">Brand Palette Picker</a></li>
+<li><a href="https://mnledu.com/en/productivity/image-studio_en.html">Photo Studio</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-workbench.html">Smart Text Workbench</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+<li><a href="https://mnledu.com/en/productivity/smart-list_en.html">Smart List Formatter</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/design-media/uploader-toolkit_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/design-media/uploader-toolkit_en.html";
+  var TK_SHARE_TITLE = "Uploader Toolkit";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (DESIGN &amp; MEDIA), 원본 canonical 오류(/creative/) 정정</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

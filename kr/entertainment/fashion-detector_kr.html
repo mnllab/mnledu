@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#18181B">
+
+<title>패션 단속반 · 패션 · 색조합 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="전신 사진을 올리면 상의·하의·신발 색을 뽑아 색조합을 판정합니다. 50가지 장난스러운 판정이 나옵니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/fashion-detector_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" />
+<meta property="og:title" content="패션 단속반 · 패션 · 색조합 | TOOLKIT" />
+<meta property="og:description" content="전신 사진을 올리면 상의·하의·신발 색을 뽑아 색조합을 판정합니다. 50가지 장난스러운 판정이 나옵니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="패션 단속반 · 패션 · 색조합 | TOOLKIT" />
+<meta name="twitter:description" content="전신 사진을 올리면 상의·하의·신발 색을 뽑아 색조합을 판정합니다. 50가지 장난스러운 판정이 나옵니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "패션 단속반",
+  "description": "전신 사진을 올리면 상의·하의·신발 색을 뽑아 색조합을 판정합니다. 50가지 장난스러운 판정이 나옵니다.",
+  "url": "https://mnledu.com/kr/entertainment/fashion-detector_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ENTERTAINMENT",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "패션 단속반",
+      "item": "https://mnledu.com/kr/entertainment/fashion-detector_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+<style>
+  :root{
+    --bg:#18181B; --panel:#212124; --line:#3F3F46; --line2:#2A2A2E;
+    --ink:#FAFAFA; --ink2:#D4D4D8; --muted:#8B8B93;
+    --yellow:#FACC15; --red:#EF4444; --green:#22C55E;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+  /* 폴리스 라인 */
+  .tapeline{height:26px;background:repeating-linear-gradient(45deg,
+    var(--yellow) 0 22px, #18181B 22px 44px);
+    box-shadow:inset 0 -1px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(0,0,0,.3)}
+
+  .btn{border:2px solid var(--line);background:#26262A;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:800;padding:10px 15px;cursor:pointer;min-height:44px;
+    font-family:inherit;white-space:nowrap;letter-spacing:-.01em;
+    transition:border-color .12s,background .12s,transform .07s}
+  .btn:hover:not(:disabled){border-color:var(--yellow);background:#2E2E33}
+  .btn:active:not(:disabled){transform:translateY(2px)}
+  .btn:disabled{opacity:.36;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+  .btn.p{background:var(--yellow);border-color:var(--yellow);color:#18181B;
+    box-shadow:0 4px 0 #A16207}
+  .btn.p:hover:not(:disabled){filter:brightness(1.07)}
+  .btn.p:active:not(:disabled){box-shadow:0 1px 0 #A16207;transform:translateY(3px)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px;border-width:1px}
+
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+
+  /* ---------- 업로드 ---------- */
+  #drop{border:3px dashed var(--line);border-radius:16px;padding:44px 20px;text-align:center;
+    cursor:pointer;background:#1E1E22;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--yellow);background:#232327}
+  body.dragging #drop{border-color:var(--yellow);background:#232327}
+  #drop .ic{font-size:44px;margin-bottom:12px}
+  #drop p{margin:0;font-size:15.5px;color:var(--ink2);line-height:1.9;font-weight:700}
+  #drop small{display:block;font-size:12.5px;color:var(--muted);margin-top:7px;font-weight:400}
+
+  /* ---------- 스캔 ---------- */
+  #stage{display:none}
+  #stage.on{display:block}
+  #photoBox{position:relative;border-radius:14px;overflow:hidden;background:#0E0E10;
+    display:flex;justify-content:center;max-height:min(64vh,600px)}
+  #photo{max-width:100%;max-height:min(64vh,600px);object-fit:contain;display:block}
+  .zone{position:absolute;left:0;right:0;pointer-events:none;
+    border-bottom:2px dashed rgba(250,204,21,.65)}
+  .zone .tag{position:absolute;left:8px;top:6px;font-size:11.5px;font-weight:800;
+    background:rgba(24,24,27,.82);color:var(--yellow);padding:2px 8px;border-radius:5px}
+  .grip{position:absolute;left:0;right:0;height:16px;cursor:ns-resize;z-index:5;
+    display:flex;align-items:center;justify-content:center}
+  .grip::after{content:'';width:52px;height:5px;border-radius:99px;background:var(--yellow);
+    box-shadow:0 0 0 2px rgba(24,24,27,.7)}
+  .grip:hover::after{width:72px}
+  .cropBox{position:absolute;border:2px solid rgba(250,204,21,.9);border-radius:10px;
+    pointer-events:none;z-index:3;box-shadow:0 0 0 9999px rgba(0,0,0,.18)}
+  .cropGrip{position:absolute;z-index:7;display:flex;align-items:center;justify-content:center}
+  .cropGrip.h{left:0;right:0;height:18px;cursor:ns-resize}
+  .cropGrip.h::after{content:'';width:64px;height:5px;border-radius:99px;background:#FAFAFA;
+    box-shadow:0 0 0 2px rgba(24,24,27,.78)}
+  .cropGrip.v{top:0;bottom:0;width:18px;cursor:ew-resize}
+  .cropGrip.v::after{content:'';width:5px;height:64px;border-radius:99px;background:#FAFAFA;
+    box-shadow:0 0 0 2px rgba(24,24,27,.78)}
+  .cropGrip:hover::after{background:var(--yellow)}
+  .cropTag{position:absolute;right:8px;top:7px;z-index:4;font-size:10.5px;font-weight:900;
+    color:#18181B;background:var(--yellow);padding:2px 7px;border-radius:5px;pointer-events:none}
+
+  #laser{position:absolute;left:0;right:0;height:3px;background:var(--red);
+    box-shadow:0 0 18px 4px rgba(239,68,68,.75);display:none;z-index:6}
+  #laser.on{display:block;animation:scan 1.1s ease-in-out infinite}
+  @keyframes scan{0%{top:0}50%{top:calc(100% - 3px)}100%{top:0}}
+  #scanMask{position:absolute;inset:0;background:rgba(24,24,27,.55);display:none;z-index:4;
+    align-items:center;justify-content:center;flex-direction:column;gap:10px}
+  #scanMask.on{display:flex}
+  #scanMask b{font-size:15px;font-weight:900;color:var(--yellow);letter-spacing:.06em}
+
+  /* 타격감 */
+  @keyframes shake{
+    0%,100%{transform:translate(0,0)} 12%{transform:translate(-10px,4px)}
+    25%{transform:translate(9px,-5px)} 38%{transform:translate(-8px,-3px)}
+    50%{transform:translate(7px,5px)} 62%{transform:translate(-5px,-4px)}
+    75%{transform:translate(4px,3px)} 88%{transform:translate(-2px,1px)}
+  }
+  body.shake{animation:shake .4s cubic-bezier(.36,.07,.19,.97)}
+  #flash{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;background:#fff}
+  @keyframes flashOut{0%{opacity:.72}100%{opacity:0}}
+  #flash.on{animation:flashOut .32s ease-out}
+
+  /* ---------- 색상 ---------- */
+  .colors{display:grid;gap:10px;grid-template-columns:repeat(3,1fr);margin-top:14px}
+  .cbox{border:2px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+    transition:border-color .12s,transform .08s}
+  .cbox:hover{border-color:var(--yellow);transform:translateY(-2px)}
+  .cbox .sw{height:66px}
+  .cbox .info{padding:9px 10px;background:#26262A}
+  .cbox .nm{font-size:12.5px;font-weight:800}
+  .cbox .hx{font-size:11.5px;color:var(--muted);margin-top:3px;
+    font-family:ui-monospace,Consolas,monospace}
+
+  /* ---------- 결과 ---------- */
+  #verdict{display:none;margin-top:18px}
+  #verdict.on{display:block}
+  #vCard{border:3px solid var(--yellow);border-radius:18px;overflow:hidden;background:#1E1E22}
+  #vTop{padding:24px 20px;text-align:center;border-bottom:3px solid var(--yellow);
+    background:repeating-linear-gradient(45deg,rgba(250,204,21,.08) 0 14px,transparent 14px 28px)}
+  #vEmoji{font-size:clamp(46px,9vw,72px);line-height:1;margin-bottom:8px}
+  #vTitle{font-size:clamp(21px,4.4vw,32px);font-weight:900;letter-spacing:-.03em;
+    line-height:1.32;word-break:keep-all}
+  #vScoreRow{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:16px}
+  #vScore{font-size:clamp(34px,7vw,54px);font-weight:900;line-height:1;letter-spacing:-.04em}
+  #vScoreLb{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.14em}
+  #vBar{height:10px;background:#2E2E33;border-radius:99px;overflow:hidden;margin:14px auto 0;
+    max-width:340px}
+  #vBarF{height:100%;width:0;border-radius:99px;transition:width .7s cubic-bezier(.2,.9,.3,1)}
+  #vBody{padding:20px}
+  #vMsg{font-size:15px;line-height:1.95;color:var(--ink2);word-break:keep-all;
+    text-align:center;max-width:620px;margin:0 auto}
+  #vWhy{margin-top:16px;padding:13px 15px;background:#26262A;border-radius:11px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  #vWhy b{color:var(--yellow)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+  #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);opacity:0;
+    background:var(--yellow);color:#18181B;border-radius:10px;padding:12px 20px;font-size:14px;
+    z-index:90;pointer-events:none;transition:opacity .18s,transform .18s;font-weight:800;
+    max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="flash"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="tapeline"></div>
+
+<header class="wrap" style="padding:32px 18px 6px">
+  <p style="font-size:12px;letter-spacing:.2em;color:var(--red);font-weight:900;margin:0 0 10px">⚠️ FASHION POLICE</p>
+  <h1 style="font-size:clamp(26px,5.4vw,40px);font-weight:900;letter-spacing:-.03em;margin:0 0 12px;line-height:1.2">
+    패션 단속반 · 오늘의 착장 현행범
+  </h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:680px">
+    오늘 입은 옷을 찍어 올리면 <b style="color:var(--yellow)">상의·하의·신발 색만 보고</b> 쓸데없이 진지한 판정문을 발급합니다.
+    패션 평가는 못 합니다. 대신 친구랑 한 번 웃기에는 꽤 성실합니다.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div id="drop" role="button" tabindex="0">
+    <div class="ic">🕵️</div>
+    <p>전신 사진을 여기에 놓아 주세요
+      <small>눌러서 고르기 · 끌어다 놓기 · <b class="mono">Ctrl</b>+<b class="mono">V</b> 붙여넣기</small>
+      <small>사진은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다</small>
+    </p>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
+
+  <div id="stage">
+    <div class="card" style="padding:14px">
+      <div id="photoBox">
+        <img id="photo" alt="올린 사진">
+        <div class="cropBox" id="cropBox"></div>
+        <span class="cropTag" id="cropTag">인물 범위</span>
+        <div class="zone" id="zTop"><span class="tag">👕 상의</span></div>
+        <div class="zone" id="zBot"><span class="tag">👖 하의</span></div>
+        <div class="zone" id="zSho" style="border-bottom:0"><span class="tag">👟 신발</span></div>
+        <div class="grip" id="grip1"></div>
+        <div class="grip" id="grip2"></div>
+        <div class="cropGrip h" id="cropTop"></div>
+        <div class="cropGrip h" id="cropBottom"></div>
+        <div class="cropGrip v" id="cropLeft"></div>
+        <div class="cropGrip v" id="cropRight"></div>
+        <div id="laser"></div>
+        <div id="scanMask"><b>🔍 스캔 중…</b></div>
+      </div>
+      <p class="hint" id="photoNote">노란 손잡이는 상의·하의·신발 경계, 흰 손잡이는 인물의 위·아래·좌·우 범위입니다. 처음에는 배경색으로 인물 범위를 대략 잡습니다. 조정만 해서는 판독하지 않으며, 아래 버튼을 눌렀을 때 색을 계산합니다.</p>
+
+      <div class="colors" id="colors"></div>
+
+      <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:14px">
+        <button class="btn p" id="scanBtn">🔍 이 영역으로 판독</button>
+        <button class="btn" id="newBtn">📷 다른 사진</button>
+      </div>
+    </div>
+
+    <div id="verdict">
+      <div id="vCard">
+        <div id="vTop">
+          <div id="vEmoji"></div>
+          <div id="vTitle"></div>
+          <div id="vScoreRow">
+            <span id="vScoreLb">무난지수</span>
+            <span id="vScore">0</span>
+            <span style="font-size:15px;font-weight:800;color:var(--muted)">/ 100</span>
+          </div>
+          <div id="vBar"><div id="vBarF"></div></div>
+        </div>
+        <div id="vBody">
+          <p id="vMsg"></p>
+          <div id="vWhy"></div>
+        </div>
+      </div>
+      <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:12px">
+        <button class="btn p" id="copyBtn">📋 판정문 복사해서 단톡방 투척</button>
+        <button class="btn" id="shotBtn">🖼 현행범 사진첩에 저장</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:26px 18px 40px;border-top:1px solid var(--line);margin-top:30px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    옷을 평가하는 도구가 아니라 색 세 개로 농담을 만드는 장난감입니다. 사진은 브라우저 안에서만 처리되며 어떤 서버로도 전송되지 않습니다.
+  </p>
+</footer>
+<div class="tapeline"></div>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2100);
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+
+/* ============================================================
+   색 계산
+   ============================================================ */
+function rgbToHsl(r, g, b){
+  r /= 255; g /= 255; b /= 255;
+  var mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+  var h = 0, s = 0, l = (mx + mn) / 2;
+  if (mx !== mn){
+    var d = mx - mn;
+    s = l > 0.5 ? d/(2-mx-mn) : d/(mx+mn);
+    if (mx === r) h = (g-b)/d + (g<b?6:0);
+    else if (mx === g) h = (b-r)/d + 2;
+    else h = (r-g)/d + 4;
+    h *= 60;
+  }
+  return { h: Math.round(h), s: Math.round(s*100), l: Math.round(l*100) };
+}
+function toHex(c){
+  return '#' + c.map(function(v){
+    return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0');
+  }).join('').toUpperCase();
+}
+/* 색상환에서 두 각도 사이의 실제 거리 */
+function hueDist(a, b){
+  var d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+}
+function isVivid(c){ return c.s >= 55 && c.l >= 25 && c.l <= 75; }
+/* 형광색은 채도가 극단적이면서 눈에 들어오는 밝기도 높다.
+   순수 빨강도 채도 100 이라 채도만으로는 못 가른다 */
+function isNeon(c, rgb){
+  if (c.s < 82) return false;
+  if (c.l < 40 || c.l > 88) return false;
+  /* 노랑과 연두는 원래 휘도가 높아 평범한 색도 걸린다. 이 대역은 뺀다 */
+  if (c.h >= 45 && c.h <= 95) return false;
+  if (!rgb) return c.s >= 92 && c.l >= 55;
+  var lum = 0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2];
+  var sorted = rgb.slice().sort(function(a,b){ return b-a; });
+  /* 형광 핑크류는 둘째 채널이 첫째와 벌어지면서 셋째가 거의 없다 */
+  var twoBright = sorted[0] >= 245 && sorted[1] >= 100 &&
+                  sorted[1]/sorted[0] < 0.75 && sorted[2] <= 60;
+  return lum >= 118 || twoBright;
+}
+/* 아주 밝거나 어두우면 채도 값이 불안정해 문턱을 넓힌다 */
+function isGray(c){
+  if (c.l >= 88 || c.l <= 12) return c.s <= 22;
+  return c.s <= 14;
+}
+function family(c){
+  if (isGray(c)) return 'gray';
+  var h = c.h;
+  if (h < 15 || h >= 345) return 'red';
+  if (h < 45) return 'orange';
+  if (h < 70) return 'yellow';
+  if (h < 170) return 'green';
+  if (h < 200) return 'cyan';
+  if (h < 260) return 'blue';
+  if (h < 290) return 'purple';
+  return 'pink';
+}
+function isEarth(c){
+  return (c.h >= 15 && c.h <= 50) && c.s >= 8 && c.s <= 65 && c.l >= 15 && c.l <= 80;
+}
+var FAM_KO = { red:'빨강', orange:'주황', yellow:'노랑', green:'초록',
+  cyan:'하늘', blue:'파랑', purple:'보라', pink:'분홍', gray:'무채색' };
+
+/* ============================================================
+   판정
+   위에서부터 검사하므로 순서가 곧 우선순위다
+   ============================================================ */
+var DB = {
+  neon1:{emoji:'🪩',score:8,title:'🪩 인간 야광봉 · 절전모드 없음',msg:'형광에 가까운 색이 하나 끼었습니다. 오늘 착장은 조용히 지나갈 생각이 없어 보입니다. 밤길 안전에는 도움이 되겠지만, 패션이 먼저 위치 공유를 켠 상태입니다.',color:'#EF4444'},
+  neon2:{emoji:'🔦',score:11,title:'🔦 옷이 먼저 입장하고 사람이 따라옴',msg:'색 하나가 나머지보다 반 박자 먼저 들어옵니다. 존재감은 확실합니다. 굳이 자기소개를 하지 않아도 오늘 입은 색이 대신 해 줄 것 같습니다.',color:'#EF4444'},
+  neon3:{emoji:'🚨',score:6,title:'🚨 시선 유도 기능 기본 탑재',msg:'포인트를 주려던 의도는 이해합니다. 그런데 포인트가 본체를 인수했습니다. 길을 잃어도 찾기는 쉽겠습니다.',color:'#EF4444'},
+
+  clash1:{emoji:'🚦',score:16,title:'🚦 색들이 각자 당대표로 출마함',msg:'강한 색들이 한 표씩 양보할 생각이 없습니다. 조합이라기보다 연립정부 협상 직전입니다. 멀리서도 의견 차이는 아주 선명하게 보입니다.',color:'#EF4444'},
+  clash2:{emoji:'📢',score:19,title:'📢 세 색 모두 마이크를 잡았습니다',msg:'누가 포인트인지 정해지지 않았습니다. 세 색이 동시에 발언 중이라 사회자가 한 명 필요해 보입니다.',color:'#EF4444'},
+  clash3:{emoji:'🥊',score:13,title:'🥊 색상끼리 단체전 성사',msg:'각자 따로 보면 이해가 되는데 한 화면에 모이니 경기가 시작됩니다. 승자는 없고 관객만 생겼습니다.',color:'#EF4444'},
+  clash4:{emoji:'🧨',score:10,title:'🧨 조합보다 충돌이 먼저 보임',msg:'색 사이 거리가 꽤 큽니다. 의도된 대비라면 성공했고, 의도하지 않았다면 더 크게 성공했습니다.',color:'#EF4444'},
+
+  black1:{emoji:'🖤',score:74,title:'🖤 무난함에 보험을 세 번 듦',msg:'무난한 건 확실합니다. 너무 확실해서 옷장이 고민을 포기한 것 같습니다. 실패할 확률과 함께 기억에 남을 확률도 조용히 낮췄습니다.',color:'#A1A1AA'},
+  black2:{emoji:'🕶️',score:78,title:'🕶️ 검정색에 전권 위임',msg:'오늘 색 선택은 검정에게 모두 맡겼습니다. 결정은 빨랐을 것 같습니다. 옷장이 이 정도로 협조적이면 아침 준비 시간이 꽤 줄어듭니다.',color:'#A1A1AA'},
+  black3:{emoji:'⬛',score:71,title:'⬛ 색상 회의 자체를 취소함',msg:'상의도 조용하고 하의도 조용하고 신발도 조용합니다. 조화는 완벽합니다. 애초에 다른 의견이 없었으니까요.',color:'#A1A1AA'},
+
+  white1:{emoji:'🍦',score:67,title:'🍦 오늘의 인간 바닐라 라떼',msg:'크림, 아이보리, 흰색이 서로 크게 다투지 않았습니다. 깔끔하긴 한데 카페에 오래 앉아 있으면 주문한 음료와 구분이 조금 어려울 수 있습니다.',color:'#FACC15'},
+  white2:{emoji:'🥛',score:70,title:'🥛 우유에 우유를 코디함',msg:'밝은 색으로 끝까지 밀었습니다. 깨끗한 인상은 확실합니다. 오늘 식사 메뉴만큼은 국물 없는 쪽을 권하고 싶습니다.',color:'#FACC15'},
+  white3:{emoji:'☁️',score:65,title:'☁️ 구름이 출근복을 입은 날',msg:'전체가 밝고 채도도 낮습니다. 부드럽고 차분합니다. 문제는 배경이 흰 벽이면 사진에서 잠깐 실종될 수 있다는 점입니다.',color:'#FACC15'},
+
+  beige1:{emoji:'🥐',score:82,title:'🥐 베이지가 베이지를 설득하는 중',msg:'무난한 색을 골랐고, 또 무난한 색을 골랐고, 마지막까지 방심하지 않았습니다. 안정감은 충분합니다. 옷장도 오늘만큼은 회의가 빨리 끝났겠습니다.',color:'#D6A85F'},
+  beige2:{emoji:'☕',score:84,title:'☕ 카페 인테리어와 합의 완료',msg:'베이지와 브라운이 아주 성실하게 모였습니다. 어디에 앉아도 공간과 싸울 일은 적겠습니다. 사람보다 인테리어 쪽에서 먼저 섭외가 올 색감입니다.',color:'#D6A85F'},
+  beige3:{emoji:'🍪',score:80,title:'🍪 옷장에서 쿠키 굽는 냄새 남',msg:'따뜻한 저채도 색이 차곡차곡 쌓였습니다. 편안한 건 확실합니다. 한 톤만 더 내려가면 아메리카노 옆에 놓여도 자연스럽겠습니다.',color:'#D6A85F'},
+  beige4:{emoji:'📦',score:77,title:'📦 고급 택배상자 에디션',msg:'갈색과 베이지가 안정적으로 정리됐습니다. 실패는 어렵습니다. 대신 누가 포장을 뜯어야 할 것 같은 안정감이 조금 있습니다.',color:'#D6A85F'},
+
+  pastel1:{emoji:'🧼',score:76,title:'🧼 섬유유연제 광고 3초 전',msg:'전체적으로 부드럽고 밝습니다. 아무도 화를 내지 않는 색 조합이라 평화롭긴 합니다. 조금만 더 뽀얘지면 옷보다 향기가 먼저 보일 것 같습니다.',color:'#E9A8C8'},
+  pastel2:{emoji:'🍬',score:73,title:'🍬 사탕 포장지들이 사이좋게 모임',msg:'밝고 연한 색들이 조용히 모였습니다. 보기 편한 건 맞습니다. 너무 착한 조합이라 누가 한 명쯤 사고를 쳐도 괜찮을 것 같습니다.',color:'#E9A8C8'},
+  pastel3:{emoji:'🍼',score:79,title:'🍼 색상에 유아용 필터 적용',msg:'채도는 낮고 밝기는 높습니다. 부드러움은 충분합니다. 오늘의 색상 회의에는 큰소리 내는 사람이 한 명도 없었습니다.',color:'#E9A8C8'},
+  pastel4:{emoji:'🌸',score:75,title:'🌸 봄날이 너무 성실하게 출근함',msg:'연한 색들이 한 방향으로 정리됐습니다. 산뜻합니다. 계절감까지 맞으면 계획적인 사람으로 오해받을 수 있습니다.',color:'#E9A8C8'},
+
+  denim1:{emoji:'👖',score:50,title:'👖 청청은 죄가 없고 시대가 문제임',msg:'위도 파랑, 아래도 파랑입니다. 나쁜 선택은 아닌데 사진에 날짜가 없으면 촬영 연도를 맞히는 게임이 시작될 수 있습니다. 유행은 돌고 도니 일단 기다려 봅니다.',color:'#FACC15'},
+  denim2:{emoji:'📼',score:54,title:'📼 잠깐만요, 촬영연도가 언제죠',msg:'상의와 하의가 모두 파랑 계열입니다. 조합은 성립합니다. 다만 사진에 필름 효과까지 넣으면 가족앨범에서 발견될 가능성이 높아집니다.',color:'#FACC15'},
+  denim3:{emoji:'🧢',score:57,title:'🧢 데님이 팀장까지 맡았습니다',msg:'파랑 계열이 상하의를 장악했습니다. 일관성은 인정합니다. 오늘 다른 색들은 출근하지 않은 모양입니다.',color:'#FACC15'},
+
+  nature1:{emoji:'🪴',score:58,title:'🪴 오늘은 사람보다 화분 쪽',msg:'초록과 흙빛이 만났습니다. 자연스럽다는 말은 맞는데, 식물원 입장권이 잘 어울릴 것 같은 자연스러움입니다. 분갈이 일정만 잡지 않으면 됩니다.',color:'#22C55E'},
+  nature2:{emoji:'🌲',score:62,title:'🌲 등산 약속 없는데 산이 따라옴',msg:'초록과 브라운이 꽤 잘 붙었습니다. 편안한 조합입니다. 문제는 도시 한복판에서도 등산로 표지판이 어울릴 수 있다는 점입니다.',color:'#22C55E'},
+  nature3:{emoji:'🪵',score:60,title:'🪵 자연친화가 조금 적극적임',msg:'흙빛과 초록 계열이 서로 잘 맞습니다. 너무 잘 맞아서 벤치 옆에 서 있으면 조경의 일부로 포함될 수 있습니다.',color:'#22C55E'},
+
+  red1:{emoji:'🌶️',score:31,title:'🌶️ 고추장 한 숟갈이 두 숟갈 됨',msg:'빨강 계열이 두 군데 이상 잡혔습니다. 포인트를 주려던 것 같은데 포인트끼리 서로 주인공 자리를 놓고 싸우는 중입니다. 식욕은 조금 생깁니다.',color:'#EF4444'},
+  red2:{emoji:'🍓',score:36,title:'🍓 포인트 컬러가 가족을 데려옴',msg:'빨강이나 분홍이 한 번으로 끝나지 않았습니다. 포인트를 반복하면 테마가 됩니다. 오늘의 테마는 이미 충분히 전달됐습니다.',color:'#EF4444'},
+  red3:{emoji:'📮',score:28,title:'📮 빨강이 업무 범위를 초과함',msg:'빨강 계열이 여러 영역에서 근무 중입니다. 활기찬 건 맞습니다. 다만 포인트색에게 야근수당을 줘야 할 정도입니다.',color:'#EF4444'},
+
+  blue1:{emoji:'🧊',score:69,title:'🧊 시원함을 너무 성실하게 준비함',msg:'파랑 계열이 여기저기 반복됩니다. 안정적이긴 한데 냉장고 문을 열었을 때 느끼는 신뢰감과 비슷한 방향입니다. 실패는 적고 온도도 낮아 보입니다.',color:'#60A5FA'},
+  blue2:{emoji:'🌊',score:66,title:'🌊 파랑이 오늘 지분을 많이 가져감',msg:'파랑과 하늘색이 여러 영역에 반복됩니다. 시원한 건 확실합니다. 나머지 색들은 소액주주 정도로 참여했습니다.',color:'#60A5FA'},
+  blue3:{emoji:'🧴',score:72,title:'🧴 쿨톤이 너무 책임감 있게 일함',msg:'차가운 계열이 끝까지 흐름을 유지합니다. 안정감은 있습니다. 화장품 패키지 회의에서 바로 통과될 것 같은 색 배치입니다.',color:'#60A5FA'},
+
+  accent1:{emoji:'📍',score:61,title:'📍 포인트 컬러가 혼자 야근 중',msg:'두 색은 조용한데 한 색만 열심히 일하고 있습니다. 포인트를 준 의도는 잘 보입니다. 문제는 그 한 명에게 팀 전체 실적을 맡긴 느낌이라는 점입니다.',color:'#F59E0B'},
+  accent2:{emoji:'🧯',score:64,title:'🧯 조용한 회의에 한 명만 열정적',msg:'전체는 차분한데 한 색만 목소리가 큽니다. 포인트는 확실합니다. 발표 자료라면 그 부분에만 형광펜을 세 번 친 셈입니다.',color:'#F59E0B'},
+  accent3:{emoji:'📌',score:59,title:'📌 포인트가 너무 정확해서 부담됨',msg:'무채색 사이에 한 색이 정확히 꽂혔습니다. 의도는 분명합니다. 너무 분명해서 어디를 봐야 하는지 설명까지 해 주는 착장입니다.',color:'#F59E0B'},
+  accent4:{emoji:'🙋',score:63,title:'🙋 한 색만 손 들고 발표 중',msg:'나머지는 조용히 앉아 있는데 한 색만 계속 손을 들고 있습니다. 포인트 컬러의 모범적인 근무 태도입니다. 조금 쉬어도 될 것 같습니다.',color:'#F59E0B'},
+
+  neutral1:{emoji:'🗂️',score:91,title:'🗂️ 패션계의 결재 완료 문서',msg:'무채색 위주라 반려 사유가 거의 없습니다. 문제도 없고 사고도 없고, 그래서 회의록에 남길 내용도 별로 없습니다. 회사에서는 이런 결과를 좋아합니다.',color:'#A1A1AA'},
+  neutral2:{emoji:'🧾',score:88,title:'🧾 영수증처럼 깔끔하게 정리됨',msg:'검정, 회색, 흰색 계열이 조용히 정리됐습니다. 틀린 곳은 없습니다. 재미도 영수증 하단 광고 정도로 절제돼 있습니다.',color:'#A1A1AA'},
+  neutral3:{emoji:'🖨️',score:86,title:'🖨️ 컬러 프린터인데 흑백으로 출력함',msg:'색을 쓸 수 있었지만 굳이 쓰지 않았습니다. 절제라고 부르면 멋있고, 귀찮았다고 부르면 솔직합니다. 어느 쪽인지는 본인만 압니다.',color:'#A1A1AA'},
+  neutral4:{emoji:'📎',score:89,title:'📎 무채색이 서로 방해하지 않기로 합의함',msg:'세 영역 모두 조용합니다. 안정적이고 정돈돼 있습니다. 너무 원만해서 패션 판독기가 할 일이 줄었습니다.',color:'#A1A1AA'},
+
+  tone1:{emoji:'🧁',score:86,title:'🧁 색상 회의 만장일치',msg:'세 색이 같은 방향을 보고 있습니다. 조화롭다는 말도 맞지만, 아무도 반대 의견을 내지 않아 회의가 너무 빨리 끝난 느낌도 있습니다. 평화는 확보했습니다.',color:'#22C55E'},
+  tone2:{emoji:'👨‍👩‍👧',score:84,title:'👨‍👩‍👧 세 색이 친척 관계로 확인됨',msg:'색상 차이가 크지 않습니다. 서로 닮아서 싸울 일은 적겠습니다. 가족사진에서 옷 맞춰 입은 느낌이 아주 조금 납니다.',color:'#22C55E'},
+  tone3:{emoji:'📚',score:83,title:'📚 같은 시리즈로 세 권 구입함',msg:'색들이 같은 계열 안에서 움직입니다. 통일감은 충분합니다. 서점이라면 세트 할인 스티커가 붙을 법한 구성입니다.',color:'#22C55E'},
+  tone4:{emoji:'🧦',score:81,title:'🧦 양말까지 맞췄을 것 같은 성실함',msg:'전체 색 방향이 꽤 일정합니다. 계획적으로 보입니다. 실제로 계획했는지 우연히 옷장이 그렇게 생겼는지는 확인할 방법이 없습니다.',color:'#22C55E'},
+  tone5:{emoji:'🧱',score:79,title:'🧱 한 색조로 벽돌 쌓듯 쌓음',msg:'톤 차이를 조금씩 두면서 같은 계열을 이어갔습니다. 안정적입니다. 변화를 주긴 줬는데 담당자가 규정을 아주 잘 지켰습니다.',color:'#22C55E'},
+
+  contrast1:{emoji:'🧩',score:46,title:'🧩 각자 괜찮은데 같이 있으니 회의 필요',msg:'색 하나씩 보면 큰 문제는 없습니다. 셋을 같이 놓으니 누가 누구를 데려왔는지 잠깐 설명이 필요합니다. 망한 건 아닌데 담당자의 기획 의도는 듣고 싶습니다.',color:'#FACC15'},
+  contrast2:{emoji:'🤝',score:49,title:'🤝 친한 척은 하는데 아직 어색함',msg:'완전히 싸우는 색은 아닙니다. 그렇다고 오래 알고 지낸 사이도 아닙니다. 첫 회식 끝난 팀 정도의 거리감입니다.',color:'#FACC15'},
+  contrast3:{emoji:'📝',score:43,title:'📝 코디 설명란이 조금 필요함',msg:'색 조합에 이유가 있을 것 같기는 합니다. 결과만 보면 한 줄 정도 기획 의도를 적어 주면 이해가 빨라질 것 같습니다.',color:'#FACC15'},
+  contrast4:{emoji:'🪑',score:52,title:'🪑 셋 다 쓸 만한데 세트는 아님',msg:'각 색은 충분히 괜찮습니다. 다만 한 번에 모이니 가구 매장에서 의자 세 개를 따로 골라 놓은 느낌이 조금 있습니다.',color:'#FACC15'}
+};
+
+function judge(parts){
+  var hsl = parts.map(function(x){ return x.hsl; });
+  var rgb = parts.map(function(x){ return x.rgb; });
+  var why = [];
+  var fam = hsl.map(family);
+  var neutralIdx = [], chromaIdx = [];
+  hsl.forEach(function(c,i){ (isGray(c) ? neutralIdx : chromaIdx).push(i); });
+
+  function countFam(names){ return fam.filter(function(f){ return names.indexOf(f) >= 0; }).length; }
+  function all(fn){ return hsl.every(fn); }
+  function isBeige(c){ return c.h >= 18 && c.h <= 55 && c.s >= 7 && c.s <= 42 && c.l >= 48 && c.l <= 88; }
+  function isPastel(c){ return c.s >= 10 && c.s <= 48 && c.l >= 67 && c.l <= 90; }
+  function choose(keys){
+    var seed = 0;
+    hsl.forEach(function(c,i){ seed += (c.h+17)*(i+3) + c.s*7 + c.l*11; });
+    return keys[Math.abs(seed) % keys.length];
+  }
+
+  for (var n=0;n<hsl.length;n++) if (isNeon(hsl[n],rgb[n])){
+    why.push(parts[n].name + ' 쪽 채도와 밝기가 유난히 튑니다');
+    return {key:choose(['neon1','neon2','neon3']),why:why};
+  }
+
+  var dark = hsl.filter(function(c){ return c.l <= 23; });
+  if (dark.length === 3){ why.push('세 영역이 모두 매우 어둡습니다'); return {key:choose(['black1','black2','black3']),why:why}; }
+
+  if (all(function(c){ return c.l >= 78 && c.s <= 24; })){
+    why.push('세 영역이 모두 밝고 채도가 낮습니다'); return {key:choose(['white1','white2','white3']),why:why};
+  }
+
+  if (all(isBeige)){
+    why.push('세 영역이 모두 베이지·브라운 계열의 낮은 채도 범위에 모였습니다'); return {key:choose(['beige1','beige2','beige3','beige4']),why:why};
+  }
+
+  if (all(isPastel)){
+    why.push('세 영역이 모두 밝고 부드러운 파스텔 범위에 들어옵니다'); return {key:choose(['pastel1','pastel2','pastel3','pastel4']),why:why};
+  }
+
+  if (family(hsl[0]) === 'blue' && family(hsl[1]) === 'blue' && hsl[0].s >= 18 && hsl[1].s >= 18){
+    why.push('상의와 하의가 모두 파랑 계열입니다'); return {key:choose(['denim1','denim2','denim3']),why:why};
+  }
+
+  var greenAt=-1, earthAt=-1;
+  hsl.forEach(function(c,k){ if(greenAt<0 && family(c)==='green' && c.s>=15) greenAt=k; if(earthAt<0 && isEarth(c)) earthAt=k; });
+  if(greenAt>=0 && earthAt>=0 && greenAt!==earthAt){
+    why.push(parts[greenAt].name + '은 초록 계열, ' + parts[earthAt].name + '은 흙빛 계열입니다'); return {key:choose(['nature1','nature2','nature3']),why:why};
+  }
+
+  if (countFam(['red','pink']) >= 2){
+    why.push('빨강·분홍 계열이 두 영역 이상 반복됩니다'); return {key:choose(['red1','red2','red3']),why:why};
+  }
+
+  if (countFam(['blue','cyan']) >= 2){
+    why.push('파랑·하늘 계열이 두 영역 이상 반복됩니다'); return {key:choose(['blue1','blue2','blue3']),why:why};
+  }
+
+  if (neutralIdx.length >= 2 && chromaIdx.length === 1 && hsl[chromaIdx[0]].s >= 28){
+    why.push(parts[chromaIdx[0]].name + ' 한 곳만 색감이 강해 포인트 역할을 합니다'); return {key:choose(['accent1','accent2','accent3','accent4']),why:why};
+  }
+
+  if (neutralIdx.length === 3){
+    why.push('세 영역이 모두 무채색 계열입니다'); return {key:choose(['neutral1','neutral2','neutral3','neutral4']),why:why};
+  }
+
+  var maxD=0, vividClash=false;
+  for(var a=0;a<hsl.length;a++) for(var b=a+1;b<hsl.length;b++){
+    var d=hueDist(hsl[a].h,hsl[b].h); maxD=Math.max(maxD,d);
+    if(isVivid(hsl[a]) && isVivid(hsl[b]) && d>=95) vividClash=true;
+  }
+  if(vividClash || maxD>=125){
+    why.push('색상 간 거리가 최대 <b>' + maxD + '도</b>까지 벌어집니다'); return {key:choose(['clash1','clash2','clash3','clash4']),why:why};
+  }
+
+  if(chromaIdx.length <= 1){
+    why.push('색감이 강한 영역이 많지 않아 전체가 차분합니다'); return {key:choose(['neutral1','neutral2','neutral3','neutral4']),why:why};
+  }
+  if(maxD<=42){
+    why.push('색상 차이가 최대 <b>' + maxD + '도</b>로 한 계열에 가깝습니다'); return {key:choose(['tone1','tone2','tone3','tone4','tone5']),why:why};
+  }
+
+  why.push('색상 차이가 <b>' + maxD + '도</b>로 한 계열도, 강한 충돌도 아닙니다');
+  return {key:choose(['contrast1','contrast2','contrast3','contrast4']),why:why};
+}
+
+/* ============================================================
+   사진
+   ============================================================ */
+var imgSrc = '', parts = [], lastKey = '';
+/* 인물 박스는 사진 전체 대비 비율, 상·하의 경계도 절대 비율로 저장한다 */
+var cropL = 0.18, cropR = 0.82, cropT = 0.04, cropB = 0.96;
+var cut1 = 0.38, cut2 = 0.78;
+var bgPalette = [];
+
+function loadBlob(blob){
+  if (!blob || !/^image\//.test(blob.type || '')){ toast('이미지 파일이 아닙니다'); return; }
+  var url = URL.createObjectURL(blob);
+  var im = new Image();
+  im.onload = function(){
+    if (imgSrc && imgSrc.indexOf('blob:') === 0) try { URL.revokeObjectURL(imgSrc); } catch(e){}
+    imgSrc = url;
+    $('photo').src = url;
+    $('drop').style.display = 'none';
+    $('stage').classList.add('on');
+    $('verdict').classList.remove('on');
+    detectPersonBox(im);
+    bgPalette = buildBackgroundPalette(im);
+    layoutZones();
+    parts = []; lastKey = '';
+    $('colors').innerHTML = '';
+  };
+  im.onerror = function(){ URL.revokeObjectURL(url); toast('사진을 읽지 못했습니다'); };
+  im.src = url;
+}
+
+/* 배경이 비교적 단순하다는 가정 아래, 가장자리 색과 다른 픽셀의 분포로 인물 범위를 추정한다. */
+function detectPersonBox(im){
+  try {
+    var maxW = 240, maxH = 320;
+    var sc = Math.min(1, maxW / im.naturalWidth, maxH / im.naturalHeight);
+    var w = Math.max(24, Math.round(im.naturalWidth * sc));
+    var h = Math.max(32, Math.round(im.naturalHeight * sc));
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var x = c.getContext('2d', {willReadFrequently:true});
+    x.drawImage(im, 0, 0, w, h);
+    var d = x.getImageData(0, 0, w, h).data;
+
+    var edge = Math.max(2, Math.round(Math.min(w,h) * 0.045));
+    var sr=0, sg=0, sb=0, n=0;
+    function acc(px, py){ var k=(py*w+px)*4; if(d[k+3]<160)return; sr+=d[k];sg+=d[k+1];sb+=d[k+2];n++; }
+    for (var yy=0; yy<h; yy+=2){ for(var xx=0; xx<w; xx+=2){
+      if (xx<edge || xx>=w-edge || yy<edge || yy>=h-edge) acc(xx,yy);
+    }}
+    if (!n) throw new Error('no edge');
+    var br=sr/n, bg=sg/n, bb=sb/n;
+    var ptsX=[], ptsY=[];
+    for (var y=0; y<h; y++){
+      for (var x0=0; x0<w; x0++){
+        var k=(y*w+x0)*4; if(d[k+3]<160) continue;
+        var dr=d[k]-br, dg=d[k+1]-bg, db=d[k+2]-bb;
+        var dist=Math.sqrt(dr*dr+dg*dg+db*db);
+        var centerBias = 1 - Math.min(0.35, Math.abs((x0/w)-0.5)*0.45);
+        if (dist*centerBias > 46){ ptsX.push(x0); ptsY.push(y); }
+      }
+    }
+    if (ptsX.length < w*h*0.035) throw new Error('weak foreground');
+    ptsX.sort(function(a,b){return a-b}); ptsY.sort(function(a,b){return a-b});
+    function q(a,p){ return a[Math.max(0, Math.min(a.length-1, Math.floor((a.length-1)*p)))]; }
+    var l=q(ptsX,.035)/w, r=(q(ptsX,.965)+1)/w;
+    var t=q(ptsY,.025)/h, b=(q(ptsY,.985)+1)/h;
+    var padX=Math.max(.025,(r-l)*.05), padY=Math.max(.015,(b-t)*.025);
+    l=Math.max(.02,l-padX); r=Math.min(.98,r+padX); t=Math.max(.01,t-padY); b=Math.min(.99,b+padY);
+    if (r-l < .22 || b-t < .42 || r-l > .94){ throw new Error('bad box'); }
+    cropL=l; cropR=r; cropT=t; cropB=b;
+  } catch(e){
+    cropL=.18; cropR=.82; cropT=.04; cropB=.96;
+  }
+  var ch=cropB-cropT;
+  cut1=cropT+ch*.38;
+  cut2=cropT+ch*.80;
+}
+
+/* 사진 외곽에서 반복되는 색을 몇 개 골라 배경색 후보로 쓴다. 사람 인식은 하지 않는다. */
+function buildBackgroundPalette(im){
+  try {
+    var maxW=260, maxH=360;
+    var sc=Math.min(1,maxW/im.naturalWidth,maxH/im.naturalHeight);
+    var w=Math.max(24,Math.round(im.naturalWidth*sc));
+    var h=Math.max(32,Math.round(im.naturalHeight*sc));
+    var c=document.createElement('canvas'); c.width=w; c.height=h;
+    var ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(im,0,0,w,h);
+    var d=ctx.getImageData(0,0,w,h).data;
+    var edge=Math.max(3,Math.round(Math.min(w,h)*.075));
+    var bins={};
+    function add(x,y){
+      var k=(y*w+x)*4; if(d[k+3]<160)return;
+      var qr=Math.round(d[k]/24)*24, qg=Math.round(d[k+1]/24)*24, qb=Math.round(d[k+2]/24)*24;
+      var key=qr+','+qg+','+qb;
+      var o=bins[key]||(bins[key]={n:0,r:0,g:0,b:0});
+      o.n++; o.r+=d[k]; o.g+=d[k+1]; o.b+=d[k+2];
+    }
+    for(var y=0;y<h;y+=2) for(var x=0;x<w;x+=2){
+      if(x<edge||x>=w-edge||y<edge||y>=h-edge) add(x,y);
+    }
+    return Object.keys(bins).map(function(k){var o=bins[k];return {n:o.n,r:o.r/o.n,g:o.g/o.n,b:o.b/o.n};})
+      .sort(function(a,b){return b.n-a.n;}).slice(0,7)
+      .map(function(o){return [o.r,o.g,o.b];});
+  }catch(e){ return []; }
+}
+function colorDist(a,b){var dr=a[0]-b[0],dg=a[1]-b[1],db=a[2]-b[2];return Math.sqrt(dr*dr+dg*dg+db*db);}
+function looksLikeBackground(rgb){
+  for(var i=0;i<bgPalette.length;i++) if(colorDist(rgb,bgPalette[i])<43) return true;
+  return false;
+}
+/* 배경 후보와 비슷한 픽셀을 버리고 남은 색 중 가장 넓은 색 덩어리를 고른다. */
+function foregroundColor(canvas){
+  try{
+    var ctx=canvas.getContext('2d',{willReadFrequently:true});
+    var d=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    var bins={}, kept=0, total=0;
+    var step=Math.max(4,Math.floor(d.length/4/10000)*4);
+    for(var i=0;i<d.length;i+=step){
+      if(d[i+3]<160)continue; total++;
+      var rgb=[d[i],d[i+1],d[i+2]];
+      if(looksLikeBackground(rgb))continue;
+      kept++;
+      var qr=Math.floor(rgb[0]/28),qg=Math.floor(rgb[1]/28),qb=Math.floor(rgb[2]/28);
+      var key=qr+','+qg+','+qb, o=bins[key]||(bins[key]={n:0,r:0,g:0,b:0});
+      o.n++;o.r+=rgb[0];o.g+=rgb[1];o.b+=rgb[2];
+    }
+    if(kept<Math.max(24,total*.08)) return null;
+    var arr=Object.keys(bins).map(function(k){return bins[k];}).sort(function(a,b){return b.n-a.n;});
+    if(!arr.length)return null;
+    var best=arr[0];
+    return [Math.round(best.r/best.n),Math.round(best.g/best.n),Math.round(best.b/best.n)];
+  }catch(e){return null;}
+}
+
+function layoutZones(){
+  var img = $('photo');
+  var iw = img.clientWidth, ih = img.clientHeight;
+  if (!iw || !ih) return;
+  var left = img.offsetLeft || 0, top = img.offsetTop || 0;
+  var x1=left+iw*cropL, x2=left+iw*cropR;
+  var y0=top+ih*cropT, y1=top+ih*cut1, y2=top+ih*cut2, y3=top+ih*cropB;
+  var cw=x2-x1;
+  $('cropBox').style.left=x1+'px'; $('cropBox').style.top=y0+'px';
+  $('cropBox').style.width=cw+'px'; $('cropBox').style.height=(y3-y0)+'px';
+  $('cropTag').style.left=Math.max(left+4,x2-82)+'px'; $('cropTag').style.top=(y0+7)+'px';
+  [['zTop',y0,y1],['zBot',y1,y2],['zSho',y2,y3]].forEach(function(z){
+    var el=$(z[0]); el.style.left=x1+'px'; el.style.right='auto'; el.style.width=cw+'px';
+    el.style.top=z[1]+'px'; el.style.height=Math.max(1,z[2]-z[1])+'px';
+  });
+  $('grip1').style.left=x1+'px'; $('grip1').style.right='auto'; $('grip1').style.width=cw+'px'; $('grip1').style.top=(y1-8)+'px';
+  $('grip2').style.left=x1+'px'; $('grip2').style.right='auto'; $('grip2').style.width=cw+'px'; $('grip2').style.top=(y2-8)+'px';
+  $('cropTop').style.left=x1+'px'; $('cropTop').style.right='auto'; $('cropTop').style.width=cw+'px'; $('cropTop').style.top=(y0-9)+'px';
+  $('cropBottom').style.left=x1+'px'; $('cropBottom').style.right='auto'; $('cropBottom').style.width=cw+'px'; $('cropBottom').style.top=(y3-9)+'px';
+  $('cropLeft').style.top=y0+'px'; $('cropLeft').style.bottom='auto'; $('cropLeft').style.height=(y3-y0)+'px'; $('cropLeft').style.left=(x1-9)+'px';
+  $('cropRight').style.top=y0+'px'; $('cropRight').style.bottom='auto'; $('cropRight').style.height=(y3-y0)+'px'; $('cropRight').style.left=(x2-9)+'px';
+}
+window.addEventListener('resize', function(){ if (imgSrc) layoutZones(); });
+$('photo').addEventListener('load', layoutZones);
+
+/* ---------- 경계 끌기 ---------- */
+var dragGrip = null;
+function gripStart(which){ return function(ev){ ev.preventDefault(); dragGrip=which; }; }
+['grip1','grip2','cropTop','cropBottom','cropLeft','cropRight'].forEach(function(id){
+  $(id).addEventListener('mousedown', gripStart(id));
+  $(id).addEventListener('touchstart', gripStart(id), {passive:false});
+});
+function gripMove(ev){
+  if (!dragGrip) return;
+  var img=$('photo'), r=img.getBoundingClientRect();
+  var pt=ev.touches ? ev.touches[0] : ev;
+  var px=(pt.clientX-r.left)/r.width, py=(pt.clientY-r.top)/r.height;
+  px=Math.max(.01,Math.min(.99,px)); py=Math.max(.01,Math.min(.99,py));
+  var minY=.055, minX=.10;
+  if (dragGrip==='grip1') cut1=Math.max(cropT+minY,Math.min(py,cut2-minY));
+  else if (dragGrip==='grip2') cut2=Math.max(cut1+minY,Math.min(py,cropB-minY));
+  else if (dragGrip==='cropTop') { cropT=Math.min(py,cut1-minY); }
+  else if (dragGrip==='cropBottom') { cropB=Math.max(py,cut2+minY); }
+  else if (dragGrip==='cropLeft') cropL=Math.min(px,cropR-minX);
+  else if (dragGrip==='cropRight') cropR=Math.max(px,cropL+minX);
+  layoutZones();
+}
+window.addEventListener('mousemove', gripMove);
+window.addEventListener('touchmove', gripMove, {passive:false});
+function gripEnd(){
+  if (!dragGrip) return;
+  dragGrip=null;
+  $('photoNote').textContent='범위를 조정했습니다. 준비가 되면 「이 영역으로 판독」을 눌러 주세요.';
+}
+window.addEventListener('mouseup', gripEnd);
+window.addEventListener('touchend', gripEnd);
+
+/* ---------- 넣는 방법 ---------- */
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) loadBlob(f);
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadBlob(f);
+});
+document.addEventListener('paste', function(e){
+  var dt = e.clipboardData; if (!dt) return;
+  if (dt.files && dt.files.length){
+    for (var i = 0; i < dt.files.length; i++){
+      if (/^image\//.test(dt.files[i].type || '')){ e.preventDefault(); loadBlob(dt.files[i]); return; }
+    }
+  }
+  var items = dt.items || [];
+  for (var k = 0; k < items.length; k++){
+    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
+      var f = items[k].getAsFile();
+      if (f){ e.preventDefault(); loadBlob(f); return; }
+    }
+  }
+});
+
+/* ============================================================
+   판독
+   ============================================================ */
+var ZONES = [
+  { name:'상의', icon:'👕' },
+  { name:'하의', icon:'👖' },
+  { name:'신발', icon:'👟' }
+];
+function scan(){
+  if (!imgSrc) return;
+  $('laser').classList.add('on');
+  $('scanMask').classList.add('on');
+  setTimeout(function(){
+    try { doScan(); }
+    catch(e){ console.error(e); toast('색을 뽑지 못했습니다 · 다른 사진으로 시도해 주세요'); }
+    $('laser').classList.remove('on');
+    $('scanMask').classList.remove('on');
+  }, 900);
+}
+function doScan(){
+  var im = new Image();
+  im.onload = function(){
+    var W = im.naturalWidth, H = im.naturalHeight;
+    var bands = [[cropT, cut1], [cut1, cut2], [cut2, cropB]];
+    parts = [];
+    var ct = (typeof ColorThief !== 'undefined') ? new ColorThief() : null;
+
+    bands.forEach(function(bd, i){
+      var y = Math.floor(H * bd[0]);
+      var hh = Math.max(1, Math.floor(H * (bd[1] - bd[0])));
+      var c = document.createElement('canvas');
+      /* 조절한 인물 박스의 좌우 범위만 사용해 배경 혼입을 줄인다 */
+      var sx = Math.floor(W * cropL), sw = Math.max(1, Math.floor(W * (cropR-cropL)));
+      c.width = sw; c.height = hh;
+      c.getContext('2d').drawImage(im, sx, y, sw, hh, 0, 0, sw, hh);
+
+      var rgb = foregroundColor(c);
+      if (!rgb && ct){
+        try { rgb = ct.getColor(c, 5); } catch(e){ rgb = null; }
+      }
+      if (!rgb) rgb = averageOf(c);
+      parts.push({
+        name: ZONES[i].name, icon: ZONES[i].icon,
+        rgb: rgb, hsl: rgbToHsl(rgb[0], rgb[1], rgb[2])
+      });
+    });
+    renderColors();
+    $('photoNote').textContent='판독 완료 · 범위를 더 조정하려면 손잡이를 움직인 뒤 다시 판독해 주세요.';
+    var r = judge(parts);
+    lastKey = r.key;
+    renderVerdict(r);
+  };
+  im.onerror = function(){ toast('사진을 읽지 못했습니다'); };
+  im.src = imgSrc;
+}
+/* Color Thief 가 실패했을 때 쓰는 평균값 */
+function averageOf(canvas){
+  try {
+    var ctx = canvas.getContext('2d');
+    var d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    var r = 0, g = 0, b = 0, n = 0;
+    var step = Math.max(4, Math.floor(d.length / 4 / 4000) * 4);
+    for (var i = 0; i < d.length; i += step){
+      if (d[i+3] < 128) continue;
+      r += d[i]; g += d[i+1]; b += d[i+2]; n++;
+    }
+    if (!n) return [128,128,128];
+    return [Math.round(r/n), Math.round(g/n), Math.round(b/n)];
+  } catch(e){ return [128,128,128]; }
+}
+function renderColors(){
+  $('colors').innerHTML = parts.map(function(p){
+    var hex = toHex(p.rgb);
+    return '<div class="cbox" data-hex="' + hex + '" role="button" tabindex="0" title="눌러서 복사">' +
+      '<div class="sw" style="background:' + hex + '"></div>' +
+      '<div class="info"><div class="nm">' + p.icon + ' ' + p.name + '</div>' +
+      '<div class="hx">' + hex + '</div>' +
+      '<div class="hx">H' + p.hsl.h + ' S' + p.hsl.s + ' L' + p.hsl.l + '</div></div></div>';
+  }).join('');
+}
+$('colors').addEventListener('click', function(ev){
+  var b = ev.target.closest('[data-hex]');
+  if (!b) return;
+  copyText(b.dataset.hex, function(ok){ if (ok) toast(b.dataset.hex + ' 복사했습니다'); });
+});
+function renderVerdict(r){
+  var d = DB[r.key];
+  $('vEmoji').textContent = d.emoji;
+  $('vTitle').textContent = d.title;
+  $('vScore').textContent = d.score;
+  $('vScore').style.color = d.color;
+  $('vBarF').style.background = d.color;
+  $('vCard').style.borderColor = d.color;
+  $('vTop').style.borderBottomColor = d.color;
+  $('vMsg').textContent = d.msg;
+  $('vWhy').innerHTML = '🧾 <b>단속반의 억지 근거</b> · ' + r.why.join(' · ') +
+    '<br>색 세 개만 보고 만든 농담입니다. 실제 패션 감각과는 아무 상관 없습니다.';
+  $('verdict').classList.add('on');
+  setTimeout(function(){ $('vBarF').style.width = d.score + '%'; }, 60);
+  hit();
+}
+function hit(){
+  var f = $('flash');
+  f.classList.remove('on');
+  void f.offsetWidth;        /* 애니메이션을 다시 태우려면 리플로우가 필요하다 */
+  f.classList.add('on');
+  document.body.classList.remove('shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake');
+  setTimeout(function(){ document.body.classList.remove('shake'); }, 420);
+}
+
+$('scanBtn').addEventListener('click', scan);
+$('newBtn').addEventListener('click', function(){
+  imgSrc = ''; parts = []; lastKey = ''; bgPalette = [];
+  $('photo').src = '';
+  $('stage').classList.remove('on');
+  $('verdict').classList.remove('on');
+  $('drop').style.display = '';
+  $('vBarF').style.width = '0';
+  toast('다른 사진을 올려 주세요');
+});
+
+/* ---------- 내보내기 ---------- */
+function resultText(){
+  var d = DB[lastKey];
+  if (!d) return '';
+  var L = ['🚨 오늘의 패션 단속반 판정문 🚨', ''];
+  L.push(d.title);
+  L.push('무난지수: ' + d.score + ' / 100');
+  L.push('');
+  L.push(d.msg);
+  L.push('');
+  L.push('[ 현장에서 확보한 색 ]');
+  parts.forEach(function(p){
+    L.push(p.icon + ' ' + p.name + ': ' + toHex(p.rgb) +
+      '  (H' + p.hsl.h + ' S' + p.hsl.s + ' L' + p.hsl.l + ')');
+  });
+  L.push('');
+  L.push('※ 색 세 개로 만든 농담입니다. 패션 평가는 아닙니다.');
+  return L.join('\n');
+}
+$('copyBtn').addEventListener('click', function(){
+  var t = parts.length ? resultText() : '';
+  if (!t){ toast('먼저 사진을 올려 판독해 주세요'); return; }
+  copyText(t, function(ok){ toast(ok ? '복사했습니다 · 친구에게 보내세요' : '복사가 막혔습니다'); });
+});
+/* 결과를 그림 한 장으로 그린다 */
+$('shotBtn').addEventListener('click', function(){
+  var d = DB[lastKey];
+  if (!d || !parts.length){ toast('먼저 사진을 올려 판독해 주세요'); return; }
+  try {
+    var W = 720, H = 620, s = 2;
+    var c = document.createElement('canvas');
+    c.width = W*s; c.height = H*s;
+    var x = c.getContext('2d');
+    x.scale(s, s);
+    x.fillStyle = '#18181B'; x.fillRect(0, 0, W, H);
+    /* 위아래 폴리스 라인 */
+    for (var t = 0; t < 2; t++){
+      var yy = t === 0 ? 0 : H - 22;
+      for (var i = -30; i < W + 30; i += 44){
+        x.fillStyle = '#FACC15';
+        x.beginPath();
+        x.moveTo(i, yy); x.lineTo(i+22, yy); x.lineTo(i+22-22, yy+22); x.lineTo(i-22+22, yy+22);
+        x.closePath(); x.fill();
+      }
+    }
+    x.textAlign = 'center';
+    x.fillStyle = '#EF4444';
+    x.font = '900 13px Pretendard, sans-serif';
+    x.fillText('⚠️ FASHION POLICE INCIDENT REPORT', W/2, 58);
+    x.font = '900 54px Pretendard, sans-serif';
+    x.fillText(d.emoji, W/2, 122);
+    x.fillStyle = '#FAFAFA';
+    x.font = '900 26px Pretendard, sans-serif';
+    wrap(x, d.title, W/2, 168, W - 80, 34, 2);
+    x.fillStyle = d.color;
+    x.font = '900 62px Pretendard, sans-serif';
+    x.fillText(String(d.score), W/2, 268);
+    x.fillStyle = '#8B8B93';
+    x.font = '800 13px Pretendard, sans-serif';
+    x.fillText('무난지수 / 100', W/2, 292);
+    /* 점수 막대 */
+    x.fillStyle = '#2E2E33';
+    rr(x, W/2 - 160, 308, 320, 10, 5); x.fill();
+    x.fillStyle = d.color;
+    rr(x, W/2 - 160, 308, 320 * d.score / 100, 10, 5); x.fill();
+
+    x.fillStyle = '#D4D4D8';
+    x.font = '400 15px Pretendard, sans-serif';
+    wrap(x, d.msg, W/2, 352, W - 90, 26, 4);
+
+    /* 뽑아 낸 색 */
+    var bw = 150, gap = 22;
+    var startX = W/2 - (bw*3 + gap*2)/2;
+    parts.forEach(function(p, i){
+      var px = startX + i*(bw+gap);
+      x.fillStyle = toHex(p.rgb);
+      rr(x, px, 470, bw, 62, 10); x.fill();
+      x.strokeStyle = 'rgba(250,250,250,.14)'; x.lineWidth = 1;
+      rr(x, px, 470, bw, 62, 10); x.stroke();
+      x.fillStyle = '#FAFAFA';
+      x.font = '800 13px Pretendard, sans-serif';
+      x.fillText(p.icon + ' ' + p.name, px + bw/2, 552);
+      x.fillStyle = '#8B8B93';
+      x.font = '400 12px ui-monospace, monospace';
+      x.fillText(toHex(p.rgb), px + bw/2, 570);
+    });
+    x.fillStyle = '#8B8B93';
+    x.font = '400 11.5px Pretendard, sans-serif';
+    x.fillText('색 세 개로 만든 농담입니다 · mnledu.com', W/2, 596);
+
+    c.toBlob(function(b){
+      if (!b){ toast('이미지를 만들지 못했습니다'); return; }
+      var url = URL.createObjectURL(b);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'fashion-verdict.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+      toast('결과를 이미지로 저장했습니다');
+    }, 'image/png');
+  } catch(e){ toast('저장이 막혔습니다'); }
+});
+function rr(x, a, b, w, h, r){
+  x.beginPath();
+  x.moveTo(a+r, b); x.lineTo(a+w-r, b); x.quadraticCurveTo(a+w, b, a+w, b+r);
+  x.lineTo(a+w, b+h-r); x.quadraticCurveTo(a+w, b+h, a+w-r, b+h);
+  x.lineTo(a+r, b+h); x.quadraticCurveTo(a, b+h, a, b+h-r);
+  x.lineTo(a, b+r); x.quadraticCurveTo(a, b, a+r, b); x.closePath();
+}
+/* 캔버스에는 자동 줄바꿈이 없으므로 직접 끊는다 */
+function wrap(x, text, cx, cy, maxW, lh, maxLines){
+  var words = String(text).split(' ');
+  var line = '', lines = [];
+  words.forEach(function(w){
+    var test = line ? line + ' ' + w : w;
+    if (x.measureText(test).width > maxW && line){ lines.push(line); line = w; }
+    else line = test;
+  });
+  if (line) lines.push(line);
+  if (lines.length > maxLines){
+    lines = lines.slice(0, maxLines);
+    lines[maxLines-1] = lines[maxLines-1].slice(0, -1) + '…';
+  }
+  lines.forEach(function(l, i){ x.fillText(l, cx, cy + i*lh); });
+}
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#212124;color:#D4D4D8;border-top:1px solid #3F3F46;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:54px 20px 62px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:750px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:900;letter-spacing:-.01em;color:#FAFAFA;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.95;color:#D4D4D8;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.9;color:#D4D4D8;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:800;color:#FACC15}
+.tk-guide code{background:#18181B;border:1px solid #3F3F46;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#FAFAFA}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #3F3F46}
+.tk-guide dt{font-size:14.5px;font-weight:800;color:#FAFAFA;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.9;color:#D4D4D8;margin:6px 0 18px;padding-bottom:18px;
+  border-bottom:1px solid #3F3F46;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:17px 19px;background:#18181B;border:1px solid #3F3F46;
+  border-radius:13px;font-size:13px;line-height:1.85;color:#8B8B93;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #3F3F46}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#FACC15;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:800;color:#FACC15}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>패션 평가는 못 합니다. 대신 사건명은 붙여 드립니다</h2>
+<p>이 도구가 보는 것은 상의·하의·신발에서 뽑은 <strong>색 세 개</strong>뿐입니다. 핏도 모르고, 소재도 모르고, 얼굴도 모르고, 유행은 더더욱 모릅니다.</p>
+<p>그래서 결과도 진지한 조언 대신 “오늘의 착장이 무엇처럼 보이는가”를 과하게 해석하는 쪽으로 만들었습니다. 잘 입었든 못 입었든 <strong>어딘가 조금 억울하게 웃긴 판정</strong>이 목표입니다.</p>
+
+<h2>사진에서는 먼저 사람 비슷한 영역만 좁혀 봅니다</h2>
+<p>사진을 올리면 가장자리에서 자주 나타나는 색을 배경 후보로 보고, 가운데에서 그 색과 다른 부분을 찾아 인물이 있을 법한 범위를 대략 잡습니다. 사람을 알아보는 AI가 아니라 <strong>색 차이와 위치만 이용한 단순 추정</strong>입니다.</p>
+<p>흰 손잡이 네 개로 위·아래·좌·우 범위를 맞추고, 노란 손잡이 두 개로 상의·하의·신발 경계를 옮길 수 있습니다. 손잡이를 움직이는 동안에는 아무 판정도 하지 않습니다. 원하는 만큼 맞춘 뒤 <strong>이 영역으로 판독</strong>을 눌렀을 때만 색을 다시 뽑습니다.</p>
+
+<h2>50가지 사건명</h2>
+<p>판정은 크게 형광, 강한 충돌, 올블랙, 밝은 무채색, 베이지, 파스텔, 청청, 자연색, 빨강 계열, 파랑 계열, 포인트 컬러, 무채색, 유사톤, 애매한 대비로 나눕니다. 그 안에서 밝기·채도·색상 차이를 다시 이용해 <strong>총 50개의 사건명</strong> 중 하나를 고릅니다.</p>
+<p>예를 들어 올블랙도 항상 같은 결과가 나오지 않습니다. <strong>무난함에 보험을 세 번 듦</strong>, <strong>검정색에 전권 위임</strong>, <strong>색상 회의 자체를 취소함</strong>처럼 같은 유형 안에서도 다른 농담이 나옵니다. 결과 선택은 색값으로 결정하므로 같은 사진과 같은 범위라면 같은 결과가 나옵니다.</p>
+<p><strong>무난지수</strong>는 잘 입었다는 점수가 아닙니다. 색들이 얼마나 조용히 지내는지를 숫자로 만든 장난입니다. 90점대라고 칭찬도 아니고, 10점대라고 실패도 아닙니다.</p>
+
+<h2>배경색은 가능한 한 빼고 봅니다</h2>
+<p>사진 가장자리에서 반복되는 색을 배경 후보로 만든 뒤, 옷 영역 안에서도 그 색과 가까운 픽셀은 대표색 계산에서 제외합니다. 단색 벽이나 바닥이 많은 사진에서 배경이 옷 색으로 잡히는 일을 줄이기 위한 장치입니다.</p>
+<p>완벽한 사람 분리는 아니므로 복잡한 거리 사진이나 여러 사람이 함께 나온 사진에서는 틀릴 수 있습니다. 그럴 때는 손잡이로 실제 옷이 있는 범위를 좁히는 편이 가장 빠릅니다.</p>
+
+<h2>결과가 너무 멀쩡해도 걱정하지 마세요</h2>
+<p>색 조합이 아주 안정적이어도 “멋집니다”로 끝내지 않습니다. 크림색 일색이면 바닐라 마카롱, 올블랙이면 무난함에 보험을 세 번 든 것으로, 같은 톤이면 색상 회의 만장일치처럼 <strong>칭찬도 혹평도 아닌 별명</strong>을 붙입니다.</p>
+<p>이 도구의 성공 기준은 패션 조언의 정확도가 아니라, 결과를 본 사람이 “뭐야 이거” 하고 한 번 웃는 것입니다.</p>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>사진이 서버로 전송되나요</dt><dd>전송되지 않습니다. 사진 처리와 색 추출은 브라우저 안에서 이루어집니다. 외부 스타일·스크립트 리소스를 불러올 수 있지만 올린 사진 자체를 서버에 보내지는 않습니다.</dd>
+<dt>손잡이를 움직일 때마다 판독하나요</dt><dd>아닙니다. 손잡이는 범위만 조절합니다. 원하는 위치로 맞춘 뒤 ‘이 영역으로 판독’을 눌렀을 때만 새로 계산합니다.</dd>
+<dt>왜 결과가 이렇게 엉뚱한가요</dt><dd>정상입니다. 색 세 개만 보고 억지로 사건명을 붙이는 오락용 도구입니다. 실제 코디의 완성도와는 관계가 없습니다.</dd>
+<dt>무난지수가 높으면 잘 입은 건가요</dt><dd>아닙니다. 색들이 얼마나 비슷하거나 차분한지를 장난스럽게 숫자로 바꾼 값입니다. 높은 숫자는 조용하다는 뜻에 가깝고, 낮은 숫자는 색들이 서로 할 말이 많다는 뜻에 가깝습니다.</dd>
+<dt>친구 사진으로 해도 되나요</dt><dd>사진을 사용할 사람의 동의를 받고 함께 웃는 용도로만 써 주세요. 외모나 옷차림을 공격하는 용도로 만든 도구는 아닙니다.</dd>
+</dl>
+
+<p class="tk-guide-note">이 도구는 색 조합으로 농담을 만드는 오락용 도구입니다. 결과는 패션, 외모, 취향에 대한 평가가 아닙니다. 사진 처리는 브라우저 안에서 이루어지며, 다른 사람의 사진을 사용할 때는 당사자의 동의를 받아 주세요.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/entertainment/aggro-match_kr.html">어그로 매치</a></li>
+<li><a href="https://mnledu.com/kr/productivity/palette-picker_kr.html">브랜드 컬러 추출기</a></li>
+<li><a href="https://mnledu.com/kr/design-media/thumb-mockup_kr.html">썸네일·쇼츠 미리보기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/image-studio_kr.html">사진 편집 스튜디오</a></li>
+<li><a href="https://mnledu.com/kr/design-media/uploader-toolkit_kr.html">업로드 스마트 템플릿</a></li>
+<li><a href="https://mnledu.com/kr/productivity/qr-studio_kr.html">맞춤형 QR코드 생성기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/entertainment/fashion-detector_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/entertainment/fashion-detector_kr.html";
+  var TK_SHARE_TITLE = "패션 단속반";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">최초 등록</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+</body>
+</html>

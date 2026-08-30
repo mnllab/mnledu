@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F172A">
+
+<title>All-in-One Photo Studio · In-Browser Background Remover | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Crop, rotate, resize and clear backgrounds entirely inside your browser. Signatures and stamps lose their white paper instantly with nothing to download; busier photos get an AI cutout. Your photo is never uploaded." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/image-studio_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/image-studio_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/image-studio_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/image-studio_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/image-studio_en.html" />
+<meta property="og:title" content="All-in-One Photo Studio · In-Browser Background Remover | TOOLKIT" />
+<meta property="og:description" content="Crop, rotate, resize and clear backgrounds entirely inside your browser. Signatures and stamps lose their white paper instantly with nothing to download; busier photos get an AI cutout. Your photo is never uploaded." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="All-in-One Photo Studio | TOOLKIT" />
+<meta name="twitter:description" content="Clear the paper behind a signature instantly, or run an AI cutout on a busier photo. All inside your browser." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "All-in-One Photo Studio",
+ "description": "A photo editor that crops, rotates, resizes and clears backgrounds entirely inside the browser \u2014 instantly for white paper, or with an AI cutout for busier photos.",
+ "url": "https://mnledu.com/en/productivity/image-studio_en.html",
+ "applicationCategory": "MultimediaApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "Photo Studio", "item": "https://mnledu.com/en/productivity/image-studio_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is my photo uploaded anywhere?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Opening the file, cropping, rotating, removing the background and saving all happen inside your browser. Close the page and the work goes with it." }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between clearing white and the AI cutout?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Clearing white turns bright pixels transparent. Because the idea is simple it runs the moment you press it, with nothing to download, and it suits signatures, stamps and handwriting sitting on pale paper. The AI cutout works out what the subject actually is, which is what you need for portraits or busy backgrounds, and it downloads a model once before it can run." }
+  },
+  {
+   "@type": "Question",
+   "name": "What does automatic brightness detection do?",
+   "acceptedAnswer": { "@type": "Answer", "text": "It reads the brightness around the edges of the photo and settles on a level that fits that particular shot, so yellowed paper or a shadow across one side is handled without any adjustment. Pressing Start shows a preview at that level, and moving a slider updates the result as you go. Press Apply once it looks right." }
+  },
+  {
+   "@type": "Question",
+   "name": "How does the AI cutout work?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Your browser downloads a segmentation model and runs it on your own device. The photo never leaves the machine \u2014 only the model file is fetched. The first run takes a while to download it; after that it stays cached and runs much faster." }
+  },
+  {
+   "@type": "Question",
+   "name": "How long does the AI cutout take?",
+   "acceptedAnswer": { "@type": "Answer", "text": "The first run can take tens of seconds while the model downloads. Once it is cached, a single photo usually takes a few seconds to a dozen or so, depending on your device and the image size." }
+  },
+  {
+   "@type": "Question",
+   "name": "How is the save format decided?",
+   "acceptedAnswer": { "@type": "Answer", "text": "If any part of the image is transparent it saves as PNG; otherwise it saves as the smaller JPG. After removing a background there are transparent areas, so the file comes out as PNG and drops straight onto another background." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I paste the edited photo directly?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Press Copy image and it goes to the clipboard as a picture, ready to paste into a document or a chat window. If your browser blocks clipboard images, the tool falls back to downloading the file." }
+  },
+  {
+   "@type": "Question",
+   "name": "How many ways can I open a photo?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Four. Use the Open image button, click the empty editing area, drag a file onto the page, or press the paste shortcut anywhere to bring in whatever picture is on your clipboard. There is a Paste button as well." }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between Undo edits and Start over?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Undo edits keeps the photo you have open and rolls back everything you did to it. Start over clears the photo too and returns to the opening screen, which is what you want before editing a different picture." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<style>
+  :root{
+    --bg:#1E293B; --panel:#0F172A; --line:#334155; --line2:#1E293B;
+    --accent:#3B82F6; --accent2:#60A5FA;
+    --ink:#F1F5F9; --ink2:#CBD5E1; --muted:#94A3B8;
+    --ok:#34D399; --warn:#FBBF24;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+
+  /* ---------- 레이아웃 ---------- */
+  #app{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+  #bar{flex:none;background:var(--panel);border-bottom:1px solid var(--line);
+    padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  #bar .brand{font-size:14.5px;font-weight:800;letter-spacing:-.01em;margin-right:6px;white-space:nowrap}
+  #bar .sep{width:1px;height:26px;background:var(--line);margin:0 4px;flex:none}
+  #bar .spacer{flex:1}
+  #main{flex:1;display:flex;min-height:0}
+  #stage{flex:1;position:relative;background:
+      linear-gradient(45deg,#182234 25%,transparent 25%,transparent 75%,#182234 75%),
+      linear-gradient(45deg,#182234 25%,#1E293B 25%,#1E293B 75%,#182234 75%);
+    background-size:22px 22px;background-position:0 0,11px 11px;
+    overflow:hidden;min-width:0;display:flex;align-items:center;justify-content:center}
+  #side{flex:none;width:288px;background:var(--panel);border-left:1px solid var(--line);
+    overflow-y:auto;padding:16px}
+  @media(max-width:860px){
+    #main{flex-direction:column}
+    #side{width:auto;border-left:0;border-top:1px solid var(--line);max-height:46vh}
+    #stage{min-height:38vh}
+  }
+
+  /* ---------- 컨트롤 ---------- */
+  .btn{border:1px solid var(--line);background:#172033;color:var(--ink);
+    border-radius:10px;font-size:13.5px;font-weight:600;padding:9px 13px;cursor:pointer;
+    min-height:40px;font-family:inherit;white-space:nowrap;
+    transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:#475569;background:#1E293B}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.sm{min-height:34px;padding:6px 10px;font-size:12.5px;border-radius:8px}
+  .btn.ghost{background:transparent}
+
+  .fld{width:100%;background:#0B1120;border:1px solid var(--line);border-radius:9px;
+    padding:9px 11px;color:var(--ink);font-size:14px;min-height:40px;font-family:inherit;outline:none}
+  .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.18)}
+  label.lab{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:7px;
+    letter-spacing:.03em;text-transform:uppercase}
+  .grp{padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--line2)}
+  .grp:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+  .grp h3{font-size:13px;font-weight:800;margin:0 0 12px;color:var(--ink)}
+  .row{display:grid;gap:8px}
+  .r2{grid-template-columns:1fr 1fr}
+  .r3{grid-template-columns:repeat(3,1fr)}
+  .r4{grid-template-columns:repeat(4,1fr)}
+  .hint{font-size:11.5px;color:var(--muted);line-height:1.7;margin:9px 0 0}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer;
+    user-select:none;min-height:34px}
+  .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+  input[type=range]{width:100%;accent-color:var(--accent);height:32px;cursor:pointer}
+
+  /* ---------- 스테이지 ---------- */
+  #empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;padding:28px;pointer-events:none;cursor:pointer}
+  #empty .ic{font-size:44px;margin-bottom:14px;opacity:.7}
+  #empty p{margin:0;font-size:15px;color:var(--ink2);line-height:1.9}
+  #empty small{display:block;font-size:12.5px;color:var(--muted);margin-top:9px}
+  #canvasWrap{position:relative;max-width:100%;max-height:100%;display:none;
+    transform-origin:center center}
+  #canvasWrap.on{display:block}
+  #view{display:block;max-width:100%;max-height:100%;
+    box-shadow:0 10px 40px rgba(2,6,23,.6)}
+  #cropWrap{display:none;max-width:100%;max-height:100%;overflow:hidden}
+  #cropWrap.on{display:block}
+  #cropImg{display:block;max-width:100%}
+  #zoomInfo{position:absolute;left:12px;bottom:12px;background:rgba(15,23,42,.88);
+    border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-size:11.5px;
+    color:var(--ink2);pointer-events:none}
+  body.drag #stage{outline:3px dashed var(--accent);outline-offset:-8px}
+
+  /* ---------- 오버레이 ---------- */
+  #busy{position:fixed;inset:0;z-index:70;background:rgba(2,6,23,.86);display:none;
+    align-items:center;justify-content:center;padding:20px}
+  #busy.on{display:flex}
+  #busyCard{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:28px;max-width:420px;width:100%;text-align:center}
+  .spin{width:52px;height:52px;margin:0 auto 18px;border:3px solid rgba(59,130,246,.22);
+    border-top-color:var(--accent);border-radius:50%;animation:sp 900ms linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  #busyTitle{font-size:15.5px;font-weight:800;margin:0 0 8px}
+  #busyMsg{font-size:13px;color:var(--ink2);line-height:1.8;margin:0}
+  #barOuter{height:7px;background:#1E293B;border-radius:99px;overflow:hidden;margin-top:16px;display:none}
+  #barOuter.on{display:block}
+  #barInner{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s}
+
+  #ask{position:fixed;inset:0;z-index:80;background:rgba(2,6,23,.86);display:none;
+    align-items:center;justify-content:center;padding:20px}
+  #ask.on{display:flex}
+  #askCard{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:26px;max-width:460px;width:100%}
+  #askCard h3{font-size:16.5px;font-weight:800;margin:0 0 12px}
+  #askCard p{font-size:13.5px;color:var(--ink2);line-height:1.9;margin:0 0 10px}
+  #askCard ul{margin:12px 0 0;padding-left:19px}
+  #askCard li{font-size:13px;color:var(--ink2);line-height:1.8;margin-top:6px}
+  .note{background:#172033;border:1px solid var(--line);border-radius:11px;
+    padding:13px 15px;margin-top:16px;font-size:12.5px;color:var(--muted);line-height:1.8}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:#0B1120;border:1px solid var(--line);color:var(--ink);border-radius:11px;
+    padding:12px 20px;font-size:13.5px;z-index:90;pointer-events:none;
+    transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+
+  .hidden{display:none !important}
+  .cropper-view-box,.cropper-face{border-radius:0}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  <!-- 툴바 -->
+  <div id="bar">
+    <span class="brand">🎨 Photo Studio</span>
+    <button class="btn p" id="openBtn">Open image</button>
+    <button class="btn" id="pasteBtn" title="Paste the picture on your clipboard">📥 Paste</button>
+    <input type="file" id="fileInput" accept="image/*" class="hidden">
+    <span class="sep"></span>
+
+    <button class="btn" id="cropBtn" disabled>✂️ Crop</button>
+    <button class="btn" id="rotLBtn" disabled title="Rotate left 90°">↺</button>
+    <button class="btn" id="rotRBtn" disabled title="Rotate right 90°">↻</button>
+    <button class="btn" id="flipHBtn" disabled title="Flip horizontally">⇄</button>
+    <button class="btn" id="whiteBtn" disabled>🩹 Clear white</button>
+    <button class="btn" id="bgBtn" disabled>✨ AI cutout</button>
+    <span class="sep"></span>
+    <button class="btn" id="undoBtn" disabled title="Undo">↶ Undo</button>
+    <button class="btn" id="resetBtn" disabled>Undo edits</button>
+    <button class="btn ghost" id="clearBtn" disabled>Start over</button>
+
+    <span class="spacer"></span>
+    <button class="btn" id="copyBtn" disabled>📋 Copy image</button>
+    <button class="btn p" id="saveBtn" disabled>💾 Save</button>
+  </div>
+
+  <div id="main">
+    <!-- 캔버스 -->
+    <div id="stage">
+      <div id="empty">
+        <div class="ic">🖼</div>
+        <p>Drop a photo here to start editing<br>
+          <small>Click here or drag a file in · paste with <b class="mono">Ctrl</b>+<b class="mono">V</b></small>
+          <small>Your photo is never uploaded — everything runs in this browser</small>
+        </p>
+      </div>
+      <div id="canvasWrap"><canvas id="view"></canvas></div>
+      <div id="cropWrap"><img id="cropImg" alt="Crop preview"></div>
+      <div id="zoomInfo" class="mono hidden">100%</div>
+    </div>
+
+    <!-- 우측 패널 -->
+    <div id="side">
+
+      <div class="grp" id="cropPanel" style="display:none">
+        <h3>✂️ Crop</h3>
+        <label class="lab">Aspect ratio</label>
+        <div class="row r4">
+          <button class="btn sm ratio on" data-r="free">Free</button>
+          <button class="btn sm ratio" data-r="1">1:1</button>
+          <button class="btn sm ratio" data-r="1.3333">4:3</button>
+          <button class="btn sm ratio" data-r="1.7778">16:9</button>
+        </div>
+        <label class="lab" style="margin-top:14px" for="fineRot">Fine angle <span id="fineVal" class="mono">0°</span></label>
+        <input type="range" id="fineRot" min="-45" max="45" step="0.5" value="0">
+        <div class="row r2" style="margin-top:12px">
+          <button class="btn" id="cropCancel">Cancel</button>
+          <button class="btn p" id="cropApply">Apply</button>
+        </div>
+        <p class="hint">Drag the corners to set the area, then press Apply. The fine angle slider straightens a tilted shot.</p>
+      </div>
+
+      <div class="grp" id="infoPanel">
+        <h3>📄 Image info</h3>
+        <div class="row r2">
+          <div>
+            <label class="lab">Dimensions</label>
+            <p class="mono" id="dimInfo" style="margin:0;font-size:14px">-</p>
+          </div>
+          <div>
+            <label class="lab">Transparency</label>
+            <p class="mono" id="alphaInfo" style="margin:0;font-size:14px">-</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grp">
+        <h3>📐 Resize</h3>
+        <div class="row r2">
+          <div>
+            <label class="lab" for="wIn">Width (px)</label>
+            <input class="fld mono" id="wIn" type="number" min="1" max="12000" inputmode="numeric">
+          </div>
+          <div>
+            <label class="lab" for="hIn">Height (px)</label>
+            <input class="fld mono" id="hIn" type="number" min="1" max="12000" inputmode="numeric">
+          </div>
+        </div>
+        <label class="chk" style="margin-top:10px">
+          <input type="checkbox" id="lockRatio" checked>
+          <span>Lock aspect ratio</span>
+        </label>
+        <div class="row r3" style="margin-top:8px">
+          <button class="btn sm scale" data-s="0.5">50%</button>
+          <button class="btn sm scale" data-s="0.75">75%</button>
+          <button class="btn sm scale" data-s="2">200%</button>
+        </div>
+        <button class="btn p" id="resizeBtn" style="width:100%;margin-top:10px" disabled>Apply size</button>
+      </div>
+
+      <div class="grp">
+        <h3>🔄 Rotate</h3>
+        <div class="row r2">
+          <button class="btn" id="rotL2" disabled>↺ Left 90°</button>
+          <button class="btn" id="rotR2" disabled>↻ Right 90°</button>
+        </div>
+        <p class="hint">Fine tilt correction lives inside the crop tool.</p>
+      </div>
+
+      <div class="grp">
+        <h3>🩹 Clear white background</h3>
+        <p class="hint" style="margin:0 0 12px">Turns the paper behind a signature, stamp or handwriting transparent right away, with nothing to download.</p>
+
+        <button class="btn p" id="whiteStart" style="width:100%" disabled>Start clearing</button>
+
+        <div id="whitePanel" style="display:none">
+          <label class="chk">
+            <input type="checkbox" id="wAuto" checked>
+            <span>Detect brightness automatically</span>
+          </label>
+          <label class="lab" style="margin-top:10px" for="wTh">Clear above <span id="wThVal" class="mono">240</span></label>
+          <input type="range" id="wTh" min="80" max="255" step="1" value="240">
+          <label class="lab" style="margin-top:6px" for="wFe">Edge softness <span id="wFeVal" class="mono">24</span></label>
+          <input type="range" id="wFe" min="0" max="80" step="1" value="24">
+          <p class="hint" id="wStat" style="margin-top:4px">-</p>
+          <div class="row r2" style="margin-top:10px">
+            <button class="btn" id="whiteCancel">Cancel</button>
+            <button class="btn p" id="whiteApply">Apply</button>
+          </div>
+          <p class="hint">Move a slider and the result updates as you go. For photos with a busy background, use the AI cutout below.</p>
+        </div>
+      </div>
+
+      <div class="grp">
+        <h3>✨ AI cutout</h3>
+        <label class="lab" for="modelSel">Model size</label>
+        <select class="fld" id="modelSel">
+          <option value="isnet_fp16" selected>Medium (recommended · about 44MB)</option>
+          <option value="isnet_quint8">Small (fast · about 11MB)</option>
+          <option value="isnet">Large (detailed · about 88MB)</option>
+        </select>
+        <button class="btn p" id="bgBtn2" style="width:100%;margin-top:10px" disabled>Remove background</button>
+        <p class="hint">The first run downloads the segmentation model, which takes a moment. After that it stays cached and runs much faster.</p>
+      </div>
+
+      <div class="grp">
+        <h3>💾 Export</h3>
+        <button class="btn" id="copyBtn2" style="width:100%" disabled>📋 Copy image to clipboard</button>
+        <button class="btn p" id="saveBtn2" style="width:100%;margin-top:8px" disabled>💾 Save image</button>
+        <p class="hint" id="fmtHint">Saves as PNG when the image has transparency, otherwise as JPG.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 진행 오버레이 -->
+<div id="busy" role="status" aria-live="polite">
+  <div id="busyCard">
+    <div class="spin"></div>
+    <p id="busyTitle">Working</p>
+    <p id="busyMsg"></p>
+    <div id="barOuter"><div id="barInner"></div></div>
+  </div>
+</div>
+
+<!-- 모델 다운로드 확인 -->
+<div id="ask" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+  <div id="askCard">
+    <h3 id="askTitle">This will download a segmentation model</h3>
+    <p>Removing a background needs a segmentation model in your browser first. The model you selected is
+      <b id="askSize" class="mono">about 44MB</b>.</p>
+    <ul>
+      <li>Your photo never leaves the device. Only the model file is fetched.</li>
+      <li>It downloads once, then stays cached and runs much faster afterwards.</li>
+      <li>On mobile data, keep an eye on your allowance.</li>
+    </ul>
+    <div class="note">Once downloaded, a single photo usually takes a few seconds to a dozen or so, depending on your device and the image size.</div>
+    <div class="row r2" style="margin-top:18px">
+      <button class="btn" id="askNo">Cancel</button>
+      <button class="btn p" id="askYes">Download and continue</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+/* ============================================================
+   스마트 올인원 사진 편집 스튜디오
+   - 모든 처리는 브라우저 안에서 이루어지며 이미지는 전송되지 않는다
+   - @imgly/background-removal 은 ESM 전용이라 module 스크립트에서 import 한다
+   ============================================================ */
+'use strict';
+
+const $ = (id) => document.getElementById(id);
+const IMGLY_VER = '1.7.0';
+const MODEL_SIZE = { isnet_quint8:'about 11MB', isnet_fp16:'about 44MB', isnet:'about 88MB' };
+
+/* ---------- 상태 ---------- */
+let img = null;          // 현재 이미지가 담긴 캔버스
+let history = [];        // 되돌리기용 캔버스 목록
+let cropper = null;
+let zoom = 1, panX = 0, panY = 0;
+let bgLib = null;        // 지연 로딩한 배경 제거 모듈
+let askResolve = null;
+
+/* ---------- 유틸 ---------- */
+let toastT = null;
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400);
+}
+function busy(on, title, msg){
+  $('busy').classList.toggle('on', !!on);
+  if (title) $('busyTitle').textContent = title;
+  $('busyMsg').textContent = msg || '';
+  if (!on){ $('barOuter').classList.remove('on'); $('barInner').style.width = '0%'; }
+}
+function progress(pct){
+  $('barOuter').classList.add('on');
+  $('barInner').style.width = Math.max(0, Math.min(100, pct)) + '%';
+}
+function makeCanvas(w, h){
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w));
+  c.height = Math.max(1, Math.round(h));
+  return c;
+}
+function cloneCanvas(src){
+  const c = makeCanvas(src.width, src.height);
+  c.getContext('2d').drawImage(src, 0, 0);
+  return c;
+}
+
+/* 투명한 픽셀이 있는지 살펴 저장 형식을 정한다 */
+function hasAlpha(cv){
+  try {
+    const ctx = cv.getContext('2d', { willReadFrequently:true });
+    const step = Math.max(1, Math.floor(Math.sqrt((cv.width*cv.height)/40000)));
+    const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+    for (let y = 0; y < cv.height; y += step){
+      for (let x = 0; x < cv.width; x += step){
+        if (d[(y*cv.width + x)*4 + 3] < 250) return true;
+      }
+    }
+    return false;
+  } catch(e){ return true; }   // 확인할 수 없으면 안전하게 PNG 로 둔다
+}
+
+/* ---------- 렌더 ---------- */
+function render(){
+  if (!img) return;
+  const view = $('view');
+  view.width = img.width; view.height = img.height;
+  const ctx = view.getContext('2d');
+  ctx.clearRect(0, 0, view.width, view.height);
+  ctx.drawImage(img, 0, 0);
+  applyTransform();
+
+  $('dimInfo').textContent = img.width + ' × ' + img.height;
+  const a = hasAlpha(img);
+  $('alphaInfo').textContent = a ? 'yes' : 'no';
+  $('fmtHint').textContent = a
+    ? 'Has transparency — will save as PNG.'
+    : 'No transparency — will save as JPG.';
+  $('wIn').value = img.width;
+  $('hIn').value = img.height;
+  enable(true);
+}
+function applyTransform(){
+  const wrap = $('canvasWrap');
+  wrap.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + zoom + ')';
+  const zi = $('zoomInfo');
+  zi.classList.remove('hidden');
+  zi.textContent = Math.round(zoom * 100) + '%';
+}
+function enable(on){
+  ['cropBtn','rotLBtn','rotRBtn','flipHBtn','whiteBtn','bgBtn','resetBtn','copyBtn','saveBtn',
+   'rotL2','rotR2','whiteStart','bgBtn2','copyBtn2','saveBtn2','resizeBtn','clearBtn'].forEach(id => { $(id).disabled = !on; });
+  $('undoBtn').disabled = history.length === 0;
+  $('canvasWrap').classList.toggle('on', !!on);
+  $('empty').style.display = on ? 'none' : 'flex';
+}
+function pushHistory(){
+  if (!img) return;
+  history.push(cloneCanvas(img));
+  if (history.length > 20) history.shift();
+  $('undoBtn').disabled = false;
+}
+
+/* ---------- 이미지 열기 ---------- */
+function loadFromBlob(blob){
+  if (!blob || !/^image\//.test(blob.type || '')){
+    toast('That is not an image file'); return;
+  }
+  const url = URL.createObjectURL(blob);
+  const im = new Image();
+  im.onload = () => {
+    URL.revokeObjectURL(url);
+    /* 너무 큰 사진은 편집이 버거우므로 긴 변을 4000px 로 맞춘다 */
+    const MAX = 4000;
+    const k = Math.min(1, MAX / Math.max(im.naturalWidth, im.naturalHeight));
+    const cv = makeCanvas(im.naturalWidth * k, im.naturalHeight * k);
+    cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+    img = cv; history = []; zoom = 1; panX = 0; panY = 0;
+    closeCrop();
+    render();
+    toast(k < 1 ? 'Large photo opened at ' + cv.width + '×' + cv.height : 'Photo opened');
+  };
+  im.onerror = () => { URL.revokeObjectURL(url); toast('Could not read the image'); };
+  im.src = url;
+}
+
+$('openBtn').addEventListener('click', () => $('fileInput').click());
+$('fileInput').addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  $('fileInput').value = '';
+  if (f) loadFromBlob(f);
+});
+
+/* 끌어다 놓기 */
+let dragDepth = 0;
+window.addEventListener('dragenter', (e) => {
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('drag');
+  }
+});
+window.addEventListener('dragleave', () => {
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('drag');
+});
+window.addEventListener('dragover', (e) => e.preventDefault());
+window.addEventListener('drop', (e) => {
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('drag');
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadFromBlob(f);
+});
+
+/* Paste — some browsers deliver files, others deliver items */
+function handlePaste(dt, ev){
+  if (!dt) return false;
+  if (dt.files && dt.files.length){
+    for (let i = 0; i < dt.files.length; i++){
+      if (/^image\//.test(dt.files[i].type || '')){
+        if (ev) ev.preventDefault();
+        loadFromBlob(dt.files[i]); return true;
+      }
+    }
+  }
+  const items = dt.items || [];
+  for (let i = 0; i < items.length; i++){
+    if (items[i].kind === 'file' && items[i].type && items[i].type.indexOf('image') === 0){
+      const f = items[i].getAsFile();
+      if (f){ if (ev) ev.preventDefault(); loadFromBlob(f); return true; }
+    }
+  }
+  return false;
+}
+document.addEventListener('paste', (e) => { handlePaste(e.clipboardData, e); });
+
+/* Where clipboard read access is allowed, the button works too */
+async function pasteFromClipboard(){
+  try {
+    if (!(navigator.clipboard && navigator.clipboard.read)) throw new Error('unsupported');
+    const items = await navigator.clipboard.read();
+    for (const it of items){
+      const type = it.types.find(t => t.indexOf('image/') === 0);
+      if (type){ loadFromBlob(await it.getType(type)); return; }
+    }
+    toast('No picture on the clipboard');
+  } catch(e){
+    toast('Your browser blocks this \u00B7 use Ctrl+V instead');
+  }
+}
+$('pasteBtn').addEventListener('click', pasteFromClipboard);
+
+
+/* ---------- 확대 · 이동 ---------- */
+const stage = $('stage');
+stage.addEventListener('wheel', (e) => {
+  if (!img || cropper) return;
+  e.preventDefault();
+  const k = e.deltaY < 0 ? 1.12 : 1/1.12;
+  zoom = Math.max(0.1, Math.min(8, zoom * k));
+  applyTransform();
+}, { passive:false });
+
+let panning = false, sx = 0, sy = 0, ox = 0, oy = 0;
+stage.addEventListener('pointerdown', (e) => {
+  if (!img || cropper) return;
+  panning = true; sx = e.clientX; sy = e.clientY; ox = panX; oy = panY;
+  try { stage.setPointerCapture(e.pointerId); } catch(err){}
+});
+stage.addEventListener('pointermove', (e) => {
+  if (!panning) return;
+  panX = ox + (e.clientX - sx); panY = oy + (e.clientY - sy);
+  applyTransform();
+});
+['pointerup','pointercancel'].forEach(t => stage.addEventListener(t, () => { panning = false; }));
+/* Clicking the empty stage opens the file picker */
+stage.addEventListener('click', () => {
+  if (!img && !panning) $('fileInput').click();
+});
+stage.addEventListener('dblclick', () => {
+  if (!img || cropper) return;
+  zoom = 1; panX = 0; panY = 0; applyTransform();
+});
+
+/* ---------- 회전 · 뒤집기 ---------- */
+function rotate90(dir){
+  if (!img) return;
+  pushHistory();
+  const c = makeCanvas(img.height, img.width);
+  const ctx = c.getContext('2d');
+  if (dir > 0){ ctx.translate(c.width, 0); ctx.rotate(Math.PI/2); }
+  else { ctx.translate(0, c.height); ctx.rotate(-Math.PI/2); }
+  ctx.drawImage(img, 0, 0);
+  img = c; render();
+}
+function flipH(){
+  if (!img) return;
+  pushHistory();
+  const c = makeCanvas(img.width, img.height);
+  const ctx = c.getContext('2d');
+  ctx.translate(c.width, 0); ctx.scale(-1, 1);
+  ctx.drawImage(img, 0, 0);
+  img = c; render();
+}
+$('rotLBtn').addEventListener('click', () => rotate90(-1));
+$('rotRBtn').addEventListener('click', () => rotate90(1));
+$('rotL2').addEventListener('click', () => rotate90(-1));
+$('rotR2').addEventListener('click', () => rotate90(1));
+$('flipHBtn').addEventListener('click', flipH);
+
+/* ---------- 되돌리기 · 초기화 ---------- */
+$('undoBtn').addEventListener('click', () => {
+  if (!history.length) return;
+  img = history.pop();
+  closeCrop(); render();
+  toast('Undone');
+});
+/* Rolls back the edits and keeps the photo */
+$('resetBtn').addEventListener('click', () => {
+  if (!history.length) { toast('No edits to undo'); return; }
+  img = history[0]; history = [];
+  closeCrop(); zoom = 1; panX = 0; panY = 0; render();
+  toast('Back to the photo as opened');
+});
+
+/* Clears the photo as well and returns to the opening screen */
+function clearAll(silent){
+  img = null; history = [];
+  zoom = 1; panX = 0; panY = 0;
+  closeCrop();
+  $('view').width = 1; $('view').height = 1;
+  $('canvasWrap').style.transform = '';
+  $('dimInfo').textContent = '-';
+  $('alphaInfo').textContent = '-';
+  $('wIn').value = ''; $('hIn').value = '';
+  $('fmtHint').textContent = 'Saves as PNG when the image has transparency, otherwise as JPG.';
+  $('zoomInfo').classList.add('hidden');
+  enable(false);
+  if (!silent) toast('Starting over \u00B7 open a photo');
+}
+$('clearBtn').addEventListener('click', () => {
+  if (!img) { toast('Nothing loaded'); return; }
+  if (history.length && !window.confirm('Your edits will be lost. Start over?')) return;
+  clearAll();
+});
+
+/* ---------- 자르기 ---------- */
+function openCrop(){
+  if (!img) return;
+  if (typeof Cropper === 'undefined'){ toast('The crop tool did not load'); return; }
+  $('canvasWrap').classList.remove('on');
+  $('cropWrap').classList.add('on');
+  $('cropPanel').style.display = 'block';
+  $('zoomInfo').classList.add('hidden');
+  $('cropBtn').classList.add('on');
+
+  const el = $('cropImg');
+  el.src = img.toDataURL('image/png');
+  el.onload = () => {
+    if (cropper) cropper.destroy();
+    cropper = new Cropper(el, {
+      viewMode:1, autoCropArea:0.9, background:false,
+      responsive:true, checkOrientation:false, dragMode:'move'
+    });
+    $('fineRot').value = 0; $('fineVal').textContent = '0°';
+    document.querySelectorAll('.ratio').forEach(b => b.classList.toggle('on', b.dataset.r === 'free'));
+  };
+}
+function closeCrop(){
+  if (cropper){ cropper.destroy(); cropper = null; }
+  $('cropWrap').classList.remove('on');
+  $('cropPanel').style.display = 'none';
+  $('cropBtn').classList.remove('on');
+  if (img){ $('canvasWrap').classList.add('on'); $('zoomInfo').classList.remove('hidden'); }
+}
+$('cropBtn').addEventListener('click', () => { cropper ? closeCrop() : openCrop(); });
+$('cropCancel').addEventListener('click', closeCrop);
+$('cropApply').addEventListener('click', () => {
+  if (!cropper) return;
+  const out = cropper.getCroppedCanvas({ imageSmoothingQuality:'high' });
+  if (!out){ toast('Select an area to crop first'); return; }
+  pushHistory();
+  img = out;
+  closeCrop(); render();
+  toast('Cropped');
+});
+document.querySelectorAll('.ratio').forEach(b => {
+  b.addEventListener('click', () => {
+    if (!cropper) return;
+    document.querySelectorAll('.ratio').forEach(x => x.classList.toggle('on', x === b));
+    cropper.setAspectRatio(b.dataset.r === 'free' ? NaN : parseFloat(b.dataset.r));
+  });
+});
+$('fineRot').addEventListener('input', function(){
+  $('fineVal').textContent = this.value + '°';
+  if (cropper) cropper.rotateTo(parseFloat(this.value));
+});
+
+/* ---------- 크기 조절 ---------- */
+let ratioLock = true;
+$('lockRatio').addEventListener('change', function(){ ratioLock = this.checked; });
+$('wIn').addEventListener('input', function(){
+  if (!img || !ratioLock) return;
+  const w = parseInt(this.value, 10);
+  if (w > 0) $('hIn').value = Math.max(1, Math.round(w * img.height / img.width));
+});
+$('hIn').addEventListener('input', function(){
+  if (!img || !ratioLock) return;
+  const h = parseInt(this.value, 10);
+  if (h > 0) $('wIn').value = Math.max(1, Math.round(h * img.width / img.height));
+});
+document.querySelectorAll('.scale').forEach(b => {
+  b.addEventListener('click', () => {
+    if (!img) return;
+    const s = parseFloat(b.dataset.s);
+    $('wIn').value = Math.max(1, Math.round(img.width * s));
+    $('hIn').value = Math.max(1, Math.round(img.height * s));
+  });
+});
+$('resizeBtn').addEventListener('click', () => {
+  if (!img) return;
+  const w = parseInt($('wIn').value, 10), h = parseInt($('hIn').value, 10);
+  if (!(w > 0 && h > 0)){ toast('Enter width and height as numbers'); return; }
+  if (w > 12000 || h > 12000){ toast('Please keep it under 12000px'); return; }
+  if (w === img.width && h === img.height){ toast('That is the current size'); return; }
+  pushHistory();
+  const c = makeCanvas(w, h);
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, 0, 0, w, h);
+  img = c; render();
+  toast('Resized to ' + w + ' × ' + h);
+});
+
+/* ---------- Clear white background (instant, live preview) ---------- */
+function luma(r, g, b){ return 0.299*r + 0.587*g + 0.114*b; }
+
+/* Reads the brightness of the border pixels to decide what counts as background.
+   Works out a value that fits the photo even on yellowed paper or in shade. */
+function autoThreshold(cv){
+  try {
+    const ctx = cv.getContext('2d', { willReadFrequently:true });
+    const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+    const W = cv.width, H = cv.height;
+    const band = Math.max(2, Math.round(Math.min(W, H) * 0.04));
+    const vals = [];
+    for (let y = 0; y < H; y++){
+      for (let x = 0; x < W; x++){
+        if (x < band || x >= W - band || y < band || y >= H - band){
+          const i = (y*W + x)*4;
+          if (d[i+3] > 8) vals.push(luma(d[i], d[i+1], d[i+2]));
+        }
+      }
+    }
+    if (!vals.length) return 240;
+    vals.sort((a, b) => a - b);
+    const p10 = vals[Math.floor(vals.length * 0.10)];
+    return Math.max(120, Math.min(250, Math.round(p10 - 14)));
+  } catch(e){ return 240; }
+}
+
+/* Clears bright pixels and reports how much of the image survived */
+function whitePass(src, th, fe){
+  const c = makeCanvas(src.width, src.height);
+  const ctx = c.getContext('2d', { willReadFrequently:true });
+  ctx.drawImage(src, 0, 0);
+  const im = ctx.getImageData(0, 0, c.width, c.height);
+  const d = im.data;
+  let kept = 0;
+  for (let i = 0; i < d.length; i += 4){
+    const L = luma(d[i], d[i+1], d[i+2]);
+    if (L >= th) d[i+3] = 0;
+    else if (L >= th - fe){
+      const t = (L - (th - fe)) / fe;
+      d[i+3] = Math.round(d[i+3] * (1 - t));
+    } else kept++;
+  }
+  ctx.putImageData(im, 0, 0);
+  return { canvas:c, ratio: kept / (d.length/4) * 100 };
+}
+
+/* Preview state */
+let wOrig = null;      // the photo as it stood when preview began
+let wPreview = null;   // a smaller copy so the sliders stay smooth on big photos
+let wRaf = 0;
+
+function buildPreviewSource(src){
+  const MAX = 900;
+  const k = Math.min(1, MAX / Math.max(src.width, src.height));
+  if (k === 1) return cloneCanvas(src);
+  const c = makeCanvas(src.width * k, src.height * k);
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(src, 0, 0, c.width, c.height);
+  return c;
+}
+
+function whiteStart(){
+  if (!img) return;
+  wOrig = cloneCanvas(img);
+  wPreview = buildPreviewSource(wOrig);
+  /* Work out a fresh value for this photo each time we enter */
+  $('wAuto').checked = true;
+  const th0 = autoThreshold(wOrig);
+  $('wTh').value = th0; $('wThVal').textContent = th0;
+  $('whitePanel').style.display = 'block';
+  $('whiteStart').style.display = 'none';
+  $('whiteBtn').classList.add('on');
+  updatePreview();
+  toast('Move a slider \u2014 the result updates as you go');
+}
+
+function updatePreview(){
+  if (!wPreview) return;
+  cancelAnimationFrame(wRaf);
+  wRaf = requestAnimationFrame(() => {
+    const th = parseInt($('wTh').value, 10);
+    const fe = Math.max(1, parseInt($('wFe').value, 10));
+    const r = whitePass(wPreview, th, fe);
+    img = r.canvas;            /* only the preview copy goes on screen */
+    render();
+    const st = $('wStat');
+    if (r.ratio < 0.3){ st.textContent = 'Almost everything went \u00B7 try lowering the level'; st.style.color = 'var(--warn)'; }
+    else if (r.ratio > 60){ st.textContent = 'A lot is left \u00B7 try raising the level'; st.style.color = 'var(--warn)'; }
+    else { st.textContent = r.ratio.toFixed(1) + '% kept \u00B7 looks about right'; st.style.color = 'var(--ok)'; }
+  });
+}
+
+function whiteEnd(){
+  $('whitePanel').style.display = 'none';
+  $('whiteStart').style.display = 'block';
+  $('whiteBtn').classList.remove('on');
+  wOrig = null; wPreview = null;
+  cancelAnimationFrame(wRaf);
+}
+
+$('whiteStart').addEventListener('click', whiteStart);
+$('whiteBtn').addEventListener('click', () => {
+  if (wOrig) whiteCancel(); else whiteStart();
+});
+function whiteCancel(){
+  if (!wOrig) return;
+  img = wOrig;
+  whiteEnd(); render();
+  toast('Clearing cancelled');
+}
+$('whiteCancel').addEventListener('click', whiteCancel);
+
+/* Only on Apply do we run it again at full resolution */
+$('whiteApply').addEventListener('click', () => {
+  if (!wOrig) return;
+  const th = parseInt($('wTh').value, 10);
+  const fe = Math.max(1, parseInt($('wFe').value, 10));
+  const src = wOrig;
+  img = src;                 /* history has to hold the full-size original */
+  pushHistory();
+  const r = whitePass(src, th, fe);
+  img = r.canvas;
+  whiteEnd(); render();
+  toast('White background cleared (level ' + th + ')');
+});
+
+$('wAuto').addEventListener('change', function(){
+  if (this.checked && wOrig){
+    const th = autoThreshold(wOrig);
+    $('wTh').value = th; $('wThVal').textContent = th;
+    updatePreview();
+  }
+});
+$('wTh').addEventListener('input', function(){
+  $('wThVal').textContent = this.value;
+  $('wAuto').checked = false;      /* touching it by hand turns detection off */
+  updatePreview();
+});
+$('wFe').addEventListener('input', function(){
+  $('wFeVal').textContent = this.value;
+  updatePreview();
+});
+
+/* ---------- AI background removal ---------- */
+function askDownload(sizeText){
+  return new Promise((resolve) => {
+    $('askSize').textContent = sizeText;
+    $('ask').classList.add('on');
+    askResolve = resolve;
+    setTimeout(() => $('askYes').focus(), 60);
+  });
+}
+function closeAsk(v){
+  $('ask').classList.remove('on');
+  if (askResolve){ const r = askResolve; askResolve = null; r(v); }
+}
+$('askYes').addEventListener('click', () => closeAsk(true));
+$('askNo').addEventListener('click', () => closeAsk(false));
+$('ask').addEventListener('click', (e) => { if (e.target === $('ask')) closeAsk(false); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && $('ask').classList.contains('on')) closeAsk(false);
+});
+
+async function removeBg(){
+  if (!img) return;
+  const model = $('modelSel').value;
+
+  /* 모델을 이미 받아 두었으면 다시 묻지 않는다 */
+  const cached = sessionStorage.getItem('bgModelReady:' + model) === '1';
+  if (!cached){
+    const go = await askDownload(MODEL_SIZE[model] || 'several tens of MB');
+    if (!go){ toast('Background removal cancelled'); return; }
+  }
+
+  busy(true, 'Getting ready', cached ? 'Detecting the subject' : 'Downloading the segmentation model');
+  try {
+    if (!bgLib){
+      bgLib = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@' + IMGLY_VER + '/+esm');
+    }
+    const fn = bgLib.removeBackground || (bgLib.default && bgLib.default.removeBackground);
+    if (typeof fn !== 'function') throw new Error('removeBackground not found');
+
+    const srcBlob = await new Promise((res) => img.toBlob(res, 'image/png'));
+    if (!srcBlob) throw new Error('blob failed');
+
+    const out = await fn(srcBlob, {
+      model: model,
+      output: { format: 'image/png' },
+      progress: (key, cur, total) => {
+        if (total > 0){
+          const pct = (cur / total) * 100;
+          progress(pct);
+          if (String(key).indexOf('fetch') === 0){
+            busy(true, 'Downloading the model', Math.round(pct) + '% · one time only');
+          } else {
+            busy(true, 'Detecting the subject', Math.round(pct) + '%');
+          }
+        }
+      }
+    });
+
+    const url = URL.createObjectURL(out);
+    const im = new Image();
+    await new Promise((res, rej) => { im.onload = res; im.onerror = rej; im.src = url; });
+    URL.revokeObjectURL(url);
+
+    pushHistory();
+    const c = makeCanvas(im.naturalWidth, im.naturalHeight);
+    c.getContext('2d').drawImage(im, 0, 0);
+    img = c;
+    sessionStorage.setItem('bgModelReady:' + model, '1');
+    busy(false);
+    render();
+    toast('Background removed');
+  } catch(err){
+    busy(false);
+    console.error(err);
+    toast('Background removal failed. Check your connection and try again');
+  }
+}
+$('bgBtn').addEventListener('click', removeBg);
+$('bgBtn2').addEventListener('click', removeBg);
+
+/* ---------- 내보내기 ---------- */
+function exportBlob(){
+  return new Promise((resolve) => {
+    if (!img) return resolve(null);
+    const alpha = hasAlpha(img);
+    if (alpha){
+      img.toBlob((b) => resolve({ blob:b, ext:'png', type:'image/png' }), 'image/png');
+    } else {
+      /* JPG 는 투명을 담지 못하므로 흰 바탕을 깔아 내보낸다 */
+      const c = makeCanvas(img.width, img.height);
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0);
+      c.toBlob((b) => resolve({ blob:b, ext:'jpg', type:'image/jpeg' }), 'image/jpeg', 0.92);
+    }
+  });
+}
+async function doSave(){
+  const r = await exportBlob();
+  if (!r || !r.blob){ toast('Could not build the image'); return; }
+  try {
+    const url = URL.createObjectURL(r.blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'').slice(0,13);
+    a.href = url; a.download = 'edited_' + stamp + '.' + r.ext;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    toast('Saved as ' + r.ext.toUpperCase());
+  } catch(e){ toast('The download was blocked'); }
+}
+async function doCopy(){
+  if (!img){ toast('Open a photo first'); return; }
+  /* 클립보드에는 PNG 만 안정적으로 들어간다 */
+  const blob = await new Promise((res) => img.toBlob(res, 'image/png'));
+  if (!blob){ toast('Could not build the image'); return; }
+  try {
+    if (!(navigator.clipboard && window.ClipboardItem)) throw new Error('unsupported');
+    await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]);
+    toast('Copied to clipboard — paste it anywhere');
+  } catch(e){
+    toast('This browser blocks clipboard images, so the file is downloading instead');
+    doSave();
+  }
+}
+$('saveBtn').addEventListener('click', doSave);
+$('saveBtn2').addEventListener('click', doSave);
+$('copyBtn').addEventListener('click', doCopy);
+$('copyBtn2').addEventListener('click', doCopy);
+
+/* ---------- 단축키 ---------- */
+document.addEventListener('keydown', (e) => {
+  if (/INPUT|TEXTAREA|SELECT/.test((e.target && e.target.tagName) || '')) return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){ e.preventDefault(); $('undoBtn').click(); }
+  else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); doSave(); }
+  else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c' && img){ e.preventDefault(); doCopy(); }
+});
+
+/* ---------- 시작 ---------- */
+enable(false);
+$('zoomInfo').classList.add('hidden');
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#152033;color:#CBD5E1;border-top:1px solid #334155;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#F1F5F9;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#CBD5E1;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#CBD5E1;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#93C5FD}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #334155}
+.tk-guide dt{font-size:15px;font-weight:700;color:#F1F5F9;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#CBD5E1;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #334155;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#0F172A;border:1px solid #334155;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#94A3B8;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #334155}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#60A5FA;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#60A5FA}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Uploading a face just to crop it never sits right</h2>
+<p>Search for a way to crop a photo or clear its background and most results ask you to upload the file to their site. They promise to delete it shortly after, but handing a picture of your own face to somebody else’s server is not a comfortable trade.</p>
+<p>This tool sends nothing anywhere. Opening the file, cropping, rotating, resizing, removing the background and saving all finish inside your browser. Cut the connection entirely and everything except background removal still works.</p>
+
+<h2>What it does</h2><dl>
+<dt>✂️ Crop</dt><dd>Drag the corners to take exactly what you want. Lock to 1:1, 4:3 or 16:9, and use the fine angle slider to straighten a shot that came out tilted.</dd>
+<dt>🔄 Rotate and flip</dt><dd>Ninety degrees either way, plus a horizontal flip. Useful when a photo came out sideways or you want the mirror version.</dd>
+<dt>📐 Resize</dt><dd>Enter width and height in pixels. With the ratio locked, filling one field fills the other. Quick buttons cover 50%, 75% and 200%.</dd>
+<dt>🩹 Clear white background</dt><dd>Makes the paper behind a signature, stamp or piece of handwriting transparent immediately, with nothing to download. Move the slider and the canvas updates live, so you can see exactly how much is being cleared.</dd>
+<dt>✨ AI cutout</dt><dd>For portraits and anything with a busy background. Keeps the subject and clears everything behind it. The result saves as PNG, so it drops straight onto another background.</dd>
+<dt>📋 Copy and save</dt><dd>Put the edited photo on the clipboard to paste into a document or a chat, or download it as a file.</dd>
+</dl>
+
+<h2>Two ways to clear a background</h2>
+<p>Lifting a signature off a sheet of paper and cutting a person out of a photograph are not the same problem, so there are two tools rather than one.</p>
+<p><strong>Clearing white</strong> turns bright pixels transparent. Because the idea is that simple, it finishes the instant you press it with nothing to download. For signatures, stamps, handwriting and scanned drawings — anything where the <strong>background is pale and the subject is dark</strong> — this is both faster and cleaner.</p>
+<p>The right brightness level differs from photo to photo, so the tool reads the border pixels and settles on a value that fits. Clean white paper lands around 240; yellowed paper or a shadowed shot drops to somewhere between 160 and 210 on its own.</p><p>Press Start and a preview appears at that level, and <strong>the canvas updates as you move the slider.</strong> It also tells you what percentage survived, so you can see at a glance whether too much or too little is going. To keep the sliders smooth on large photos the preview runs on a scaled-down copy, and Apply recalculates at full resolution.</p>
+<p><strong>The AI cutout</strong> works out what the subject actually is. That is what you need when the background is busy, or when subject and background sit at a similar brightness. The trade is that it downloads a model first.</p>
+
+<h2>How the AI cutout works here</h2>
+<p>Recognising a background takes a segmentation model. That normally runs on a server, but this tool <strong>brings the model into your browser and runs it on your own device</strong>. That is why the photo never has to leave the machine.</p>
+<p>The trade is that the model file has to be downloaded once. Three sizes are available.</p>
+<ul>
+<li><strong>Small (about 11MB)</strong> — quick, with somewhat rougher edges. Good when you are in a hurry.</li>
+<li><strong>Medium (about 44MB)</strong> — the default, balancing speed against quality.</li>
+<li><strong>Large (about 88MB)</strong> — holds fine edges like hair much better, and takes longer.</li>
+</ul>
+<p>It downloads once and stays cached, so later runs are far quicker. You are asked before the download starts, so you can decline when your data allowance is tight.</p>
+
+<h2>How to use it</h2><ol>
+<li>Open a photo — press the button, click the empty canvas, drag a file in, or paste with <strong>Ctrl+V</strong>.</li>
+<li>Use <strong>Crop</strong> to set the framing and straighten any tilt.</li>
+<li>For a signature or stamp use <strong>Clear white</strong>; for a portrait use the <strong>AI cutout</strong>.</li>
+<li>Set the pixel size you need under <strong>Resize</strong>.</li>
+<li><strong>Copy image</strong> to paste it somewhere, or <strong>Save</strong> to download the file.</li>
+</ol>
+<p>Scroll to zoom and drag to pan; double-click returns to the original scale. <strong>Ctrl+Z</strong> steps back one edit at a time. Undo edits clears your changes but keeps the photo; Start over clears the photo as well so you can open another.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Is my photo uploaded anywhere?</dt><dd>No. Opening the file, cropping, rotating, removing the background and saving all happen inside your browser. Close the page and the work goes with it.</dd>
+<dt>What is the difference between clearing white and the AI cutout?</dt><dd>Clearing white turns bright pixels transparent. Because the idea is simple it runs the moment you press it, with nothing to download, and it suits signatures, stamps and handwriting sitting on pale paper. The AI cutout works out what the subject actually is, which is what you need for portraits or busy backgrounds, and it downloads a model once before it can run.</dd>
+<dt>What does automatic brightness detection do?</dt><dd>It reads the brightness around the edges of the photo and settles on a level that fits that particular shot, so yellowed paper or a shadow across one side is handled without any adjustment. Pressing Start shows a preview at that level, and moving a slider updates the result as you go. Press Apply once it looks right.</dd>
+<dt>How does the AI cutout work?</dt><dd>Your browser downloads a segmentation model and runs it on your own device. The photo never leaves the machine — only the model file is fetched. The first run takes a while to download it; after that it stays cached and runs much faster.</dd>
+<dt>How long does the AI cutout take?</dt><dd>The first run can take tens of seconds while the model downloads. Once it is cached, a single photo usually takes a few seconds to a dozen or so, depending on your device and the image size.</dd>
+<dt>How is the save format decided?</dt><dd>If any part of the image is transparent it saves as PNG; otherwise it saves as the smaller JPG. After removing a background there are transparent areas, so the file comes out as PNG and drops straight onto another background.</dd>
+<dt>Can I paste the edited photo directly?</dt><dd>Press Copy image and it goes to the clipboard as a picture, ready to paste into a document or a chat window. If your browser blocks clipboard images, the tool falls back to downloading the file.</dd>
+<dt>How many ways can I open a photo?</dt><dd>Four. Use the Open image button, click the empty editing area, drag a file onto the page, or press the paste shortcut anywhere to bring in whatever picture is on your clipboard. There is a Paste button as well.</dd>
+<dt>What is the difference between Undo edits and Start over?</dt><dd>Undo edits keeps the photo you have open and rolls back everything you did to it. Start over clears the photo too and returns to the opening screen, which is what you want before editing a different picture.</dd>
+</dl>
+
+<p class="tk-guide-note">Every edit runs inside your browser and no photo is transmitted to any server. Background removal needs an internet connection to fetch the model file; even then, the photo itself is never sent. Very large photos are opened with their longest edge scaled to 4000px so that editing stays responsive.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/pdf-signature_en.html">PDF Signature Stamp</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio_en.html">QR Code Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/slot-coordinator_en.html">Smart Schedule Coordinator</a></li>
+<li><a href="https://mnledu.com/en/productivity/meeting-minutes_en.html">Smart Meeting Minutes</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+<li><a href="https://mnledu.com/en/lifestyle/food-picker_en.html">What Should I Eat?</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/image-studio_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/image-studio_en.html";
+  var TK_SHARE_TITLE = "All-in-One Photo Studio";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록. DESIGN &amp; MEDIA로 잘못 배치했다가 원본 canonical 기준으로 PRODUCTIVITY 로 정정</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

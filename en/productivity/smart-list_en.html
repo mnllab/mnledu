@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>Smart List Formatter · Column to One Line | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Turns a column copied out of a spreadsheet into one line formatted for Outlook, Gmail, Slack or SQL. Blank lines and stray spaces are cleaned up and duplicates removed. Nothing you type is uploaded." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/smart-list_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/smart-list_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/smart-list_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/smart-list_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/smart-list_en.html" />
+<meta property="og:title" content="Smart List Formatter · Column to One Line | TOOLKIT" />
+<meta property="og:description" content="Turns a spreadsheet column into one line formatted for Outlook, Gmail, Slack or SQL." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Smart List Formatter | TOOLKIT" />
+<meta name="twitter:description" content="Turns a spreadsheet column into one line, formatted for wherever you are pasting it." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Smart List Formatter",
+ "description": "Joins a vertical list into a single line using the separator the target platform expects.",
+ "url": "https://mnledu.com/en/productivity/smart-list_en.html",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "Smart List Formatter", "item": "https://mnledu.com/en/productivity/smart-list_en.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Why does the separator differ by platform?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Outlook separates recipients with semicolons; Gmail uses commas. Paste the wrong one and the whole string reads as a single malformed address, and sending fails. Choose where you are pasting and the right character is applied for you." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I paste straight from a spreadsheet?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Yes. Blank lines and surrounding spaces are cleaned up automatically, and if you copied several columns the tabs are split into separate items. Values that come across wrapped in quotes have those quotes stripped as well." }
+  },
+  {
+   "@type": "Question",
+   "name": "Anything to watch for with SQL?",
+   "acceptedAnswer": { "@type": "Answer", "text": "A single quote inside a value breaks the query. This tool doubles any it finds, so O'Brien comes out as 'O''Brien' and the statement stays valid." }
+  },
+  {
+   "@type": "Question",
+   "name": "How are duplicates handled?",
+   "acceptedAnswer": { "@type": "Answer", "text": "With duplicate removal on, only the first occurrence of a value survives. Turn on ignore case as well to catch the same address written with different capitalisation. The count of what was removed is shown alongside the result." }
+  },
+  {
+   "@type": "Question",
+   "name": "Is anything I type sent anywhere?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Every conversion happens in your browser, so the tool works with the connection switched off. Internal addresses and customer lists stay on your machine." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I define my own format?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Choose Custom and you can set the separator, a character to wrap each item in, and a prefix to put in front. Pipes, slashes, brackets \u2014 whatever shape you need." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#3B82F6; --accent2:#2563EB; --soft:#EFF6FF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14.5px;font-weight:600;padding:11px 15px;cursor:pointer;min-height:46px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:#CBD5E1;background:#F8FAFC}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+
+  label.lab{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:8px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  textarea, .fld{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px;
+    font-size:14.5px;line-height:1.85;color:var(--ink);outline:none;background:#fff;
+    font-family:ui-monospace,Consolas,monospace}
+  textarea{min-height:300px;resize:vertical}
+  textarea:focus, .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.16)}
+  textarea::placeholder{color:#CBD5E1}
+  select.fld{appearance:none;min-height:50px;cursor:pointer;font-family:inherit;font-size:15px;
+    padding-right:40px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 21px) 53%,calc(100% - 16px) 53%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  input.fld{min-height:46px;font-size:14.5px}
+  .chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:7px 0;margin-right:18px}
+  .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+
+  .split{display:grid;gap:16px;grid-template-columns:1fr}
+  @media(min-width:940px){.split{grid-template-columns:1fr 1fr}}
+
+  #outBox{background:#0F172A;color:#E2E8F0;border-radius:11px;padding:14px;min-height:300px;
+    max-height:460px;overflow-y:auto;font-family:ui-monospace,Consolas,monospace;font-size:14px;
+    line-height:1.9;white-space:pre-wrap;word-break:break-all;margin:0;cursor:pointer}
+  #outBox.empty{color:#475569;white-space:normal;cursor:default}
+
+  #count{display:flex;gap:16px;flex-wrap:wrap;align-items:baseline;padding:12px 15px;
+    background:var(--soft);border:1px solid #BFDBFE;border-radius:11px;margin-top:12px;font-size:13.5px}
+  #count b{font-size:17px;font-weight:800;color:var(--accent2)}
+  #count .dim{color:var(--muted)}
+
+  .preset{display:grid;gap:7px;grid-template-columns:1fr;margin-top:10px}
+  @media(min-width:520px){.preset{grid-template-columns:1fr 1fr 1fr}}
+  .pv{background:var(--line2);border-radius:8px;padding:9px 11px;font-size:12.5px;color:var(--ink2);
+    font-family:ui-monospace,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  #custom{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line2)}
+  #custom.on{display:block}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:44px 18px 8px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Smart List Formatter</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Smart List Formatter</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
+    Turns a column copied out of a spreadsheet into <b>one line formatted for wherever it is going</b>.
+    Blank lines and stray spaces are tidied up, and duplicates are filtered out.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div class="card" style="padding:20px;margin-bottom:16px">
+    <label class="lab" for="target">🎯 Where are you pasting it?</label>
+    <select class="fld" id="target">
+      <option value="outlook">📧 Outlook recipients — semicolons</option>
+      <option value="gmail">✉️ Gmail recipients — commas</option>
+      <option value="slack">💬 Slack mentions — @ and spaces</option>
+      <option value="sql">🗄️ SQL IN clause — single quotes</option>
+      <option value="comma">📄 CSV line — commas only</option>
+      <option value="pipe">📊 Pipe separated</option>
+      <option value="custom">⚙️ Custom</option>
+    </select>
+    <div class="preset">
+      <div class="pv" id="pvSep"></div>
+      <div class="pv" id="pvSample"></div>
+      <div class="pv" id="pvNote"></div>
+    </div>
+
+    <div id="custom">
+      <div class="split" style="gap:12px">
+        <div>
+          <label class="lab" for="cSep">Separator</label>
+          <input class="fld mono" id="cSep" value=", " placeholder="e.g. | or / ">
+          <p class="hint">Goes between items. Spaces count.</p>
+        </div>
+        <div>
+          <label class="lab" for="cWrap">Wrap each item <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+          <input class="fld mono" id="cWrap" placeholder="e.g. &quot; or [">
+          <p class="hint">Wraps every item. Give just the opening bracket and the closing one is matched.</p>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <label class="lab" for="cPrefix">Prefix <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+        <input class="fld mono" id="cPrefix" placeholder="e.g. @ or #" style="max-width:220px">
+      </div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="card" style="padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <label class="lab" for="src" style="margin:0">📋 Paste here (one per line)</label>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm" id="sampleBtn">Load sample</button>
+          <button class="btn sm" id="clearBtn">Clear</button>
+        </div>
+      </div>
+      <textarea id="src" placeholder="Paste your spreadsheet column straight in&#10;&#10;kim@company.com&#10;lee@company.com&#10;park@company.com"></textarea>
+      <p class="hint mono" id="srcInfo"></p>
+
+      <div style="border-top:1px solid var(--line2);margin-top:14px;padding-top:12px">
+        <p class="lab" style="margin-bottom:2px">🧹 Clean-up</p>
+        <label class="chk"><input type="checkbox" id="opUnique" checked><span>Remove duplicates</span></label>
+        <label class="chk"><input type="checkbox" id="opCase"><span>Ignore case</span></label>
+        <label class="chk"><input type="checkbox" id="opSort"><span>Sort alphabetically</span></label>
+        <label class="chk"><input type="checkbox" id="opQuote"><span>Strip quotes</span></label>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <label class="lab" style="margin:0">✨ Result (single line)</label>
+        <button class="btn sm" id="wrapBtn">Turn off wrapping</button>
+      </div>
+      <pre id="outBox" class="empty" title="Click to copy">Paste a list on the left and the result appears here.</pre>
+      <div id="count">
+        <span><b id="cnItems">0</b> items</span>
+        <span class="dim" id="cnDup"></span>
+        <span class="dim" id="cnLen"></span>
+      </div>
+      <button class="btn p" id="copyBtn" style="width:100%;margin-top:12px;min-height:52px;font-size:15.5px" disabled>📋 Copy result</button>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:30px 18px 46px;border-top:1px solid var(--line);margin-top:34px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Every conversion runs inside your browser. Nothing you type is sent to any server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2300);
+}
+
+/* 붙여넣을 곳마다 항목을 나누는 기호가 다르다 */
+var PRESETS = {
+  outlook: { sep:'; ',  wrap:'',  prefix:'', name:'semicolon and space',
+             note:'paste straight into the Outlook recipients field' },
+  gmail:   { sep:', ',  wrap:'',  prefix:'', name:'comma and space',
+             note:'paste straight into the Gmail To field' },
+  slack:   { sep:' ',   wrap:'',  prefix:'@', name:'space with @',
+             note:'names that already start with @ are left alone' },
+  sql:     { sep:', ',  wrap:"'", prefix:'', name:'single quotes and commas',
+             note:'quotes inside values are escaped automatically' },
+  comma:   { sep:',',   wrap:'',  prefix:'', name:'commas only',
+             note:'joined with commas and no spaces' },
+  pipe:    { sep:' | ', wrap:'',  prefix:'', name:'pipe',
+             note:'handy when moving things into a table' },
+  custom:  { sep:', ',  wrap:'',  prefix:'', name:'your own',
+             note:'build the shape you need below' }
+};
+/* 감싸는 기호는 여는 것과 닫는 것이 다를 수 있다 */
+var PAIR = { '(':')', '[':']', '{':'}', '<':'>' };
+
+var items = [], result = '', dupCount = 0;
+
+function readOpts(){
+  return {
+    unique: $('opUnique').checked,
+    caseInsensitive: $('opCase').checked,
+    sort: $('opSort').checked,
+    stripQuotes: $('opQuote').checked
+  };
+}
+
+/* 붙여넣은 세로 데이터를 항목 목록으로 정리한다 */
+function parseItems(text, o){
+  var t = String(text == null ? '' : text).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  /* 엑셀에서 여러 칸을 함께 복사하면 탭이 섞여 온다 */
+  var raw = t.split(/[\n\t]/);
+  var out = [];
+  raw.forEach(function(s){
+    s = s.trim();
+    /* 엑셀이 값을 통째로 따옴표로 감싸 보내는 경우를 벗긴다 */
+    if (s.length > 1 && s.charAt(0) === '"' && s.charAt(s.length-1) === '"'){
+      s = s.slice(1, -1).replace(/""/g, '"').trim();
+    }
+    if (o.stripQuotes) s = s.replace(/^['"]+|['"]+$/g, '').trim();
+    if (!s) return;
+    out.push(s);
+  });
+  var before = out.length;
+  if (o.unique){
+    var seen = {}, uniq = [];
+    out.forEach(function(s){
+      var k = o.caseInsensitive ? s.toLowerCase() : s;
+      if (Object.prototype.hasOwnProperty.call(seen, k)) return;
+      seen[k] = 1; uniq.push(s);
+    });
+    out = uniq;
+  }
+  dupCount = before - out.length;
+  if (o.sort) out = out.slice().sort(function(a, b){ return a.localeCompare(b, 'en'); });
+  return out;
+}
+
+function currentCfg(){
+  var key = $('target').value;
+  var p = PRESETS[key] || PRESETS.gmail;
+  if (key !== 'custom') return { sep:p.sep, wrap:p.wrap, wrapEnd:p.wrap, prefix:p.prefix };
+  var w = $('cWrap').value;
+  var open = w.charAt(0) || '';
+  var close = w.length > 1 ? w.slice(1) : (PAIR[open] || open);
+  return { sep: $('cSep').value, wrap: open, wrapEnd: close, prefix: $('cPrefix').value };
+}
+
+function format(list, cfg){
+  return list.map(function(s){
+    var v = s;
+    if (cfg.wrap){
+      /* SQL 은 값 안의 작은따옴표를 두 번 써야 쿼리가 깨지지 않는다 */
+      if (cfg.wrap === "'") v = v.replace(/'/g, "''");
+      v = cfg.wrap + v + (cfg.wrapEnd || cfg.wrap);
+    }
+    if (cfg.prefix){
+      /* 이미 붙어 있으면 겹쳐 붙이지 않는다 */
+      v = (v.indexOf(cfg.prefix) === 0) ? v : cfg.prefix + v;
+    }
+    return v;
+  }).join(cfg.sep);
+}
+
+function update(){
+  var o = readOpts();
+  items = parseItems($('src').value, o);
+  result = format(items, currentCfg());
+
+  var box = $('outBox');
+  if (!items.length){
+    box.textContent = 'Paste a list on the left and the result appears here.';
+    box.classList.add('empty');
+  } else {
+    box.textContent = result;
+    box.classList.remove('empty');
+  }
+  $('cnItems').textContent = items.length.toLocaleString('en-US');
+  $('cnDup').textContent = dupCount ? dupCount.toLocaleString('en-US') + ' duplicate(s) removed' : '';
+  $('cnLen').textContent = result ? result.length.toLocaleString('en-US') + ' chars' : '';
+  $('copyBtn').disabled = !items.length;
+
+  var v = $('src').value;
+  $('srcInfo').textContent = v
+    ? (v.split(/\n/).length.toLocaleString('en-US') + ' lines \u00B7 ' + v.length.toLocaleString('en-US') + ' chars')
+    : '';
+  updatePreview();
+}
+
+function updatePreview(){
+  var key = $('target').value;
+  var p = PRESETS[key] || PRESETS.gmail;
+  var demo = format(['aaa', 'bbb'], currentCfg());
+  $('pvSep').textContent = 'Separator \u00B7 ' + p.name;
+  $('pvSample').textContent = 'Example \u00B7 ' + demo;
+  $('pvNote').textContent = p.note;
+  $('custom').classList.toggle('on', key === 'custom');
+}
+
+/* ---------- 복사 ---------- */
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+$('copyBtn').addEventListener('click', function(){
+  if (!result){ toast('Paste a list first'); return; }
+  copyText(result, function(ok){
+    toast(ok ? items.length.toLocaleString('en-US') + ' items copied' : 'Copy was blocked');
+  });
+});
+/* 결과 화면을 눌러도 복사되게 한다 */
+$('outBox').addEventListener('click', function(){
+  if (!result) return;
+  copyText(result, function(ok){ if (ok) toast('Copied'); });
+});
+
+/* ---------- 이벤트 ---------- */
+$('src').addEventListener('input', update);
+['opUnique','opCase','opSort','opQuote','target'].forEach(function(id){
+  $(id).addEventListener('change', update);
+});
+['cSep','cWrap','cPrefix'].forEach(function(id){ $(id).addEventListener('input', update); });
+
+$('clearBtn').addEventListener('click', function(){
+  if (!$('src').value){ toast('Already empty'); return; }
+  $('src').value = ''; update();
+  toast('Cleared');
+});
+$('sampleBtn').addEventListener('click', function(){
+  $('src').value = [
+    'kim.cs@company.com', 'lee.yh@company.com', '', '  park.js@company.com  ',
+    'choi.ms@company.com', 'kim.cs@company.com', 'jung.sj@company.com'
+  ].join('\n');
+  update();
+  toast('Sample loaded \u00B7 blanks and duplicates get cleaned up');
+});
+$('wrapBtn').addEventListener('click', function(){
+  var b = $('outBox');
+  var wrapping = b.style.whiteSpace !== 'pre';
+  b.style.whiteSpace = wrapping ? 'pre' : 'pre-wrap';
+  b.style.overflowX = wrapping ? 'auto' : 'hidden';
+  this.textContent = wrapping ? 'Turn on wrapping' : 'Turn off wrapping';
+});
+
+update();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#1D4ED8}
+.tk-guide code{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13.5px;color:#0F172A}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#1D4ED8;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#1D4ED8}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Getting a spreadsheet column into a To field</h2>
+<p>You drag down the email column in a spreadsheet and copy it. Paste that into the Outlook recipients field and the addresses stack up vertically, and pressing send gets you a complaint about the address format.</p>
+<p>So you paste it into a text editor and replace the line breaks with semicolons by hand, or write a CONCATENATE formula. Past a hundred names, that is its own afternoon.</p>
+<p>This tool removes the step. Paste, pick where it is going, and it comes out as one line.</p>
+
+<h2>Why the separator matters</h2>
+<p>Services do not agree on how to separate recipients. <strong>Outlook uses semicolons; Gmail uses commas.</strong> Get it backwards and the whole string reads as one malformed address.</p>
+<dl>
+<dt>📧 Outlook</dt><dd><code>a@a.com; b@b.com</code> — semicolon and space.</dd>
+<dt>✉️ Gmail</dt><dd><code>a@a.com, b@b.com</code> — comma and space.</dd>
+<dt>💬 Slack and messengers</dt><dd><code>@user1 @user2</code> — an @ in front, separated by spaces. Names that already carry one are left alone.</dd>
+<dt>🗄️ SQL IN clause</dt><dd><code>'item1', 'item2'</code> — wrapped in single quotes, with any quote inside the value doubled so the statement holds.</dd>
+<dt>⚙️ Custom</dt><dd>Set the separator, a wrapper and a prefix yourself. Pipes, slashes, brackets — whatever the destination wants.</dd>
+</dl>
+
+<h2>What gets tidied up first</h2>
+<p>Data copied out of a spreadsheet is rarely clean. A blank row in the middle, trailing spaces, the same address entered twice.</p>
+<p>Blank lines and surrounding spaces are <strong>removed automatically.</strong> If you copied several columns at once, the tabs are split into separate items, and values that arrive wrapped in quotes have them stripped.</p>
+<ul>
+<li><strong>Remove duplicates</strong> — on by default, and it tells you how many went.</li>
+<li><strong>Ignore case</strong> — treats <code>Kim@a.com</code> and <code>kim@a.com</code> as the same entry.</li>
+<li><strong>Sort alphabetically</strong> — when you want the list in order.</li>
+<li><strong>Strip quotes</strong> — for when every value came across quoted.</li>
+</ul>
+
+<h2>How to use it</h2><ol>
+<li>Copy a column from your spreadsheet and <strong>paste it on the left.</strong></li>
+<li>Pick <strong>where it is going</strong>. An example shows what the output will look like.</li>
+<li>Adjust the clean-up options if you need to. The result updates <strong>as you change things</strong>.</li>
+<li>Press <strong>Copy result</strong> and paste it where you need it. Clicking the result area copies too.</li>
+</ol>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Why does the separator differ by platform?</dt><dd>Outlook separates recipients with semicolons; Gmail uses commas. Paste the wrong one and the whole string reads as a single malformed address, and sending fails. Choose where you are pasting and the right character is applied for you.</dd>
+<dt>Can I paste straight from a spreadsheet?</dt><dd>Yes. Blank lines and surrounding spaces are cleaned up automatically, and if you copied several columns the tabs are split into separate items. Values that come across wrapped in quotes have those quotes stripped as well.</dd>
+<dt>Anything to watch for with SQL?</dt><dd>A single quote inside a value breaks the query. This tool doubles any it finds, so O'Brien comes out as 'O''Brien' and the statement stays valid.</dd>
+<dt>How are duplicates handled?</dt><dd>With duplicate removal on, only the first occurrence of a value survives. Turn on ignore case as well to catch the same address written with different capitalisation. The count of what was removed is shown alongside the result.</dd>
+<dt>Is anything I type sent anywhere?</dt><dd>No. Every conversion happens in your browser, so the tool works with the connection switched off. Internal addresses and customer lists stay on your machine.</dd>
+<dt>Can I define my own format?</dt><dd>Choose Custom and you can set the separator, a character to wrap each item in, and a prefix to put in front. Pipes, slashes, brackets — whatever shape you need.</dd>
+</dl>
+
+<p class="tk-guide-note">Every conversion runs inside your browser and nothing you type is transmitted to any server. Closing the page clears what you entered, so copy anything you need to keep. When mailing a large group, consider using BCC so recipients cannot see each other’s addresses.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/text-diff_en.html">Secure Text Diff Checker</a></li>
+<li><a href="https://mnledu.com/en/productivity/receipt-to-excel_en.html">Receipt to Expense Sheet</a></li>
+<li><a href="https://mnledu.com/en/productivity/roster-maker_en.html">Fair Roster Maker</a></li>
+<li><a href="https://mnledu.com/en/productivity/meeting-minutes_en.html">Smart Meeting Minutes</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio_en.html">QR Code Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/smart-list_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/smart-list_en.html";
+  var TK_SHARE_TITLE = "Smart List Formatter";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+</body>
+</html>

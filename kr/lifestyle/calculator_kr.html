@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0D1117">
+<title>스마트 수식 계산기 · 계산 · 수식 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="괄호와 거듭제곱이 섞인 식을 그대로 계산합니다. 계산 기록을 눌러 다시 불러올 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/kr/lifestyle/calculator_kr.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/lifestyle/calculator_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/lifestyle/calculator_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/lifestyle/calculator_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/kr/lifestyle/calculator_kr.html" />
+<meta property="og:title" content="스마트 수식 계산기 · 계산 · 수식 | TOOLKIT" />
+<meta property="og:description" content="괄호와 거듭제곱이 섞인 식을 그대로 계산합니다. 계산 기록을 눌러 다시 불러올 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="스마트 수식 계산기 · 계산 · 수식 | TOOLKIT" />
+<meta name="twitter:description" content="괄호와 거듭제곱이 섞인 식을 그대로 계산합니다. 계산 기록을 눌러 다시 불러올 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "스마트 수식 계산기",
+  "description": "괄호와 거듭제곱이 섞인 식을 그대로 계산합니다. 계산 기록을 눌러 다시 불러올 수 있습니다.",
+  "url": "https://mnledu.com/kr/lifestyle/calculator_kr.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "LIFESTYLE",
+      "item": "https://mnledu.com/#kr"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "스마트 수식 계산기",
+      "item": "https://mnledu.com/kr/lifestyle/calculator_kr.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.1/lib/browser/math.js"></script>
+
+<style>
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --panel:#161C24; --line:#232C38; --fg:#E8EDF3; --dim:#8A97A6;
+    --key:#1C242E; --keyA:#28323E; --accent:#2C6BA0; --op:#243444; --eq:#2C6BA0; --err:#E05A4C;
+  }
+  :root[data-theme="light"]{
+    --bg:#F4F5F7; --panel:#FFFFFF; --line:#E3E7EC; --fg:#26384B; --dim:#5F7488;
+    --key:#FFFFFF; --keyA:#EEF2F6; --accent:#2C6BA0; --op:#EAF1F7; --eq:#2C6BA0; --err:#C0392B;
+  }
+  *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--bg); color:var(--fg);
+    font-family:'Pretendard',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none; touch-action:manipulation;
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:14px; }
+  .key{
+    background:var(--key); border:1px solid var(--line); border-radius:11px; color:var(--fg);
+    font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600;
+    height:56px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:background .08s, transform .06s;
+  }
+  .key:active{ transform:scale(.95); background:var(--keyA); }
+  .key.op{ background:var(--op); color:var(--accent); }
+  .key.fn{ font-size:15px; }
+  .key.eq{ background:var(--eq); border-color:var(--eq); color:#fff; }
+  .key.ac{ color:var(--err); }
+
+  #expr{
+    width:100%; background:transparent; border:0; outline:none; color:var(--fg);
+    font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:600;
+    text-align:right; padding:0; direction:ltr;
+  }
+  #preview{ text-align:right; font-family:'JetBrains Mono',monospace; font-size:16px; color:var(--dim); min-height:22px; }
+  #preview.bad{ color:var(--err); font-size:12.5px; }
+
+  .histRow{
+    padding:9px 11px; border:1px solid var(--line); border-radius:9px; margin-bottom:6px;
+    cursor:pointer; transition:border-color .12s, background .12s;
+  }
+  .histRow:hover{ border-color:var(--accent); background:var(--keyA); }
+  .histRow .e{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--dim); word-break:break-all; }
+  .histRow .r{ font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; margin-top:2px; word-break:break-all; }
+
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--fg);
+    border-radius:8px; font-size:12.5px; padding:7px 11px; cursor:pointer;
+  }
+  .btn:active{ background:var(--keyA); }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,10px); opacity:0;
+    background:var(--panel); border:1px solid var(--line); border-radius:9px;
+    padding:10px 16px; font-size:13px; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60;
+  }
+  #toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+
+<body>
+<div class="mx-auto max-w-4xl px-4 py-5">
+
+  <header class="mb-4 flex items-center justify-between gap-3">
+    <div>
+      <h1 class="text-[17px] font-semibold tracking-tight">스마트 수식 계산기</h1>
+      <p class="mt-0.5 text-[12px]" style="color:var(--dim)">괄호와 거듭제곱이 들어간 식을 그대로 계산합니다</p>
+    </div>
+    <button class="btn" id="themeBtn">라이트</button>
+  </header>
+
+  <div class="grid gap-4 lg:grid-cols-[1fr_300px]">
+
+    <div>
+      <!-- 디스플레이 -->
+      <div class="panel" style="padding:16px 18px">
+        <input id="expr" inputmode="text" autocomplete="off" spellcheck="false" placeholder="0">
+        <div id="preview" class="mono">&nbsp;</div>
+      </div>
+
+      <!-- 패드 -->
+      <div class="mt-3" style="display:grid; grid-template-columns:repeat(5,1fr); gap:7px">
+        <button class="key fn ac" data-k="AC">AC</button>
+        <button class="key fn" data-k="BS">⌫</button>
+        <button class="key fn op" data-k="(">(</button>
+        <button class="key fn op" data-k=")">)</button>
+        <button class="key op" data-k="/">÷</button>
+
+        <button class="key fn" data-k="sq">x²</button>
+        <button class="key" data-k="7">7</button>
+        <button class="key" data-k="8">8</button>
+        <button class="key" data-k="9">9</button>
+        <button class="key op" data-k="*">×</button>
+
+        <button class="key fn" data-k="^">^</button>
+        <button class="key" data-k="4">4</button>
+        <button class="key" data-k="5">5</button>
+        <button class="key" data-k="6">6</button>
+        <button class="key op" data-k="-">−</button>
+
+        <button class="key fn" data-k="sqrt">√</button>
+        <button class="key" data-k="1">1</button>
+        <button class="key" data-k="2">2</button>
+        <button class="key" data-k="3">3</button>
+        <button class="key op" data-k="+">+</button>
+
+        <button class="key fn" data-k="%">%</button>
+        <button class="key" data-k="0">0</button>
+        <button class="key" data-k=".">.</button>
+        <button class="key eq" data-k="=" style="grid-column:span 2">=</button>
+      </div>
+
+      <p class="mt-2.5 text-[11px] leading-relaxed" style="color:var(--dim)">
+        키보드도 그대로 됩니다 · Enter 계산 · Backspace 한 글자 · Esc 전체 지우기 · 입력창에 직접 타이핑해도 됩니다
+      </p>
+    </div>
+
+    <!-- 히스토리 -->
+    <div class="panel" style="padding:14px">
+      <div class="mb-2 flex items-center justify-between">
+        <span class="text-[12px] font-medium tracking-wide" style="color:var(--dim)">
+          계산 기록 <b class="mono" id="histCnt" style="color:var(--fg)">0</b>
+        </span>
+        <button class="btn" id="clearHist" style="padding:5px 9px; font-size:11.5px">비우기</button>
+      </div>
+      <div id="hist" style="max-height:56vh; overflow:auto"></div>
+      <p id="histEmpty" class="text-[12px]" style="color:var(--dim)">계산하면 여기에 쌓입니다. 눌러서 다시 불러올 수 있습니다.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  const expr = document.getElementById('expr');
+  const preview = document.getElementById('preview');
+  const histEl = document.getElementById('hist');
+  let history = [];
+
+  const toastEl = document.getElementById('toast');
+  let tt = null;
+  function toast(m) {
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  function fmt(v) {
+    try {
+      if (typeof v === 'number') {
+        if (!isFinite(v)) return String(v);
+        const r = Math.round(v * 1e10) / 1e10;
+        return Math.abs(r) >= 1e15 || (Math.abs(r) < 1e-6 && r !== 0)
+          ? r.toExponential(6) : r.toLocaleString('ko-KR', { maximumFractionDigits: 10 });
+      }
+      return (window.math && math.format) ? math.format(v, { precision: 12 }) : String(v);
+    } catch (e) { return String(v); }
+  }
+
+  // %는 math.js가 모르는 기호라 100으로 나누는 식으로 바꿔서 넘긴다
+  function normalize(s) {
+    return s.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-')
+            .replace(/(\d+(?:\.\d+)?)\s*%/g, '($1/100)');
+  }
+
+  function evaluate(s) {
+    if (!s.trim()) return null;
+    if (!window.math) throw new Error('계산 엔진을 불러오지 못했습니다');
+    return math.evaluate(normalize(s));
+  }
+
+  function update() {
+    const s = expr.value;
+    if (!s.trim()) { preview.innerHTML = '&nbsp;'; preview.className = 'mono'; return; }
+    try {
+      const v = evaluate(s);
+      preview.textContent = (v === undefined || v === null) ? '' : '= ' + fmt(v);
+      preview.className = 'mono';
+    } catch (e) {
+      preview.textContent = '입력 중…';
+      preview.className = 'mono bad';
+    }
+  }
+
+  function insert(t) {
+    const s = expr.selectionStart, e = expr.selectionEnd;
+    expr.value = expr.value.slice(0, s) + t + expr.value.slice(e);
+    const p = s + t.length;
+    expr.setSelectionRange(p, p);
+    expr.focus();
+    update();
+  }
+
+  function backspace() {
+    const s = expr.selectionStart, e = expr.selectionEnd;
+    if (s !== e) expr.value = expr.value.slice(0, s) + expr.value.slice(e);
+    else if (s > 0) { expr.value = expr.value.slice(0, s - 1) + expr.value.slice(s); }
+    const p = Math.max(0, s === e ? s - 1 : s);
+    expr.setSelectionRange(p, p);
+    expr.focus();
+    update();
+  }
+
+  function equals() {
+    const s = expr.value.trim();
+    if (!s) return;
+    let v;
+    try { v = evaluate(s); }
+    catch (err) { toast('식을 확인해 주세요'); preview.textContent = '식이 올바르지 않습니다'; preview.className = 'mono bad'; return; }
+    if (v === undefined || v === null) return;
+
+    const out = fmt(v);
+    history.unshift({ e: s, r: out });
+    if (history.length > 60) history.pop();
+    renderHist();
+
+    expr.value = String(typeof v === 'number' ? Math.round(v * 1e10) / 1e10 : out).replace(/,/g, '');
+    expr.setSelectionRange(expr.value.length, expr.value.length);
+    update();
+  }
+
+  function press(k) {
+    if (k === 'AC') { expr.value = ''; update(); expr.focus(); return; }
+    if (k === 'BS') return backspace();
+    if (k === '=') return equals();
+    if (k === 'sq') return insert('^2');
+    if (k === 'sqrt') return insert('sqrt(');
+    insert(k);
+  }
+
+  document.querySelectorAll('[data-k]').forEach(function (b) {
+    b.addEventListener('click', function () { press(b.dataset.k); });
+  });
+
+  expr.addEventListener('input', update);
+  expr.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); equals(); }
+    if (ev.key === 'Escape') { ev.preventDefault(); expr.value = ''; update(); }
+  });
+  // 입력창 밖에서 눌러도 그대로 이어 쓰도록 키를 받아 넘긴다
+  document.addEventListener('keydown', function (ev) {
+    if (document.activeElement === expr) return;
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    const k = ev.key;
+    if (/^[0-9+\-*/().^%]$/.test(k)) { ev.preventDefault(); insert(k); }
+    else if (k === 'Enter' || k === '=') { ev.preventDefault(); equals(); }
+    else if (k === 'Backspace') { ev.preventDefault(); backspace(); }
+    else if (k === 'Escape') { ev.preventDefault(); expr.value = ''; update(); }
+  });
+
+  function renderHist() {
+    histEl.innerHTML = '';
+    document.getElementById('histCnt').textContent = history.length;
+    document.getElementById('histEmpty').style.display = history.length ? 'none' : 'block';
+    history.forEach(function (h) {
+      const d = document.createElement('div');
+      d.className = 'histRow';
+      d.innerHTML = '<div class="e">' + h.e.replace(/</g, '&lt;') + '</div><div class="r">= ' + h.r + '</div>';
+      d.title = '눌러서 불러오기';
+      d.addEventListener('click', function () {
+        expr.value = h.e;
+        expr.focus();
+        expr.setSelectionRange(expr.value.length, expr.value.length);
+        update();
+        toast('식을 불러왔습니다');
+      });
+      histEl.appendChild(d);
+    });
+  }
+
+  document.getElementById('clearHist').addEventListener('click', function () {
+    history = []; renderHist(); toast('기록을 비웠습니다');
+  });
+
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    this.textContent = next === 'dark' ? '라이트' : '다크';
+  });
+
+  renderHist();
+  update();
+  expr.focus();
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>계산기가 수식을 못 받는 불편</h2>
+<p>기본 계산기는 숫자를 하나씩 눌러야 합니다. 여러 항이 섞인 계산을 하려면 중간 결과를 외우거나 따로 적어야 하고, 잘못 눌렀을 때 어디서 틀렸는지 알 수 없습니다.</p>
+<p>이 도구는 수식을 통째로 적어 넣습니다. <strong>(1200000 - 350000) * 0.7</strong>처럼 적으면 그대로 계산되고, 적어둔 식이 화면에 남아 있어 어디를 고칠지 바로 보입니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>예산 계산</dt><dd>여러 항목을 더하고 비율을 곱하는 계산. 식이 남아 있어 검토하기 좋습니다.</dd>
+<dt>견적 검산</dt><dd>받은 견적서의 합계가 맞는지 항목을 그대로 적어 확인할 때.</dd>
+<dt>단가 나누기</dt><dd>총액을 수량으로 나눠 단가를 구할 때. 괄호를 써서 조건을 반영할 수 있습니다.</dd>
+<dt>빠른 확인</dt><dd>문서 작업 중 잠깐 계산이 필요할 때. 탭 하나만 열면 됩니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>입력창에 수식을 적습니다. 괄호와 사칙연산, 제곱근을 쓸 수 있습니다.</li>
+<li>결과가 바로 표시됩니다.</li>
+<li>식을 고치면 결과도 함께 바뀝니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>라이트 · 다크</dt><dd>화면 테마를 바꿉니다. 밤에 쓰거나 다른 창과 맞출 때 조절하세요.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>어떤 연산을 쓸 수 있나요</dt><dd>더하기, 빼기, 곱하기, 나누기와 괄호, 제곱근을 지원합니다.</dd>
+<dt>계산 기록이 남나요</dt><dd>적어둔 식이 화면에 남아 있어 되짚어 볼 수 있습니다. 다만 페이지를 닫으면 사라지니 필요한 내용은 복사해 두세요.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/lifestyle/birth-chart_kr.html">탄생 천궁도 분석</a></li>
+<li><a href="https://mnledu.com/kr/lifestyle/biorhythm_kr.html">힐링 바이오리듬</a></li>
+<li><a href="https://mnledu.com/kr/lifestyle/food-picker_kr.html">오늘 뭐 먹지</a></li>
+<li><a href="https://mnledu.com/kr/lifestyle/saju-studio_kr.html">강점으로 읽는 만세력</a></li>
+<li><a href="https://mnledu.com/kr/lifestyle/kstartup-board_kr.html">이번 주 창업지원사업</a></li>
+<li><a href="https://mnledu.com/kr/lifestyle/youtubenote_kr.html">유튜브 타임스탬프 노트</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "어떤 연산을 쓸 수 있나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "더하기, 빼기, 곱하기, 나누기와 괄호, 제곱근을 지원합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "계산 기록이 남나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "적어둔 식이 화면에 남아 있어 되짚어 볼 수 있습니다. 다만 페이지를 닫으면 사라지니 필요한 내용은 복사해 두세요."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="공유">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+공유
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">이 도구 공유하기</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/kr/lifestyle/calculator_kr.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">링크 복사</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">닫기</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/kr/lifestyle/calculator_kr.html";
+  var TK_SHARE_TITLE = "스마트 수식 계산기";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "링크 복사";
+  var copiedLabel = "복사됨";
+  var blockedLabel = "복사가 막혔습니다. 직접 선택해 복사하세요";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+</body>
+</html>
