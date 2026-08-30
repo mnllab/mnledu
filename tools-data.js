@@ -67,7 +67,7 @@ const TOOLS_DATA = [
     id: 'receipt-to-excel',
     title: '영수증 지출결의서 변환기',
     category: 'PRODUCTIVITY',
-    desc: '영수증 사진에서 날짜·금액·상호를 읽어 지출결의서 표로 만듭니다. 품목별로 뽑는 일반형과 총액만 뽑는 간편형을 고를 수 있습니다.',
+    desc: '영수증 사진에서 날짜·금액·상호를 읽고 업종에 맞는 계정과목까지 자동으로 붙입니다. 품목별 일반형과 총액만 뽑는 간편형을 고를 수 있습니다.',
     url: 'https://mnledu.com/kr/productivity/receipt-to-excel_kr.html',
     icon: 'receipt',
     badge: 'NEW',
