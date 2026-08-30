@@ -172,7 +172,7 @@
     ]
   },
   "kstartup-board": {
-    "version": "1.1",
+    "version": "1.2",
     "addedDate": "2026-08-28",
     "history": [
       {
@@ -184,6 +184,11 @@
         "version": "1.1",
         "date": "2026-08-30",
         "note": "시작 페이지 최상단 고정(Pinned) 처리, 배지 NEW → BEST"
+      },
+      {
+        "version": "1.2",
+        "date": "2026-08-30",
+        "note": "고정 방식 변경 — 별도 PINNED 섹션 제거, 대신 어느 카테고리 그리드에서든 맨 앞으로. 배지 BEST → PINNED. 영문판은 고정 기능 제외"
       }
     ]
   },

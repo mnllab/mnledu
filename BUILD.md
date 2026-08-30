@@ -378,3 +378,25 @@ index.html / en/index.html 에 PINNED SECTION 을 추가했다.
   en/index.html 은 build-en.js 로 자동 생성되지만, 이 로직 자체가
   한국어 원본(index.html)에서 그대로 복사되는 방식이므로 원본만 고치고
   build-en.js 를 다시 돌리면 영문판도 따라간다.
+
+
+## kstartup-board 고정 방식 재조정 (2026-08-30, 오후 2차)
+
+별도 "PINNED SECTION" 헤더/구획을 없애고, 대신 카테고리·검색·태그 필터가
+무엇이든 그 결과 그리드의 맨 앞에 이 도구가 오도록 바꿨다
+(render() 안에서 visible.unshift(pinned)). 즐겨찾기 규칙과 동일하게,
+이 도구를 즐겨찾기해도 즐겨찾기 섹션 + 메인 그리드 양쪽에 뜨는 기존
+동작을 그대로 따른다(중복 방지 로직 없음, 사이트의 기존 즐겨찾기
+표시 관례와 일치).
+
+배지를 BEST → PINNED 로 변경(같은 앰버 스타일 재사용).
+
+**영문판은 고정 기능을 아예 쓰지 않는다.** build-en.js 가 생성 시
+`var PINNED_ID = 'kstartup-board';` 를 `var PINNED_ID = '';` 로 치환한다
+(한국 정부지원사업 정보라 영어권에 홍보할 이유가 없음). 영문 카탈로그의
+배지도 평범한 'NEW' 로 되돌렸다.
+
+**다른 도구를 고정하려면** index.html 의 `var PINNED_ID = '...'` 만
+바꾸면 된다. en/index.html 은 그대로 빈 값 유지(build-en.js 가 항상
+비운다) — 영문판에 고정 기능을 쓰고 싶어지면 build-en.js 의 해당
+치환 줄을 지워야 한다.

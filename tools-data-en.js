@@ -348,7 +348,7 @@ const TOOLS_DATA_EN = [
     desc: 'Korea-specific. This week\'s Korean government startup funding calls, sorted by closing date and filterable by region.',
     url: 'https://mnledu.com/en/lifestyle/kstartup-board.html',
     icon: 'layout-dashboard',
-    badge: 'BEST',  // 시작 페이지 최상단 고정 (index.html 의 PINNED 섹션)
+    badge: 'NEW',  // 시작 페이지 최상단 고정 (index.html 의 PINNED 섹션)
     tags: ['#korea', '#startup', '#funding', '#deadlines']
   },
   {

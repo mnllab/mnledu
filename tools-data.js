@@ -379,7 +379,7 @@ const TOOLS_DATA = [
     desc: '이번 주 K-Startup 공고를 마감 임박순으로 모아 봅니다. 지역과 대상으로 걸러 필요한 것만 골라낼 수 있습니다.',
     url: 'https://mnledu.com/lifestyle/kstartup-board.html',
     icon: 'layout-dashboard',
-    badge: 'BEST',  // 시작 페이지 최상단 고정 (index.html 의 PINNED 섹션)
+    badge: 'PINNED',  // 카테고리와 무관하게 항상 그리드 맨 앞. index.html 의 PINNED_ID 참고
     tags: ['#창업', '#지원사업', '#공고', '#마감']
   },
   {

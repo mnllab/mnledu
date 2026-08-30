@@ -393,6 +393,13 @@ function buildIndex() {
   html = html.split('href="/privacy.html"').join('href="/en/privacy.html"');
   html = html.split('href="/terms.html"').join('href="/en/terms.html"');
 
+  // 영문판은 고정(Pinned) 기능을 쓰지 않는다 — 한국 전용 도구(kstartup-board)를
+  // 영어권 사용자에게 상단 고정으로 밀어줄 이유가 없음
+  html = html.replace(
+    "var PINNED_ID = 'kstartup-board';",
+    "var PINNED_ID = ''; // 영문판은 고정 기능 미사용"
+  );
+
   html = injectCoffeeStyle(html);
   html = swapSupport(html);
   html = swapFooterSupport(html);
