@@ -562,3 +562,19 @@ patch-tool-pages.js 가 한국어 파일만 처리한다는 걸 계속 놓치기
 en/productivity/receipt-to-excel_en.html)에 바로 배치했고,
 canonical·hreflang 도 새 구조 기준으로 재구성. 마커 밖 잔여물
 육안 확인 · 영문판 SEO 수동 재구성 절차를 그대로 따라 사고 없이 완료.
+
+## receipt-to-excel 경량 온디바이스 AI 보강 (2026-08-30, 심야 2차)
+
+Xenova/multilingual-e5-small(INT8 양자화) 임베딩 모델을 브라우저
+안에서 워커로 돌려, 정규식·좌표 기반 판단만으로 애매한 OCR 행을
+의미 기반으로 재분류하는 레이어 추가. merchant/item/maker/total/
+subtotal/tax/payment/code/header/address 10개 라벨에 대해 문장
+임베딩 유사도를 계산해 신뢰도 낮은 행을 보강한다.
+"경량 AI · 애매한 OCR 행 의미 분류" 진행 표시가 뜨는 지점.
+
+안내문 내용은 이번엔 변경 없음(기능이 내부 정확도 개선이라 catalog
+설명도 그대로 둠). v2.2 → v2.3.
+
+canonical 이 이미 새(kr/en) 구조를 정확히 가리키고 있어서 절차가
+한결 수월했음 — 지난 마이그레이션 이후 이 파일을 기반으로 계속
+작업해 주고 계신 것으로 보임.

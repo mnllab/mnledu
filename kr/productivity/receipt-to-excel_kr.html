@@ -108,7 +108,7 @@
     font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
     -webkit-font-smoothing:antialiased}
   .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
-  .wrap{max-width:1320px;margin:0 auto;padding:0 18px}
+  .wrap{max-width:1480px;margin:0 auto;padding:0 18px}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:16px}
   .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
@@ -131,7 +131,9 @@
 
   /* ---------- 좌우 배치 ---------- */
   #main{display:grid;gap:18px;grid-template-columns:1fr;align-items:start}
-  @media(min-width:1060px){#main{grid-template-columns:376px 1fr}}
+  @media(min-width:1060px){#main{grid-template-columns:minmax(430px,460px) minmax(0,1fr);gap:22px}}
+  @media(min-width:1320px){#main{grid-template-columns:minmax(470px,500px) minmax(0,1fr);gap:24px}}
+  #main>.card{min-width:0}
 
   /* ---------- 업로드 ---------- */
   #drop{border:2px dashed var(--line);border-radius:14px;padding:30px 18px;text-align:center;
@@ -352,11 +354,11 @@
 
 
     <div id="smartAiBox" class="odAiBox smAiBox">
-      <div class="odAiHead"><div class="odAiTitle">🧠 온디바이스 AI 스마트 분석 <span class="odAiBadge">고급 · 선택</span></div><span id="smartAiState" class="odAiState">기본 규칙 분석 사용 중</span></div>
-      <p class="odAiDesc">OCR이 읽은 글자와 위치를 소형 언어모델이 다시 해석해 <b>상품·제조사·할인·합계·단가·수량</b> 관계가 애매한 경우를 보강합니다. 기존 규칙 파서가 충분히 확실하면 실행하지 않는 <b>AI Rescue</b> 방식입니다.</p>
-      <label class="odAiConsent"><input type="checkbox" id="smartAiConsent"><span><b>스마트 분석 모델 다운로드 및 로컬 저장에 동의합니다.</b><br>약 0.5GB의 Qwen2.5 0.5B 모델을 브라우저 캐시에 저장합니다. 분석할 OCR 내용은 외부로 전송되지 않습니다.</span></label>
-      <button type="button" class="btn odAiSetup smAiSetup" id="smartAiSetupBtn" disabled>🧠 AI 스마트 분석 준비하기</button>
-      <div id="smartAiNote" class="odAiNote">동의 후 모델을 준비하면, 기존 파서가 불확실한 영수증에서만 자동으로 로컬 AI가 재분석합니다. WebGPU를 우선 사용하고 미지원 기기는 CPU/WASM으로 동작해 더 느릴 수 있습니다.</div>
+      <div class="odAiHead"><div class="odAiTitle">🧠 경량 AI 영수증 구조 분석 <span class="odAiBadge">선택 · 저부하</span></div><span id="smartAiState" class="odAiState">기본 규칙 분석 사용 중</span></div>
+      <p class="odAiDesc">생성형 언어모델 대신 다국어 <b>의미 임베딩 모델</b>이 OCR 행을 상품·제조사·할인·합계·세금·결제정보 등으로 분류하고, 기존 좌표·수학 검증과 함께 애매한 구조만 보강합니다. 문장을 새로 생성하지 않아 메모리 사용과 환각 위험을 크게 낮췄습니다.</p>
+      <label class="odAiConsent"><input type="checkbox" id="smartAiConsent"><span><b>경량 의미분석 모델 다운로드 및 로컬 저장에 동의합니다.</b><br>INT8 모델과 토크나이저 약 140MB를 브라우저 캐시에 저장합니다. OCR 내용은 외부로 전송되지 않습니다.</span></label>
+      <button type="button" class="btn odAiSetup smAiSetup" id="smartAiSetupBtn" disabled>🧠 경량 AI 구조 분석 준비하기</button>
+      <div id="smartAiNote" class="odAiNote">준비 후에도 기존 규칙 파서가 우선 동작하며, 애매한 영수증에서만 보조 분류를 실행합니다. GPU 메모리 급증을 피하기 위해 Web Worker의 CPU/WASM + INT8 경로로 제한합니다.</div>
     </div>
 
     <div id="editorWrap">
@@ -2054,49 +2056,82 @@ odRefreshUi();
 
 
 /* ============================================================
-   선택형 온디바이스 AI 스마트 분석 · Qwen2.5 0.5B
-   - 모델 파일만 다운로드하고 OCR/영수증 내용은 네트워크로 보내지 않는다.
-   - Transformers.js 브라우저 Cache API를 사용한다.
-   - 기존 규칙 파서가 애매한 경우에만 AI Rescue를 호출한다.
+   선택형 경량 AI 영수증 구조 분석 · multilingual-e5-small INT8
+   - 생성형 언어모델을 사용하지 않고 OCR 행의 의미 벡터만 계산한다.
+   - 약 118MB INT8 모델 + tokenizer를 브라우저 캐시에 저장한다.
+   - Web Worker + CPU/WASM으로 고정해 GPU 메모리 급증과 UI 프리징 위험을 줄인다.
+   - 기존 규칙 파서가 애매한 경우에만 분류 결과를 보조 신호로 사용한다.
    ============================================================ */
 var SM_LIB_URL='https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/+esm';
-var SM_MODEL_ID='onnx-community/Qwen2.5-0.5B-Instruct';
+var SM_MODEL_ID='Xenova/multilingual-e5-small';
+var SM_DTYPE='q8';
+var SM_LABELS=[
+  {id:'merchant',text:'가맹점 상호명 매장명 판매처 업체명 merchant store shop vendor business name'},
+  {id:'item',text:'실제로 구매한 상품명 품목명 서비스명 purchased item product merchandise line item'},
+  {id:'maker',text:'제조사 브랜드 공급사 수입사 유통사 manufacturer maker brand supplier distributor'},
+  {id:'discount',text:'할인 쿠폰 행사 에누리 프로모션 discount coupon promotion markdown saving'},
+  {id:'total',text:'최종 합계 총액 결제금액 받을금액 승인금액 grand total amount due final payment total'},
+  {id:'subtotal',text:'소계 공급가액 거래금액 과세물품가액 subtotal net amount supply amount taxable amount'},
+  {id:'tax',text:'부가세 세액 세금 VAT tax sales tax'},
+  {id:'payment',text:'카드 승인 결제수단 현금 계좌이체 card approval payment method cash bank transfer'},
+  {id:'code',text:'상품코드 바코드 승인번호 사업자번호 거래번호 식별번호 barcode item code approval number identifier'},
+  {id:'header',text:'표 머리글 상품명 단가 수량 금액 열 제목 table header item unit price quantity amount'},
+  {id:'contact',text:'주소 전화번호 연락처 사업장 소재지 address phone telephone contact location'}
+];
 var smWorker=null,smWorkerUrl='',smReady=false,smBusy=false,smInitWait=null,smInferWait=null,smBackend='';
 function smSetState(v){if($('smartAiState'))$('smartAiState').textContent=v}
 function smSetNote(v){if($('smartAiNote'))$('smartAiNote').textContent=v}
 function smUseEnabled(){var c=$('smartAiConsent');return !!(smReady&&c&&c.checked)}
 function smRefreshUi(){
   var c=$('smartAiConsent'),b=$('smartAiSetupBtn');if(!c||!b)return;
-  if(smReady){b.disabled=true;b.classList.add('ready');b.textContent=odS('✓ AI 스마트 분석 준비 완료','✓ AI smart analysis ready');smSetState(c.checked?odS('AI Rescue 사용 중','AI Rescue active'):odS('모델 준비됨 · 규칙 분석만 사용','Model ready · rules only'));}
-  else{b.classList.remove('ready');b.disabled=!c.checked||smBusy;b.textContent=smBusy?odS('스마트 분석 모델 준비 중...','Preparing smart-analysis model...'):odS('🧠 AI 스마트 분석 준비하기','🧠 Prepare AI smart analysis');smSetState(c.checked?odS('다운로드 대기','Ready to download'):odS('기본 규칙 분석 사용 중','Rule-based parsing active'));}
+  if(smReady){b.disabled=true;b.classList.add('ready');b.textContent=odS('✓ 경량 AI 구조 분석 준비 완료','✓ Lightweight AI structure analysis ready');smSetState(c.checked?odS('경량 AI 보강 사용 중','Lightweight AI assist active'):odS('모델 준비됨 · 규칙 분석만 사용','Model ready · rules only'));}
+  else{b.classList.remove('ready');b.disabled=!c.checked||smBusy;b.textContent=smBusy?odS('경량 의미분석 모델 준비 중...','Preparing lightweight semantic model...'):odS('🧠 경량 AI 구조 분석 준비하기','🧠 Prepare lightweight AI analysis');smSetState(c.checked?odS('다운로드 대기','Ready to download'):odS('기본 규칙 분석 사용 중','Rule-based parsing active'));}
 }
 function smWorkerMain(){
   'use strict';
-  let generator=null;
+  let extractor=null,labelIds=[],labelMatrix=null,dim=0;
+  function tensorRows(t){
+    const d=t&&t.dims||[],n=d.length?d[0]:0,m=d.length?d[d.length-1]:0,data=t&&t.data;if(!n||!m||!data)throw new Error('Invalid embedding output');return{n:n,m:m,data:data};
+  }
+  function scoreRows(t,docs){
+    const z=tensorRows(t),out=[];
+    for(let i=0;i<z.n;i++){
+      let best=-Infinity,second=-Infinity,bi=-1,si=-1,off=i*z.m;
+      for(let j=0;j<labelIds.length;j++){
+        let s=0,lo=j*dim;for(let k=0;k<dim;k++)s+=z.data[off+k]*labelMatrix[lo+k];
+        if(s>best){second=best;si=bi;best=s;bi=j;}else if(s>second){second=s;si=j;}
+      }
+      out.push({id:docs[i].id,text:docs[i].text,label:labelIds[bi]||'other',score:best,second:labelIds[si]||'',secondScore:second,margin:best-second});
+    }
+    return out;
+  }
   self.onmessage=async function(ev){
     const msg=ev.data||{};
     try{
       if(msg.type==='init'){
-        self.postMessage({type:'status',message:'Transformers.js'});
+        self.postMessage({type:'status',message:'Transformers.js · WASM q8'});
         const hf=await import(msg.libUrl);
         hf.env.useBrowserCache=true;
         if('useWasmCache' in hf.env)hf.env.useWasmCache=true;
-        if('cacheKey' in hf.env)hf.env.cacheKey='toolkit-receipt-smart-ai-v1';
-        hf.env.allowRemoteModels=true;
-        hf.env.allowLocalModels=false;
-        const progress_callback=function(p){
-          const safe={type:'progress',status:String(p&&p.status||''),file:String(p&&p.file||p&&p.name||''),progress:Number(p&&p.progress),loaded:Number(p&&p.loaded),total:Number(p&&p.total)};
-          self.postMessage(safe);
-        };
-        generator=await hf.pipeline('text-generation',msg.modelId,{device:msg.device,dtype:msg.dtype,progress_callback:progress_callback});
-        self.postMessage({type:'ready',device:msg.device,dtype:msg.dtype});
+        if('cacheKey' in hf.env)hf.env.cacheKey='toolkit-receipt-semantic-ai-v2';
+        hf.env.allowRemoteModels=true;hf.env.allowLocalModels=false;
+        const progress_callback=function(p){self.postMessage({type:'progress',status:String(p&&p.status||''),file:String(p&&p.file||p&&p.name||''),progress:Number(p&&p.progress),loaded:Number(p&&p.loaded),total:Number(p&&p.total)});};
+        extractor=await hf.pipeline('feature-extraction',msg.modelId,{device:'wasm',dtype:msg.dtype||'q8',progress_callback:progress_callback});
+        labelIds=(msg.labels||[]).map(x=>x.id);
+        const labelTexts=(msg.labels||[]).map(x=>'query: '+x.text);
+        const le=await extractor(labelTexts,{pooling:'mean',normalize:true});
+        const lr=tensorRows(le);dim=lr.m;labelMatrix=new Float32Array(lr.data);
+        self.postMessage({type:'ready',device:'wasm',dtype:msg.dtype||'q8',dim:dim});
       }else if(msg.type==='analyze'){
-        if(!generator)throw new Error('Smart model is not ready');
-        const output=await generator(msg.messages,{max_new_tokens:msg.maxNewTokens||560,do_sample:false,repetition_penalty:1.03});
-        let gt=output&&output[0]&&output[0].generated_text,text='';
-        if(Array.isArray(gt)){const last=gt[gt.length-1];text=last&&typeof last==='object'?String(last.content||''):String(last||'');}
-        else text=String(gt||'');
-        self.postMessage({type:'result',id:msg.id,text:text});
+        if(!extractor||!labelMatrix)throw new Error('Semantic model is not ready');
+        const docs=(msg.docs||[]).filter(x=>x&&x.text).slice(0,96),all=[],chunk=10;
+        for(let s=0;s<docs.length;s+=chunk){
+          const part=docs.slice(s,s+chunk),inputs=part.map(x=>'passage: '+String(x.text).slice(0,220));
+          const e=await extractor(inputs,{pooling:'mean',normalize:true});all.push(...scoreRows(e,part));
+          self.postMessage({type:'infer-progress',id:msg.id,current:Math.min(docs.length,s+part.length),total:docs.length});
+          await new Promise(r=>setTimeout(r,0));
+        }
+        self.postMessage({type:'result',id:msg.id,rows:all});
       }
     }catch(err){self.postMessage({type:'error',id:msg.id||'',message:(err&&err.message)||String(err),stack:(err&&err.stack)||''});}
   };
@@ -2105,30 +2140,32 @@ function smEnsureWorker(){
   if(smWorker)return smWorker;
   var src='('+smWorkerMain.toString()+')();',blob=new Blob([src],{type:'text/javascript'});smWorkerUrl=URL.createObjectURL(blob);smWorker=new Worker(smWorkerUrl,{type:'module'});
   smWorker.onmessage=function(ev){var m=ev.data||{};
-    if(m.type==='status'){smSetNote(odS('로컬 언어모델 엔진을 준비하는 중입니다 · '+m.message,'Preparing local language-model engine · '+m.message));return}
+    if(m.type==='status'){smSetNote(odS('경량 의미분석 엔진을 준비하는 중입니다 · '+m.message,'Preparing lightweight semantic engine · '+m.message));return}
     if(m.type==='progress'){
       var p=isFinite(m.progress)?m.progress:0;if(p>0&&p<=1)p*=100;p=Math.max(0,Math.min(100,p||0));var fn=(m.file||'').split('/').pop();
-      var msg=odS('스마트 분석 모델 다운로드 중','Downloading smart-analysis model')+(fn?' · '+fn:'')+(p?' · '+Math.round(p)+'%':'');smSetNote(msg);setProg(true,p||8,msg);return;
+      var msg=odS('경량 의미분석 모델 다운로드 중','Downloading lightweight semantic model')+(fn?' · '+fn:'')+(p?' · '+Math.round(p)+'%':'');smSetNote(msg);setProg(true,p||8,msg);return;
     }
-    if(m.type==='ready'&&smInitWait){smBackend=(m.device==='webgpu'?'WebGPU':'WASM')+' · '+m.dtype;var w=smInitWait;smInitWait=null;w.resolve(m);return}
-    if(m.type==='result'&&smInferWait&&(!m.id||m.id===smInferWait.id)){var q=smInferWait;smInferWait=null;q.resolve(m.text);return}
+    if(m.type==='ready'&&smInitWait){smBackend='WASM · '+m.dtype+' · '+m.dim+'D';var w=smInitWait;smInitWait=null;w.resolve(m);return}
+    if(m.type==='infer-progress'&&smInferWait&&(!m.id||m.id===smInferWait.id)){var q=84+Math.round(11*(m.current/Math.max(1,m.total)));setProg(true,q,odS('경량 AI · 애매한 OCR 행 의미 분류 '+m.current+'/'+m.total,'Lightweight AI · classifying ambiguous OCR rows '+m.current+'/'+m.total));return}
+    if(m.type==='result'&&smInferWait&&(!m.id||m.id===smInferWait.id)){var r=smInferWait;smInferWait=null;clearTimeout(r.timer);r.resolve(m.rows||[]);return}
     if(m.type==='error'){
-      if(smInferWait&&(!m.id||m.id===smInferWait.id)){var qi=smInferWait;smInferWait=null;qi.reject(new Error(m.message||'Smart analysis failed'));return}
-      if(smInitWait){var qw=smInitWait;smInitWait=null;qw.reject(new Error(m.message||'Smart model setup failed'));return}
-      console.error('Smart AI',m.message,m.stack||'');
+      if(smInferWait&&(!m.id||m.id===smInferWait.id)){var qi=smInferWait;smInferWait=null;clearTimeout(qi.timer);qi.reject(new Error(m.message||'Semantic analysis failed'));return}
+      if(smInitWait){var qw=smInitWait;smInitWait=null;qw.reject(new Error(m.message||'Semantic model setup failed'));return}
+      console.error('Lightweight semantic AI',m.message,m.stack||'');
     }
   };
-  smWorker.onerror=function(e){if(smInitWait){var w=smInitWait;smInitWait=null;w.reject(new Error(e.message||'Smart worker error'))}if(smInferWait){var q=smInferWait;smInferWait=null;q.reject(new Error(e.message||'Smart worker error'))}};
+  smWorker.onerror=function(e){if(smInitWait){var w=smInitWait;smInitWait=null;w.reject(new Error(e.message||'Semantic worker error'))}if(smInferWait){var q=smInferWait;smInferWait=null;clearTimeout(q.timer);q.reject(new Error(e.message||'Semantic worker error'))}};
   return smWorker;
 }
 async function smSetup(){
-  if(smReady||smBusy)return;var c=$('smartAiConsent');if(!c||!c.checked){toast(odS('먼저 스마트 분석 모델 다운로드에 동의해 주세요','Please agree to the smart-analysis model download first'));return}
-  smBusy=true;smRefreshUi();setProg(true,2,odS('스마트 분석 모델 준비를 시작합니다','Starting smart-analysis model setup'));
+  if(smReady||smBusy)return;var c=$('smartAiConsent');if(!c||!c.checked){toast(odS('먼저 경량 AI 모델 다운로드에 동의해 주세요','Please agree to the lightweight AI model download first'));return}
+  smBusy=true;smRefreshUi();setProg(true,2,odS('경량 의미분석 모델 준비를 시작합니다','Starting lightweight semantic model setup'));
   try{
-    var useGpu=!!navigator.gpu,device=useGpu?'webgpu':'wasm',dtype=useGpu?'q4f16':'q8';smSetNote(odS('약 0.5GB 모델을 로컬 캐시에 준비합니다 · '+(useGpu?'WebGPU':'CPU/WASM'),'Preparing about 0.5 GB in the local cache · '+(useGpu?'WebGPU':'CPU/WASM')));
-    var w=smEnsureWorker();await new Promise(function(resolve,reject){smInitWait={resolve:resolve,reject:reject};w.postMessage({type:'init',libUrl:SM_LIB_URL,modelId:SM_MODEL_ID,device:device,dtype:dtype})});
-    smReady=true;setProg(false);smSetNote(odS('준비 완료 · '+smBackend+' · 모델은 브라우저 캐시에 보관됩니다. 기존 파서가 애매할 때만 자동 실행합니다.','Ready · '+smBackend+' · model cached in this browser. It runs only when the existing parser is uncertain.'));toast(odS('AI 스마트 분석 준비가 끝났습니다','AI smart analysis is ready'));
-  }catch(e){console.error(e);setProg(false);smSetNote(odS('스마트 분석 모델 준비 실패 · 네트워크, 저장공간 또는 WebGPU 지원을 확인해 주세요','Smart-analysis setup failed · check network, storage, or WebGPU support'));toast(odS('스마트 분석 모델을 준비하지 못했습니다','Could not prepare the smart-analysis model'));
+    smSetNote(odS('약 140MB의 INT8 의미분석 모델과 토크나이저를 로컬 캐시에 준비합니다 · GPU를 사용하지 않습니다','Preparing about 140 MB of INT8 semantic model/tokenizer in local cache · GPU is not used'));
+    var w=smEnsureWorker();await new Promise(function(resolve,reject){smInitWait={resolve:resolve,reject:reject};w.postMessage({type:'init',libUrl:SM_LIB_URL,modelId:SM_MODEL_ID,dtype:SM_DTYPE,labels:SM_LABELS})});
+    smReady=true;setProg(false);smSetNote(odS('준비 완료 · '+smBackend+' · 애매한 영수증 행만 의미 분류하며 생성형 AI는 사용하지 않습니다.','Ready · '+smBackend+' · only ambiguous receipt rows are classified; no generative AI is used.'));toast(odS('경량 AI 구조 분석 준비가 끝났습니다','Lightweight AI structure analysis is ready'));
+    try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+  }catch(e){console.error(e);setProg(false);smSetNote(odS('경량 의미분석 모델 준비 실패 · 기본 규칙 분석은 그대로 사용할 수 있습니다','Lightweight semantic model setup failed · rule-based parsing is still available'));toast(odS('경량 AI 구조 분석을 준비하지 못했습니다','Could not prepare lightweight AI analysis'));
   }finally{smBusy=false;smRefreshUi()}
 }
 function smN(v){
@@ -2147,45 +2184,76 @@ function smNeedsRescue(best,rtype){
   var sum=items.reduce(function(z,it){return z+smN(it.amount)},0),total=smN(best.amount),mismatch=total&&sum&&Math.abs(sum-total)>Math.max(100,total*.05);
   return bad>=1||mismatch||best.fragmentMode||best.itemOverflow||(+best.conf||0)<68;
 }
-function smCurrentSummary(best,rtype){
-  var o={receipt_type:rtype,date:best.date||'',merchant:best.store||'',total:best.amount||'',ocr_confidence:Math.round(+best.conf||0)};
-  if(rtype==='itemized')o.items=(best.items||[]).map(function(it){return{name:it.name||'',unit_price:smN(it.unit),quantity:smN(it.qty),amount:smN(it.amount),note:it.note||''}});
-  else if(best.simple)o.parser_scores={merchant:+best.simple.storeScore||0,total:+best.simple.amountScore||0,date:+best.simple.dateScore||0};
-  return o;
+function smLines(best){return String(best&&((best.visualText||best.text))||'').split(/\r?\n/).map(function(x){return x.replace(/\s+/g,' ').trim()}).filter(Boolean).slice(0,72)}
+function smLexicalLabel(text){
+  var s=String(text||'');
+  if(/(?:총\s*합\s*계|총\s*계|총\s*액|결제\s*금액|승인\s*금액|받을\s*금액|청구\s*금액|grand\s*total|amount\s*due|total\s*amount)/i.test(s))return'total';
+  if(/(?:부가\s*세|부가가치세|세\s*액|\bvat\b|sales\s*tax|\btax\b)/i.test(s))return'tax';
+  if(/(?:공급\s*가액|거래\s*금액|과세\s*물품|소\s*계|subtotal|supply\s*amount|net\s*amount)/i.test(s))return'subtotal';
+  if(/(?:할인|쿠폰|에누리|행사|discount|coupon|saving|promotion)/i.test(s))return'discount';
+  if(/(?:상품\s*명|품\s*명|품목).*(?:단가|가격|수량|금액)|(?:item|description).*(?:price|qty|quantity|amount)/i.test(s))return'header';
+  if(/(?:승인\s*번호|사업자\s*번호|상품\s*코드|바코드|barcode|approval\s*no|business\s*no)/i.test(s))return'code';
+  if(/(?:카드\s*승인|카드\s*번호|결제\s*수단|현금|계좌\s*이체|credit\s*card|debit\s*card|payment\s*method|cash|bank\s*transfer)/i.test(s))return'payment';
+  if(looksAuxiliaryText(s))return'maker';
+  return'';
 }
-function smPrompt(best,rtype){
-  var layout=String(best.visualText||best.text||'').slice(0,7000),raw=String(best.text||'').slice(0,5000),current=JSON.stringify(smCurrentSummary(best,rtype));
-  var sys='You are a conservative receipt-structure parser running locally in a browser. Read OCR text, preserve evidence, never invent missing values, and return JSON only. Distinguish merchant from manufacturers; actual purchased items from headers, barcodes, tax, subtotals, totals and card metadata. Use arithmetic unit_price * quantity = amount when evidence supports it. If uncertain, use empty string or 0. Do not add explanations outside JSON.';
-  var schema='Return exactly one JSON object with this shape: {"date":"YYYY-MM-DD or empty","merchant":"string or empty","total":0,"payment":"card|cash|bank_transfer|other|empty","confidence":0,"reason":"short string","items":[{"name":"string","unit_price":0,"quantity":0,"amount":0,"note":"string"}]}. For itemized receipts, items must contain actual purchased line items only, in receipt order. Exclude subtotal, VAT/tax, grand total, change, approval numbers, business numbers and barcodes. A global discount may be reflected only in reason, not invented as a purchased item. For simple receipts, items must be an empty array.';
-  var user='Receipt mode: '+rtype+'\n\nLAYOUT-PRESERVING OCR:\n'+layout+'\n\nRAW OCR:\n'+raw+'\n\nCURRENT RULE-BASED PARSE:\n'+current+'\n\n'+schema;
-  return[{role:'system',content:sys},{role:'user',content:user}];
+function smEffectiveLabel(r){
+  if(!r)return'other';var forced=smLexicalLabel(r.text);if(forced)return forced;var score=+r.score||0,margin=+r.margin||0;if(score>=.70&&margin>=.018)return r.label||'other';if(score>=.76)return r.label||'other';return'other';
 }
-function smParseJson(text){
-  var s=String(text||'').trim().replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/,'');var a=s.indexOf('{'),b=s.lastIndexOf('}');if(a<0||b<=a)return null;s=s.slice(a,b+1);try{return JSON.parse(s)}catch(e){console.warn('Smart JSON parse failed',s);return null}
+function smAmountCandidates(text){
+  var s=String(text||'').replace(/(20\d{2})[-./](\d{1,2})[-./](\d{1,2})/g,' '),m=s.match(/-?\d{1,3}(?:[,.]\d{3})+|-?\d{1,8}/g)||[],out=[];
+  m.forEach(function(x){var n=parseInt(x.replace(/[,.]/g,''),10);if(isFinite(n)&&Math.abs(n)<=100000000)out.push(n)});return out;
 }
+function smMoneyFromRow(text){var a=smAmountCandidates(text).filter(function(n){return Math.abs(n)>=10});return a.length?a[a.length-1]:0}
+function smCleanRowName(text){
+  var s=String(text||'').replace(/^\s*\d{1,3}[.)-]?\s+/,'').trim(),m=s.search(/[-+]?\d[\d,.]*/);if(m>0)s=s.slice(0,m);return compactItemName(s.replace(/^[*#·•:_-]+|[*#·•:_-]+$/g,''));
+}
+function smSemanticMap(rows){var map={};(rows||[]).forEach(function(r){map[r.id]=r});return map}
 async function smAnalyze(best,rtype){
-  if(!smUseEnabled())return null;var w=smEnsureWorker(),id='sm-'+Date.now()+'-'+Math.random().toString(36).slice(2);setProg(true,84,odS('AI Rescue · 영수증 의미 구조를 로컬에서 다시 분석하는 중입니다','AI Rescue · re-analysing receipt structure locally'));
-  var text=await new Promise(function(resolve,reject){smInferWait={id:id,resolve:resolve,reject:reject};w.postMessage({type:'analyze',id:id,messages:smPrompt(best,rtype),maxNewTokens:600})});return smParseJson(text);
+  if(!smUseEnabled())return null;var lines=smLines(best),docs=[];lines.forEach(function(t,i){docs.push({id:'row:'+i,text:t})});if(rtype==='itemized')(best.items||[]).slice(0,14).forEach(function(it,i){if(it&&it.name)docs.push({id:'item:'+i,text:String(it.name)});});if(!docs.length)return null;
+  var w=smEnsureWorker(),id='sm-'+Date.now()+'-'+Math.random().toString(36).slice(2);setProg(true,84,odS('경량 AI · 애매한 영수증 행의 의미를 분류하는 중입니다','Lightweight AI · classifying ambiguous receipt rows'));
+  return await new Promise(function(resolve,reject){var timer=setTimeout(function(){if(smInferWait&&smInferWait.id===id){smInferWait=null;reject(new Error('Semantic analysis timed out'))}},65000);smInferWait={id:id,resolve:resolve,reject:reject,timer:timer};w.postMessage({type:'analyze',id:id,docs:docs})});
 }
-function smNormalizeItems(arr){
-  if(!Array.isArray(arr))return[];var out=[];arr.slice(0,14).forEach(function(it,i){if(!it||typeof it!=='object')return;var name=compactItemName(it.name||''),amount=smN(it.amount),unit=smN(it.unit_price!=null?it.unit_price:it.unit),qty=smN(it.quantity!=null?it.quantity:it.qty);if(textStrength(name)<2||!amount)return;if(qty>999||unit>100000000||Math.abs(amount)>100000000)return;out.push({name:name,unit:unit||'',qty:qty||'',amount:amount,note:compactNote(it.note||''),y:(i+1)*100})});return out;
-}
-function smMergeCandidate(base,ai,rtype){
-  if(!ai||typeof ai!=='object')return base;var o=Object.assign({},base),confidence=Math.max(0,Math.min(100,smN(ai.confidence))),used=false;
-  if(smValidDate(ai.date)&&(!o.date||confidence>=75)){if(!o.date||o.date===ai.date){o.date=ai.date;used=true}}
-  var merchant=cleanStore(ai.merchant||'');if(merchant&&textStrength(merchant)>=2&&(!o.store||(rtype==='simple'&&((o.simple&&+o.simple.storeScore)||0)<40))){o.store=merchant;used=true}
-  var total=smN(ai.total);if(total>0&&!smN(o.amount)){o.amount=total.toLocaleString('en-US');used=true}
-  if(rtype==='itemized'){
-    var smartItems=smNormalizeItems(ai.items),baseItems=o.items||[],bq=smItemSetQuality(baseItems,o.amount),sq=smItemSetQuality(smartItems,o.amount),rescue=smNeedsRescue(base,rtype);
-    if(smartItems.length&&((rescue&&sq>=bq-1)||sq>bq+3)){o.items=smartItems.slice(0,10);o.itemFound=smartItems.length;o.itemOverflow=smartItems.length>10;o.fragmentMode=false;o.patternRows=Math.max(+o.patternRows||0,smartItems.length);used=true}
-    else if(smartItems.length&&baseItems.length){
-      var merged=baseItems.map(function(it,idx){var s=smartItems[idx];if(!s)return it;var x=Object.assign({},it),sameAmt=smN(it.amount)===smN(s.amount);if(sameAmt){if(textStrength(s.name)>textStrength(it.name))x.name=s.name;if(!x.unit&&s.unit)x.unit=s.unit;if(!x.qty&&s.qty)x.qty=s.qty;if(!x.note&&s.note)x.note=s.note}return x});o.items=merged;
+function smRecoverItems(base,rows,map){
+  var out=[],usedNames={};
+  rows.forEach(function(line,idx){
+    var rr=map['row:'+idx],lab=smEffectiveLabel(rr);if(['discount','total','subtotal','tax','payment','code','header','maker','contact'].indexOf(lab)>=0)return;
+    var nums=smAmountCandidates(line).filter(function(n){return n>=0}),amount=nums.length?nums[nums.length-1]:0;if(amount<10||amount>100000000)return;
+    var qty='',unit='';if(nums.length>=3){var q=nums[nums.length-2],u=nums[nums.length-3];if(q>=1&&q<=99&&u>=10&&Math.abs(u*q-amount)<=Math.max(3,amount*.04)){qty=q;unit=u}}
+    if(!qty&&nums.length>=2){var u2=nums[nums.length-2];if(u2>=10&&amount>=u2){var iq=amount/u2;if(iq>=1&&iq<=99&&Math.abs(iq-Math.round(iq))<.001){unit=u2;qty=Math.round(iq)}}}
+    var name=smCleanRowName(line),nameLab=lab;if(textStrength(name)<2||looksCodeOnlyText(name)||metaRowText(name)){name='';}
+    if(!name||nameLab==='other'){
+      for(var p=idx-1;p>=Math.max(0,idx-2);p--){var pr=map['row:'+p],pl=smEffectiveLabel(pr),pn=smCleanRowName(rows[p]);if(pl==='item'&&textStrength(pn)>=2&&!looksCodeOnlyText(pn)&&!metaRowText(pn)){name=pn;break}}
     }
-  }else{
-    var sp=Object.assign({},o.simple||{});if(o.date){sp.date=o.date;sp.dateScore=Math.max(+sp.dateScore||0,confidence)}if(o.store){sp.store=o.store;sp.storeScore=Math.max(+sp.storeScore||0,confidence)}if(o.amount){sp.amount=o.amount;sp.amountScore=Math.max(+sp.amountScore||0,confidence)}
-    var pay=String(ai.payment||'').toLowerCase();if(!o.pay&&pay){o.pay=/cash/.test(pay)?(odKo?'현금':'Cash'):/bank/.test(pay)?(odKo?'계좌이체':'Bank transfer'):/card/.test(pay)?(odKo?'법인카드':'Company card'):'';if(o.pay)used=true}sp.pay=o.pay||sp.pay||'';o.simple=sp;
+    if(textStrength(name)<2)return;var key=name+'|'+amount;if(usedNames[key])return;usedNames[key]=1;out.push({name:name,unit:unit||'',qty:qty||'',amount:amount,note:'',y:(idx+1)*100});
+  });
+  return out.slice(0,10);
+}
+function smMergeCandidate(base,semantic,rtype){
+  if(!Array.isArray(semantic)||!semantic.length)return base;var o=Object.assign({},base),map=smSemanticMap(semantic),lines=smLines(base),used=false,changes=0;
+  var rowInfo=lines.map(function(t,i){var r=map['row:'+i];return{text:t,index:i,row:r,label:smEffectiveLabel(r),score:r?+r.score||0:0,margin:r?+r.margin||0:0}});
+  if(!o.date){for(var di=0;di<lines.length;di++){var d=parseDate(lines[di]);if(d){o.date=d;used=true;changes++;break}}}
+  if(!o.store||(rtype==='simple'&&((o.simple&&+o.simple.storeScore)||0)<40)){
+    var merchant=rowInfo.filter(function(x){return x.label==='merchant'&&x.index<Math.max(7,Math.ceil(rowInfo.length*.38))&&textStrength(x.text)>=2&&!metaRowText(x.text)&&smAmountCandidates(x.text).length<2}).sort(function(a,b){return b.score-a.score})[0];
+    if(merchant){var mv=simpleMerchantValue(merchant.text);if(mv&&textStrength(mv)>=2){o.store=mv;used=true;changes++}}
   }
-  if(used){o.smartUsed=true;o.smartConfidence=confidence;o.smartReason=String(ai.reason||'').slice(0,160);o.score=(+o.score||0)+8}return o;
+  if(!smN(o.amount)||(rtype==='simple'&&((o.simple&&+o.simple.amountScore)||0)<70)){
+    var totals=rowInfo.filter(function(x){return x.label==='total'}).map(function(x){return{x:x,n:smMoneyFromRow(x.text)}}).filter(function(z){return z.n>0}).sort(function(a,b){return b.x.index-a.x.index||b.x.score-a.x.score});
+    if(totals.length){o.amount=totals[0].n.toLocaleString('en-US');used=true;changes++}
+  }
+  if(rtype==='itemized'){
+    var items=(o.items||[]).slice(),clean=[];
+    items.forEach(function(it,i){var ir=map['item:'+i],il=smEffectiveLabel(ir);if(['discount','total','subtotal','tax','payment','code','header'].indexOf(il)>=0){changes++;used=true;return}var x=Object.assign({},it);
+      var weak=textStrength(x.name)<2||looksAuxiliaryText(x.name)||il==='maker';if(weak){var amt=smN(x.amount),ri=-1;for(var j=0;j<lines.length;j++){if(smAmountCandidates(lines[j]).indexOf(amt)>=0){ri=j;break}}if(ri>=0){for(var p=ri;p>=Math.max(0,ri-2);p--){var pr=map['row:'+p],pl=smEffectiveLabel(pr),pn=smCleanRowName(lines[p]);if(pl==='item'&&textStrength(pn)>=2&&!looksCodeOnlyText(pn)&&!metaRowText(pn)){x.name=pn;changes++;used=true;break}}}}
+      clean.push(x);
+    });
+    if(!clean.length){var rec=smRecoverItems(base,lines,map);if(rec.length){clean=rec;used=true;changes+=rec.length}}
+    if(clean.length){var bq=smItemSetQuality(o.items||[],o.amount),cq=smItemSetQuality(clean,o.amount);if(cq>=bq-1||!(o.items||[]).length){o.items=clean.slice(0,10);o.itemFound=Math.max(+o.itemFound||0,clean.length);o.itemOverflow=clean.length>10;o.patternRows=Math.max(+o.patternRows||0,clean.length)}}
+  }else{
+    var sp=Object.assign({},o.simple||{});if(o.date){sp.date=o.date;sp.dateScore=Math.max(+sp.dateScore||0,72)}if(o.store){sp.store=o.store;sp.storeScore=Math.max(+sp.storeScore||0,55)}if(o.amount){sp.amount=o.amount;sp.amountScore=Math.max(+sp.amountScore||0,92)}
+    if(!o.pay){var payRow=rowInfo.filter(function(x){return x.label==='payment'})[0];if(payRow){var pv=simplePayment(payRow.text);if(pv){o.pay=pv;used=true;changes++}}}sp.pay=o.pay||sp.pay||'';o.simple=sp;
+  }
+  if(used){o.smartUsed=true;o.smartConfidence=changes;o.smartReason=odS('경량 의미분류로 '+changes+'개 구조 신호 보강','lightweight semantic resolver strengthened '+changes+' structure signal(s)');o.score=(+o.score||0)+Math.min(10,changes*2)}return o;
 }
 if($('smartAiConsent'))$('smartAiConsent').addEventListener('change',smRefreshUi);
 if($('smartAiSetupBtn'))$('smartAiSetupBtn').addEventListener('click',smSetup);
@@ -2218,17 +2286,17 @@ async function scanCurrent(){
     if(smUseEnabled()&&smNeedsRescue(best,rtype)){
       smartTried=true;
       try{var smResult=await smAnalyze(best,rtype);if(smResult){var smMerged=smMergeCandidate(best,smResult,rtype);smartApplied=!!smMerged.smartUsed;best=smMerged}}
-      catch(smErr){console.warn('Smart AI Rescue failed',smErr);smSetNote(odS('이번 영수증의 스마트 분석은 건너뛰었습니다 · 기존 판독 결과를 유지합니다','Smart analysis skipped for this receipt · keeping the existing parse'))}
+      catch(smErr){console.warn('Lightweight semantic resolver failed',smErr);smSetNote(odS('이번 영수증의 경량 AI 구조 분석은 건너뛰었습니다 · 기존 판독 결과를 유지합니다','Smart analysis skipped for this receipt · keeping the existing parse'))}
     }
     if(rtype==='itemized'&&best.items.length){
       var batch=best.items.map(function(it){return{date:best.date,store:best.store||'',item:compactItemName(it.name),unit:it.unit?Number(it.unit).toLocaleString('ko-KR'):'',qty:it.qty?String(it.qty):'',amount:Number(it.amount).toLocaleString('ko-KR'),acct:guessAcct(it.name+' '+(it.note||''),best.text),memo:itemMemo(it)}});addRowsBatch(batch);
-      var smartHeader=smartApplied?'[ AI 스마트 분석 · '+(best.smartReason||'구조 보강')+' ]\n\n':'';var structured=smartHeader+'[ 일반형 판독 · '+(best.itemFound?'품목 패턴 감지':'패턴 확인 필요')+' ]\n'+(best.fragmentMode?'상·하단 정보 없는 중간 품목 구간으로 판독했습니다.\n':'')+'\n[ 좌→우로 재구성한 OCR 행 ]\n'+(best.visualText||best.text.trim())+'\n\n[ 추출한 품목 · 품목명 | 단가 | 수량 | 금액 | 비고 ]\n'+best.items.map(function(it,i){return String(i+1).padStart(2,'0')+' | '+compactItemName(it.name)+' | '+(it.unit?Number(it.unit).toLocaleString('ko-KR'):'')+' | '+(it.qty||'')+' | '+Number(it.amount).toLocaleString('ko-KR')+' | '+compactNote(it.note||'')}).join('\n')+'\n\n[ OCR 원문 ]\n'+best.text.trim();$('raw').textContent=structured;$('rawWrap').classList.add('on');doneCount+=best.items.length;
-      if(best.fragmentMode)toast('상·하단 정보가 없는 품목 중간 구간으로 판단했습니다 · 숫자열 반복 패턴으로 정렬했습니다');var isum=best.items.reduce(function(z,it){return z+(+it.amount||0)},0),receiptTotal=toNum(best.amount),msg=best.items.length+'개 품목을 행으로 추출했습니다 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · AI 스마트 분석':'');if(best.itemOverflow)msg+=' · 한 사진에서는 앞 10개만 반영';if(receiptTotal&&Math.abs(isum-receiptTotal)>Math.max(100,receiptTotal*.04))msg+=' · 품목합계와 영수증 총액이 달라 확인 필요';toast(msg);
+      var smartHeader=smartApplied?'[ 경량 AI 구조 분석 · '+(best.smartReason||'구조 보강')+' ]\n\n':'';var structured=smartHeader+'[ 일반형 판독 · '+(best.itemFound?'품목 패턴 감지':'패턴 확인 필요')+' ]\n'+(best.fragmentMode?'상·하단 정보 없는 중간 품목 구간으로 판독했습니다.\n':'')+'\n[ 좌→우로 재구성한 OCR 행 ]\n'+(best.visualText||best.text.trim())+'\n\n[ 추출한 품목 · 품목명 | 단가 | 수량 | 금액 | 비고 ]\n'+best.items.map(function(it,i){return String(i+1).padStart(2,'0')+' | '+compactItemName(it.name)+' | '+(it.unit?Number(it.unit).toLocaleString('ko-KR'):'')+' | '+(it.qty||'')+' | '+Number(it.amount).toLocaleString('ko-KR')+' | '+compactNote(it.note||'')}).join('\n')+'\n\n[ OCR 원문 ]\n'+best.text.trim();$('raw').textContent=structured;$('rawWrap').classList.add('on');doneCount+=best.items.length;
+      if(best.fragmentMode)toast('상·하단 정보가 없는 품목 중간 구간으로 판단했습니다 · 숫자열 반복 패턴으로 정렬했습니다');var isum=best.items.reduce(function(z,it){return z+(+it.amount||0)},0),receiptTotal=toNum(best.amount),msg=best.items.length+'개 품목을 행으로 추출했습니다 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · 경량 AI 구조 분석':'');if(best.itemOverflow)msg+=' · 한 사진에서는 앞 10개만 반영';if(receiptTotal&&Math.abs(isum-receiptTotal)>Math.max(100,receiptTotal*.04))msg+=' · 품목합계와 영수증 총액이 달라 확인 필요';toast(msg);
     }else{
       if(rtype==='simple'){
-        var sp=best.simple||{},simpleRaw=(smartApplied?'[ AI 스마트 분석 · '+(best.smartReason||'구조 보강')+' ]\n\n':'')+'[ 간편형 수집 결과 ]\n유형: '+(sp.kind||'간편형')+'\n상호명: '+(best.store||'(확인 필요)')+'\n일자: '+(best.date||'(확인 필요)')+'\n총액: '+(best.amount||'(확인 필요)')+'\n결제수단: '+(best.pay||'(확인 필요)')+'\n총액 근거: '+(sp.amountReason||sp.amountEvidence||'(확인 필요)')+'\n\n[ 좌→우로 재구성한 OCR 행 ]\n'+(sp.visualText||best.visualText||best.text.trim())+'\n\n[ OCR 원문 ]\n'+best.text.trim();
+        var sp=best.simple||{},simpleRaw=(smartApplied?'[ 경량 AI 구조 분석 · '+(best.smartReason||'구조 보강')+' ]\n\n':'')+'[ 간편형 수집 결과 ]\n유형: '+(sp.kind||'간편형')+'\n상호명: '+(best.store||'(확인 필요)')+'\n일자: '+(best.date||'(확인 필요)')+'\n총액: '+(best.amount||'(확인 필요)')+'\n결제수단: '+(best.pay||'(확인 필요)')+'\n총액 근거: '+(sp.amountReason||sp.amountEvidence||'(확인 필요)')+'\n\n[ 좌→우로 재구성한 OCR 행 ]\n'+(sp.visualText||best.visualText||best.text.trim())+'\n\n[ OCR 원문 ]\n'+best.text.trim();
         $('raw').textContent=simpleRaw;$('rawWrap').classList.add('on');var acct=guessAcct(best.store,best.text);addRow({date:best.date,store:best.store,item:'',amount:best.amount,pay:best.pay||PAY[0],acct:acct});doneCount++;
-        var missing=[];if(!best.date)missing.push('일자');if(!best.store)missing.push('상호');if(!best.amount)missing.push('총액');var msg2='간편형 1건 수집 완료 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · AI 스마트 분석':'');if(missing.length)msg2+=' · '+missing.join('·')+' 확인 필요';toast(msg2);
+        var missing=[];if(!best.date)missing.push('일자');if(!best.store)missing.push('상호');if(!best.amount)missing.push('총액');var msg2='간편형 1건 수집 완료 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · 경량 AI 구조 분석':'');if(missing.length)msg2+=' · '+missing.join('·')+' 확인 필요';toast(msg2);
       }else{
         $('raw').textContent='[ 일반형 · 품목 패턴을 충분히 찾지 못했습니다 ]\n파란 영역을 품목표 쪽으로 좁히거나, 단가·수량·금액 열이 2행 이상 보이게 맞춘 뒤 다시 판독해 주세요.\n\n[ OCR 원문 ]\n'+(best.text.trim()||'(읽어 낸 글자가 없습니다)');$('rawWrap').classList.add('on');toast('품목 패턴을 충분히 찾지 못했습니다 · 표 영역을 조금 넓게 잡아 다시 판독해 주세요');
       }
@@ -2419,8 +2487,8 @@ render();
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.2 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.3 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
@@ -2506,6 +2574,8 @@ render();
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
+
+
 
 
 
