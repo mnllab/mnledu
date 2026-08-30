@@ -248,6 +248,11 @@
 
   .uploadActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
   .uploadActions .btn{min-width:0}
+  .quickScanSettings{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .quickScanSettings .toolBox{padding:10px}
+  .quickScanSettings .lab{margin-bottom:5px}
+  .quickScanSettings .toolSelect{min-height:40px}
+  .quickLangHint{grid-column:1/-1;margin:-1px 2px 0;font-size:11.5px;line-height:1.5;color:var(--muted)}
   .optGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;margin-top:10px}
   .optCheck{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.45;color:var(--ink2);cursor:pointer}
   .optCheck input{margin-top:2px;accent-color:var(--accent)}
@@ -292,6 +297,8 @@
     #drop{padding:25px 14px}
     .editTools{grid-template-columns:1fr}
     .uploadActions{grid-template-columns:1fr}
+    .quickScanSettings{grid-template-columns:1fr}
+    .quickLangHint{grid-column:auto}
     .optGrid{grid-template-columns:1fr}
     .toolBox.wide{grid-column:auto}
     .toolRow .btn{min-width:0}
@@ -362,6 +369,11 @@
     <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
     <div class="uploadActions"><button type="button" class="btn" id="browseBtn">🖼 사진 선택</button><button type="button" class="btn p" id="cameraBtn">📷 카메라로 바로 촬영</button></div>
+    <div class="quickScanSettings" id="quickScanSettings">
+      <div class="toolBox"><label class="lab" for="langSel">인식 언어</label><select id="langSel" class="toolSelect"><option value="kor" selected>한국어</option><option value="eng">English</option><option value="kor+eng">한국어 + English</option></select></div>
+      <div class="toolBox"><label class="lab" for="receiptType">영수증 유형</label><select id="receiptType" class="toolSelect"><option value="itemized" selected>일반형 · 품목별</option><option value="simple">간편형 · 총액 1건</option></select></div>
+      <div class="quickLangHint">기본 OCR과 온디바이스 AI 모두 이 언어 설정을 사용합니다. 한글과 영문이 함께 있으면 <b>한국어 + English</b>를 선택하세요.</div>
+    </div>
 
     
 
@@ -381,14 +393,6 @@
       <button class="btn p" id="ocrBtn">🔍 보정해서 이 영역 판독하기</button>
 
       <div class="editTools">
-        <div class="toolBox">
-          <label class="lab" for="langSel">인식 언어</label>
-          <select id="langSel" class="toolSelect"><option value="kor" selected>한국어 · 기본</option><option value="eng">English</option><option value="kor+eng">한국어 + English</option></select>
-        </div>
-        <div class="toolBox">
-          <label class="lab" for="receiptType">영수증 유형</label>
-          <select id="receiptType" class="toolSelect"><option value="itemized" selected>일반형 · 품목/단가/수량/금액</option><option value="simple">간편형 · 총액 1건</option></select>
-        </div>
         <div class="toolBox wide"><div id="modeGuide" class="modeGuide"><b>일반형</b> · 전체 영수증 또는 긴 영수증의 중간 품목 구간만 찍어도 됩니다. 상·하단 정보가 없어도 반복되는 숫자열 패턴으로 품목표를 찾습니다.</div></div>
         <div class="toolBox">
           <label class="lab">회전</label>
@@ -402,6 +406,7 @@
           <div class="rangeRow"><span>대비</span><input id="contrast" type="range" min="0" max="80" step="5" value="30"><output id="contrastVal">30</output></div>
           <div class="optGrid">
             <label class="optCheck"><input type="checkbox" id="perspectiveMode" checked><span><b>가벼운 원근보정</b><br>영수증 위·아래 폭 차이를 간단히 보정합니다. 무거운 OpenCV는 사용하지 않습니다.</span></label>
+            <label class="optCheck"><input type="checkbox" id="shadowNormalize" checked><span><b>자동 그림자·조명 균일화</b><br>종이의 완만한 밝기 그라데이션을 추정해 어두운 부분만 선택적으로 보정합니다.</span></label>
             <label class="optCheck"><input type="checkbox" id="autoEnhance" checked><span><b>OCR 자동 선명화</b><br>최적화된 작업본에 회색조와 대비 보정을 적용합니다.</span></label>
             <label class="optCheck"><input type="checkbox" id="grayMode"><span><b>강한 흑백</b><br>감열지가 많이 바랬을 때 직접 켜 보세요.</span></label>
             <label class="optCheck"><input type="checkbox" id="precisionOcr" checked><span><b>2단계 정밀 OCR · 기본</b><br>기본 판독 뒤 한 번 더 읽고 더 나은 단어·행·수치만 합칩니다. 일반형과 간편형 모두 기본으로 사용합니다.</span></label>
@@ -858,6 +863,7 @@ function cloneCanvas(c){ var o=document.createElement('canvas');o.width=c.width;
 function resetControls(){
   rot90=0; fineRot=0; crop={x:.04,y:.04,w:.92,h:.92};
   $('deskew').value=0; $('brightness').value=0; $('contrast').value=30; $('grayMode').checked=false;
+  if($('shadowNormalize')) $('shadowNormalize').checked=true;
   if($('perspectiveMode')) $('perspectiveMode').checked=true;
   if($('autoEnhance')) $('autoEnhance').checked=true;
   if($('precisionOcr')) $('precisionOcr').checked=true;
@@ -939,14 +945,55 @@ function manualAdjust(c,forceGray){
   x.filter='brightness('+Math.max(55,100+br)+'%) contrast('+Math.max(70,100+ct)+'%)'+(force?' grayscale(100%)':'');
   x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
 }
+function shadowBoxBlur(src,w,h,r){
+  var tmp=new Float32Array(w*h),dst=new Float32Array(w*h),pref=new Float64Array(Math.max(w,h)+1),x,y,l,rr,n;
+  for(y=0;y<h;y++){
+    pref[0]=0;for(x=0;x<w;x++)pref[x+1]=pref[x]+src[y*w+x];
+    for(x=0;x<w;x++){l=Math.max(0,x-r);rr=Math.min(w-1,x+r);n=rr-l+1;tmp[y*w+x]=(pref[rr+1]-pref[l])/n}
+  }
+  for(x=0;x<w;x++){
+    pref[0]=0;for(y=0;y<h;y++)pref[y+1]=pref[y]+tmp[y*w+x];
+    for(y=0;y<h;y++){l=Math.max(0,y-r);rr=Math.min(h-1,y+r);n=rr-l+1;dst[y*w+x]=(pref[rr+1]-pref[l])/n}
+  }
+  return dst;
+}
+function shadowPercentile(sorted,p){if(!sorted.length)return 0;var i=Math.max(0,Math.min(sorted.length-1,Math.round((sorted.length-1)*p)));return sorted[i]}
+function normalizeReceiptIllumination(c){
+  if(!c||!c.width||!c.height)return{canvas:cloneCanvas(c),applied:false,spread:0,strength:0};
+  /* Estimate only the slow illumination field on a tiny image. Text strokes disappear in the broad blur. */
+  var maxMap=168,scale=Math.min(1,maxMap/Math.max(c.width,c.height)),mw=Math.max(24,Math.round(c.width*scale)),mh=Math.max(24,Math.round(c.height*scale));
+  var sm=document.createElement('canvas');sm.width=mw;sm.height=mh;var sx=sm.getContext('2d',{willReadFrequently:true});sx.imageSmoothingEnabled=true;sx.imageSmoothingQuality='high';sx.drawImage(c,0,0,mw,mh);
+  var sd=sx.getImageData(0,0,mw,mh).data,g=new Float32Array(mw*mh);for(var i=0,j=0;i<sd.length;i+=4,j++)g[j]=.2126*sd[i]+.7152*sd[i+1]+.0722*sd[i+2];
+  var rad=Math.max(3,Math.round(Math.min(mw,mh)*.065)),field=shadowBoxBlur(g,mw,mh,rad);field=shadowBoxBlur(field,mw,mh,Math.max(2,Math.round(rad*.62)));
+  var vals=[];for(var q=0;q<field.length;q++){var fv=field[q];if(fv>35)vals.push(fv)}vals.sort(function(a,b){return a-b});
+  if(vals.length<Math.max(80,field.length*.35))return{canvas:cloneCanvas(c),applied:false,spread:0,strength:0};
+  var p15=shadowPercentile(vals,.15),p50=shadowPercentile(vals,.50),p86=shadowPercentile(vals,.86),spread=(p86-p15)/Math.max(1,p50);
+  /* Uniformly dark photos are handled by normal brightness/contrast. This pass is only for spatial gradients/shadows. */
+  if(p50<72||spread<.10||p86-p15<18)return{canvas:cloneCanvas(c),applied:false,spread:spread,strength:0};
+  var target=Math.min(238,Math.max(p86,p50+10)),cutoff=p50+(p86-p50)*.30,strength=Math.max(.30,Math.min(1,(spread-.075)/.22));
+  var out=cloneCanvas(c),ox=out.getContext('2d',{willReadFrequently:true}),im=ox.getImageData(0,0,out.width,out.height),d=im.data,xmap=new Uint16Array(out.width);
+  for(var xx=0;xx<out.width;xx++)xmap[xx]=Math.min(mw-1,Math.floor(xx*mw/out.width));
+  var den=Math.max(12,cutoff-p15),changed=0;
+  for(var yy=0;yy<out.height;yy++){
+    var my=Math.min(mh-1,Math.floor(yy*mh/out.height)),row=my*mw;
+    for(var x0=0;x0<out.width;x0++){
+      var bg=field[row+xmap[x0]],local=(cutoff-bg)/den;if(local<=.035)continue;local=Math.min(1,Math.max(0,local));
+      var rawGain=Math.min(1.82,target/Math.max(55,bg)),gain=1+(rawGain-1)*local*strength;if(gain<1.015)continue;
+      var k=(yy*out.width+x0)*4;d[k]=Math.min(255,Math.round(d[k]*gain));d[k+1]=Math.min(255,Math.round(d[k+1]*gain));d[k+2]=Math.min(255,Math.round(d[k+2]*gain));changed++;
+    }
+  }
+  if(changed<out.width*out.height*.025)return{canvas:cloneCanvas(c),applied:false,spread:spread,strength:0};
+  ox.putImageData(im,0,0);out._shadowApplied=true;out._shadowSpread=spread;out._shadowStrength=strength;return{canvas:out,applied:true,spread:spread,strength:strength};
+}
 function otsuBinary(c){
   var max=1200,k0=Math.min(1,max/Math.max(c.width,c.height)),o=document.createElement('canvas');o.width=Math.max(1,Math.round(c.width*k0));o.height=Math.max(1,Math.round(c.height*k0));var x=o.getContext('2d');x.drawImage(c,0,0,o.width,o.height);var im=x.getImageData(0,0,o.width,o.height),d=im.data,h=new Uint32Array(256),n=0;
   for(var i=0;i<d.length;i+=4){var v=Math.round(.299*d[i]+.587*d[i+1]+.114*d[i+2]);h[v]++;n++}var sum=0;for(var j=0;j<256;j++)sum+=j*h[j];var wb=0,sb=0,best=-1,th=145;for(var t=0;t<256;t++){wb+=h[t];if(!wb)continue;var wf=n-wb;if(!wf)break;sb+=t*h[t];var mb=sb/wb,mf=(sum-sb)/wf,vv=wb*wf*(mb-mf)*(mb-mf);if(vv>best){best=vv;th=t}}for(var q=0;q<d.length;q+=4){var y=.299*d[q]+.587*d[q+1]+.114*d[q+2],v2=y>th?255:0;d[q]=d[q+1]=d[q+2]=v2}x.putImageData(im,0,0);return o;
 }
-async function enhancedVariants(){
-  setProg(true,5,'OCR용 사진을 준비하는 중입니다');await sleep(20);var base=cropHighRes();
+async function enhancedVariants(skipShadow){
+  setProg(true,5,'OCR용 사진을 준비하는 중입니다');await sleep(20);var base=cropHighRes(),shadowApplied=false,shadowSpread=0;
   if($('perspectiveMode').checked){setProg(true,7,'가벼운 원근 보정 중입니다');await sleep(0);base=lightPerspectiveCorrect(base)}
-  var forceGray=$('autoEnhance').checked||$('grayMode').checked;return manualAdjust(base,forceGray);
+  if(!skipShadow&&$('shadowNormalize')&&$('shadowNormalize').checked){setProg(true,8,'그림자와 조명 편차를 분석하는 중입니다');await sleep(0);var sn=normalizeReceiptIllumination(base);shadowApplied=!!sn.applied;shadowSpread=sn.spread||0;base=sn.canvas}
+  var forceGray=$('autoEnhance').checked||$('grayMode').checked,out=manualAdjust(base,forceGray);out._shadowApplied=shadowApplied;out._shadowSpread=shadowSpread;return out;
 }
 function parseTsvWords(tsv){
   if(!tsv)return [];var ls=String(tsv).split(/\r?\n/),out=[];
@@ -1089,6 +1136,51 @@ function repairTruncatedAmount(unit,qty,amount,amountG){
   if(amountG&&numericPrefixMatches(amountG.raw,expected))return expected;
   return amount;
 }
+
+/* One-line menu receipts often have no barcode/detail row: item + unit + qty + amount live on one OCR row.
+   Recover the row by arithmetic even when OCR glues unit/qty together or column spacing is narrow. */
+function rowArithmeticRescue(r,W,cols){
+  if(!r||metaRowText(r.text))return null;
+  var groups=numericGroups(r.words,W).filter(function(g){return g.cx>W*.27}),cands=[],range=W*.17;
+  if(!groups.length)return null;
+  function add(unit,qty,amount,unitG,qtyG,amountG,score,reason){
+    unit=+unit||0;qty=+qty||0;amount=+amount||0;
+    if(unit<10||qty<1||qty>999||amount<10||amount>100000000)return;
+    var tol=Math.max(2,Math.round(amount*.018));if(Math.abs(unit*qty-amount)>tol)return;
+    if(amountG&&amountG.cx>W*.58)score+=2;
+    if(cols&&cols.unit!=null&&unitG&&Math.abs(unitG.cx-cols.unit)<=range*1.25)score+=1;
+    if(cols&&cols.qty!=null&&qtyG&&Math.abs(qtyG.cx-cols.qty)<=range*1.25)score+=1;
+    if(cols&&cols.total!=null&&amountG&&Math.abs(amountG.cx-cols.total)<=range*1.25)score+=2;
+    cands.push({unit:unit,qty:qty,amount:amount,unitG:unitG,qtyG:qtyG,amountG:amountG,score:score,reason:reason});
+  }
+  /* Normal three-column arithmetic, independent of learned column centres. */
+  var start=Math.max(0,groups.length-5);
+  for(var i=start;i<groups.length;i++)for(var j=i+1;j<groups.length;j++)for(var k=j+1;k<groups.length;k++){
+    var u=groups[i],q=groups[j],a=groups[k];
+    if(q.value>=1&&q.value<=999)add(u.value,q.value,a.value,u,q,a,8,'one-line arithmetic');
+  }
+  /* OCR may emit 7,00025 as a single token. Split it and validate against the right-hand amount. */
+  groups.forEach(function(g,gi){
+    fusedMoneyQty(g.raw).forEach(function(s){
+      for(var j=gi+1;j<groups.length;j++){
+        var a=groups[j],expected=s.unit*s.qty;
+        if(a.value===expected)add(s.unit,s.qty,expected,g,g,a,11,'glued unit/qty');
+        else if(numericPrefixMatches(a.raw,expected))add(s.unit,s.qty,expected,g,g,a,10,'glued unit/qty + clipped amount');
+      }
+    });
+  });
+  /* If unit and amount survived but quantity disappeared, exact division is reliable. */
+  for(var a0=start;a0<groups.length;a0++)for(var b0=a0+1;b0<groups.length;b0++){
+    var ug=groups[a0],ag=groups[b0];if(ug.value<10||ag.value<ug.value)continue;
+    var iq=ag.value/ug.value;if(iq>=1&&iq<=999&&Math.abs(iq-Math.round(iq))<.0001)add(ug.value,Math.round(iq),ag.value,ug,null,ag,6,'quantity inferred by arithmetic');
+  }
+  if(!cands.length)return null;cands.sort(function(a,b){return b.score-a.score});var b=cands[0];if(b.score<8)return null;
+  var first=b.unitG||b.qtyG||b.amountG;[b.unitG,b.qtyG,b.amountG].forEach(function(g){if(g&&(!first||g.left<first.left))first=g});
+  return {unit:b.unit,qty:b.qty,amount:b.amount,first:first,unitG:b.unitG,qtyG:b.qtyG,amountG:b.amountG,repaired:b.reason,mathRescue:true};
+}
+function fieldStructureScore(f){
+  if(!f)return 0;var s=0;if(f.amount)s+=2;if(f.unit)s+=1;if(f.qty)s+=1;if(f.unit&&f.qty&&f.amount&&Math.abs(f.unit*f.qty-f.amount)<=Math.max(3,f.amount*.025))s+=6;if(f.mathRescue)s+=1;return s;
+}
 function inferFields(groups,W,cols){
   if(!groups.length)return {unit:'',qty:'',amount:'',first:null};
   var fused=repairFusedNumericFields(groups,W,cols);if(fused)return fused;
@@ -1174,7 +1266,9 @@ function itemRowPlausible(info,W,cols){
 function parseItemRows(tsv){
   var vr=visualRowsFromTsv(tsv),W=vr.width,header=detectHeaderColumns(vr),cols=detectPatternColumns(vr,header),infos=[],used={};
   vr.rows.forEach(function(r,idx){
-    var groups=numericGroups(r.words,W),fields=inferFields(groups,W,cols),cut=fields.first?fields.first.left-4:W*.64,left=wordsLeftText(r,cut,W);
+    var groups=numericGroups(r.words,W),fields=inferFields(groups,W,cols),rescue=rowArithmeticRescue(r,W,cols);
+    if(rescue&&fieldStructureScore(rescue)>fieldStructureScore(fields))fields=rescue;
+    var cut=fields.first?fields.first.left-4:W*.64,left=wordsLeftText(r,cut,W);
     infos.push({idx:idx,row:r,groups:groups,fields:fields,left:left,lead:hasLeadIndex(r,W),meta:metaRowText(r.text),hasData:!!fields.amount});
   });
   var plausible=infos.filter(function(z){return itemRowPlausible(z,W,cols)}), fragmentMode=header.hits<2&&plausible.length>=2&&cols.total!=null;
@@ -1358,26 +1452,41 @@ function simpleStoreFromRows(vr,text){
   return {value:'',score:0,evidence:''};
 }
 function simpleAmountFromRows(vr,text){
-  var rows=vr.rows||[],W=vr.width||1,maxY=rows.length?rows[rows.length-1].cy:1,best={value:'',score:-999,evidence:'',reason:''},moneyRows=[];
+  var rows=vr.rows||[],W=vr.width||1,maxY=rows.length?rows[rows.length-1].cy:1,best={value:'',score:-999,evidence:'',reason:''},moneyRows=[],explicitFinal={value:'',score:-999,evidence:'',reason:''};
   var finalKey=/(합\s*계(?:\s*금액)?|총\s*합\s*계|총\s*계|총\s*액|총\s*금액|결제\s*금액|승인\s*금액|받을\s*금액|청구\s*금액|grand\s*total|amount\s*due|total\s*amount|payment\s*amount|paid\s*amount|^\s*total\b)/i;
   var baseKey=/(거래\s*금액|물품\s*가액|공급\s*가액|공급가|판매\s*금액|매출\s*금액|subtotal|supply\s*amount|transaction\s*amount)/i;
   var taxKey=/(부가\s*세|세\s*액|부가가치세|vat|tax)/i;
   var reject=/(승인\s*번호|거래\s*번호|사업자|전화|tel|카드\s*번호|일련번호|매장번호|가맹점\s*번호|pos|영수증\s*번호|receipt\s*no|invoice\s*no|단말기\s*번호|전표\s*번호)/i;
   var otherNeg=/(할인|discount|거스름|change|잔액|balance|포인트|point|쿠폰|coupon)/i;
+  function moneyGroups(r){return numericGroupsAny((r&&r.words)||[]).filter(function(g){return g.value>=10&&g.value<=100000000&&g.cx>W*.24});}
+  /* Explicit grand-total labels are authoritative in simple mode. Also pair a label-only row with a nearby value row. */
+  rows.forEach(function(r,idx){
+    var raw=String(r.text||'');if(!finalKey.test(raw)||reject.test(raw))return;
+    var gs=moneyGroups(r),g=gs.length?gs[gs.length-1]:null,ev=raw,bonus=0;
+    if(!g){
+      for(var d=1;d<=2&&!g;d++){
+        var rr=rows[idx+d];if(!rr)break;var gap=rowGap(r,rr);if(gap>2.6)break;
+        var rt=String(rr.text||'');if(reject.test(rt)||baseKey.test(rt)||taxKey.test(rt)||otherNeg.test(rt))continue;
+        var ng=moneyGroups(rr);if(ng.length){g=ng[ng.length-1];ev=raw+' / '+rt;bonus=18-d*3;}
+      }
+    }
+    if(g){var sc=260+bonus+Math.min(22,(r.cy/Math.max(1,maxY))*22)+Math.min(14,(g.cx/W)*14);if(sc>explicitFinal.score)explicitFinal={value:g.value,score:sc,evidence:ev,reason:'합계/결제금액 표기'};}
+  });
   rows.forEach(function(r,idx){
     var raw=String(r.text||'');if(reject.test(raw)||parseDate(raw))return;
-    var gs=numericGroupsAny(r.words).filter(function(g){return g.value>=10&&g.value<=100000000&&g.cx>W*.32});if(!gs.length)return;
+    var gs=moneyGroups(r);if(!gs.length)return;
     var g=gs[gs.length-1],kind=finalKey.test(raw)?'final':baseKey.test(raw)?'base':taxKey.test(raw)?'tax':'plain';
     moneyRows.push({idx:idx,cy:r.cy,raw:raw,value:g.value,cx:g.cx,kind:kind});
-    var sc=0;if(kind==='final')sc+=185;else if(kind==='base')sc+=58;else if(kind==='tax')sc-=65;else sc+=10;
+    var sc=0;if(kind==='final')sc+=210;else if(kind==='base')sc+=58;else if(kind==='tax')sc-=65;else sc+=10;
     sc+=Math.min(24,(r.cy/Math.max(1,maxY))*24)+Math.min(18,(g.cx/W)*18);
     if(g.value>=1000)sc+=7;if(otherNeg.test(raw))sc-=85;
     if(sc>best.score)best={value:g.value,score:sc,evidence:raw,reason:kind==='final'?'합계/결제금액 표기':'위치·금액 후보'};
   });
-  /* Korean approval slips often print base amount, VAT, then total in three adjacent rows. Even if OCR misses labels, arithmetic is reliable. */
+  /* If a readable 합계/총액/결제금액 exists, never replace it with 공급가액 or 부가세. */
+  if(explicitFinal.value)return explicitFinal;
+  /* Korean approval slips often print base amount, VAT, then total in three adjacent rows. */
   for(var i=0;i<moneyRows.length;i++)for(var j=i+1;j<Math.min(moneyRows.length,i+4);j++)for(var k=j+1;k<Math.min(moneyRows.length,j+4);k++){
-    var a=moneyRows[i],b=moneyRows[j],c=moneyRows[k];
-    if(c.idx-a.idx>6)continue;
+    var a=moneyRows[i],b=moneyRows[j],c=moneyRows[k];if(c.idx-a.idx>6)continue;
     var tol=Math.max(2,Math.round(c.value*.0025));
     if(Math.abs((a.value+b.value)-c.value)<=tol){
       var sc=205+(c.kind==='final'?35:0)+(a.kind==='base'?12:0)+(b.kind==='tax'?12:0);
@@ -1414,20 +1523,24 @@ function candidate(out,rtype){
    ============================================================ */
 var OD_ORT_VERSION='1.29.0';
 var OD_ORT_BASE='https://cdn.jsdelivr.net/npm/onnxruntime-web@'+OD_ORT_VERSION+'/dist/';
-var OD_REC_MODEL_URL='https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/korean/rec.onnx';
+var OD_REC_MODELS={
+  kor:{rec:'https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/korean/rec.onnx',dict:'https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/korean/dict.txt',label:'Korean + English'},
+  eng:{rec:'https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/english/rec.onnx',dict:'https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/english/dict.txt',label:'English'}
+};
 var OD_DET_MODEL_URL='https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det_onnx/resolve/main/inference.onnx';
-var OD_DICT_URL='https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/korean/dict.txt';
 var OD_DB_NAME='toolkit-ondevice-receipt-ai';
 var OD_DB_VERSION=1,OD_STORE='assets',OD_DET_LONG_SIDE=1280;
-var odWorker=null,odReady=false,odInitBusy=false,odInitWait=null,odInferWait=null,odObjectUrls=[];
+var odWorker=null,odReady=false,odInitBusy=false,odInitWait=null,odInferWait=null,odObjectUrls=[],odReadyProfile='',odPendingProfile='';
 var odKo=(document.documentElement.lang||'ko').toLowerCase().indexOf('ko')===0;
 function odS(ko,en){return odKo?ko:en}
-function odUseEnabled(){var c=$('onDeviceConsent');return !!(odReady&&c&&c.checked)}
+function odDesiredRecProfile(){return $('langSel')&&$('langSel').value==='eng'?'eng':'kor'}
+function odProfileMatches(){return !!(odReady&&odReadyProfile===odDesiredRecProfile())}
+function odUseEnabled(){var c=$('onDeviceConsent');return !!(odProfileMatches()&&c&&c.checked)}
 function odSetState(text){if($('onDeviceAiState'))$('onDeviceAiState').textContent=text}
 function odRefreshUi(){
   var c=$('onDeviceConsent'),b=$('onDeviceSetupBtn');if(!c||!b)return;
-  if(odReady){b.disabled=true;b.classList.add('ready');b.textContent=odS('✓ 온디바이스 AI 준비 완료','✓ On-device AI ready');odSetState(c.checked?odS('온디바이스 AI 사용 중','On-device AI active'):odS('모델 준비됨 · 기본 OCR 사용','Model ready · standard OCR active'));}
-  else{b.classList.remove('ready');b.disabled=!c.checked||odInitBusy;b.textContent=odInitBusy?odS('AI 모델 준비 중...','Preparing AI model...'):odS('🤖 온디바이스 AI 준비하기','🤖 Prepare on-device AI');odSetState(c.checked?odS('다운로드 대기','Ready to download'):odS('기본 OCR 사용 중','Standard OCR active'));}
+  if(odProfileMatches()){b.disabled=true;b.classList.add('ready');b.textContent=odS('✓ 온디바이스 AI 준비 완료','✓ On-device AI ready');odSetState(c.checked?odS('온디바이스 AI 사용 중','On-device AI active'):odS('모델 준비됨 · 기본 OCR 사용','Model ready · standard OCR active'));}
+  else{b.classList.remove('ready');b.disabled=!c.checked||odInitBusy;b.textContent=odInitBusy?odS('AI 모델 준비 중...','Preparing AI model...'):odS('🤖 온디바이스 AI 준비하기','🤖 Prepare on-device AI');odSetState(c.checked?(odReady?odS('언어 변경됨 · 해당 인식 모델 준비 필요','Language changed · prepare matching recognizer'):odS('다운로드 대기','Ready to download')):odS('기본 OCR 사용 중','Standard OCR active'));}
 }
 function odOpenDb(){return new Promise(function(resolve,reject){if(!('indexedDB'in window))return reject(new Error(odS('IndexedDB를 지원하지 않는 브라우저입니다','This browser does not support IndexedDB')));var req=indexedDB.open(OD_DB_NAME,OD_DB_VERSION);req.onupgradeneeded=function(){var db=req.result;if(!db.objectStoreNames.contains(OD_STORE))db.createObjectStore(OD_STORE,{keyPath:'key'})};req.onsuccess=function(){resolve(req.result)};req.onerror=function(){reject(req.error)}})}
 async function odGet(key){var db=await odOpenDb();return await new Promise(function(resolve,reject){var tx=db.transaction(OD_STORE,'readonly'),req=tx.objectStore(OD_STORE).get(key);req.onsuccess=function(){resolve(req.result||null)};req.onerror=function(){reject(req.error)};tx.oncomplete=function(){db.close()}})}
@@ -2104,7 +2217,7 @@ function odResultToOutput(msg){
 function odHandleWorker(ev){
   var m=ev.data||{};
   if(m.type==='status'){setProg(true,92,odS('온디바이스 AI 런타임을 초기화하는 중입니다','Initializing on-device AI runtime'));return}
-  if(m.type==='ready'){odReady=true;odInitBusy=false;odRefreshUi();setProg(true,100,odS('온디바이스 AI 준비 완료 · '+m.backend,'On-device AI ready · '+m.backend));if(odInitWait){odInitWait.resolve(m);odInitWait=null}setTimeout(function(){if(!busy)setProg(false)},700);return}
+  if(m.type==='ready'){odReady=true;odReadyProfile=odPendingProfile||odDesiredRecProfile();odInitBusy=false;odRefreshUi();setProg(true,100,odS('온디바이스 AI 준비 완료 · '+m.backend,'On-device AI ready · '+m.backend));if(odInitWait){odInitWait.resolve(m);odInitWait=null}setTimeout(function(){if(!busy)setProg(false)},700);return}
   if(m.type==='phase'){setProg(true,18,odS('온디바이스 AI · 텍스트 영역을 찾는 중입니다','On-device AI · detecting text regions'));return}
   if(m.type==='detected'){setProg(true,27,odS('텍스트 영역 '+m.count+'개 감지 · 영역별 인식 시작','Detected '+m.count+' text regions · recognising'));return}
   if(m.type==='infer-progress'){var p=27+Math.round(68*(m.current/Math.max(1,m.total)));setProg(true,p,odS('온디바이스 AI 인식 '+m.current+'/'+m.total+' · 재검증 '+(m.retries||0)+'회','On-device AI '+m.current+'/'+m.total+' · '+(m.retries||0)+' recheck(s)'));return}
@@ -2112,30 +2225,33 @@ function odHandleWorker(ev){
   if(m.type==='error'){console.error(m.stack||m.message);var err=new Error(odS('온디바이스 AI 처리 중 오류가 발생했습니다','On-device AI failed'));if(odInferWait){odInferWait.reject(err);odInferWait=null}if(odInitWait){odInitWait.reject(err);odInitWait=null}odInitBusy=false;odRefreshUi();}
 }
 async function odSetup(){
-  if(odReady){odRefreshUi();return}if(odInitBusy)return;var consent=$('onDeviceConsent');if(!consent||!consent.checked){toast(odS('먼저 AI 모델 다운로드 동의에 체크해 주세요','Tick the AI model download consent box first'));return}
-  odInitBusy=true;odRefreshUi();
+  if(odProfileMatches()){odRefreshUi();return}if(odInitBusy)return;var consent=$('onDeviceConsent');if(!consent||!consent.checked){toast(odS('먼저 AI 모델 다운로드 동의에 체크해 주세요','Tick the AI model download consent box first'));return}
+  if(odWorker){try{odWorker.terminate()}catch(e){}odWorker=null}odReady=false;odReadyProfile='';
+  odInitBusy=true;odPendingProfile=odDesiredRecProfile();odRefreshUi();
   try{
-    var preferWebGPU=!!navigator.gpu,mode=preferWebGPU?'webgpu':'wasm',runtime=preferWebGPU?{bundle:OD_ORT_BASE+'ort.webgpu.bundle.min.mjs',mjs:OD_ORT_BASE+'ort-wasm-simd-threaded.jsep.mjs',wasm:OD_ORT_BASE+'ort-wasm-simd-threaded.jsep.wasm'}:{bundle:OD_ORT_BASE+'ort.wasm.bundle.min.mjs',mjs:OD_ORT_BASE+'ort-wasm-simd-threaded.mjs',wasm:OD_ORT_BASE+'ort-wasm-simd-threaded.wasm'};
-    var assets=[
+    var preferWebGPU=!!navigator.gpu,mode=preferWebGPU?'webgpu':'wasm',runtime=preferWebGPU?{bundle:OD_ORT_BASE+'ort.webgpu.bundle.min.mjs',mjs:OD_ORT_BASE+'ort-wasm-simd-threaded.jsep.mjs',wasm:OD_ORT_BASE+'ort-wasm-simd-threaded.jsep.wasm'}:{bundle:OD_ORT_BASE+'ort.wasm.bundle.min.mjs',mjs:OD_ORT_BASE+'ort-wasm-simd-threaded.mjs',wasm:OD_ORT_BASE+'ort-wasm-simd-threaded.wasm'},profile=odPendingProfile||odDesiredRecProfile(),recCfg=OD_REC_MODELS[profile]||OD_REC_MODELS.kor;
+    var recKey='od-ppocrv5-'+profile+'-rec-v2',dictKey='od-ppocrv5-'+profile+'-dict-v2',assets=[
       {key:'od-ort-'+OD_ORT_VERSION+'-'+mode+'-bundle',name:'ONNX Runtime JS',url:runtime.bundle,weight:.04},
       {key:'od-ort-'+OD_ORT_VERSION+'-'+mode+'-mjs',name:'ONNX Runtime loader',url:runtime.mjs,weight:.04},
       {key:'od-ort-'+OD_ORT_VERSION+'-'+mode+'-wasm',name:'WebAssembly runtime',url:runtime.wasm,weight:.42},
       {key:'od-ppocrv5-mobile-det-v1',name:'PP-OCRv5 text detector',url:OD_DET_MODEL_URL,weight:.12},
-      {key:'od-ppocrv5-korean-rec-v1',name:'PP-OCRv5 Korean/English recognizer',url:OD_REC_MODEL_URL,weight:.35},
-      {key:'od-ppocrv5-korean-dict-v1',name:'OCR character dictionary',url:OD_DICT_URL,weight:.03}
+      {key:recKey,name:'PP-OCRv5 '+recCfg.label+' recognizer',url:recCfg.rec,weight:.35},
+      {key:dictKey,name:'OCR character dictionary',url:recCfg.dict,weight:.03}
     ],done=0,buffers={};
     for(var i=0;i<assets.length;i++){var a=assets[i];setProg(true,Math.round(done*88),odS('온디바이스 AI 파일 확인 중 · ','Checking on-device AI files · ')+a.name);buffers[a.key]=await odFetch(a.url,a.key,function(fr,cached,bytes){var gp=Math.round((done+a.weight*Math.max(0,Math.min(1,fr)))*88);setProg(true,gp,odS('온디바이스 AI 준비 ','Preparing on-device AI ')+gp+'% · '+a.name+' · '+(cached?odS('캐시','cache'):odS('다운로드 ','download ')+odFmt(bytes)))});done+=a.weight}
     var bundleUrl=odBlob(buffers['od-ort-'+OD_ORT_VERSION+'-'+mode+'-bundle'],'text/javascript'),mjsUrl=odBlob(buffers['od-ort-'+OD_ORT_VERSION+'-'+mode+'-mjs'],'text/javascript'),wasmUrl=odBlob(buffers['od-ort-'+OD_ORT_VERSION+'-'+mode+'-wasm'],'application/wasm');
     var workerUrl=URL.createObjectURL(new Blob(['('+odWorkerMain.toString()+')();'],{type:'text/javascript'}));odObjectUrls.push(workerUrl);odWorker=new Worker(workerUrl,{type:'module'});odWorker.onmessage=odHandleWorker;odWorker.onerror=function(e){console.error(e);if(odInitWait){odInitWait.reject(new Error(e.message||'AI Worker error'));odInitWait=null}};
-    var dictText=new TextDecoder('utf-8').decode(buffers['od-ppocrv5-korean-dict-v1']),rec=buffers['od-ppocrv5-korean-rec-v1'],det=buffers['od-ppocrv5-mobile-det-v1'];
+    var dictText=new TextDecoder('utf-8').decode(buffers[dictKey]),rec=buffers[recKey],det=buffers['od-ppocrv5-mobile-det-v1'];
     var readyPromise=new Promise(function(resolve,reject){odInitWait={resolve:resolve,reject:reject}});odWorker.postMessage({type:'init',ortBundleUrl:bundleUrl,ortRuntimeMjsUrl:mjsUrl,ortWasmUrl:wasmUrl,recModelBuffer:rec,detModelBuffer:det,dictText:dictText,preferWebGPU:preferWebGPU,detLongSide:OD_DET_LONG_SIDE},[rec,det]);await readyPromise;
     try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
     toast(odS('온디바이스 AI 준비 완료 · 이제 판독에 자동 적용됩니다','On-device AI is ready and will be used for scanning'));
   }catch(e){console.error(e);odReady=false;odInitBusy=false;setProg(false);odRefreshUi();toast(odS('온디바이스 AI 준비에 실패했습니다 · 기본 OCR은 그대로 사용할 수 있습니다','On-device AI setup failed · standard OCR is still available'))}
 }
-async function odPrepareCanvas(){
+async function odPrepareCanvas(skipShadow){
   setProg(true,5,odS('온디바이스 AI용 사진을 준비하는 중입니다','Preparing image for on-device AI'));await sleep(10);var base=cropHighRes();if($('perspectiveMode').checked){base=lightPerspectiveCorrect(base)}
-  var long=Math.max(base.width,base.height),scale=long<1600?Math.min(4,1600/Math.max(1,long)):1,o=document.createElement('canvas');o.width=Math.max(1,Math.round(base.width*scale));o.height=Math.max(1,Math.round(base.height*scale));var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';var br=+$('brightness').value,ct=+$('contrast').value,gray=$('grayMode').checked;x.filter='brightness('+Math.max(55,100+br)+'%) contrast('+Math.max(70,100+ct)+'%)'+(gray?' grayscale(100%)':'');x.drawImage(base,0,0,o.width,o.height);x.filter='none';return o;
+  var long=Math.max(base.width,base.height),scale=long<1600?Math.min(4,1600/Math.max(1,long)):1,scaled=document.createElement('canvas');scaled.width=Math.max(1,Math.round(base.width*scale));scaled.height=Math.max(1,Math.round(base.height*scale));var sx=scaled.getContext('2d');sx.imageSmoothingEnabled=true;sx.imageSmoothingQuality='high';sx.drawImage(base,0,0,scaled.width,scaled.height);
+  var shadowApplied=false,shadowSpread=0,src=scaled;if(!skipShadow&&$('shadowNormalize')&&$('shadowNormalize').checked){setProg(true,8,odS('그림자와 조명 편차를 분석하는 중입니다','Checking shadows and lighting gradients'));await sleep(0);var sn=normalizeReceiptIllumination(scaled);shadowApplied=!!sn.applied;shadowSpread=sn.spread||0;src=sn.canvas}
+  var o=document.createElement('canvas');o.width=src.width;o.height=src.height;var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';var br=+$('brightness').value,ct=+$('contrast').value,gray=$('grayMode').checked;x.filter='brightness('+Math.max(55,100+br)+'%) contrast('+Math.max(70,100+ct)+'%)'+(gray?' grayscale(100%)':'');x.drawImage(src,0,0,o.width,o.height);x.filter='none';o._shadowApplied=shadowApplied;o._shadowSpread=shadowSpread;return o;
 }
 async function odRecognizeCanvas(c){
   if(!odReady||!odWorker)throw new Error(odS('온디바이스 AI가 아직 준비되지 않았습니다','On-device AI is not ready yet'));if(odInferWait)throw new Error('AI inference already running');var x=c.getContext('2d',{willReadFrequently:true}),im=x.getImageData(0,0,c.width,c.height),buf=im.data.buffer,low=!!(workBase&&Math.max(workBase.width,workBase.height)<1000);
@@ -2143,6 +2259,11 @@ async function odRecognizeCanvas(c){
 }
 if($('onDeviceConsent'))$('onDeviceConsent').addEventListener('change',odRefreshUi);
 if($('onDeviceSetupBtn'))$('onDeviceSetupBtn').addEventListener('click',odSetup);
+if($('langSel'))$('langSel').addEventListener('change',function(){
+  if(odReadyProfile&&odReadyProfile!==odDesiredRecProfile()){
+    odRefreshUi();odSetNote(odS('인식 언어가 바뀌었습니다. 해당 언어의 AI 인식 모델을 준비하면 캐시된 공통 파일은 다시 받지 않습니다.','Recognition language changed. Prepare the matching AI recognizer; shared cached files are reused.'));
+  }
+});
 odRefreshUi();
 
 
@@ -2359,12 +2480,14 @@ async function scanCurrent(){
   if(!currentFile){toast('사진을 먼저 넣어 주세요');return}if(busy)return;busy=true;$('ocrBtn').disabled=true;
   rememberReceiptPreview();
   try{
-    var rtype=$('receiptType').value,needLayout=true,firstMode=rtype==='simple'?'block':'auto',a,best,precisionApplied=false,deepApplied=false,aiApplied=false,first,w,smartApplied=false,smartTried=false;
+    var rtype=$('receiptType').value,needLayout=true,firstMode=rtype==='simple'?'block':'auto',a,best,precisionApplied=false,deepApplied=false,aiApplied=false,first,w,smartApplied=false,smartTried=false,shadowApplied=false,shadowCompared=false;
     if(odUseEnabled()){
-      aiApplied=true;first=await odPrepareCanvas();setProg(true,12,'온디바이스 AI · 텍스트 검출과 인식을 시작합니다');a=candidate(await odRecognizeCanvas(first),rtype);best=a;
+      aiApplied=true;first=await odPrepareCanvas(false);shadowApplied=!!first._shadowApplied;setProg(true,12,'온디바이스 AI · 텍스트 검출과 인식을 시작합니다');a=candidate(await odRecognizeCanvas(first),rtype);best=a;
+      if(shadowApplied){setProg(true,38,'그림자 보정 결과를 원본 조명과 교차 확인하는 중입니다');var aiBase=await odPrepareCanvas(true);try{var aiAlt=candidate(await odRecognizeCanvas(aiBase),rtype);best=mergeStructuredCandidates(best,aiAlt,rtype);a=best;shadowCompared=true}finally{aiBase.width=1;aiBase.height=1}}
     }else{
-      setProg(true,2,'판독 준비 중입니다');await sleep(30);w=await getWorker();first=await enhancedVariants();
+      setProg(true,2,'판독 준비 중입니다');await sleep(30);w=await getWorker();first=await enhancedVariants(false);shadowApplied=!!first._shadowApplied;
       setProg(true,10,rtype==='simple'?'1단계 · 영수증 전체의 상단 정보와 총액 위치를 읽는 중입니다':'1단계 · 글자 위치와 행 구조를 읽는 중입니다');a=candidate(await recognizeVariant(w,first,firstMode,needLayout),rtype);best=a;
+      if(shadowApplied){setProg(true,30,'그림자 보정 결과를 원본 조명과 교차 확인하는 중입니다');var baseLight=await enhancedVariants(true);try{var baseAlt=candidate(await recognizeVariant(w,baseLight,firstMode,needLayout),rtype);best=mergeStructuredCandidates(best,baseAlt,rtype);a=best;shadowCompared=true}finally{baseLight.width=1;baseLight.height=1}}
       if($('precisionOcr')&&$('precisionOcr').checked){
         setProg(true,52,'2단계 정밀 OCR로 행과 단어를 교차 확인하는 중입니다');await sleep(30);var pc=precisionVariant(first);
         try{var b=candidate(await recognizeVariant(w,pc,rtype==='itemized'?'block':'sparse',needLayout),rtype);best=mergeStructuredCandidates(a,b,rtype);precisionApplied=true}finally{pc.width=1;pc.height=1}
@@ -2382,12 +2505,12 @@ async function scanCurrent(){
     if(rtype==='itemized'&&best.items.length){
       var batch=best.items.map(function(it){return{date:best.date,store:best.store||'',item:compactItemName(it.name),unit:it.unit?Number(it.unit).toLocaleString('ko-KR'):'',qty:it.qty?String(it.qty):'',amount:Number(it.amount).toLocaleString('ko-KR'),acct:guessAcct(it.name+' '+(it.note||''),best.text),memo:itemMemo(it)}});addRowsBatch(batch);
       var smartHeader=smartApplied?'[ 경량 AI 구조 분석 · '+(best.smartReason||'구조 보강')+' ]\n\n':'';var structured=smartHeader+'[ 일반형 판독 · '+(best.itemFound?'품목 패턴 감지':'패턴 확인 필요')+' ]\n'+(best.fragmentMode?'상·하단 정보 없는 중간 품목 구간으로 판독했습니다.\n':'')+'\n[ 좌→우로 재구성한 OCR 행 ]\n'+(best.visualText||best.text.trim())+'\n\n[ 추출한 품목 · 품목명 | 단가 | 수량 | 금액 | 비고 ]\n'+best.items.map(function(it,i){return String(i+1).padStart(2,'0')+' | '+compactItemName(it.name)+' | '+(it.unit?Number(it.unit).toLocaleString('ko-KR'):'')+' | '+(it.qty||'')+' | '+Number(it.amount).toLocaleString('ko-KR')+' | '+compactNote(it.note||'')}).join('\n')+'\n\n[ OCR 원문 ]\n'+best.text.trim();$('raw').textContent=structured;$('rawWrap').classList.add('on');doneCount+=best.items.length;
-      if(best.fragmentMode)toast('상·하단 정보가 없는 품목 중간 구간으로 판단했습니다 · 숫자열 반복 패턴으로 정렬했습니다');var isum=best.items.reduce(function(z,it){return z+(+it.amount||0)},0),receiptTotal=toNum(best.amount),msg=best.items.length+'개 품목을 행으로 추출했습니다 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · 경량 AI 구조 분석':'');if(best.itemOverflow)msg+=' · 한 사진에서는 앞 10개만 반영';if(receiptTotal&&Math.abs(isum-receiptTotal)>Math.max(100,receiptTotal*.04))msg+=' · 품목합계와 영수증 총액이 달라 확인 필요';toast(msg);
+      if(best.fragmentMode)toast('상·하단 정보가 없는 품목 중간 구간으로 판단했습니다 · 숫자열 반복 패턴으로 정렬했습니다');var isum=best.items.reduce(function(z,it){return z+(+it.amount||0)},0),receiptTotal=toNum(best.amount),msg=best.items.length+'개 품목을 행으로 추출했습니다 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · 경량 AI 구조 분석':'')+(shadowApplied?' · 그림자 자동보정':'');if(best.itemOverflow)msg+=' · 한 사진에서는 앞 10개만 반영';if(receiptTotal&&Math.abs(isum-receiptTotal)>Math.max(100,receiptTotal*.04))msg+=' · 품목합계와 영수증 총액이 달라 확인 필요';toast(msg);
     }else{
       if(rtype==='simple'){
         var sp=best.simple||{},simpleRaw=(smartApplied?'[ 경량 AI 구조 분석 · '+(best.smartReason||'구조 보강')+' ]\n\n':'')+'[ 간편형 수집 결과 ]\n유형: '+(sp.kind||'간편형')+'\n상호명: '+(best.store||'(확인 필요)')+'\n일자: '+(best.date||'(확인 필요)')+'\n총액: '+(best.amount||'(확인 필요)')+'\n결제수단: '+(best.pay||'(확인 필요)')+'\n총액 근거: '+(sp.amountReason||sp.amountEvidence||'(확인 필요)')+'\n\n[ 좌→우로 재구성한 OCR 행 ]\n'+(sp.visualText||best.visualText||best.text.trim())+'\n\n[ OCR 원문 ]\n'+best.text.trim();
         $('raw').textContent=simpleRaw;$('rawWrap').classList.add('on');var acct=guessAcct(best.store,best.text);addRow({date:best.date,store:best.store,item:'',amount:best.amount,pay:best.pay||PAY[0],acct:acct});doneCount++;
-        var missing=[];if(!best.date)missing.push('일자');if(!best.store)missing.push('상호');if(!best.amount)missing.push('총액');var msg2='간편형 1건 수집 완료 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · 경량 AI 구조 분석':'');if(missing.length)msg2+=' · '+missing.join('·')+' 확인 필요';toast(msg2);
+        var missing=[];if(!best.date)missing.push('일자');if(!best.store)missing.push('상호');if(!best.amount)missing.push('총액');var msg2='간편형 1건 수집 완료 · OCR '+Math.round(best.conf)+'%'+(aiApplied?' · 온디바이스 AI':'')+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'')+(smartApplied?' · 경량 AI 구조 분석':'')+(shadowApplied?' · 그림자 자동보정':'');if(missing.length)msg2+=' · '+missing.join('·')+' 확인 필요';toast(msg2);
       }else{
         $('raw').textContent='[ 일반형 · 품목 패턴을 충분히 찾지 못했습니다 ]\n파란 영역을 품목표 쪽으로 좁히거나, 단가·수량·금액 열이 2행 이상 보이게 맞춘 뒤 다시 판독해 주세요.\n\n[ OCR 원문 ]\n'+(best.text.trim()||'(읽어 낸 글자가 없습니다)');$('rawWrap').classList.add('on');toast('품목 패턴을 충분히 찾지 못했습니다 · 표 영역을 조금 넓게 잡아 다시 판독해 주세요');
       }
@@ -2578,8 +2701,8 @@ render();
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.4 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.5 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.5</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">그림자·조명 편차 보정(shadowNormalize) 옵션 추가 — 적용 시 원본 조명 결과와 교차 확인해 더 나은 쪽을 채택. 한 줄짜리 간이 영수증(바코드·상세행 없는 경우)을 위한 산술 기반 행 복구 로직 추가. 합계 라벨이 명확할 때 공급가액·부가세로 잘못 대체되지 않도록 최종 금액 판단 로직 개선</span></li><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->

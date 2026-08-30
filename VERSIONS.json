@@ -62,13 +62,18 @@
     "history": []
   },
   "ocrextract": {
-    "version": "2.0",
+    "version": "2.1",
     "addedDate": "untracked-baseline",
     "history": [
       {
         "version": "2.0",
         "date": "2026-08-30",
         "note": "고정밀 온디바이스 AI OCR(PP-OCRv5) 옵션 추가 — 사용자 동의 시 약 30MB 모델을 받아 작은 글자·영수증·표·스캔 문서 인식률과 줄 위치 복원을 개선. 문서 레이아웃 AI(PP-DocLayout-S, 약 5MB)로 제목·본문·표·헤더·푸터 영역을 인식해 읽기 순서 복원. Markdown 내보내기 추가. 기본 OCR(Tesseract)은 동의 없이 그대로 유지"
+      },
+      {
+        "version": "2.1",
+        "date": "2026-08-30",
+        "note": "receipt-to-excel 에 먼저 적용된 그림자·조명 편차 보정(shadowNormalize) 기능 이식 — 적용 시 원본과 보정본 OCR 결과를 교차 확인해 더 나은 쪽 채택"
       }
     ]
   },
@@ -298,7 +303,7 @@
     ]
   },
   "receipt-to-excel": {
-    "version": "2.4",
+    "version": "2.5",
     "addedDate": "2026-08-29",
     "history": [
       {
@@ -330,6 +335,11 @@
         "version": "2.4",
         "date": "2026-08-30",
         "note": "안정성·정확도 소폭 개선"
+      },
+      {
+        "version": "2.5",
+        "date": "2026-08-30",
+        "note": "그림자·조명 편차 보정(shadowNormalize) 옵션 추가 — 적용 시 원본 조명 결과와 교차 확인해 더 나은 쪽을 채택. 한 줄짜리 간이 영수증(바코드·상세행 없는 경우)을 위한 산술 기반 행 복구 로직 추가. 합계 라벨이 명확할 때 공급가액·부가세로 잘못 대체되지 않도록 최종 금액 판단 로직 개선"
       }
     ]
   },

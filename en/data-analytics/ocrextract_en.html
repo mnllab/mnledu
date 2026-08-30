@@ -311,6 +311,7 @@
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
         <label class="opt"><input type="checkbox" id="optJoin" checked>Tidy line breaks</label>
         <label class="opt"><input type="checkbox" id="optLayout">Preserve table/column spacing</label>
+        <label class="opt" title="Detects shadows or gradual lighting gradients and corrects only the darker regions."><input type="checkbox" id="optShadow" checked>Auto shadow / lighting correction</label>
         <span>Characters <b id="chars" class="num ml-0.5 font-medium text-ink">0</b></span>
         <span id="confInfo" class="num"></span>
         <button id="copyBtn" class="btn btn-primary ml-auto py-1.5 text-[12px]">Copy all recognised text</button>
@@ -343,6 +344,7 @@
   const confInfo = document.getElementById('confInfo');
   const optJoin  = document.getElementById('optJoin');
   const optLayout = document.getElementById('optLayout');
+  const optShadow = document.getElementById('optShadow');
   const copyFmt  = document.getElementById('copyFmt');
   const redoBtn  = document.getElementById('redoBtn');
   const newBtn   = document.getElementById('newBtn');
@@ -1347,13 +1349,13 @@ function odWorkerMain() {
       toast(LS('고정밀 온디바이스 AI OCR 준비 완료','High-accuracy on-device AI OCR is ready'));
     } catch(e) {console.error(e);odReady=false;odInitBusy=false;progress.classList.add('hidden');odSetNote(LS('AI 준비 실패 · 기본 OCR은 계속 사용할 수 있습니다. 네트워크·저장공간을 확인해 주세요.','AI setup failed · standard OCR still works. Check network and storage.'));toast(LS('AI OCR을 준비하지 못했습니다','Could not prepare AI OCR'));} finally {odInitBusy=false;odRefreshUi();}
   }
-  function odPreparedCanvas() {
-    const maxSide=Math.max(canvas.width,canvas.height)||1; let target=maxSide;
+  function odPreparedCanvas(sourceCanvas) {
+    const src=sourceCanvas||canvas,maxSide=Math.max(src.width,src.height)||1; let target=maxSide;
     if(maxSide<1600)target=Math.min(1600,maxSide*4); else if(maxSide>2400)target=2400;
-    const scale=target/maxSide,o=document.createElement('canvas');o.width=Math.max(1,Math.round(canvas.width*scale));o.height=Math.max(1,Math.round(canvas.height*scale));const x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(canvas,0,0,o.width,o.height);return o;
+    const scale=target/maxSide,o=document.createElement('canvas');o.width=Math.max(1,Math.round(src.width*scale));o.height=Math.max(1,Math.round(src.height*scale));const x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(src,0,0,o.width,o.height);return o;
   }
-  async function odRecognizeCurrent() {
-    if(!odReady||!odWorker)throw new Error('AI not ready'); const c=odPreparedCanvas(),x=c.getContext('2d',{willReadFrequently:true}),im=x.getImageData(0,0,c.width,c.height),buf=im.data.buffer,low=Math.max(canvas.width,canvas.height)<1000;
+  async function odRecognizeCurrent(sourceCanvas) {
+    if(!odReady||!odWorker)throw new Error('AI not ready'); const c=odPreparedCanvas(sourceCanvas),x=c.getContext('2d',{willReadFrequently:true}),im=x.getImageData(0,0,c.width,c.height),buf=im.data.buffer,low=Math.max(canvas.width,canvas.height)<1000;
     return await new Promise(function(resolve,reject){const timer=setTimeout(function(){if(odInferWait){odInferWait=null;reject(new Error(LS('AI 판독 시간이 너무 오래 걸립니다','AI recognition timed out')))}},180000);odInferWait={resolve:function(v){clearTimeout(timer);resolve(v)},reject:function(e){clearTimeout(timer);reject(e)}};odWorker.postMessage({type:'infer',image:{width:im.width,height:im.height,data:buf},lowResolutionSource:low},[buf]);});
   }
   document.getElementById('onDeviceConsent').addEventListener('change',function(){odRefreshUi();if(typeof smRefreshUi==='function')smRefreshUi();});
@@ -1436,6 +1438,59 @@ function odWorkerMain() {
   smRefreshUi();
 
 
+
+  /* ---------- Automatic shadow / illumination equalisation ---------- */
+  function shadowBoxBlur(src,w,h,r){
+    const tmp=new Float32Array(w*h),dst=new Float32Array(w*h),pref=new Float64Array(Math.max(w,h)+1);let x,y,l,rr,n;
+    for(y=0;y<h;y++){
+      pref[0]=0;for(x=0;x<w;x++)pref[x+1]=pref[x]+src[y*w+x];
+      for(x=0;x<w;x++){l=Math.max(0,x-r);rr=Math.min(w-1,x+r);n=rr-l+1;tmp[y*w+x]=(pref[rr+1]-pref[l])/n;}
+    }
+    for(x=0;x<w;x++){
+      pref[0]=0;for(y=0;y<h;y++)pref[y+1]=pref[y]+tmp[y*w+x];
+      for(y=0;y<h;y++){l=Math.max(0,y-r);rr=Math.min(h-1,y+r);n=rr-l+1;dst[y*w+x]=(pref[rr+1]-pref[l])/n;}
+    }
+    return dst;
+  }
+  function shadowPercentile(sorted,p){if(!sorted.length)return 0;const i=Math.max(0,Math.min(sorted.length-1,Math.round((sorted.length-1)*p)));return sorted[i];}
+  function normalizeDocumentIllumination(source,maxOutputSide){
+    if(!source||!source.width||!source.height)return{canvas:null,applied:false,spread:0,strength:0};
+    /* Estimate only the slow lighting field on a tiny image, so text strokes do not drive the correction. */
+    const maxMap=180,mapScale=Math.min(1,maxMap/Math.max(source.width,source.height)),mw=Math.max(24,Math.round(source.width*mapScale)),mh=Math.max(24,Math.round(source.height*mapScale));
+    const sm=document.createElement('canvas');sm.width=mw;sm.height=mh;const sx=sm.getContext('2d',{willReadFrequently:true});sx.imageSmoothingEnabled=true;sx.imageSmoothingQuality='high';sx.drawImage(source,0,0,mw,mh);
+    const sd=sx.getImageData(0,0,mw,mh).data,g=new Float32Array(mw*mh);for(let i=0,j=0;i<sd.length;i+=4,j++)g[j]=.2126*sd[i]+.7152*sd[i+1]+.0722*sd[i+2];
+    let rad=Math.max(3,Math.round(Math.min(mw,mh)*.065)),field=shadowBoxBlur(g,mw,mh,rad);field=shadowBoxBlur(field,mw,mh,Math.max(2,Math.round(rad*.62)));
+    const vals=[];for(let q=0;q<field.length;q++){const v=field[q];if(v>35)vals.push(v);}vals.sort(function(a,b){return a-b;});
+    if(vals.length<Math.max(80,field.length*.35))return{canvas:null,applied:false,spread:0,strength:0};
+    const p15=shadowPercentile(vals,.15),p50=shadowPercentile(vals,.50),p86=shadowPercentile(vals,.86),spread=(p86-p15)/Math.max(1,p50);
+    /* Uniform darkness belongs to ordinary OCR preprocessing; this pass is only for spatial gradients and shadows. */
+    if(p50<72||spread<.10||p86-p15<18)return{canvas:null,applied:false,spread:spread,strength:0};
+    const target=Math.min(238,Math.max(p86,p50+10)),cutoff=p50+(p86-p50)*.30,strength=Math.max(.30,Math.min(1,(spread-.075)/.22));
+    const outScale=Math.min(1,(maxOutputSide||2600)/Math.max(source.width,source.height)),out=document.createElement('canvas');out.width=Math.max(1,Math.round(source.width*outScale));out.height=Math.max(1,Math.round(source.height*outScale));
+    const ox=out.getContext('2d',{willReadFrequently:true});ox.imageSmoothingEnabled=true;ox.imageSmoothingQuality='high';ox.drawImage(source,0,0,out.width,out.height);
+    const im=ox.getImageData(0,0,out.width,out.height),d=im.data,xmap=new Uint16Array(out.width);for(let xx=0;xx<out.width;xx++)xmap[xx]=Math.min(mw-1,Math.floor(xx*mw/out.width));
+    const den=Math.max(12,cutoff-p15);let changed=0;
+    for(let yy=0;yy<out.height;yy++){
+      const my=Math.min(mh-1,Math.floor(yy*mh/out.height)),row=my*mw;
+      for(let xx=0;xx<out.width;xx++){
+        const bg=field[row+xmap[xx]];let local=(cutoff-bg)/den;if(local<=.035)continue;local=Math.min(1,Math.max(0,local));
+        const rawGain=Math.min(1.82,target/Math.max(55,bg)),gain=1+(rawGain-1)*local*strength;if(gain<1.015)continue;
+        const k=(yy*out.width+xx)*4;d[k]=Math.min(255,Math.round(d[k]*gain));d[k+1]=Math.min(255,Math.round(d[k+1]*gain));d[k+2]=Math.min(255,Math.round(d[k+2]*gain));changed++;
+      }
+    }
+    if(changed<out.width*out.height*.025){out.width=1;out.height=1;return{canvas:null,applied:false,spread:spread,strength:0};}
+    ox.putImageData(im,0,0);return{canvas:out,applied:true,spread:spread,strength:strength};
+  }
+  function ocrTextStrength(text){
+    const s=String(text||''),chars=(s.match(/[A-Za-z0-9\u00C0-\u024F\u3131-\u318E\uAC00-\uD7A3\u3040-\u30FF\u3400-\u9FFF]/g)||[]).length,lines=s.split(/\n+/).filter(function(v){return v.trim().length>1;}).length;
+    return {chars:chars,lines:lines};
+  }
+  function ocrCandidateScore(v){
+    if(!v||!String(v.text||'').trim())return -1e9;const s=ocrTextStrength(v.text),conf=Math.max(0,Math.min(100,Number(v.confidence)||0));return conf+Math.min(28,Math.log2(1+s.chars)*3)+Math.min(8,s.lines*.35);
+  }
+  function chooseOcrCandidate(a,b){if(!a)return b;if(!b)return a;return ocrCandidateScore(b)>ocrCandidateScore(a)+.6?b:a;}
+
+
   /* ---------- OCR ---------- */
   // Tesseract가 알려주는 단계 이름을 우리말로 바꾼다
   const STATUS = {
@@ -1461,23 +1516,36 @@ function odWorkerMain() {
     redoBtn.disabled = true;
     langSel.disabled = true;
     resetSmartResult();
+    let shadow=null;
     try {
-      let conf = null, usedAI = false;
+      if(optShadow&&optShadow.checked){
+        localProgress('Checking shadows and lighting gradients',3);
+        await new Promise(function(r){setTimeout(r,0);});
+        shadow=normalizeDocumentIllumination(canvas,2600);
+      }
+      const shadowApplied=!!(shadow&&shadow.applied&&shadow.canvas);
+      let conf = null, usedAI = false, shadowUsed=false;
       if (odUseEnabled()) {
         try {
-          localProgress('Starting high-accuracy on-device AI OCR', 5);
-          const ai = await odRecognizeCurrent();
-          rawText = ai.text || '';
-          lastAiData = ai;
+          localProgress(shadowApplied?'High-accuracy AI OCR on corrected lighting':'Starting high-accuracy on-device AI OCR', 5);
+          let aiMain = await odRecognizeCurrent(shadowApplied?shadow.canvas:null), aiChosen=aiMain;
+          if(shadowApplied){
+            localProgress('Cross-checking AI OCR against the original lighting',72);
+            const aiOriginal=await odRecognizeCurrent(null);
+            aiChosen=chooseOcrCandidate(aiMain,aiOriginal);
+            shadowUsed=(aiChosen===aiMain);
+          }
+          rawText = aiChosen.text || '';
+          lastAiData = aiChosen;
           layoutText = rawText;
-          if(smUseEnabled()&&ai.layoutRegions&&ai.layoutRegions.length){
+          if(smUseEnabled()&&aiChosen.layoutRegions&&aiChosen.layoutRegions.length){
             smartBackup={raw:rawText,layout:rawText,text:rawText,join:optJoin.checked,layoutOpt:optLayout.checked};
-            const structured=buildStructuredFromAi(ai,copyFmt.value==='markdown');
+            const structured=buildStructuredFromAi(aiChosen,copyFmt.value==='markdown');
             if(structured){layoutText=structured;rawText=structured;optJoin.checked=false;optLayout.checked=false;document.getElementById('smartRestoreBtn').classList.remove('hidden');}
           }
-          conf = Math.round(ai.confidence || 0);
+          conf = Math.round(aiChosen.confidence || 0);
           usedAI = true;
-          confInfo.textContent = 'AI · ' + (ai.backend || odBackend || 'local') + (ai.layoutRegions&&ai.layoutRegions.length&&smUseEnabled() ? ' · Layout' : '') + ' · confidence ' + conf + '%';
+          confInfo.textContent = 'AI · ' + (aiChosen.backend || odBackend || 'local') + (aiChosen.layoutRegions&&aiChosen.layoutRegions.length&&smUseEnabled() ? ' · Layout' : '') + (shadowApplied ? (shadowUsed?' · lighting corrected':' · original preferred') : '') + ' · confidence ' + conf + '%';
         } catch (aiErr) {
           console.warn('On-device AI OCR fallback', aiErr);
           toast('AI OCR had a problem, so standard OCR is being used automatically');
@@ -1485,19 +1553,32 @@ function odWorkerMain() {
       }
       if (!usedAI) {
         if (typeof Tesseract === 'undefined') throw new Error('The OCR engine could not be loaded. Check your connection.');
-        const result = await Tesseract.recognize(currentBlob, langSel.value, { logger: function (m) { setProgress(m.status, m.progress); } });
-        rawText = (result && result.data && result.data.text) ? result.data.text : '';
+        let chosen=null;
+        if(shadowApplied){
+          setProgress('recognizing text',.08);
+          const nr=await Tesseract.recognize(shadow.canvas, langSel.value, { logger: function (m) { setProgress(m.status, Math.min(.70,(m.progress||0)*.70)); } });
+          const n={text:(nr&&nr.data&&nr.data.text)||'',confidence:nr&&nr.data&&typeof nr.data.confidence==='number'?nr.data.confidence:0,normalized:true};
+          localProgress('Cross-checking standard OCR against the original lighting',74);
+          const or=await Tesseract.recognize(currentBlob, langSel.value, { logger: function (m) { if(m.status==='recognizing text')setProgress(m.status,.72+(m.progress||0)*.28); } });
+          const o={text:(or&&or.data&&or.data.text)||'',confidence:or&&or.data&&typeof or.data.confidence==='number'?or.data.confidence:0,normalized:false};
+          chosen=chooseOcrCandidate(n,o);shadowUsed=!!chosen.normalized;
+        }else{
+          const result=await Tesseract.recognize(currentBlob, langSel.value, { logger: function (m) { setProgress(m.status, m.progress); } });
+          chosen={text:(result&&result.data&&result.data.text)||'',confidence:result&&result.data&&typeof result.data.confidence==='number'?result.data.confidence:0,normalized:false};
+        }
+        rawText = chosen.text || '';
         lastAiData = null;
         layoutText = rawText;
-        conf = result && result.data && typeof result.data.confidence === 'number' ? Math.round(result.data.confidence) : null;
-        confInfo.textContent = conf !== null ? 'standard OCR · confidence ' + conf + '%' : 'standard OCR';
+        conf = Math.round(chosen.confidence || 0);
+        confInfo.textContent = 'standard OCR' + (shadowApplied ? (shadowUsed?' · lighting corrected':' · original preferred') : '') + (conf !== null ? ' · confidence ' + conf + '%' : '');
       }
       applyText();
       confInfo.style.color = (conf !== null && conf < 70) ? 'var(--alert)' : 'var(--muted)';
-      toast(rawText.trim() ? (usedAI ? 'High-accuracy AI extraction complete' : 'Extraction complete') : 'No text was found');
+      toast(rawText.trim() ? (usedAI ? 'High-accuracy AI extraction complete' : 'Extraction complete') + (shadowApplied?' · lighting cross-check complete':'') : 'No text was found');
     } catch (e) {
       showErr('Recognition failed: ' + (e && e.message ? e.message : 'unknown error'));
     } finally {
+      if(shadow&&shadow.canvas){shadow.canvas.width=1;shadow.canvas.height=1;}
       busy = false;
       progress.classList.add('hidden');
       redoBtn.disabled = false;
@@ -1753,8 +1834,8 @@ function odWorkerMain() {
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">고정밀 온디바이스 AI OCR(PP-OCRv5) 옵션 추가 — 사용자 동의 시 약 30MB 모델을 받아 작은 글자·영수증·표·스캔 문서 인식률과 줄 위치 복원을 개선. 문서 레이아웃 AI(PP-DocLayout-S, 약 5MB)로 제목·본문·표·헤더·푸터 영역을 인식해 읽기 순서 복원. Markdown 내보내기 추가. 기본 OCR(Tesseract)은 동의 없이 그대로 유지</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.1 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">receipt-to-excel 에 먼저 적용된 그림자·조명 편차 보정(shadowNormalize) 기능 이식 — 적용 시 원본과 보정본 OCR 결과를 교차 확인해 더 나은 쪽 채택</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">고정밀 온디바이스 AI OCR(PP-OCRv5) 옵션 추가 — 사용자 동의 시 약 30MB 모델을 받아 작은 글자·영수증·표·스캔 문서 인식률과 줄 위치 복원을 개선. 문서 레이아웃 AI(PP-DocLayout-S, 약 5MB)로 제목·본문·표·헤더·푸터 영역을 인식해 읽기 순서 복원. Markdown 내보내기 추가. 기본 OCR(Tesseract)은 동의 없이 그대로 유지</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
