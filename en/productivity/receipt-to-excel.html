@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F6">
+
+<title>Receipt to Expense Sheet · Photo to Spreadsheet | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Reads the date, amount and merchant from a photo of a receipt and lays them out as an expense sheet. Stack several, fix any cell by clicking it, then paste into a spreadsheet or download as CSV. Your photos are never uploaded." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/receipt-to-excel.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/receipt-to-excel.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/receipt-to-excel.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/receipt-to-excel.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/receipt-to-excel.html" />
+<meta property="og:title" content="Receipt to Expense Sheet · Photo to Spreadsheet | TOOLKIT" />
+<meta property="og:description" content="Reads date, amount and merchant from a receipt photo and lays them out ready to paste into a spreadsheet." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Receipt to Expense Sheet | TOOLKIT" />
+<meta name="twitter:description" content="Reads date, amount and merchant from a receipt photo, ready for your spreadsheet." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Receipt to Expense Sheet",
+ "description": "Reads the date, amount and merchant from receipt photos and builds an expense sheet for export.",
+ "url": "https://mnledu.com/en/productivity/receipt-to-excel.html",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "PRODUCTIVITY", "item": "https://mnledu.com/en/#productivity" },
+  { "@type": "ListItem", "position": 3, "name": "Receipt to Expense Sheet", "item": "https://mnledu.com/en/productivity/receipt-to-excel.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Are my receipt photos uploaded anywhere?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Even the text recognition runs inside your browser; only the recognition data is fetched, once. The photo itself never leaves your device, and closing the page clears the work with it." }
+  },
+  {
+   "@type": "Question",
+   "name": "What if the reading is wrong?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Click any cell in the table and edit it directly. Receipts print in every imaginable condition, so perfect recognition is not realistic. This tool is here to save the typing; checking and correcting is quicker done by hand." }
+  },
+  {
+   "@type": "Question",
+   "name": "What does it pull out?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Three things: the date, the amount and the merchant. Dates come out as year-month-day whatever format they were printed in. Amounts are found near words like total or approved, while approval and registration numbers are filtered out. Merchants come from a labelled line or a company marker first, and from the top of the receipt otherwise." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I do several at once?",
+   "acceptedAnswer": { "@type": "Answer", "text": "They are read one at a time and stack up in the table. Select several photos and they are worked through in order, with a new row appearing as each finishes. Export the whole lot when you are done." }
+  },
+  {
+   "@type": "Question",
+   "name": "How do I get it into a spreadsheet?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Copy for spreadsheet puts the table on your clipboard with tabs between the cells. Paste it into Excel or Sheets and every value lands in its own cell. To keep a file instead, use the CSV download." }
+  },
+  {
+   "@type": "Question",
+   "name": "How long does recognition take?",
+   "acceptedAnswer": { "@type": "Answer", "text": "The first run spends a while downloading the recognition data. After that a receipt usually takes a few seconds to a dozen or so, depending on your device and the size of the photo." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+  :root{
+    --bg:#FAF9F6; --card:#FFFFFF; --th:#F1F5F9; --line:#E2E8F0; --line2:#F1F5F9;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#1D4ED8; --accent2:#2563EB; --soft:#EFF6FF;
+    --ok:#059669; --warn:#D97706;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14.5px;font-weight:600;padding:11px 15px;cursor:pointer;min-height:46px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:#CBD5E1;background:#F8FAFC}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+  .btn.dan{color:#B91C1C;border-color:#FECACA}
+  .btn.dan:hover:not(:disabled){background:#FEF2F2;border-color:#FCA5A5}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px;
+    letter-spacing:.02em}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+
+  /* ---------- 좌우 배치 ---------- */
+  #main{display:grid;gap:18px;grid-template-columns:1fr;align-items:start}
+  @media(min-width:1060px){#main{grid-template-columns:376px 1fr}}
+
+  /* ---------- 업로드 ---------- */
+  #drop{border:2px dashed var(--line);border-radius:14px;padding:30px 18px;text-align:center;
+    cursor:pointer;background:#FCFCFB;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--accent);background:var(--soft)}
+  #drop .ic{font-size:34px;margin-bottom:10px}
+  #drop p{margin:0;font-size:14.5px;color:var(--ink2);line-height:1.85}
+  #drop small{display:block;font-size:12.5px;color:var(--muted);margin-top:7px}
+  body.dragging #drop{border-color:var(--accent);background:var(--soft)}
+
+  #pvWrap{margin-top:14px;display:none}
+  #pvWrap.on{display:block}
+  #pv{width:100%;height:auto;max-height:340px;object-fit:contain;border:1px solid var(--line);
+    border-radius:12px;background:#F8FAFC;display:block}
+  #pvName{font-size:12px;color:var(--muted);margin:8px 0 0;word-break:break-all}
+
+  #prog{display:none;margin-top:14px}
+  #prog.on{display:block}
+  #progBar{height:8px;background:var(--line2);border-radius:99px;overflow:hidden}
+  #progFill{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .3s}
+  #progMsg{font-size:13px;color:var(--ink2);margin:9px 0 0;line-height:1.7}
+
+  #rawWrap{margin-top:14px;display:none}
+  #rawWrap.on{display:block}
+  #raw{width:100%;min-height:130px;max-height:230px;overflow-y:auto;background:#F8FAFC;
+    border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12px;line-height:1.75;
+    color:var(--ink2);white-space:pre-wrap;word-break:break-all;margin:0;
+    font-family:ui-monospace,Consolas,monospace}
+
+  /* ---------- 표 ---------- */
+  #tblWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:920px}
+  thead th{background:var(--th);text-align:left;padding:12px 11px;font-size:12.5px;font-weight:700;
+    color:var(--ink2);border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;z-index:1}
+  tbody td{padding:0;border-bottom:1px solid var(--line2);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#FCFCFB}
+  tbody tr.sel{background:var(--soft)}
+  .ed{padding:11px;min-height:44px;outline:none;cursor:text}
+  .ed:focus{background:#FFFBEB;box-shadow:inset 0 0 0 2px var(--accent)}
+  .ed.num{text-align:right;font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+  .ed:empty::before{content:attr(data-ph);color:#CBD5E1}
+  td.ctr{text-align:center;padding:0 8px}
+  td.ctr input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer}
+  select.cell{width:100%;border:0;background:transparent;padding:11px 9px;font-size:14px;
+    font-family:inherit;color:var(--ink);outline:none;cursor:pointer;min-height:44px}
+  select.cell:focus{background:#FFFBEB;box-shadow:inset 0 0 0 2px var(--accent)}
+  .del{background:transparent;border:0;color:#CBD5E1;cursor:pointer;font-size:17px;padding:8px 10px;
+    line-height:1;border-radius:7px}
+  .del:hover{color:#DC2626;background:#FEF2F2}
+  #emptyRow{padding:44px 20px;text-align:center;color:var(--muted);font-size:14px;line-height:1.9}
+
+  #sumBar{display:flex;gap:20px;flex-wrap:wrap;align-items:baseline;padding:14px 16px;
+    background:var(--th);border-radius:12px;margin-top:14px}
+  #sumBar b{font-size:19px;font-weight:800}
+  #sumBar span{font-size:13px;color:var(--muted)}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+
+  .sec{padding:34px 0}
+  .sec h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
+  .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:46px 18px 10px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Receipt to Excel</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Receipt to Expense Sheet</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
+    Reads the date, amount and merchant from a receipt photo and lays them out as a row. Stack a few, then
+    <b>paste straight into your spreadsheet</b>. Photos are never uploaded — everything runs in this browser.
+  </p>
+</header>
+
+<div class="wrap" style="padding-top:22px">
+<div id="main">
+
+  <!-- 좌측 -->
+  <div class="card" style="padding:20px">
+    <p class="lab" style="margin-bottom:12px">📷 Receipt image</p>
+
+    <div id="drop" role="button" tabindex="0">
+      <div class="ic">🧾</div>
+      <p>Drop a receipt photo here
+        <small>Click to browse · drag and drop · paste with <b class="mono">Ctrl</b>+<b class="mono">V</b></small>
+        <small>You can select several at once</small>
+      </p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+
+    <div id="pvWrap">
+      <img id="pv" alt="Receipt preview">
+      <p id="pvName" class="mono"></p>
+    </div>
+
+    <div id="prog">
+      <div id="progBar"><div id="progFill"></div></div>
+      <p id="progMsg"></p>
+    </div>
+
+    <div id="rawWrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="lab" style="margin:0">Recognised text</span>
+        <button class="btn sm" id="rawToggle">Hide</button>
+      </div>
+      <pre id="raw"></pre>
+      <p class="hint">If something came out wrong, check against this and fix it in the table.</p>
+    </div>
+  </div>
+
+  <!-- 우측 -->
+  <div class="card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+      <p class="lab" style="margin:0">📊 Expenses <span id="rowCount" class="mono" style="color:var(--ink)"></span></p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn sm" id="addRow">+ Add row</button>
+        <button class="btn sm dan" id="delSel">Delete selected</button>
+        <button class="btn sm dan" id="clearAll">Clear all</button>
+      </div>
+    </div>
+
+    <div id="tblWrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:42px"><input type="checkbox" id="chkAll" aria-label="Select all"></th>
+            <th style="width:124px">Date</th>
+            <th style="min-width:170px">Merchant</th>
+            <th style="width:118px;text-align:right">Amount</th>
+            <th style="width:132px">Payment</th>
+            <th style="width:142px">Category</th>
+            <th style="min-width:150px">Note</th>
+            <th style="width:44px"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="emptyRow">Nothing here yet.<br>Add a receipt photo on the left, or start with an empty row.</div>
+    </div>
+
+    <div id="sumBar">
+      <span>Total <b class="mono" id="sumAmt">0</b></span>
+      <span><b class="mono" id="sumCnt">0</b> entries</span>
+      <span id="sumWarn" style="color:var(--warn)"></span>
+    </div>
+
+    <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr;margin-top:16px">
+      <button class="btn p" id="tsvBtn">📋 Copy for spreadsheet</button>
+      <button class="btn" id="csvBtn">💾 Download CSV</button>
+    </div>
+    <p class="hint">Press Copy, then paste in your spreadsheet — every value lands in its own cell.</p>
+  </div>
+
+</div>
+</div>
+
+<footer class="wrap" style="padding:30px 18px 46px;border-top:1px solid var(--line);margin-top:34px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Everything runs inside your browser. Receipt photos are never sent to any server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2600);
+}
+
+var PAY = ['Company card','Personal card','Cash','Bank transfer','Other'];
+var ACCT = ['Meals','Travel','Entertainment','Supplies','Books & printing','Telecom','Meetings','Staff welfare','Training','Other'];
+
+/* ============================================================
+   영수증 텍스트에서 값을 뽑아내는 부분
+   ============================================================ */
+
+/* 날짜 — 어떤 표기든 YYYY-MM-DD 로 바꾼다 */
+function parseDate(text){
+  var pats = [
+    /(20\d{2})\s*[-.\/년]\s*(\d{1,2})\s*[-.\/월]\s*(\d{1,2})\s*일?/g,
+    /(\d{2})\s*[-.\/]\s*(\d{1,2})\s*[-.\/]\s*(\d{1,2})/g
+  ];
+  for (var i = 0; i < pats.length; i++){
+    var re = pats[i], m;
+    re.lastIndex = 0;
+    /* 앞에서부터 훑되 달과 날이 말이 되는 것을 만날 때까지 계속 본다 */
+    while ((m = re.exec(text)) !== null){
+      var y = +m[1], mo = +m[2], d = +m[3];
+      if (y < 100) y += 2000;
+      if (mo < 1 || mo > 12 || d < 1 || d > 31) continue;
+      if (y < 2000 || y > 2100) continue;
+      var chk = new Date(y, mo-1, d);       /* 2월 30일 같은 날을 걸러 낸다 */
+      if (chk.getMonth() !== mo-1 || chk.getDate() !== d) continue;
+      return y + '-' + String(mo).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    }
+  }
+  return '';
+}
+
+var AMT_KEYS = ['합\\s*계','총\\s*액','합계금액','승인금액','받을금액','결제금액','판매금액',
+                '총\\s*합\\s*계','청구금액','과세물품가액','Total','TOTAL','합\\s*겨'];
+/* 번호가 적힌 줄은 금액으로 보지 않는다 */
+var NOT_AMT = /승인\s*번호|거래\s*번호|사업자|전화|TEL|카드\s*번호|일련번호|매장번호|가맹점\s*번호|POS|영수증\s*번호/i;
+
+function parseAmount(text){
+  var lines = text.split(/\r?\n/);
+  var cands = [];
+  var keyRe = new RegExp('(' + AMT_KEYS.join('|') + ')', 'i');
+  for (var i = 0; i < lines.length; i++){
+    if (!keyRe.test(lines[i]) || NOT_AMT.test(lines[i])) continue;
+    /* 같은 줄과 바로 다음 줄에서 숫자를 찾는다 */
+    for (var j = i; j <= Math.min(i+1, lines.length-1); j++){
+      if (NOT_AMT.test(lines[j])) continue;
+      var nums = lines[j].match(/\d{1,3}(?:[,.]\d{3})+|\d{3,}/g);
+      if (!nums) continue;
+      nums.forEach(function(n){
+        var v = parseInt(n.replace(/[,.]/g,''), 10);
+        if (v >= 100 && v <= 100000000) cands.push(v);
+      });
+    }
+  }
+  if (!cands.length){
+    /* 키워드가 없으면 콤마가 찍힌 숫자 중 가장 큰 값을 쓴다 */
+    lines.forEach(function(L){
+      if (NOT_AMT.test(L)) return;
+      var all = L.match(/\d{1,3}(?:[,.]\d{3})+/g) || [];
+      all.forEach(function(n){
+        var v = parseInt(n.replace(/[,.]/g,''), 10);
+        if (v >= 100 && v <= 100000000) cands.push(v);
+      });
+    });
+  }
+  if (!cands.length) return '';
+  return Math.max.apply(null, cands).toLocaleString('en-US');
+}
+
+function parseStore(text){
+  var lines = text.split(/\r?\n/).map(function(s){ return s.trim(); }).filter(Boolean);
+  /* 1) 상호명이라고 적힌 줄 */
+  for (var i = 0; i < lines.length; i++){
+    var m = lines[i].match(/(?:상\s*호|가\s*맹\s*점|점\s*포|매\s*장)\s*(?:명)?\s*[:：]?\s*(.+)/);
+    if (m && m[1].trim().length >= 2) return cleanStore(m[1]);
+  }
+  /* 2) 법인 표기가 있는 줄 */
+  for (var k = 0; k < lines.length; k++){
+    if (/\(\s*[주유재사]\s*\)|주식회사/.test(lines[k])) return cleanStore(lines[k]);
+  }
+  /* 3) 윗부분에서 그럴듯한 줄 */
+  for (var p = 0; p < Math.min(5, lines.length); p++){
+    var s = lines[p];
+    if (/사업자|대표자|주소|전화|TEL|영수증|번호|\d{3}-\d{2}-\d{5}/i.test(s)) continue;
+    if (s.replace(/[^가-힣A-Za-z]/g,'').length >= 2) return cleanStore(s);
+  }
+  return '';
+}
+function cleanStore(s){
+  return s.replace(/[:：]/g,' ').replace(/\s+/g,' ').trim().slice(0, 40);
+}
+
+/* 상호를 보고 계정과목을 짐작한다 */
+function guessAcct(store){
+  var s = String(store || '');
+  if (/coffee|cafe|caf\u00e9|starbucks|costa|pret|dunkin|tim hortons|\uCEE4\uD53C|\uCE74\uD398/i.test(s)) return 'Meals';
+  if (/restaurant|diner|kitchen|grill|burger|pizza|sushi|deli|bistro|mcdonald|subway|\uC2DD\uB2F9/i.test(s)) return 'Meals';
+  if (/taxi|uber|lyft|rail|train|airline|airways|parking|shell|bp |esso|fuel|gas station|\uD0DD\uC2DC/i.test(s)) return 'Travel';
+  if (/office|stationer|staples|depot|daiso|hardware/i.test(s)) return 'Supplies';
+  if (/book|print|copy shop|kinko|waterstones/i.test(s)) return 'Books & printing';
+  if (/telecom|mobile|vodafone|at&t|verizon|t-mobile/i.test(s)) return 'Telecom';
+  if (/mart|market|grocer|tesco|walmart|costco|seven|7-eleven|aldi|lidl/i.test(s)) return 'Supplies';
+  return 'Meals';
+}
+
+/* ============================================================
+   표
+   ============================================================ */
+var rows = [];      /* {id, date, store, amount, pay, acct, memo} */
+var seq = 1;
+
+function addRow(data, silent){
+  var r = {
+    id: seq++,
+    date: (data && data.date) || '',
+    store: (data && data.store) || '',
+    amount: (data && data.amount) || '',
+    pay: (data && data.pay) || PAY[0],
+    acct: (data && data.acct) || ACCT[0],
+    memo: (data && data.memo) || ''
+  };
+  rows.push(r);
+  render();
+  if (!silent){
+    var tb = $('tbody');
+    var last = tb.lastElementChild;
+    if (last && last.scrollIntoView){
+      try { last.scrollIntoView({ behavior:'smooth', block:'nearest' }); } catch(e){}
+    }
+  }
+  return r;
+}
+
+function render(){
+  var tb = $('tbody');
+  if (!rows.length){
+    tb.innerHTML = '';
+    $('emptyRow').style.display = 'block';
+  } else {
+    $('emptyRow').style.display = 'none';
+    tb.innerHTML = rows.map(function(r){
+      return '<tr data-id="' + r.id + '">' +
+        '<td class="ctr"><input type="checkbox" class="rc" aria-label="Select row"></td>' +
+        '<td><div class="ed mono" contenteditable="true" data-f="date" data-ph="YYYY-MM-DD">' + esc(r.date) + '</div></td>' +
+        '<td><div class="ed" contenteditable="true" data-f="store" data-ph="Merchant">' + esc(r.store) + '</div></td>' +
+        '<td><div class="ed num" contenteditable="true" data-f="amount" data-ph="0">' + esc(r.amount) + '</div></td>' +
+        '<td>' + sel('pay', PAY, r.pay) + '</td>' +
+        '<td>' + sel('acct', ACCT, r.acct) + '</td>' +
+        '<td><div class="ed" contenteditable="true" data-f="memo" data-ph="Note">' + esc(r.memo) + '</div></td>' +
+        '<td class="ctr"><button class="del" title="Delete this row" aria-label="Delete this row">×</button></td>' +
+      '</tr>';
+    }).join('');
+  }
+  $('rowCount').textContent = rows.length ? '(' + rows.length + ')' : '';
+  updateSum();
+}
+function sel(field, list, cur){
+  return '<select class="cell" data-f="' + field + '" aria-label="' + (field==='pay'?'Payment':'Category') + '">' +
+    list.map(function(v){
+      return '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(v) + '</option>';
+    }).join('') + '</select>';
+}
+
+function toNum(s){
+  var n = parseInt(String(s || '').replace(/[^0-9-]/g,''), 10);
+  return isFinite(n) ? n : 0;
+}
+function updateSum(){
+  var sum = 0, bad = 0;
+  rows.forEach(function(r){
+    sum += toNum(r.amount);
+    if (!r.date || !/^\d{4}-\d{2}-\d{2}$/.test(r.date) || !toNum(r.amount)) bad++;
+  });
+  $('sumAmt').textContent = sum.toLocaleString('en-US');
+  $('sumCnt').textContent = rows.length;
+  $('sumWarn').textContent = bad ? '\u26A0 ' + bad + ' row(s) need checking' : '';
+}
+
+/* 셀 편집 */
+$('tbody').addEventListener('input', function(ev){
+  var ed = ev.target.closest('.ed');
+  if (!ed) return;
+  var tr = ed.closest('tr');
+  var r = rows.find(function(x){ return x.id === +tr.dataset.id; });
+  if (!r) return;
+  r[ed.dataset.f] = ed.textContent.trim();
+  updateSum();
+});
+/* 금액 칸은 편집이 끝날 때 콤마를 다시 찍는다 */
+$('tbody').addEventListener('focusout', function(ev){
+  var ed = ev.target.closest('.ed');
+  if (!ed || ed.dataset.f !== 'amount') return;
+  var tr = ed.closest('tr');
+  var r = rows.find(function(x){ return x.id === +tr.dataset.id; });
+  if (!r) return;
+  var n = toNum(r.amount);
+  var t = n ? n.toLocaleString('en-US') : '';
+  r.amount = t; ed.textContent = t;
+  updateSum();
+});
+$('tbody').addEventListener('change', function(ev){
+  var s = ev.target.closest('select.cell');
+  if (s){
+    var tr = s.closest('tr');
+    var r = rows.find(function(x){ return x.id === +tr.dataset.id; });
+    if (r) r[s.dataset.f] = s.value;
+    return;
+  }
+  var c = ev.target.closest('.rc');
+  if (c) c.closest('tr').classList.toggle('sel', c.checked);
+});
+$('tbody').addEventListener('click', function(ev){
+  var d = ev.target.closest('.del');
+  if (!d) return;
+  var tr = d.closest('tr');
+  rows = rows.filter(function(x){ return x.id !== +tr.dataset.id; });
+  render();
+  toast('Row deleted');
+});
+/* 엔터로 줄이 나뉘지 않게 한다 */
+$('tbody').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' && ev.target.closest('.ed')){
+    ev.preventDefault();
+    ev.target.blur();
+  }
+});
+$('chkAll').addEventListener('change', function(){
+  var on = this.checked;
+  $('tbody').querySelectorAll('.rc').forEach(function(c){
+    c.checked = on; c.closest('tr').classList.toggle('sel', on);
+  });
+});
+$('addRow').addEventListener('click', function(){ addRow(); });
+$('delSel').addEventListener('click', function(){
+  var ids = [];
+  $('tbody').querySelectorAll('.rc').forEach(function(c){
+    if (c.checked) ids.push(+c.closest('tr').dataset.id);
+  });
+  if (!ids.length){ toast('Select the rows to delete'); return; }
+  rows = rows.filter(function(x){ return ids.indexOf(x.id) < 0; });
+  $('chkAll').checked = false;
+  render();
+  toast(ids.length + ' row(s) deleted');
+});
+$('clearAll').addEventListener('click', function(){
+  if (!rows.length){ toast('Already empty'); return; }
+  if (!window.confirm('Clear every row?')) return;
+  rows = []; $('chkAll').checked = false;
+  render();
+  toast('All cleared');
+});
+
+/* ============================================================
+   OCR
+   ============================================================ */
+var worker = null, busy = false;
+var queue = [];
+
+function setProg(on, pct, msg){
+  $('prog').classList.toggle('on', !!on);
+  if (typeof pct === 'number') $('progFill').style.width = Math.max(0, Math.min(100, pct)) + '%';
+  if (msg) $('progMsg').textContent = msg;
+}
+
+async function getWorker(){
+  if (worker) return worker;
+  if (typeof Tesseract === 'undefined') throw new Error('tesseract missing');
+  setProg(true, 4, 'Downloading recognition data \u00B7 one time only');
+  worker = await Tesseract.createWorker(['eng','kor'], 1, {
+    logger: function(m){
+      if (!m || typeof m.progress !== 'number') return;
+      var pct = Math.round(m.progress * 100);
+      if (m.status === 'recognizing text') setProg(true, pct, 'Reading the text \u00B7 ' + pct + '%');
+      else if (/load|initial|download/i.test(m.status || '')) setProg(true, Math.min(pct, 95), 'Preparing recognition data \u00B7 ' + pct + '%');
+    }
+  });
+  return worker;
+}
+
+function readFile(file){
+  return new Promise(function(res, rej){
+    var r = new FileReader();
+    r.onload = function(e){ res(e.target.result); };
+    r.onerror = function(){ rej(new Error('read failed')); };
+    r.readAsDataURL(file);
+  });
+}
+
+async function processOne(file){
+  var url = await readFile(file);
+  $('pv').src = url;
+  $('pvWrap').classList.add('on');
+  $('pvName').textContent = file.name || 'pasted image';
+
+  var w = await getWorker();
+  setProg(true, 8, 'Reading the text');
+  var out = await w.recognize(url);
+  var text = (out && out.data && out.data.text) || '';
+
+  $('raw').textContent = text.trim() || '(no text was recognised)';
+  $('rawWrap').classList.add('on');
+
+  var date = parseDate(text);
+  var store = parseStore(text);
+  var amount = parseAmount(text);
+  addRow({ date:date, store:store, amount:amount, acct:guessAcct(store) });
+
+  var missing = [];
+  if (!date) missing.push('date');
+  if (!store) missing.push('merchant');
+  if (!amount) missing.push('amount');
+  return missing;
+}
+
+async function handleFiles(files){
+  var list = Array.prototype.slice.call(files).filter(function(f){
+    return /^image\//.test(f.type || '');
+  });
+  if (!list.length){ toast('That is not an image file'); return; }
+  if (busy){ queue = queue.concat(list); toast('Still working \u00B7 ' + list.length + ' queued'); return; }
+
+  busy = true;
+  var done = 0, warned = 0;
+  try {
+    while (list.length){
+      var f = list.shift();
+      done++;
+      if (done > 1 || list.length) setProg(true, null, 'Reading photo ' + done);
+      var missing = await processOne(f);
+      if (missing.length) warned++;
+      if (!list.length && queue.length){ list = queue; queue = []; }
+    }
+    setProg(false);
+    var msg = done + ' photo(s) processed';
+    if (warned) msg += ' \u00B7 ' + warned + ' need checking, some fields were not found';
+    toast(msg);
+  } catch(e){
+    setProg(false);
+    console.error(e);
+    toast('Text recognition failed \u00B7 check your connection and try again');
+  } finally {
+    busy = false;
+  }
+}
+
+/* 넣는 방법 세 가지 */
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files;
+  if (f && f.length) handleFiles(f);
+  this.value = '';
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+});
+document.addEventListener('paste', function(e){
+  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  if (e.target && e.target.isContentEditable) return;
+  var dt = e.clipboardData;
+  if (!dt) return;
+  if (dt.files && dt.files.length){
+    for (var i = 0; i < dt.files.length; i++){
+      if (/^image\//.test(dt.files[i].type || '')){ e.preventDefault(); handleFiles(dt.files); return; }
+    }
+  }
+  var items = dt.items || [];
+  for (var k = 0; k < items.length; k++){
+    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
+      var f = items[k].getAsFile();
+      if (f){ e.preventDefault(); handleFiles([f]); return; }
+    }
+  }
+});
+
+$('rawToggle').addEventListener('click', function(){
+  var r = $('raw');
+  var hidden = r.style.display === 'none';
+  r.style.display = hidden ? 'block' : 'none';
+  this.textContent = hidden ? 'Hide' : 'Show';
+});
+
+/* ============================================================
+   내보내기
+   ============================================================ */
+var HEAD = ['Date','Merchant','Amount','Payment','Category','Note'];
+function rowArr(r){ return [r.date, r.store, r.amount, r.pay, r.acct, r.memo]; }
+
+/* 탭으로 나누면 엑셀이 칸을 그대로 나눈다. 값 안의 탭과 줄바꿈은 공백으로 바꾼다 */
+function tsvText(){
+  var out = [HEAD.join('\t')];
+  rows.forEach(function(r){
+    out.push(rowArr(r).map(function(c){
+      return String(c == null ? '' : c).replace(/[\t\r\n]/g, ' ');
+    }).join('\t'));
+  });
+  return out.join('\n');
+}
+function csvText(){
+  function cell(s){
+    s = String(s == null ? '' : s);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }
+  var out = [HEAD.map(cell).join(',')];
+  rows.forEach(function(r){ out.push(rowArr(r).map(cell).join(',')); });
+  var sum = rows.reduce(function(a, r){ return a + toNum(r.amount); }, 0);
+  out.push('');
+  out.push(['Total','','' + sum.toLocaleString('en-US'),'','',''].map(cell).join(','));
+  return out.join('\n');
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+$('tsvBtn').addEventListener('click', function(){
+  if (!rows.length){ toast('Nothing to export'); return; }
+  copyText(tsvText(), function(ok){
+    toast(ok ? 'Copied \u00B7 paste it into your spreadsheet' : 'Copy was blocked');
+  });
+});
+$('csvBtn').addEventListener('click', function(){
+  if (!rows.length){ toast('Nothing to export'); return; }
+  try {
+    var blob = new Blob(['\ufeff' + csvText()], { type:'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var d = new Date();
+    a.href = url;
+    a.download = 'expenses_' + d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+    toast('CSV downloaded');
+  } catch(e){ toast('The download was blocked'); }
+});
+
+render();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#1D4ED8}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#1D4ED8;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#1D4ED8}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Typing receipts in, one line at a time</h2>
+<p>You tip the month’s receipts out of the drawer and open a spreadsheet. Date, merchant, amount, next one. Twenty receipts eats an hour, and somewhere in there you fat-finger a figure.</p>
+<p>This tool takes over the transcribing. Drop a photo in and it reads the text, pulls out the date, amount and merchant, and drops them into the table as a row. Fix anything that came out wrong, then paste the lot into your spreadsheet.</p>
+
+<h2>The photos never go anywhere</h2>
+<p>A receipt carries your company name and what you spent it on. Uploading that to somebody else’s server is not a comfortable trade for a bit of convenience.</p>
+<p>Here, <strong>even the text recognition runs inside your browser.</strong> The recognition data downloads once, and after that no photo has any reason to leave the machine. Close the page and the work goes with it.</p>
+
+<h2>What it pulls out</h2><dl>
+<dt>📅 Date</dt><dd>Whether the receipt says 2025-08-14, 25/08/14 or 14 August 2025, it comes out as <strong>year-month-day</strong>. Impossible dates like a thirteenth month or 30 February are discarded and the next candidate is tried.</dd>
+<dt>💰 Amount</dt><dd>Found near words like total, approved or amount due. If that line holds no figure it looks at the next one. Lines carrying approval numbers or registration numbers are skipped so they are not mistaken for money.</dd>
+<dt>🏢 Merchant</dt><dd>A line explicitly labelled as the merchant comes first, then a company marker, and failing both it takes a plausible line from the top of the receipt, skipping registration and phone numbers.</dd>
+<dt>📁 Category</dt><dd>Guessed from the merchant and filled in for you — a cafe or restaurant becomes Meals, a taxi or fuel stop becomes Travel. You can change it in the table.</dd>
+</dl>
+
+<h2>Recognition is not perfect</h2>
+<p>Receipts print in every condition imaginable. Faded thermal paper, a fold across the middle, ink that gave up halfway — even a person squints at some of them.</p>
+<p>So <strong>every cell in the table can be clicked and edited.</strong> The recognised text is shown on the left exactly as it came out, which makes it quick to see where things went astray. If any of the three fields is missing, you are told how many rows need attention when the batch finishes, and the summary row keeps a running count.</p>
+<p>Better photos help. Flatten the receipt, use good light, and fill the frame with the text.</p>
+
+<h2>How to use it</h2><ol>
+<li>Add a receipt photo — click to browse, drag it in, or paste with <strong>Ctrl+V</strong>.</li>
+<li>Select several at once and they are worked through in order, stacking up in the table.</li>
+<li><strong>Click any cell to correct it.</strong> Payment and category are dropdowns.</li>
+<li>Missing a receipt? <strong>Add row</strong> and type it in.</li>
+<li><strong>Copy for spreadsheet</strong>, then paste — every value lands in its own cell.</li>
+</ol>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Are my receipt photos uploaded anywhere?</dt><dd>No. Even the text recognition runs inside your browser; only the recognition data is fetched, once. The photo itself never leaves your device, and closing the page clears the work with it.</dd>
+<dt>What if the reading is wrong?</dt><dd>Click any cell in the table and edit it directly. Receipts print in every imaginable condition, so perfect recognition is not realistic. This tool is here to save the typing; checking and correcting is quicker done by hand.</dd>
+<dt>What does it pull out?</dt><dd>Three things: the date, the amount and the merchant. Dates come out as year-month-day whatever format they were printed in. Amounts are found near words like total or approved, while approval and registration numbers are filtered out. Merchants come from a labelled line or a company marker first, and from the top of the receipt otherwise.</dd>
+<dt>Can I do several at once?</dt><dd>They are read one at a time and stack up in the table. Select several photos and they are worked through in order, with a new row appearing as each finishes. Export the whole lot when you are done.</dd>
+<dt>How do I get it into a spreadsheet?</dt><dd>Copy for spreadsheet puts the table on your clipboard with tabs between the cells. Paste it into Excel or Sheets and every value lands in its own cell. To keep a file instead, use the CSV download.</dd>
+<dt>How long does recognition take?</dt><dd>The first run spends a while downloading the recognition data. After that a receipt usually takes a few seconds to a dozen or so, depending on your device and the size of the photo.</dd>
+</dl>
+
+<p class="tk-guide-note">Everything runs inside your browser and no receipt photo is transmitted to any server. Text recognition needs an internet connection to fetch its data file; even then, the photo itself is never sent. Automatically extracted values are a starting point — check them against the originals before you submit anything.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/roster-maker.html">Fair Roster Maker</a></li>
+<li><a href="https://mnledu.com/en/productivity/pdf-signature.html">PDF Signature Stamp</a></li>
+<li><a href="https://mnledu.com/en/productivity/image-studio.html">Photo Studio</a></li>
+<li><a href="https://mnledu.com/en/productivity/meeting-minutes.html">Smart Meeting Minutes</a></li>
+<li><a href="https://mnledu.com/en/productivity/date-calc.html">Date Calculator</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio.html">QR Code Generator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>

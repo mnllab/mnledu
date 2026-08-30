@@ -8,6 +8,86 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'receipt-to-excel',
+    title: 'Receipt to Expense Sheet',
+    category: 'PRODUCTIVITY',
+    desc: 'Reads the date, amount and merchant from a receipt photo and lays it out as an expense sheet ready for a spreadsheet.',
+    url: 'https://mnledu.com/en/productivity/receipt-to-excel.html',
+    icon: 'receipt',
+    badge: 'NEW',
+    tags: ['#receipt', '#spreadsheet', '#expenses', '#OCR']
+  },
+  {
+    id: 'roster-maker',
+    title: 'Fair Roster Maker',
+    category: 'PRODUCTIVITY',
+    desc: 'Enter your team and their days off, and it builds a balanced duty roster with no back-to-back shifts.',
+    url: 'https://mnledu.com/en/productivity/roster-maker.html',
+    icon: 'calendar-check',
+    badge: 'NEW',
+    tags: ['#roster', '#schedule', '#automation', '#spreadsheet']
+  },
+  {
+    id: 'sheet2memo',
+    title: 'Sheet2Memo',
+    category: 'PRODUCTIVITY',
+    desc: 'Paste a spreadsheet link or file and every row becomes a sticky note you can search and filter.',
+    url: 'https://mnledu.com/en/productivity/sheet2memo.html',
+    icon: 'layout-grid',
+    badge: 'NEW',
+    tags: ['#spreadsheet', '#dashboard', '#organize', '#search']
+  },
+  {
+    id: 'smart-list',
+    title: 'Smart List Formatter',
+    category: 'PRODUCTIVITY',
+    desc: 'Turns a spreadsheet column into one line formatted for Outlook, Slack or SQL, with duplicates removed.',
+    url: 'https://mnledu.com/en/productivity/smart-list.html',
+    icon: 'list-ordered',
+    badge: 'NEW',
+    tags: ['#list', '#automation', '#SQL', '#copy']
+  },
+  {
+    id: 'text-diff',
+    title: 'Secure Text Diff Checker',
+    category: 'PRODUCTIVITY',
+    desc: 'Puts an original and a revised document side by side and shows exactly what changed, word or character.',
+    url: 'https://mnledu.com/en/productivity/text-diff.html',
+    icon: 'diff',
+    badge: 'NEW',
+    tags: ['#contracts', '#compare', '#review', '#documents']
+  },
+  {
+    id: 'palette-picker',
+    title: 'Brand Palette Picker',
+    category: 'PRODUCTIVITY',
+    desc: 'Drop in a logo or photo and pull out the dominant colour and a palette, with HEX, RGB and HSL to copy.',
+    url: 'https://mnledu.com/en/productivity/palette-picker.html',
+    icon: 'palette',
+    badge: 'NEW',
+    tags: ['#color', '#design', '#palette', '#brand']
+  },
+  {
+    id: 'asset-hub',
+    title: 'One-Click Asset Hub',
+    category: 'PRODUCTIVITY',
+    desc: 'Keep the phrases, colours, logos and links you reuse in one place and click to copy any of them.',
+    url: 'https://mnledu.com/en/productivity/asset-hub.html',
+    icon: 'clipboard-copy',
+    badge: 'NEW',
+    tags: ['#assets', '#copy', '#brand', '#automation']
+  },
+  {
+    id: 'data-harvester',
+    title: 'Data Harvester',
+    category: 'PRODUCTIVITY',
+    desc: 'Drop a folder for a file list, pull links and emails out of messy text, and decode broken URLs.',
+    url: 'https://mnledu.com/en/productivity/data-harvester.html',
+    icon: 'database',
+    badge: 'NEW',
+    tags: ['#data', '#linkextraction', '#filelist', '#recovery']
+  },
+  {
     id: 'pdf-signature',
     title: 'PDF Signature Stamp',
     category: 'PRODUCTIVITY',
@@ -192,6 +272,16 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ LIFESTYLE ═══════════════ */
   {
+    id: 'birth-chart',
+    title: 'Birth Chart Profiler',
+    category: 'LIFESTYLE',
+    desc: 'Reconstructs the sky at your birth time and place, with Ascendant, Midheaven, twelve Houses and major aspects.',
+    url: 'https://mnledu.com/en/lifestyle/birth-chart.html',
+    icon: 'orbit',
+    badge: 'NEW',
+    tags: ['#astrology', '#birthchart', '#personality', '#break']
+  },
+  {
     id: 'biorhythm',
     title: 'Healing Biorhythm Tracker',
     category: 'LIFESTYLE',
@@ -294,6 +384,36 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ DESIGN & MEDIA ═══════════════ */
   {
+    id: 'thumb-mockup',
+    title: 'Thumbnail & Shorts Preview Simulator',
+    category: 'DESIGN & MEDIA',
+    desc: 'See what the duration badge, progress bar and Shorts icon column cover, and where your title gets truncated.',
+    url: 'https://mnledu.com/en/design-media/thumb-mockup.html',
+    icon: 'monitor-play',
+    badge: 'NEW',
+    tags: ['#thumbnail', '#youtube', '#shorts', '#preview']
+  },
+  {
+    id: 'uploader-toolkit',
+    title: 'Uploader Toolkit',
+    category: 'DESIGN & MEDIA',
+    desc: 'Pick a date and your title and filename build themselves from your own rules, plus reusable description blocks.',
+    url: 'https://mnledu.com/en/design-media/uploader-toolkit.html',
+    icon: 'upload',
+    badge: 'NEW',
+    tags: ['#upload', '#youtube', '#template', '#automation']
+  },
+  {
+    id: 'image-studio',
+    title: 'All-in-One Photo Studio',
+    category: 'PRODUCTIVITY',
+    desc: 'Crop, rotate, resize and clear backgrounds entirely in your browser, with instant results and an AI cutout mode.',
+    url: 'https://mnledu.com/en/productivity/image-studio.html',
+    icon: 'image',
+    badge: 'NEW',
+    tags: ['#imageediting', '#backgroundremoval', '#crop', '#AI']
+  },
+  {
     id: 'screendeco',
     title: 'Screenshot Beautifier',
     category: 'DESIGN & MEDIA',
@@ -325,6 +445,16 @@ const TOOLS_DATA_EN = [
   },
 
   /* ═══════════════ ENTERTAINMENT ═══════════════ */
+  {
+    id: 'aggro-match',
+    title: 'Aggro Match',
+    category: 'ENTERTAINMENT',
+    desc: 'Paste your candidate titles and it pits them head to head until one is left standing.',
+    url: 'https://mnledu.com/en/entertainment/aggro-match.html',
+    icon: 'swords',
+    badge: 'NEW',
+    tags: ['#titles', '#bracket', '#picker', '#break']
+  },
   {
     id: 'tetris',
     title: 'Block Stacker',

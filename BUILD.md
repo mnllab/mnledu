@@ -126,3 +126,38 @@ guides 항목 없이 안내문이 파일에 박혀 있는 도구 (총 9개)
   presentation-timer, kstartup-board,
   pdf-signature, qr-studio, meeting-minutes, slot-coordinator,
   biorhythm, food-picker, saju-studio
+
+## 2026-08-29 birth-chart 추가 (LIFESTYLE 상단)
+
+완성본 직접 배치. guides 항목 없음.
+
+guides 항목 없이 안내문이 파일에 박혀 있는 도구 (총 10개)
+  presentation-timer, kstartup-board,
+  pdf-signature, qr-studio, meeting-minutes, slot-coordinator,
+  biorhythm, food-picker, saju-studio, birth-chart
+
+
+## 2026-08-29 대량 추가 12종 (54개 도달)
+
+PRODUCTIVITY 8 : receipt-to-excel, roster-maker, sheet2memo, smart-list,
+  text-diff, palette-picker, asset-hub, data-harvester
+DESIGN & MEDIA 2 : thumb-mockup, uploader-toolkit
+ENTERTAINMENT 1 : aggro-match
+image-studio : 원본 canonical 이 /productivity/ 였으므로 PRODUCTIVITY 로 배치
+  (design-media 아님 — 처음에 잘못 분류했다가 정정)
+
+원본 파일들의 canonical 이 /creative/ 로 되어 있었는데, 실제 사이트에는
+그런 카테고리·폴더가 없다. thumb-mockup·uploader-toolkit·aggro-match 는
+각각 design-media·design-media·entertainment 폴더로 배치하고
+canonical/og/ld+json 안의 /creative/ 를 실제 경로로 정정했다.
+새 카테고리 폴더를 받으면 이 점을 먼저 확인할 것.
+
+data-harvester 영문판의 정적 placeholder "0개" → "0" 로 수정
+(리스트가 비어 있을 때 잠깐 보이는 초기값, JS가 이후 숫자로 덮어씀).
+
+guides 항목 없이 안내문이 파일에 박혀 있는 도구 (총 22개)
+  presentation-timer, kstartup-board, pdf-signature, qr-studio,
+  meeting-minutes, slot-coordinator, biorhythm, food-picker, saju-studio,
+  birth-chart, receipt-to-excel, roster-maker, sheet2memo, smart-list,
+  text-diff, thumb-mockup, uploader-toolkit, palette-picker, aggro-match,
+  asset-hub, data-harvester, image-studio

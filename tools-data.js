@@ -34,6 +34,86 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'receipt-to-excel',
+    title: '영수증 지출결의서 변환기',
+    category: 'PRODUCTIVITY',
+    desc: '영수증 사진에서 날짜·금액·상호를 읽어 지출결의서 표로 만듭니다. 여러 장을 이어 붙이고 엑셀로 내려받습니다.',
+    url: 'https://mnledu.com/productivity/receipt-to-excel.html',
+    icon: 'receipt',
+    badge: 'NEW',
+    tags: ['#영수증', '#엑셀', '#지출결의서', '#OCR']
+  },
+  {
+    id: 'roster-maker',
+    title: '공평무사 당직표 생성기',
+    category: 'PRODUCTIVITY',
+    desc: '명단과 휴가만 넣으면 당직표를 자동으로 짭니다. 연속 당직을 막고, 끌어다 놓아 교대하며, 공지문으로 내보냅니다.',
+    url: 'https://mnledu.com/productivity/roster-maker.html',
+    icon: 'calendar-check',
+    badge: 'NEW',
+    tags: ['#당직표', '#근무표', '#자동배정', '#엑셀']
+  },
+  {
+    id: 'sheet2memo',
+    title: '시트 포스트잇 대시보드',
+    category: 'PRODUCTIVITY',
+    desc: '구글 시트나 엑셀 파일을 넣으면 각 행을 포스트잇 카드로 펼쳐 보여 줍니다. 검색·분류로 원하는 카드만 골라 봅니다.',
+    url: 'https://mnledu.com/productivity/sheet2memo.html',
+    icon: 'layout-grid',
+    badge: 'NEW',
+    tags: ['#스프레드시트', '#대시보드', '#정리', '#검색']
+  },
+  {
+    id: 'smart-list',
+    title: '스마트 리스트 변환기',
+    category: 'PRODUCTIVITY',
+    desc: '엑셀에서 복사한 세로 목록을 아웃룩·슬랙·SQL에 맞는 한 줄로 바꿉니다. 빈 줄과 중복을 자동으로 걸러 냅니다.',
+    url: 'https://mnledu.com/productivity/smart-list.html',
+    icon: 'list-ordered',
+    badge: 'NEW',
+    tags: ['#목록', '#자동정리', '#SQL', '#복사']
+  },
+  {
+    id: 'text-diff',
+    title: '문서·계약서 정밀 비교기',
+    category: 'PRODUCTIVITY',
+    desc: '원본과 수정본을 나란히 놓고 바뀐 곳만 찾아냅니다. 단어·글자 단위 비교와 공백·대소문자 무시를 고를 수 있습니다.',
+    url: 'https://mnledu.com/productivity/text-diff.html',
+    icon: 'diff',
+    badge: 'NEW',
+    tags: ['#계약서', '#비교', '#검수', '#문서']
+  },
+  {
+    id: 'palette-picker',
+    title: '브랜드 컬러 추출기',
+    category: 'PRODUCTIVITY',
+    desc: '로고나 사진을 올리면 대표 색과 팔레트를 뽑아 줍니다. 클릭 한 번으로 HEX·RGB·HSL 코드를 복사합니다.',
+    url: 'https://mnledu.com/productivity/palette-picker.html',
+    icon: 'palette',
+    badge: 'NEW',
+    tags: ['#컬러', '#디자인', '#팔레트', '#브랜드']
+  },
+  {
+    id: 'asset-hub',
+    title: '원클릭 에셋 허브',
+    category: 'PRODUCTIVITY',
+    desc: '자주 쓰는 문구·색상·로고·링크를 모아 두고 눌러서 복사합니다. 이미지도 클립보드에 담겨 문서에 바로 붙습니다.',
+    url: 'https://mnledu.com/productivity/asset-hub.html',
+    icon: 'clipboard-copy',
+    badge: 'NEW',
+    tags: ['#에셋', '#복사', '#브랜드', '#자동화']
+  },
+  {
+    id: 'data-harvester',
+    title: '스마트 데이터 수집·복원기',
+    category: 'PRODUCTIVITY',
+    desc: '폴더를 끌어다 놓아 파일 목록을 표로 만들고, 뒤섞인 글에서 링크·메일을 뽑고, 깨진 한글 주소를 되살립니다.',
+    url: 'https://mnledu.com/productivity/data-harvester.html',
+    icon: 'database',
+    badge: 'NEW',
+    tags: ['#데이터', '#링크추출', '#파일목록', '#복원']
+  },
+  {
     id: 'pdf-signature',
     title: 'PDF 서명 스탬프',
     category: 'PRODUCTIVITY',
@@ -223,6 +303,16 @@ const TOOLS_DATA = [
   // 3. LIFESTYLE (라이프스타일)
   // ---------------------------------------------------------
   {
+    id: 'birth-chart',
+    title: '탄생 천궁도 분석',
+    category: 'LIFESTYLE',
+    desc: '생년월일과 출생 시각, 출생지 좌표로 천체 배열을 역산합니다. 상승점과 중천점, 12하우스, 주요 각을 함께 봅니다.',
+    url: 'https://mnledu.com/lifestyle/birth-chart.html',
+    icon: 'orbit',
+    badge: 'NEW',
+    tags: ['#별자리', '#천궁도', '#성향', '#쉬는시간']
+  },
+  {
     id: 'biorhythm',
     title: '힐링 바이오리듬',
     category: 'LIFESTYLE',
@@ -329,6 +419,36 @@ const TOOLS_DATA = [
   // 4. DESIGN & MEDIA (디자인 & 미디어)
   // ---------------------------------------------------------
   {
+    id: 'thumb-mockup',
+    title: '썸네일·쇼츠 미리보기 시뮬레이터',
+    category: 'DESIGN & MEDIA',
+    desc: '썸네일이 재생 시간 뱃지·진행률 바·쇼츠 아이콘 열에 어디가 가려지는지, 제목이 몇 줄에서 잘리는지 미리 봅니다.',
+    url: 'https://mnledu.com/design-media/thumb-mockup.html',
+    icon: 'monitor-play',
+    badge: 'NEW',
+    tags: ['#썸네일', '#유튜브', '#쇼츠', '#미리보기']
+  },
+  {
+    id: 'uploader-toolkit',
+    title: '업로드 스마트 템플릿',
+    category: 'DESIGN & MEDIA',
+    desc: '날짜를 고르면 제목과 파일명이 규칙대로 만들어지고, 자주 쓰는 문구 블록을 골라 더보기란을 조립합니다.',
+    url: 'https://mnledu.com/design-media/uploader-toolkit.html',
+    icon: 'upload',
+    badge: 'NEW',
+    tags: ['#업로드', '#유튜브', '#템플릿', '#자동화']
+  },
+  {
+    id: 'image-studio',
+    title: '스마트 올인원 사진 편집 스튜디오',
+    category: 'PRODUCTIVITY',
+    desc: '자르기·회전·크기 조절·배경 제거를 브라우저에서 처리합니다. 서명은 즉시, 복잡한 사진은 AI로 배경을 지웁니다.',
+    url: 'https://mnledu.com/productivity/image-studio.html',
+    icon: 'image',
+    badge: 'NEW',
+    tags: ['#이미지편집', '#배경제거', '#자르기', '#AI']
+  },
+  {
     id: 'screendeco',
     title: '1초 캡처 뷰티파이어',
     category: 'DESIGN & MEDIA',
@@ -362,6 +482,16 @@ const TOOLS_DATA = [
   // ---------------------------------------------------------
   // 5. ENTERTAINMENT (오락 & 엔터테인먼트)
   // ---------------------------------------------------------
+  {
+    id: 'aggro-match',
+    title: '어그로 매치',
+    category: 'ENTERTAINMENT',
+    desc: '고민 중인 제목 후보를 한 줄씩 넣으면 1대1로 붙여 최종 하나를 골라 줍니다. 여러 개보다 둘 중 하나가 쉽습니다.',
+    url: 'https://mnledu.com/entertainment/aggro-match.html',
+    icon: 'swords',
+    badge: 'NEW',
+    tags: ['#제목', '#이상형월드컵', '#선택', '#쉬는시간']
+  },
   {
     id: 'tetris',
     title: '테트리스',

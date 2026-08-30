@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F172A">
+
+<title>Thumbnail & Shorts Preview Simulator · Check UI Overlap | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="See how your thumbnail actually looks in the feed. Check what the duration badge, progress bar and Shorts icon column cover up, and find out exactly where your title gets truncated." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/design-media/thumb-mockup.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/thumb-mockup.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/thumb-mockup.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/thumb-mockup.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/design-media/thumb-mockup.html" />
+<meta property="og:title" content="Thumbnail & Shorts Preview Simulator · Check UI Overlap | TOOLKIT" />
+<meta property="og:description" content="See what the interface covers up on your thumbnail, and where your title gets cut off." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Thumbnail &amp; Shorts Preview Simulator | TOOLKIT" />
+<meta name="twitter:description" content="See what the interface covers up on your thumbnail before you publish." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "Thumbnail & Shorts Preview Simulator",
+ "description": "Shows how much of a thumbnail the player interface covers and where the title gets truncated.",
+ "url": "https://mnledu.com/en/design-media/thumb-mockup.html",
+ "applicationCategory": "MultimediaApplication",
+ "operatingSystem": "Web",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "publisher": { "@type": "Person", "name": "Janggil Kim", "url": "https://mnledu.com/en/about.html" },
+ "isPartOf": { "@type": "WebSite", "name": "TOOLKIT", "url": "https://mnledu.com/en/" }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+  { "@type": "ListItem", "position": 2, "name": "CREATIVE", "item": "https://mnledu.com/en/#creative" },
+  { "@type": "ListItem", "position": 3, "name": "Thumbnail & Shorts Preview Simulator", "item": "https://mnledu.com/en/design-media/thumb-mockup.html" }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is my thumbnail uploaded anywhere?",
+   "acceptedAnswer": { "@type": "Answer", "text": "No. Reading the image and laying the mockup over it both happen inside your browser, so the tool works with the connection switched off. Closing the page clears the image with it." }
+  },
+  {
+   "@type": "Question",
+   "name": "Which parts get covered?",
+   "acceptedAnswer": { "@type": "Answer", "text": "On a regular video the duration badge always sits bottom right, and a progress bar appears along the bottom on hover or when you have watched part of it. On Shorts the icon column on the right and the channel block at the bottom take a substantial share of the frame, so text placed there will not be read." }
+  },
+  {
+   "@type": "Question",
+   "name": "How is title truncation determined?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Not by counting characters, but by measuring the height the browser actually rendered. Anything past two lines is truncated with an ellipsis, and you are told which of the layouts it happens in." }
+  },
+  {
+   "@type": "Question",
+   "name": "What does the covered-area overlay show?",
+   "acceptedAnswer": { "@type": "Answer", "text": "It hatches the regions the interface sits on top of. Leave it on while reviewing and you can see at a glance where the safe area ends. Keep text and faces outside those regions and nothing gets hidden." }
+  },
+  {
+   "@type": "Question",
+   "name": "What dimensions should I use?",
+   "acceptedAnswer": { "@type": "Answer", "text": "Regular videos use 16 by 9, commonly 1280 by 720 pixels. Shorts are 9 by 16 portrait. Load an image with a different ratio and you are told which edges would be cropped." }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I save the result?",
+   "acceptedAnswer": { "@type": "Answer", "text": "The preview can be saved as an image, which is handy for sharing with a team or comparing drafts. The saved image includes the interface mockup." }
+  }
+ ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#0F172A; --panel:#1A2437; --line:#2A3550; --line2:#212C43;
+    --ink:#F1F5F9; --ink2:#CBD5E1; --muted:#8296B4;
+    --accent:#EF4444; --accent2:#DC2626; --soft:#2A1A22;
+    --yt:#FF0000;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#141D2E;color:var(--ink);border-radius:10px;
+    font-size:14px;font-weight:600;padding:10px 14px;cursor:pointer;min-height:44px;
+    font-family:inherit;white-space:nowrap;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:#3D4C6E;background:#1D2839}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  .fld{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-size:14.5px;color:var(--ink);outline:none;background:#0B1120;min-height:46px;font-family:inherit}
+  .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(239,68,68,.16)}
+  .fld::placeholder{color:#4A5A78}
+  .chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:7px 0;margin-right:16px}
+  .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+
+  #drop{border:2px dashed var(--line);border-radius:14px;padding:34px 18px;text-align:center;
+    cursor:pointer;background:#131C2C;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--accent);background:#181F31}
+  body.dragging #drop{border-color:var(--accent);background:#181F31}
+  #drop p{margin:0;font-size:15px;color:var(--ink2);line-height:1.85}
+  #drop small{display:block;font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  /* ============ 미리보기 공통 ============ */
+  .stage{display:flex;justify-content:center;padding:8px 0 4px}
+  .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:repeating-linear-gradient(45deg,#1B2436,#1B2436 10px,#212C43 10px,#212C43 20px);
+    color:var(--muted);font-size:13px}
+
+  /* ============ 데스크톱 카드 ============ */
+  #deskView{width:100%;max-width:400px}
+  .ytCard{width:100%}
+  .thumbBox{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+    background:#000}
+  .thumbBox img{width:100%;height:100%;object-fit:cover;display:block}
+  .meta{display:flex;gap:12px;padding:12px 0 0}
+  .avatar{width:36px;height:36px;border-radius:50%;flex:none;
+    background:linear-gradient(135deg,#475569,#334155);
+    display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#CBD5E1}
+  .metaTxt{min-width:0;flex:1}
+  .ytTitle{font-size:15px;font-weight:700;line-height:1.42;color:#F1F5F9;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    word-break:break-word}
+  .ytSub{font-size:12.5px;color:#94A3B8;margin-top:5px;line-height:1.55}
+
+  /* ============ 모바일 카드 ============ */
+  #mobView{width:100%;max-width:340px}
+  #mobView .thumbBox{border-radius:0}
+  #mobView .phone{border:9px solid #0A0F1C;border-radius:32px;overflow:hidden;
+    box-shadow:0 12px 34px rgba(0,0,0,.5);background:#0B1120}
+  #mobView .notch{height:22px;background:#0B1120;position:relative}
+  #mobView .notch::after{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);
+    width:74px;height:15px;background:#0A0F1C;border-radius:99px}
+  #mobView .meta{padding:11px 12px 16px}
+  #mobView .ytTitle{font-size:14.5px}
+
+  /* ============ UI 오버레이 ============ */
+  .badge{position:absolute;right:5px;bottom:5px;background:rgba(0,0,0,.8);color:#fff;
+    font-size:11px;font-weight:700;padding:2px 5px;border-radius:4px;line-height:1.4;
+    font-family:ui-monospace,monospace;letter-spacing:.02em}
+  .progWrap{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.32)}
+  .progBar{height:100%;background:var(--yt);width:38%}
+  .hoverShade{position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.24) 26%,transparent 52%)}
+  .playBtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:16%;aspect-ratio:1;border-radius:50%;background:rgba(0,0,0,.62);
+    display:flex;align-items:center;justify-content:center}
+  .playBtn::after{content:'';border-style:solid;border-width:0.9em 0 0.9em 1.5em;
+    border-color:transparent transparent transparent #fff;margin-left:.25em;font-size:min(2.2vw,10px)}
+  .ctrlRow{position:absolute;left:0;right:0;bottom:6px;display:flex;align-items:center;
+    gap:8px;padding:0 8px}
+  .ctrlRow .ic{color:#fff;font-size:12px;opacity:.92}
+  .ctrlRow .tm{color:#fff;font-size:10.5px;font-family:ui-monospace,monospace;opacity:.92}
+
+  /* ============ 쇼츠 ============ */
+  #shortView{width:100%;max-width:270px}
+  .shortFrame{position:relative;width:100%;aspect-ratio:9/16;border-radius:26px;overflow:hidden;
+    background:#000;border:8px solid #0A0F1C;box-shadow:0 12px 34px rgba(0,0,0,.5)}
+  .shortFrame > img{width:100%;height:100%;object-fit:cover;display:block}
+  .shortTop{position:absolute;top:0;left:0;right:0;height:52px;
+    background:linear-gradient(to bottom,rgba(0,0,0,.5),transparent);
+    display:flex;align-items:center;justify-content:space-between;padding:12px 12px 0;
+    color:#fff;font-size:12px}
+  .shortSide{position:absolute;right:7px;bottom:14%;display:flex;flex-direction:column;
+    gap:15px;align-items:center}
+  .sIcon{display:flex;flex-direction:column;align-items:center;gap:3px;color:#fff}
+  .sIcon .g{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.42);
+    display:flex;align-items:center;justify-content:center;font-size:15px}
+  .sIcon .n{font-size:10px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+  .shortBottom{position:absolute;left:0;right:52px;bottom:0;padding:12px 12px 14px;
+    background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.4) 55%,transparent 100%)}
+  .shortCh{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+  .shortCh .av{width:26px;height:26px;border-radius:50%;flex:none;
+    background:linear-gradient(135deg,#475569,#334155);display:flex;align-items:center;
+    justify-content:center;font-size:12px;font-weight:800;color:#E2E8F0}
+  .shortCh .nm{font-size:12.5px;font-weight:700;color:#fff}
+  .shortCh .sub{font-size:11px;font-weight:800;background:#fff;color:#0F172A;
+    border-radius:99px;padding:4px 11px;margin-left:2px}
+  .shortTitle{font-size:12.5px;line-height:1.45;color:#fff;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    text-shadow:0 1px 3px rgba(0,0,0,.55);word-break:break-word}
+  .shortBar{position:absolute;left:0;right:0;bottom:0;height:2.5px;background:rgba(255,255,255,.28)}
+  .shortBar i{display:block;height:100%;width:42%;background:#fff}
+
+  /* 안전 영역 빗금 */
+  .safe{position:absolute;pointer-events:none;
+    background:repeating-linear-gradient(45deg,rgba(239,68,68,.20),rgba(239,68,68,.20) 6px,transparent 6px,transparent 12px);
+    border:1px dashed rgba(239,68,68,.55)}
+  .safeTag{position:absolute;font-size:9px;font-weight:800;color:#FCA5A5;
+    background:rgba(15,23,42,.82);padding:1px 5px;border-radius:4px;white-space:nowrap}
+
+  /* ============ 판정 ============ */
+  .verdict{border-radius:11px;padding:13px 15px;font-size:13.5px;line-height:1.8;margin-top:12px}
+  .verdict.ok{background:#0D2A20;border:1px solid #14532D;color:#86EFAC}
+  .verdict.warn{background:#2A1F0D;border:1px solid #713F12;color:#FDE68A}
+  .verdict b{font-weight:800}
+
+  #modeBar{display:flex;gap:7px;flex-wrap:wrap}
+  #views{display:grid;gap:20px;grid-template-columns:1fr;justify-items:center}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:#F1F5F9;color:#0F172A;border-radius:11px;padding:12px 20px;font-size:14px;
+    z-index:90;pointer-events:none;transition:opacity .18s,transform .18s;font-weight:600}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  .sec{padding:26px 0}
+  .sec h2{font-size:19px;font-weight:800;margin:0 0 6px}
+  .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:42px 18px 6px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Thumb-Mockup</p>
+  <h1 style="font-size:clamp(25px,4.6vw,34px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">Thumbnail &amp; Shorts Preview</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
+    The thumbnail you laboured over often ends up <b>half-covered by the interface</b> in the real feed.
+    Load it here and see first. Your image is never uploaded.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div class="card" style="padding:20px">
+    <div id="drop" role="button" tabindex="0">
+      <p>🖼 Drop your thumbnail here
+        <small>Click to browse · drag and drop · paste with <b class="mono">Ctrl</b>+<b class="mono">V</b></small>
+        <small>16:9 for regular videos, 9:16 for Shorts</small>
+      </p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+    <p class="hint mono" id="imgInfo"></p>
+
+    <div style="margin-top:16px">
+      <label class="lab" for="title">📝 Video title</label>
+      <input class="fld" id="title" placeholder="Type a title to see how it wraps and where it gets cut off" maxlength="100" autocomplete="off">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;margin-top:7px">
+        <span class="hint mono" style="margin:0" id="titleLen">0 / 100</span>
+        <span style="flex:1"></span>
+        <button class="btn sm" id="sampleBtn">Sample title</button>
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <label class="lab" for="channel">📺 Channel name</label>
+      <input class="fld" id="channel" value="My Channel" maxlength="30" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;margin-top:14px">
+    <p class="lab" style="margin-bottom:9px">🖥 Preview layout</p>
+    <div id="modeBar">
+      <button class="btn sm on" data-m="desk">💻 Desktop</button>
+      <button class="btn sm" data-m="mob">📱 Mobile</button>
+      <button class="btn sm" data-m="short">📱 Shorts</button>
+      <button class="btn sm" data-m="all">🔲 All at once</button>
+    </div>
+    <div style="border-top:1px solid var(--line2);margin-top:12px;padding-top:10px">
+      <p class="lab" style="margin-bottom:2px">⚠️ Interface overlap</p>
+      <label class="chk"><input type="checkbox" id="optHover"><span>Hover state</span></label>
+      <label class="chk"><input type="checkbox" id="optWatched"><span>Partly watched (progress bar)</span></label>
+      <label class="chk"><input type="checkbox" id="optSafe"><span>Show covered areas</span></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn sm" id="shotBtn">🖼 Save preview</button>
+        <button class="btn sm" id="clearBtn">Start over</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="verdictBox"></div>
+</section>
+
+<div class="wrap sec">
+  <div id="views">
+    <!-- Desktop -->
+    <div id="deskView" class="stage" style="flex-direction:column;align-items:stretch">
+      <p class="lab" style="text-align:center">💻 Desktop · home feed</p>
+      <div class="ytCard">
+        <div class="thumbBox" id="deskThumb">
+          <div class="noimg" id="deskNo">Load an image</div>
+          <img id="deskImg" alt="Desktop thumbnail preview" style="display:none">
+        </div>
+        <div class="meta">
+          <div class="avatar" id="deskAv">M</div>
+          <div class="metaTxt">
+            <div class="ytTitle" id="deskTitle">Your title appears here</div>
+            <div class="ytSub"><span id="deskCh">My Channel</span><br>12K views · 3 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <div id="mobView" class="stage" style="flex-direction:column;align-items:stretch;display:none">
+      <p class="lab" style="text-align:center">📱 Mobile app · feed</p>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="thumbBox" id="mobThumb">
+          <div class="noimg" id="mobNo">Load an image</div>
+          <img id="mobImg" alt="Mobile thumbnail preview" style="display:none">
+        </div>
+        <div class="meta">
+          <div class="avatar" id="mobAv" style="width:32px;height:32px;font-size:13px">M</div>
+          <div class="metaTxt">
+            <div class="ytTitle" id="mobTitle">Your title appears here</div>
+            <div class="ytSub"><span id="mobCh">My Channel</span> · 12K views · 3 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shorts -->
+    <div id="shortView" class="stage" style="flex-direction:column;align-items:stretch;display:none">
+      <p class="lab" style="text-align:center">📱 Shorts · full screen</p>
+      <div class="shortFrame" id="shortFrame">
+        <div class="noimg" id="shortNo">Load an image</div>
+        <img id="shortImg" alt="Shorts thumbnail preview" style="display:none">
+        <div class="shortTop"><span>Shorts</span><span>⋮</span></div>
+        <div class="shortSide">
+          <div class="sIcon"><span class="g">👍</span><span class="n">1.2K</span></div>
+          <div class="sIcon"><span class="g">👎</span><span class="n">Dislike</span></div>
+          <div class="sIcon"><span class="g">💬</span><span class="n">86</span></div>
+          <div class="sIcon"><span class="g">↪</span><span class="n">Share</span></div>
+          <div class="sIcon"><span class="g">⋯</span></div>
+        </div>
+        <div class="shortBottom">
+          <div class="shortCh">
+            <span class="av" id="shortAv">M</span>
+            <span class="nm" id="shortCh">@MyChannel</span>
+            <span class="sub">Subscribe</span>
+          </div>
+          <div class="shortTitle" id="shortTitle">Your title appears here</div>
+        </div>
+        <div class="shortBar"><i></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="wrap" style="padding:24px 18px 44px;border-top:1px solid var(--line);margin-top:10px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    Everything runs inside your browser. The image you load is never sent to any server.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2100);
+}
+
+var imgSrc = '', imgW = 0, imgH = 0, mode = 'desk';
+
+/* ============================================================
+   Loading an image
+   ============================================================ */
+function loadBlob(blob){
+  if (!blob || !/^image\//.test(blob.type || '')){ toast('That is not an image file'); return; }
+  var url = URL.createObjectURL(blob);
+  var im = new Image();
+  im.onload = function(){
+    imgSrc = url; imgW = im.naturalWidth; imgH = im.naturalHeight;
+    ['deskImg','mobImg','shortImg'].forEach(function(id){
+      $(id).src = url; $(id).style.display = 'block';
+    });
+    ['deskNo','mobNo','shortNo'].forEach(function(id){ $(id).style.display = 'none'; });
+    var ratio = imgW / imgH;
+    var kind = Math.abs(ratio - 16/9) < 0.12 ? '16:9'
+             : Math.abs(ratio - 9/16) < 0.06 ? '9:16'
+             : ratio.toFixed(2) + ':1';
+    $('imgInfo').textContent = imgW + ' × ' + imgH + ' · ' + kind;
+    update();
+    toast('Image loaded');
+  };
+  im.onerror = function(){ URL.revokeObjectURL(url); toast('Could not read the image'); };
+  im.src = url;
+}
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) loadBlob(f);
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadBlob(f);
+});
+document.addEventListener('paste', function(e){
+  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  var dt = e.clipboardData;
+  if (!dt) return;
+  if (dt.files && dt.files.length){
+    for (var i = 0; i < dt.files.length; i++){
+      if (/^image\//.test(dt.files[i].type || '')){ e.preventDefault(); loadBlob(dt.files[i]); return; }
+    }
+  }
+  var items = dt.items || [];
+  for (var k = 0; k < items.length; k++){
+    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
+      var f = items[k].getAsFile();
+      if (f){ e.preventDefault(); loadBlob(f); return; }
+    }
+  }
+});
+
+/* ============================================================
+   Layout switching
+   ============================================================ */
+document.querySelectorAll('[data-m]').forEach(function(b){
+  b.addEventListener('click', function(){
+    mode = this.dataset.m;
+    document.querySelectorAll('[data-m]').forEach(function(x){ x.classList.toggle('on', x === b); });
+    var all = (mode === 'all');
+    $('deskView').style.display  = (all || mode === 'desk')  ? 'flex' : 'none';
+    $('mobView').style.display   = (all || mode === 'mob')   ? 'flex' : 'none';
+    $('shortView').style.display = (all || mode === 'short') ? 'flex' : 'none';
+    $('views').style.gridTemplateColumns =
+      all && window.innerWidth >= 1000 ? 'repeat(3,auto)' : '1fr';
+    update();
+  });
+});
+
+/* ============================================================
+   Interface overlays
+   ============================================================ */
+function clearOverlays(box){
+  box.querySelectorAll('.badge,.progWrap,.hoverShade,.playBtn,.ctrlRow,.safe,.safeTag')
+     .forEach(function(e){ e.remove(); });
+}
+function paintVideo(box){
+  clearOverlays(box);
+  var hover = $('optHover').checked, watched = $('optWatched').checked;
+
+  if (hover){
+    /* On hover the lower area darkens and a play button appears */
+    var sh = document.createElement('div'); sh.className = 'hoverShade'; box.appendChild(sh);
+    var pb = document.createElement('div'); pb.className = 'playBtn'; box.appendChild(pb);
+    var cr = document.createElement('div');
+    cr.className = 'ctrlRow';
+    cr.innerHTML = '<span class="ic">▶</span><span class="tm">0:00 / 12:34</span>' +
+                   '<span style="flex:1"></span><span class="ic">⚙</span><span class="ic">⛶</span>';
+    box.appendChild(cr);
+  }
+  if (!hover){
+    /* The duration badge always sits bottom right */
+    var bg = document.createElement('div');
+    bg.className = 'badge'; bg.textContent = '12:34';
+    box.appendChild(bg);
+  }
+  if (watched || hover){
+    var pw = document.createElement('div');
+    pw.className = 'progWrap';
+    pw.innerHTML = '<div class="progBar"></div>';
+    box.appendChild(pw);
+  }
+  if ($('optSafe').checked){
+    /* Where the duration badge and progress bar sit */
+    addSafe(box, { right:'0', bottom:'0', width:'26%', height:'13%' }, 'duration');
+    addSafe(box, { left:'0', right:'0', bottom:'0', height:'5%' }, 'progress');
+  }
+}
+function paintShort(box){
+  box.querySelectorAll('.safe,.safeTag').forEach(function(e){ e.remove(); });
+  if (!$('optSafe').checked) return;
+  addSafe(box, { right:'0', bottom:'8%', width:'22%', height:'46%' }, 'icons');
+  addSafe(box, { left:'0', right:'0', bottom:'0', height:'22%' }, 'channel + title');
+  addSafe(box, { left:'0', right:'0', top:'0', height:'8%' }, 'top bar');
+}
+function addSafe(box, pos, label){
+  var d = document.createElement('div');
+  d.className = 'safe';
+  Object.keys(pos).forEach(function(k){ d.style[k] = pos[k]; });
+  box.appendChild(d);
+  var t = document.createElement('div');
+  t.className = 'safeTag';
+  t.textContent = label;
+  if (pos.top !== undefined) t.style.top = '3px'; else t.style.bottom = '3px';
+  if (pos.right !== undefined && pos.left === undefined) t.style.right = '3px';
+  else t.style.left = '3px';
+  box.appendChild(t);
+}
+
+/* ============================================================
+   Title truncation
+   Measured from the height the browser actually rendered, not a character count
+   ============================================================ */
+function measure(el, text){
+  if (!el) return null;
+  el.textContent = text || '';
+  /* Measure the full height before the two-line clamp is applied */
+  var lc = el.style.webkitLineClamp;
+  el.style.webkitLineClamp = 'unset';
+  el.style.overflow = 'visible';
+  var full = el.scrollHeight;
+  el.style.webkitLineClamp = lc || '';
+  el.style.overflow = 'hidden';
+  var shown = el.clientHeight;
+  var lh = parseFloat(getComputedStyle(el).lineHeight) || 20;
+  var lines = Math.max(1, Math.round(full / lh));
+  return { lines: lines, clipped: full > shown + 1 };
+}
+function update(){
+  var t = $('title').value;
+  var ch = $('channel').value || 'My Channel';
+  var initial = (ch.replace(/^@/, '').trim()[0] || 'M');
+
+  $('deskCh').textContent = ch;
+  $('mobCh').textContent = ch;
+  $('shortCh').textContent = '@' + ch.replace(/^@/, '').replace(/\s+/g, '');
+  ['deskAv','mobAv','shortAv'].forEach(function(id){ $(id).textContent = initial; });
+
+  var ph = 'Your title appears here';
+  var res = {};
+  res.desk  = measure($('deskTitle'),  t || ph);
+  res.mob   = measure($('mobTitle'),   t || ph);
+  res.short = measure($('shortTitle'), t || ph);
+
+  $('titleLen').textContent = t.length + ' / 100';
+
+  paintVideo($('deskThumb'));
+  paintVideo($('mobThumb'));
+  paintShort($('shortFrame'));
+
+  renderVerdict(t, res);
+}
+
+function renderVerdict(t, res){
+  var box = $('verdictBox');
+  if (!t.trim() && !imgSrc){ box.innerHTML = ''; return; }
+  var items = [];
+
+  if (t.trim()){
+    var names = { desk:'desktop', mob:'mobile', short:'Shorts' };
+    var clipped = Object.keys(names).filter(function(k){ return res[k] && res[k].clipped; });
+    if (clipped.length){
+      items.push({ warn:true, html:'The title runs past two lines on <b>' +
+        clipped.map(function(k){ return names[k]; }).join(', ') +
+        '</b> and gets truncated. Put the important words first, or shorten it.' });
+    } else {
+      var mx = Math.max(res.desk.lines, res.mob.lines, res.short.lines);
+      items.push({ warn:false, html:'The title fits in <b>' + mx + ' line(s)</b> everywhere.' });
+    }
+    if (t.length > 60){
+      items.push({ warn:true, html:'The title is <b>' + t.length + ' characters</b>. In search results only the first 40 or so register.' });
+    }
+  }
+
+  if (imgSrc){
+    var r = imgW / imgH;
+    if (Math.abs(r - 16/9) < 0.12){
+      items.push({ warn:false, html:'Ratio is <b>16:9</b> \u2014 right for a regular video.' });
+      if (imgW < 1280) items.push({ warn:true, html:'Width is <b>' + imgW + 'px</b>. Aim for 1280px or more.' });
+    } else if (Math.abs(r - 9/16) < 0.06){
+      items.push({ warn:false, html:'Ratio is <b>9:16</b> \u2014 right for Shorts.' });
+    } else {
+      items.push({ warn:true, html:'Ratio is <b>' + r.toFixed(2) + ':1</b>. ' +
+        (r > 16/9 ? 'The sides would be cropped on a regular video.' : 'The top and bottom would be cropped.') +
+        ' Aim for 16:9 or 9:16.' });
+    }
+  }
+
+  box.innerHTML = items.map(function(x){
+    return '<div class="verdict ' + (x.warn ? 'warn' : 'ok') + '">' +
+      (x.warn ? '⚠️ ' : '✅ ') + x.html + '</div>';
+  }).join('');
+}
+
+['title','channel'].forEach(function(id){ $(id).addEventListener('input', update); });
+['optHover','optWatched','optSafe'].forEach(function(id){
+  $(id).addEventListener('change', update);
+});
+$('sampleBtn').addEventListener('click', function(){
+  $('title').value = 'Master these spreadsheet formulas and cut your admin time in half \u2014 the complete practical guide';
+  update();
+  toast('See where a long title gets cut');
+});
+$('clearBtn').addEventListener('click', function(){
+  imgSrc = ''; imgW = 0; imgH = 0;
+  ['deskImg','mobImg','shortImg'].forEach(function(id){ $(id).src = ''; $(id).style.display = 'none'; });
+  ['deskNo','mobNo','shortNo'].forEach(function(id){ $(id).style.display = 'flex'; });
+  $('title').value = ''; $('imgInfo').textContent = '';
+  update();
+  toast('Starting over');
+});
+
+/* ============================================================
+   Saving the preview
+   Drawn straight onto a canvas — no screen-capture library
+   ============================================================ */
+$('shotBtn').addEventListener('click', function(){
+  if (!imgSrc){ toast('Load an image first'); return; }
+  try {
+    var isShort = (mode === 'short');
+    var W = isShort ? 540 : 960;
+    var H = isShort ? 960 : 540;
+    var pad = 30, footer = isShort ? 0 : 96;
+    var c = document.createElement('canvas');
+    var s = 2;
+    c.width = (W + pad*2) * s; c.height = (H + pad*2 + footer) * s;
+    var x = c.getContext('2d');
+    x.scale(s, s);
+    x.fillStyle = '#0F172A'; x.fillRect(0, 0, W + pad*2, H + pad*2 + footer);
+
+    var im = new Image();
+    im.onload = function(){
+      /* Crop to fill when the ratio differs */
+      var sr = im.naturalWidth / im.naturalHeight, tr = W / H;
+      var sw, sh, sx, sy;
+      if (sr > tr){ sh = im.naturalHeight; sw = sh * tr; sx = (im.naturalWidth - sw)/2; sy = 0; }
+      else { sw = im.naturalWidth; sh = sw / tr; sx = 0; sy = (im.naturalHeight - sh)/2; }
+      x.drawImage(im, sx, sy, sw, sh, pad, pad, W, H);
+
+      if (isShort) drawShortUI(x, pad, pad, W, H);
+      else drawVideoUI(x, pad, pad, W, H);
+
+      if (!isShort) drawMeta(x, pad, pad + H + 16, W);
+
+      c.toBlob(function(b){
+        if (!b){ toast('Could not build the image'); return; }
+        var url = URL.createObjectURL(b);
+        var a = document.createElement('a');
+        a.href = url; a.download = 'thumb-preview-' + mode + '.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+        toast('Preview saved');
+      }, 'image/png');
+    };
+    im.onerror = function(){ toast('Could not build the image'); };
+    im.src = imgSrc;
+  } catch(e){ toast('The download was blocked'); }
+});
+function rr(x, a, b, w, h, r){
+  x.beginPath();
+  x.moveTo(a+r, b); x.lineTo(a+w-r, b); x.quadraticCurveTo(a+w, b, a+w, b+r);
+  x.lineTo(a+w, b+h-r); x.quadraticCurveTo(a+w, b+h, a+w-r, b+h);
+  x.lineTo(a+r, b+h); x.quadraticCurveTo(a, b+h, a, b+h-r);
+  x.lineTo(a, b+r); x.quadraticCurveTo(a, b, a+r, b); x.closePath();
+}
+function drawVideoUI(x, ox, oy, W, H){
+  var hover = $('optHover').checked, watched = $('optWatched').checked;
+  if (hover){
+    var g = x.createLinearGradient(0, oy + H*0.48, 0, oy + H);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.72)');
+    x.fillStyle = g; x.fillRect(ox, oy + H*0.48, W, H*0.52);
+    x.fillStyle = 'rgba(0,0,0,.62)';
+    x.beginPath(); x.arc(ox + W/2, oy + H/2, W*0.08, 0, Math.PI*2); x.fill();
+    x.fillStyle = '#fff';
+    var r = W*0.032;
+    x.beginPath();
+    x.moveTo(ox + W/2 - r*0.5, oy + H/2 - r);
+    x.lineTo(ox + W/2 + r*0.9, oy + H/2);
+    x.lineTo(ox + W/2 - r*0.5, oy + H/2 + r);
+    x.closePath(); x.fill();
+  } else {
+    x.fillStyle = 'rgba(0,0,0,.8)';
+    x.font = '700 15px ui-monospace, monospace';
+    var tw = x.measureText('12:34').width;
+    rr(x, ox + W - tw - 22, oy + H - 32, tw + 14, 22, 4); x.fill();
+    x.fillStyle = '#fff';
+    x.fillText('12:34', ox + W - tw - 15, oy + H - 16);
+  }
+  if (watched || hover){
+    x.fillStyle = 'rgba(255,255,255,.32)'; x.fillRect(ox, oy + H - 5, W, 5);
+    x.fillStyle = '#FF0000'; x.fillRect(ox, oy + H - 5, W*0.38, 5);
+  }
+}
+function drawShortUI(x, ox, oy, W, H){
+  var g = x.createLinearGradient(0, oy + H*0.68, 0, oy + H);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.78)');
+  x.fillStyle = g; x.fillRect(ox, oy + H*0.68, W, H*0.32);
+
+  /* Right-hand icon column */
+  var icons = ['👍','👎','💬','↪','⋯'];
+  x.textAlign = 'center';
+  icons.forEach(function(ic, i){
+    var cy = oy + H*0.52 + i*58;
+    x.fillStyle = 'rgba(0,0,0,.42)';
+    x.beginPath(); x.arc(ox + W - 40, cy, 21, 0, Math.PI*2); x.fill();
+    x.fillStyle = '#fff'; x.font = '18px Pretendard, sans-serif';
+    x.fillText(ic, ox + W - 40, cy + 6);
+  });
+  x.textAlign = 'left';
+
+  /* Channel row and title */
+  var ch = $('channel').value || 'My Channel';
+  x.fillStyle = 'rgba(255,255,255,.3)';
+  x.beginPath(); x.arc(ox + 30, oy + H - 78, 16, 0, Math.PI*2); x.fill();
+  x.fillStyle = '#fff'; x.font = '700 15px Pretendard, sans-serif';
+  x.fillText('@' + ch.replace(/^@/, '').replace(/\s+/g, ''), ox + 54, oy + H - 73);
+  x.fillStyle = '#fff';
+  rr(x, ox + 54 + x.measureText('@' + ch).width + 12, oy + H - 90, 56, 24, 12); x.fill();
+  x.fillStyle = '#0F172A'; x.font = '800 12px Pretendard, sans-serif';
+  x.fillText('Sub', ox + 54 + x.measureText('@' + ch).width + 30, oy + H - 74);
+
+  x.fillStyle = '#fff'; x.font = '400 15px Pretendard, sans-serif';
+  wrapText(x, $('title').value || '(no title)', ox + 20, oy + H - 42, W - 110, 21, 2);
+
+  x.fillStyle = 'rgba(255,255,255,.28)'; x.fillRect(ox, oy + H - 4, W, 4);
+  x.fillStyle = '#fff'; x.fillRect(ox, oy + H - 4, W*0.42, 4);
+}
+function drawMeta(x, ox, oy, W){
+  var ch = $('channel').value || 'My Channel';
+  x.fillStyle = 'rgba(255,255,255,.16)';
+  x.beginPath(); x.arc(ox + 20, oy + 20, 19, 0, Math.PI*2); x.fill();
+  x.fillStyle = '#F1F5F9'; x.font = '700 18px Pretendard, sans-serif';
+  wrapText(x, $('title').value || '(no title)', ox + 52, oy + 18, W - 60, 25, 2);
+  x.fillStyle = '#94A3B8'; x.font = '400 14px Pretendard, sans-serif';
+  x.fillText(ch + ' · 12K views · 3 days ago', ox + 52, oy + 76);
+}
+/* Canvas has no automatic wrapping, so break the lines by hand */
+function wrapText(x, text, px, py, maxW, lh, maxLines){
+  var words = String(text).split('');
+  var line = '', lines = [];
+  words.forEach(function(ch){
+    if (x.measureText(line + ch).width > maxW && line){
+      lines.push(line); line = ch;
+    } else line += ch;
+  });
+  if (line) lines.push(line);
+  if (lines.length > maxLines){
+    lines = lines.slice(0, maxLines);
+    lines[maxLines-1] = lines[maxLines-1].slice(0, -1) + '…';
+  }
+  lines.forEach(function(l, i){ x.fillText(l, px, py + i*lh); });
+}
+
+update();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#131C2C;color:#CBD5E1;border-top:1px solid #2A3550;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#F1F5F9;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#CBD5E1;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#CBD5E1;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#FCA5A5}
+.tk-guide code{background:#0B1120;border:1px solid #2A3550;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#F1F5F9}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #2A3550}
+.tk-guide dt{font-size:15px;font-weight:700;color:#F1F5F9;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#CBD5E1;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #2A3550;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#0B1120;border:1px solid #2A3550;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#8296B4;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #2A3550}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#FCA5A5;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#FCA5A5}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>When the text you agonised over sits under a duration badge</h2>
+<p>You put a line of copy in the bottom right corner of the thumbnail, publish, and find the duration badge sitting squarely on top of it. Shorts is worse: a column of like and comment icons down the right, the channel name and title across the bottom.</p>
+<p>What looked fine filling your editor does not survive the actual app. This tool shows you that state <strong>before you publish</strong>.</p>
+
+<h2>What gets covered</h2><dl>
+<dt>💻 Regular video · bottom right</dt><dd>The duration badge is always there, covering roughly 26% across and 13% down.</dd>
+<dt>💻 Regular video · along the bottom</dt><dd>A red progress bar appears on anything partly watched. Hover and the lower half darkens while a play button lands in the centre.</dd>
+<dt>📱 Shorts · right side</dt><dd>Like, dislike, comment and share stack vertically, taking about 22% of the width.</dd>
+<dt>📱 Shorts · bottom</dt><dd>Channel name, subscribe button and title cover the bottom 22% or so. This is the one most often missed.</dd>
+</dl>
+<p>Turn on <strong>show covered areas</strong> and those regions appear hatched. Keep your text and faces outside them.</p>
+
+<h2>Where the title gets cut</h2>
+<p>Titles show <strong>two lines at most</strong> in every layout, and anything beyond that is truncated. The catch is that the available width differs between layouts, so a title that fits neatly on desktop can still be cut on Shorts.</p>
+<p>This tool does not estimate from character counts. It <strong>measures the height the browser actually rendered</strong>, so the font and letter spacing are accounted for. If any layout truncates, you are told which.</p>
+<p>In search results only the first 40 characters or so really register, so lead with the words that matter.</p>
+
+<h2>How to use it</h2><ol>
+<li>Load your thumbnail — drag it in or paste with <strong>Ctrl+V</strong>.</li>
+<li>Type the <strong>title</strong> and watch how it wraps.</li>
+<li>Switch between <strong>desktop, mobile and Shorts</strong>, or view all three side by side.</li>
+<li>Turn on <strong>hover state</strong> and <strong>partly watched</strong> to see the worst case.</li>
+<li><strong>Save the preview</strong> if you want to compare drafts later.</li>
+</ol>
+
+<h2>Dimensions</h2>
+<p>Regular videos use <code>16:9</code>, commonly 1280×720 pixels. Shorts are <code>9:16</code> portrait. Load something with a different ratio and you are told which edges would be cropped.</p>
+
+<h2>Frequently asked questions</h2><dl>
+<dt>Is my thumbnail uploaded anywhere?</dt><dd>No. Reading the image and laying the mockup over it both happen inside your browser, so the tool works with the connection switched off. Closing the page clears the image with it.</dd>
+<dt>Which parts get covered?</dt><dd>On a regular video the duration badge always sits bottom right, and a progress bar appears along the bottom on hover or when you have watched part of it. On Shorts the icon column on the right and the channel block at the bottom take a substantial share of the frame, so text placed there will not be read.</dd>
+<dt>How is title truncation determined?</dt><dd>Not by counting characters, but by measuring the height the browser actually rendered. Anything past two lines is truncated with an ellipsis, and you are told which of the layouts it happens in.</dd>
+<dt>What does the covered-area overlay show?</dt><dd>It hatches the regions the interface sits on top of. Leave it on while reviewing and you can see at a glance where the safe area ends. Keep text and faces outside those regions and nothing gets hidden.</dd>
+<dt>What dimensions should I use?</dt><dd>Regular videos use 16 by 9, commonly 1280 by 720 pixels. Shorts are 9 by 16 portrait. Load an image with a different ratio and you are told which edges would be cropped.</dd>
+<dt>Can I save the result?</dt><dd>The preview can be saved as an image, which is handy for sharing with a team or comparing drafts. The saved image includes the interface mockup.</dd>
+</dl>
+
+<p class="tk-guide-note">Everything runs inside your browser and the image you load is never sent to any server. The interface shown here is a mockup redrawn in CSS from the general layout of the real players; no logos or trademarks are used. Actual apps vary a little by version and device, so confirm the final result on a real screen.</p>
+
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/image-studio.html">Photo Studio</a></li>
+<li><a href="https://mnledu.com/en/productivity/palette-picker.html">Brand Palette Picker</a></li>
+<li><a href="https://mnledu.com/en/productivity/qr-studio.html">QR Code Generator</a></li>
+<li><a href="https://mnledu.com/en/productivity/sheet2memo.html">Sheet2Memo</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-workbench.html">Smart Text Workbench</a></li>
+<li><a href="https://mnledu.com/en/productivity/smart-list.html">Smart List Formatter</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>
