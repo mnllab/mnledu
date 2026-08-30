@@ -1412,6 +1412,8 @@
 
           
 
+          
+
           <!-- TOOLKIT:LANG_START -->
           <a href="https://mnledu.com/en/" title="View in English" hreflang="en"
             class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
@@ -1502,6 +1504,9 @@
 
   <!-- ============ MAIN CONTENT ============ -->
   <main class="mx-auto max-w-6xl px-4 sm:px-8 pt-7 sm:pt-9 pb-16 sm:pb-24">
+
+    <!-- PINNED SECTION · 검색·카테고리·태그 필터와 무관하게 항상 최상단에 고정 -->
+    <section id="pinned-section" class="mb-10 sm:mb-12"></section>
 
     <!-- FAVORITES SECTION -->
     <section id="fav-section" class="hidden mb-10 sm:mb-12">
@@ -1897,6 +1902,7 @@
     }
 
     var DATA = (window.TOOLS_DATA || []).slice();
+    var PINNED_ID = 'kstartup-board'; // 시작 페이지 최상단에 항상 고정 노출
     var favs = loadFavs();
     var activeCategory = 'ALL';
     var activeTag = null;
@@ -1912,6 +1918,7 @@
       tagRail:     document.getElementById('tag-rail'),
       activeTag:   document.getElementById('active-tag'),
       activeTagLbl:document.getElementById('active-tag-label'),
+      pinnedSection: document.getElementById('pinned-section'),
       favSection:  document.getElementById('fav-section'),
       favGrid:     document.getElementById('fav-grid'),
       favCount:    document.getElementById('fav-count'),
@@ -2215,6 +2222,20 @@
       '</article>';
     }
 
+    // 검색·카테고리·태그·즐겨찾기 상태와 무관하게 항상 같은 자리에 그린다
+    function renderPinned() {
+      var t = byId(PINNED_ID);
+      if (!t) { el.pinnedSection.innerHTML = ''; return; }
+      el.pinnedSection.innerHTML =
+        '<div class="flex items-center gap-2.5 mb-4 sm:mb-5 min-w-0">' +
+          '<i data-lucide="pin" class="h-4 w-4 text-amber-500 shrink-0"></i>' +
+          '<h2 class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-slate-900 truncate">Pinned</h2>' +
+          '<span class="h-px flex-1 min-w-[12px] bg-slate-200/80"></span>' +
+        '</div>' +
+        '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">' + cardHTML(t) + '</div>';
+      if (window.lucide) window.lucide.createIcons();
+    }
+
     function renderTabbar() {
       var btns = el.tabbar.querySelectorAll('[data-view]');
       for (var i = 0; i < btns.length; i++) {
@@ -2232,7 +2253,8 @@
     }
 
     function render() {
-      var visible = DATA.filter(matches);
+      renderPinned();
+      var visible = DATA.filter(matches).filter(function (t) { return t.id !== PINNED_ID; });
       var favVisible = visible.filter(function (t) { return isFav(t.id); });
 
       if (view === 'fav') visible = favVisible;

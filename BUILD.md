@@ -358,3 +358,23 @@ mnledu-v2_2026-09-02_0930.zip  ...
 
 업데이트 1건
 - receipt-to-excel v12 → v2.0 (기존 대비 대폭 개편, 파일 크기 2배 이상)
+
+
+## kstartup-board 상단 고정 (2026-08-30)
+
+index.html / en/index.html 에 PINNED SECTION 을 추가했다.
+검색·카테고리·태그·즐겨찾기 상태와 완전히 무관하게 항상 시작 페이지
+최상단(즐겨찾기 섹션보다도 위)에 kstartup-board 카드 하나를 고정 노출한다.
+
+- `PINNED_ID = 'kstartup-board'` 상수로 지정 (index.html 스크립트 안)
+- `renderPinned()` 함수가 render() 맨 앞에서 항상 호출됨
+- 일반 그리드(visible 배열)에서는 이 도구를 제외해 중복 노출을 막는다
+  (tools-data.js 상의 카테고리·개수 집계에는 그대로 포함되므로
+  LIFESTYLE 탭 카운트가 그리드에 보이는 카드 수보다 1개 많게 보일 수
+  있음 — 의도된 동작, 고정 슬롯에 있기 때문)
+- 배지를 'NEW' → 'BEST' 로 변경
+- **다른 고정 도구로 바꾸려면** index.html 과 en/index.html 양쪽에서
+  `var PINNED_ID = '...'` 값만 바꾸면 된다. 두 파일 모두 고쳐야 한다 —
+  en/index.html 은 build-en.js 로 자동 생성되지만, 이 로직 자체가
+  한국어 원본(index.html)에서 그대로 복사되는 방식이므로 원본만 고치고
+  build-en.js 를 다시 돌리면 영문판도 따라간다.

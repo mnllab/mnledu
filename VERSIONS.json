@@ -172,13 +172,18 @@
     ]
   },
   "kstartup-board": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "2026-08-28",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-28",
         "note": "최초 등록 (LIFESTYLE 최상단), 원본 canonical 오류(/productivity/) 정정"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-08-30",
+        "note": "시작 페이지 최상단 고정(Pinned) 처리, 배지 NEW → BEST"
       }
     ]
   },
