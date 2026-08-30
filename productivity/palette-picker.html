@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAFAF9">
+
+<title>브랜드 컬러 추출기 · 컬러 · 디자인 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="로고나 사진을 올리면 대표 색과 팔레트를 뽑아 줍니다. 클릭 한 번으로 HEX·RGB·HSL 코드를 복사합니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/productivity/palette-picker.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/palette-picker.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/palette-picker.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/palette-picker.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/productivity/palette-picker.html" />
+<meta property="og:title" content="브랜드 컬러 추출기 · 컬러 · 디자인 | TOOLKIT" />
+<meta property="og:description" content="로고나 사진을 올리면 대표 색과 팔레트를 뽑아 줍니다. 클릭 한 번으로 HEX·RGB·HSL 코드를 복사합니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="브랜드 컬러 추출기 · 컬러 · 디자인 | TOOLKIT" />
+<meta name="twitter:description" content="로고나 사진을 올리면 대표 색과 팔레트를 뽑아 줍니다. 클릭 한 번으로 HEX·RGB·HSL 코드를 복사합니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "브랜드 컬러 추출기",
+  "description": "로고나 사진을 올리면 대표 색과 팔레트를 뽑아 줍니다. 클릭 한 번으로 HEX·RGB·HSL 코드를 복사합니다.",
+  "url": "https://mnledu.com/productivity/palette-picker.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#productivity"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "브랜드 컬러 추출기",
+      "item": "https://mnledu.com/productivity/palette-picker.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+<style>
+  :root{
+    --bg:#FAFAF9; --card:#FFFFFF; --line:#E7E5E4; --line2:#F5F5F4;
+    --ink:#1C1917; --ink2:#44403C; --muted:#78716C;
+    --accent:#1C1917; --accent2:#292524;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14.5px;font-weight:600;padding:11px 15px;cursor:pointer;min-height:46px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:#D6D3D1;background:#FAFAF9}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+  .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* ---------- 업로드 ---------- */
+  #drop{border:2px dashed var(--line);border-radius:18px;padding:46px 20px;text-align:center;
+    cursor:pointer;background:#FCFCFB;transition:border-color .14s,background .14s}
+  #drop:hover{border-color:var(--accent);background:#F5F5F4}
+  #drop .ic{font-size:42px;margin-bottom:12px}
+  #drop p{margin:0;font-size:15.5px;color:var(--ink2);line-height:1.9}
+  #drop small{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+  body.dragging #drop{border-color:var(--accent);background:#F5F5F4}
+
+  #stage{display:none}
+  #stage.on{display:block}
+  #pvWrap{display:flex;justify-content:center;background:
+      linear-gradient(45deg,#F0EFED 25%,transparent 25%,transparent 75%,#F0EFED 75%),
+      linear-gradient(45deg,#F0EFED 25%,#FAFAF9 25%,#FAFAF9 75%,#F0EFED 75%);
+    background-size:20px 20px;background-position:0 0,10px 10px;
+    border:1px solid var(--line);border-radius:14px;padding:16px;position:relative}
+  #pv{max-width:100%;max-height:300px;object-fit:contain;display:block;border-radius:8px}
+  #pvName{font-size:12.5px;color:var(--muted);margin:10px 0 0;word-break:break-all;text-align:center}
+
+  /* ---------- 색상 ---------- */
+  #mainSwatch{border-radius:16px;padding:34px 24px;cursor:pointer;position:relative;
+    transition:transform .1s;border:1px solid rgba(28,25,23,.08)}
+  #mainSwatch:hover{transform:translateY(-2px)}
+  #mainSwatch:active{transform:translateY(0)}
+  #mainSwatch .tag{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.72;margin-bottom:10px}
+  #mainSwatch .hex{font-size:clamp(28px,6vw,42px);font-weight:800;letter-spacing:-.01em;line-height:1.1}
+  #mainSwatch .sub{font-size:13.5px;opacity:.78;margin-top:9px;line-height:1.8}
+
+  .grid{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+  @media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:900px){.grid{grid-template-columns:repeat(6,1fr)}}
+  .sw{border-radius:13px;overflow:hidden;cursor:pointer;border:1px solid rgba(28,25,23,.08);
+    transition:transform .1s}
+  .sw:hover{transform:translateY(-2px)}
+  .sw:active{transform:translateY(0)}
+  .sw .box{height:92px;display:flex;align-items:flex-end;justify-content:flex-end;padding:8px}
+  .sw .pct{font-size:11px;font-weight:700;opacity:.7}
+  .sw .txt{background:#fff;padding:10px 11px;border-top:1px solid var(--line)}
+  .sw .h{font-size:14px;font-weight:800;font-family:ui-monospace,Consolas,monospace}
+  .sw .r{font-size:11px;color:var(--muted);margin-top:3px;font-family:ui-monospace,Consolas,monospace}
+
+  .tip{position:fixed;background:var(--ink);color:#fff;border-radius:8px;padding:7px 13px;
+    font-size:13px;font-weight:600;pointer-events:none;opacity:0;z-index:80;
+    transform:translate(-50%,-8px);transition:opacity .16s,transform .16s;white-space:nowrap}
+  .tip.on{opacity:1;transform:translate(-50%,-14px)}
+
+  #busy{display:none;padding:34px;text-align:center}
+  #busy.on{display:block}
+  .spin{width:38px;height:38px;margin:0 auto 14px;border:3px solid var(--line);
+    border-top-color:var(--accent);border-radius:50%;animation:sp 850ms linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  label.lab{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  select.fld{border:1px solid var(--line);border-radius:9px;padding:8px 32px 8px 11px;
+    font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink);cursor:pointer;
+    appearance:none;min-height:38px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 16px) 53%,calc(100% - 12px) 53%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+
+  .sec{padding:30px 0}
+  .sec h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
+  .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+<div class="tip" id="tip">복사했습니다</div>
+
+<header class="wrap" style="padding:46px 18px 8px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px">Brand Palette Picker</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">브랜드 컬러 추출기</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:720px">
+    로고나 사진을 올리면 대표 색과 팔레트를 뽑아 드립니다. <b>색을 누르면 HEX 코드가 바로 복사</b>되므로
+    스포이드로 하나씩 찍을 필요가 없습니다.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div id="drop" role="button" tabindex="0">
+    <div class="ic">🎨</div>
+    <p>이미지를 여기에 놓아 주세요
+      <small>눌러서 고르기 · 끌어다 놓기 · <b class="mono">Ctrl</b>+<b class="mono">V</b> 붙여넣기</small>
+      <small>이미지는 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다</small>
+    </p>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
+
+  <div id="busy">
+    <div class="spin"></div>
+    <p style="font-size:14.5px;color:var(--ink2);margin:0">색을 뽑는 중입니다</p>
+  </div>
+
+  <div id="stage">
+    <div class="card" style="padding:18px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+        <p class="lab" style="margin:0">🖼 원본 이미지</p>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select class="fld" id="quality" aria-label="추출 정밀도">
+            <option value="10">빠르게</option>
+            <option value="5" selected>보통</option>
+            <option value="1">정밀하게</option>
+          </select>
+          <select class="fld" id="count" aria-label="팔레트 개수">
+            <option value="4">색 4개</option>
+            <option value="6" selected>색 6개</option>
+            <option value="8">색 8개</option>
+            <option value="10">색 10개</option>
+          </select>
+          <button class="btn sm" id="reBtn">다시 뽑기</button>
+          <button class="btn sm" id="newBtn">새 이미지</button>
+        </div>
+      </div>
+      <div id="pvWrap"><img id="pv" alt="올린 이미지 미리보기"></div>
+      <p id="pvName" class="mono"></p>
+    </div>
+
+    <div class="sec" style="padding-top:0">
+      <h2>🎨 대표 색상</h2>
+      <p class="sub">이미지에서 가장 넓은 면적을 차지하는 색입니다. 눌러서 복사하세요.</p>
+      <div id="mainSwatch" role="button" tabindex="0">
+        <div class="tag">DOMINANT COLOR</div>
+        <div class="hex mono" id="mainHex">#000000</div>
+        <div class="sub mono" id="mainSub"></div>
+      </div>
+    </div>
+
+    <div class="sec" style="padding-top:0">
+      <h2>🎨 팔레트</h2>
+      <p class="sub">함께 쓰기 좋은 색들입니다. 각 블록을 누르면 HEX 코드가 복사됩니다.</p>
+      <div class="grid" id="palette"></div>
+    </div>
+
+    <div class="sec" style="padding-top:0">
+      <h2>📤 내보내기</h2>
+      <p class="sub">문서나 코드에 그대로 옮기실 수 있습니다.</p>
+      <div style="display:grid;gap:9px;grid-template-columns:1fr 1fr">
+        <button class="btn p" id="copyAllBtn">📋 전체 HEX 복사</button>
+        <button class="btn" id="copyCssBtn">🎯 CSS 변수로 복사</button>
+        <button class="btn" id="imgBtn">🖼 팔레트 이미지 저장</button>
+        <button class="btn" id="jsonBtn">💾 JSON 저장</button>
+      </div>
+      <div class="card" style="padding:16px;margin-top:14px">
+        <p class="lab" style="margin-bottom:9px">미리보기</p>
+        <pre id="preview" class="mono" style="margin:0;font-size:13px;line-height:1.9;color:var(--ink2);white-space:pre-wrap;word-break:break-all"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:28px 18px 46px;border-top:1px solid var(--line);margin-top:26px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    모든 처리는 사용자의 브라우저 안에서만 이루어지며, 올리신 이미지는 어떤 서버로도 전송되지 않습니다.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2200);
+}
+
+/* ---------- 색 변환 ---------- */
+function toHex(rgb){
+  return '#' + rgb.map(function(v){
+    v = Math.max(0, Math.min(255, Math.round(v)));
+    return v.toString(16).padStart(2, '0');
+  }).join('').toUpperCase();
+}
+function toRgbText(rgb){ return 'rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2] + ')'; }
+function toHsl(rgb){
+  var r = rgb[0]/255, g = rgb[1]/255, b = rgb[2]/255;
+  var mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+  var h = 0, s = 0, l = (mx + mn) / 2;
+  if (mx !== mn){
+    var d = mx - mn;
+    s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+    if (mx === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (mx === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  return 'hsl(' + Math.round(h) + ', ' + Math.round(s*100) + '%, ' + Math.round(l*100) + '%)';
+}
+/* 배경이 밝으면 검은 글자, 어두우면 흰 글자를 얹는다 */
+function luma(rgb){ return 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]; }
+function textOn(rgb){ return luma(rgb) > 150 ? '#1C1917' : '#FFFFFF'; }
+
+/* ---------- 상태 ---------- */
+var img = null, dominant = null, palette = [], fileName = '';
+
+/* ---------- 이미지 열기 ---------- */
+function loadBlob(blob, name){
+  if (!blob || !/^image\//.test(blob.type || '')){ toast('이미지 파일이 아닙니다'); return; }
+  var url = URL.createObjectURL(blob);
+  var im = new Image();
+  im.onload = function(){
+    /* Color Thief 는 캔버스를 쓰므로 아주 큰 이미지는 줄여 둔다 */
+    var MAX = 1400;
+    var k = Math.min(1, MAX / Math.max(im.naturalWidth, im.naturalHeight));
+    if (k < 1){
+      var c = document.createElement('canvas');
+      c.width = Math.round(im.naturalWidth * k);
+      c.height = Math.round(im.naturalHeight * k);
+      var ctx = c.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(im, 0, 0, c.width, c.height);
+      var small = new Image();
+      small.onload = function(){ URL.revokeObjectURL(url); ready(small, name, c.width, c.height); };
+      small.onerror = function(){ URL.revokeObjectURL(url); ready(im, name, im.naturalWidth, im.naturalHeight); };
+      small.src = c.toDataURL('image/png');
+      return;
+    }
+    URL.revokeObjectURL(url);
+    ready(im, name, im.naturalWidth, im.naturalHeight);
+  };
+  im.onerror = function(){ URL.revokeObjectURL(url); toast('이미지를 읽지 못했습니다'); };
+  im.src = url;
+}
+function ready(im, name, w, h){
+  img = im;
+  fileName = name || '붙여넣은 이미지';
+  $('pv').src = im.src;
+  $('pvName').textContent = fileName + ' · ' + w + ' × ' + h;
+  extract();
+}
+
+/* ---------- 색 뽑기 ---------- */
+function extract(){
+  if (!img) return;
+  if (typeof ColorThief === 'undefined'){
+    toast('색상 추출 기능을 불러오지 못했습니다 · 연결을 확인해 주세요');
+    return;
+  }
+  $('drop').style.display = 'none';
+  $('stage').classList.remove('on');
+  $('busy').classList.add('on');
+
+  /* 그리기가 끝난 뒤에 뽑아야 한다. Color Thief 는 로드 여부를 스스로 확인하지 않는다 */
+  setTimeout(function(){
+    try {
+      var ct = new ColorThief();
+      var q = parseInt($('quality').value, 10) || 5;
+      var n = parseInt($('count').value, 10) || 6;
+
+      dominant = ct.getColor(img, q);
+      /* 색이 적은 이미지에서는 요청한 개수만큼 나오지 않을 수 있어 줄여 가며 시도한다 */
+      palette = null;
+      for (var tryN = n; tryN >= 2 && !palette; tryN--){
+        try { palette = ct.getPalette(img, tryN, q); } catch(e){ palette = null; }
+      }
+      if (!palette || !palette.length) palette = [dominant];
+
+      $('busy').classList.remove('on');
+      $('stage').classList.add('on');
+      render();
+      toast('색 ' + palette.length + '개를 뽑았습니다');
+    } catch(e){
+      console.error(e);
+      $('busy').classList.remove('on');
+      $('drop').style.display = '';
+      toast('색을 뽑지 못했습니다 · 다른 이미지로 시도해 주세요');
+    }
+  }, 60);
+}
+
+function render(){
+  var ms = $('mainSwatch');
+  ms.style.background = toRgbText(dominant);
+  ms.style.color = textOn(dominant);
+  ms.dataset.hex = toHex(dominant);
+  $('mainHex').textContent = toHex(dominant);
+  $('mainSub').textContent = toRgbText(dominant) + '  ·  ' + toHsl(dominant);
+
+  $('palette').innerHTML = palette.map(function(c, i){
+    return '<div class="sw" data-hex="' + toHex(c) + '" role="button" tabindex="0" ' +
+      'aria-label="' + toHex(c) + ' 복사">' +
+      '<div class="box" style="background:' + toRgbText(c) + ';color:' + textOn(c) + '">' +
+        '<span class="pct">' + (i + 1) + '</span></div>' +
+      '<div class="txt"><div class="h">' + toHex(c) + '</div>' +
+      '<div class="r">' + toRgbText(c) + '</div></div></div>';
+  }).join('');
+
+  $('preview').textContent = allHex();
+}
+
+/* ---------- 복사 ---------- */
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+var tipT = null;
+function showTip(el, msg){
+  var tip = $('tip');
+  tip.textContent = msg;
+  var r = el.getBoundingClientRect();
+  tip.style.left = (r.left + r.width / 2) + 'px';
+  tip.style.top = r.top + 'px';
+  tip.classList.add('on');
+  clearTimeout(tipT);
+  tipT = setTimeout(function(){ tip.classList.remove('on'); }, 1100);
+}
+function copySwatch(el){
+  var hex = el.dataset.hex;
+  if (!hex) return;
+  copyText(hex, function(ok){
+    if (ok) showTip(el, hex + ' 복사했습니다');
+    else toast('복사가 막혔습니다');
+  });
+}
+$('mainSwatch').addEventListener('click', function(){ copySwatch(this); });
+$('mainSwatch').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); copySwatch(this); }
+});
+$('palette').addEventListener('click', function(ev){
+  var el = ev.target.closest('.sw');
+  if (el) copySwatch(el);
+});
+$('palette').addEventListener('keydown', function(ev){
+  if (ev.key !== 'Enter' && ev.key !== ' ') return;
+  var el = ev.target.closest('.sw');
+  if (el){ ev.preventDefault(); copySwatch(el); }
+});
+
+/* ---------- 내보내기 ---------- */
+function allHex(){
+  var list = [toHex(dominant)];
+  palette.forEach(function(c){
+    var h = toHex(c);
+    if (list.indexOf(h) < 0) list.push(h);
+  });
+  return list.join(', ');
+}
+function cssText(){
+  var L = [':root {'];
+  L.push('  --brand-primary: ' + toHex(dominant) + ';');
+  palette.forEach(function(c, i){ L.push('  --brand-' + (i + 1) + ': ' + toHex(c) + ';'); });
+  L.push('}');
+  return L.join('\n');
+}
+function jsonText(){
+  return JSON.stringify({
+    source: fileName,
+    dominant: { hex: toHex(dominant), rgb: dominant, hsl: toHsl(dominant) },
+    palette: palette.map(function(c){
+      return { hex: toHex(c), rgb: c, hsl: toHsl(c) };
+    })
+  }, null, 2);
+}
+function download(text, name, mime){
+  try {
+    var blob = new Blob(['\ufeff' + text], { type: (mime || 'text/plain') + ';charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+    return true;
+  } catch(e){ return false; }
+}
+$('copyAllBtn').addEventListener('click', function(){
+  if (!dominant) return;
+  copyText(allHex(), function(ok){ toast(ok ? 'HEX 코드를 복사했습니다' : '복사가 막혔습니다'); });
+});
+$('copyCssBtn').addEventListener('click', function(){
+  if (!dominant) return;
+  $('preview').textContent = cssText();
+  copyText(cssText(), function(ok){ toast(ok ? 'CSS 변수로 복사했습니다' : '복사가 막혔습니다'); });
+});
+$('jsonBtn').addEventListener('click', function(){
+  if (!dominant) return;
+  var ok = download(jsonText(), 'palette.json', 'application/json');
+  toast(ok ? 'JSON 파일로 저장했습니다' : '저장이 막혔습니다');
+});
+
+/* 팔레트를 그림 한 장으로 그린다 */
+$('imgBtn').addEventListener('click', function(){
+  if (!dominant) return;
+  try {
+    var list = [dominant].concat(palette);
+    var W = 1000, CH = 150, PAD = 40, HEAD = 96;
+    var cols = Math.min(list.length, 4);
+    var rows = Math.ceil(list.length / cols);
+    var CW = (W - PAD*2) / cols;
+    var H = HEAD + rows*CH + PAD;
+    var c = document.createElement('canvas');
+    var s = 2;
+    c.width = W*s; c.height = H*s;
+    var x = c.getContext('2d');
+    x.scale(s, s);
+    x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#1C1917';
+    x.font = '800 26px Pretendard, sans-serif';
+    x.fillText('Brand Palette', PAD, 48);
+    x.fillStyle = '#78716C';
+    x.font = '400 14px Pretendard, sans-serif';
+    x.fillText(fileName, PAD, 72);
+
+    list.forEach(function(col, i){
+      var cx = PAD + (i % cols) * CW;
+      var cy = HEAD + Math.floor(i / cols) * CH;
+      x.fillStyle = toRgbText(col);
+      x.fillRect(cx + 4, cy + 4, CW - 8, CH - 30);
+      x.strokeStyle = 'rgba(28,25,23,.08)'; x.lineWidth = 1;
+      x.strokeRect(cx + 4, cy + 4, CW - 8, CH - 30);
+      x.fillStyle = '#1C1917';
+      x.font = '700 15px ui-monospace, monospace';
+      x.fillText(toHex(col), cx + 6, cy + CH - 8);
+      x.fillStyle = '#78716C';
+      x.font = '400 11px ui-monospace, monospace';
+      x.fillText(i === 0 ? 'DOMINANT' : toRgbText(col), cx + 96, cy + CH - 8);
+    });
+    c.toBlob(function(b){
+      if (!b){ toast('이미지를 만들지 못했습니다'); return; }
+      var url = URL.createObjectURL(b);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'palette.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+      toast('팔레트를 이미지로 저장했습니다');
+    }, 'image/png');
+  } catch(e){ toast('이미지 저장이 막혔습니다'); }
+});
+
+/* ---------- 넣는 방법 세 가지 ---------- */
+$('drop').addEventListener('click', function(){ $('fileInput').click(); });
+$('drop').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
+});
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) loadBlob(f, f.name);
+});
+var dragDepth = 0;
+window.addEventListener('dragenter', function(e){
+  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
+    dragDepth++; document.body.classList.add('dragging');
+  }
+});
+window.addEventListener('dragleave', function(){
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) document.body.classList.remove('dragging');
+});
+window.addEventListener('dragover', function(e){ e.preventDefault(); });
+window.addEventListener('drop', function(e){
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadBlob(f, f.name);
+});
+document.addEventListener('paste', function(e){
+  var dt = e.clipboardData;
+  if (!dt) return;
+  if (dt.files && dt.files.length){
+    for (var i = 0; i < dt.files.length; i++){
+      if (/^image\//.test(dt.files[i].type || '')){
+        e.preventDefault(); loadBlob(dt.files[i], dt.files[i].name); return;
+      }
+    }
+  }
+  var items = dt.items || [];
+  for (var k = 0; k < items.length; k++){
+    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
+      var f = items[k].getAsFile();
+      if (f){ e.preventDefault(); loadBlob(f, ''); return; }
+    }
+  }
+});
+
+$('reBtn').addEventListener('click', extract);
+['quality','count'].forEach(function(id){
+  $(id).addEventListener('change', function(){ if (img) extract(); });
+});
+$('newBtn').addEventListener('click', function(){
+  img = null; dominant = null; palette = [];
+  $('stage').classList.remove('on');
+  $('drop').style.display = '';
+  $('pv').src = '';
+  toast('새 이미지를 올려 주세요');
+});
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F5F5F4;color:#44403C;border-top:1px solid #E7E5E4;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#1C1917;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#44403C;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#44403C;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#1C1917}
+.tk-guide code{background:#fff;border:1px solid #E7E5E4;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13.5px;color:#1C1917}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E7E5E4}
+.tk-guide dt{font-size:15px;font-weight:700;color:#1C1917;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#44403C;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E7E5E4;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E7E5E4;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#78716C;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E7E5E4}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#1C1917;text-decoration:none;font-weight:600}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#1C1917}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>고객사 로고 색을 알아내는 흔한 방법</h2>
+<p>제안서를 만드는데 고객사 브랜드 색을 맞춰야 합니다. 브랜드 가이드는 없고, 있는 것은 홈페이지에 걸린 로고 이미지 하나뿐입니다.</p>
+<p>보통은 로고를 저장해 그림판이나 파워포인트에 넣고, 스포이드로 한 점씩 찍어 색을 확인합니다. 색이 예닐곱 개면 그 작업을 예닐곱 번 반복하게 됩니다.</p>
+<p>이 도구는 <strong>이미지를 넣으면 색을 한 번에 뽑아 줍니다.</strong> 캡처해서 붙여넣기만 해도 되고, 색을 누르면 HEX 코드가 바로 복사됩니다.</p>
+
+<h2>이미지를 넣는 세 가지 방법</h2><dl>
+<dt>📋 붙여넣기</dt><dd>가장 빠릅니다. 화면 캡처 도구로 로고 부분만 잘라 복사한 뒤 이 페이지에서 <code>Ctrl+V</code>를 누르세요. 파일로 저장할 필요가 없습니다.</dd>
+<dt>🖱️ 끌어다 놓기</dt><dd>탐색기나 바탕화면에 있는 이미지를 그대로 끌어다 놓으면 됩니다.</dd>
+<dt>📁 파일 고르기</dt><dd>업로드 영역을 눌러 파일을 고릅니다.</dd>
+</dl>
+
+<h2>색은 어떻게 뽑나</h2>
+<p>이미지의 픽셀을 훑어 비슷한 색끼리 묶고, <strong>차지하는 면적이 넓은 순서로</strong> 골라냅니다. 대표 색은 그중 가장 많이 쓰인 색이고, 팔레트는 그다음으로 눈에 띄는 색들입니다.</p>
+<p>정밀도를 <strong>정밀하게</strong>로 올리면 픽셀을 더 촘촘히 살펴 미세한 색까지 잡아내지만 시간이 조금 더 걸립니다. 로고처럼 색이 단순한 이미지는 <strong>빠르게</strong>로도 충분합니다.</p>
+<p>색 개수는 4개부터 10개까지 고르실 수 있습니다. 다만 색이 몇 가지뿐인 로고에서는 요청한 만큼 나오지 않을 수 있는데, 그럴 때는 실제로 있는 만큼만 보여 드립니다.</p>
+
+<h2>뽑은 색을 쓰는 곳</h2><ul>
+<li><strong>HEX</strong> — <code>#FF5A5F</code> 형태입니다. CSS와 대부분의 디자인 도구에서 그대로 쓰입니다.</li>
+<li><strong>RGB</strong> — 파워포인트나 한글에서 색을 직접 넣을 때 요구하는 형식입니다.</li>
+<li><strong>HSL</strong> — 색조를 유지한 채 밝기만 조절하고 싶을 때 편합니다.</li>
+<li><strong>CSS 변수</strong> — 코드에 바로 붙일 수 있는 형태로 내보냅니다.</li>
+</ul>
+<p>팔레트를 그림 한 장으로 저장할 수도 있어, 문서에 첨부하거나 팀에 공유하기 좋습니다.</p>
+
+<h2>결과가 아쉬울 때</h2>
+<p>사진에 그림자나 조명이 섞이면 원래 색과 다르게 나옵니다. 로고 색을 정확히 알고 싶으시다면 <strong>배경이 단순한 이미지</strong>를 쓰시는 편이 좋습니다.</p>
+<p>캡처하실 때 로고 둘레의 그림자나 테두리가 함께 들어가지 않게 잘라 주시면 결과가 한결 나아집니다. 흰 배경이 넓게 잡히면 흰색이 대표 색으로 뽑히는 일도 있습니다.</p>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>올린 이미지가 서버로 전송되나요</dt><dd>전송되지 않습니다. 색을 뽑는 일까지 모두 브라우저 안에서 처리되며, 인터넷 연결을 끊고 쓰셔도 그대로 동작합니다. 페이지를 닫으면 올린 이미지도 함께 사라집니다.</dd>
+<dt>웹사이트 로고를 바로 가져올 수 있나요</dt><dd>화면을 캡처해 붙여넣기 하시면 됩니다. 캡처 도구로 로고 부분만 잘라 복사한 뒤 이 페이지에서 붙여넣기 단축키를 누르시면 바로 색이 뽑힙니다. 파일로 저장하실 필요가 없습니다.</dd>
+<dt>색은 어떤 기준으로 뽑나요</dt><dd>이미지의 픽셀을 훑어 비슷한 색끼리 묶고, 가장 넓은 면적을 차지하는 순서로 고릅니다. 대표 색은 그중 가장 많이 쓰인 색이고, 팔레트는 그다음으로 눈에 띄는 색들입니다. 정밀도를 높이면 더 촘촘히 살피지만 시간이 조금 더 걸립니다.</dd>
+<dt>복사한 코드를 어디에 쓰나요</dt><dd>HEX 코드는 CSS와 디자인 도구에서 두루 쓰입니다. 파워포인트나 한글에서는 색 설정 창에 HEX를 넣으면 되고, 도구에 따라 RGB 값을 요구하면 그 아래 표시된 숫자를 쓰시면 됩니다.</dd>
+<dt>뽑힌 색이 실제와 다르게 보입니다</dt><dd>사진에 그림자나 조명이 섞이면 원래 색과 달라집니다. 로고라면 배경이 단순한 이미지를 쓰시는 편이 정확하고, 캡처할 때 그림자나 테두리가 함께 들어가지 않게 잘라 주시면 결과가 좋아집니다.</dd>
+<dt>팔레트 전체를 한 번에 가져갈 수 있나요</dt><dd>전체 복사를 누르면 대표 색과 팔레트의 HEX 코드가 한 줄로 담깁니다. CSS 변수 형태나 이미지 카드로도 내보낼 수 있어 문서나 대화방에 그대로 붙여넣으실 수 있습니다.</dd>
+</dl>
+
+<p class="tk-guide-note">모든 처리는 사용자의 브라우저 안에서만 이루어지며 올리신 이미지는 어떤 서버로도 전송되지 않습니다. 뽑아 낸 색은 이미지에서 계산한 값이므로 브랜드가 공식적으로 정한 색과 다를 수 있습니다. 정확한 브랜드 색이 필요하시면 해당 기업의 브랜드 가이드를 확인해 주시고, 로고와 브랜드 색의 사용 권한은 별도로 살펴 주시기 바랍니다.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/productivity/image-studio.html">사진 편집 스튜디오</a></li>
+<li><a href="https://mnledu.com/productivity/qr-studio.html">맞춤형 QR코드 생성기</a></li>
+<li><a href="https://mnledu.com/productivity/smart-list.html">스마트 리스트 변환기</a></li>
+<li><a href="https://mnledu.com/productivity/text-diff.html">문서·계약서 정밀 비교기</a></li>
+<li><a href="https://mnledu.com/productivity/pdf-signature.html">PDF 서명 스탬프</a></li>
+<li><a href="https://mnledu.com/productivity/receipt-to-excel.html">영수증 지출결의서 변환기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>

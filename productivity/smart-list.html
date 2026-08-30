@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>스마트 리스트 변환기 · 목록 · 자동 정리 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="엑셀에서 복사한 세로 목록을 아웃룩·슬랙·SQL에 맞는 한 줄로 바꿉니다. 빈 줄과 중복을 자동으로 걸러 냅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/productivity/smart-list.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/smart-list.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/smart-list.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/smart-list.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/productivity/smart-list.html" />
+<meta property="og:title" content="스마트 리스트 변환기 · 목록 · 자동 정리 | TOOLKIT" />
+<meta property="og:description" content="엑셀에서 복사한 세로 목록을 아웃룩·슬랙·SQL에 맞는 한 줄로 바꿉니다. 빈 줄과 중복을 자동으로 걸러 냅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="스마트 리스트 변환기 · 목록 · 자동 정리 | TOOLKIT" />
+<meta name="twitter:description" content="엑셀에서 복사한 세로 목록을 아웃룩·슬랙·SQL에 맞는 한 줄로 바꿉니다. 빈 줄과 중복을 자동으로 걸러 냅니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "스마트 리스트 변환기",
+  "description": "엑셀에서 복사한 세로 목록을 아웃룩·슬랙·SQL에 맞는 한 줄로 바꿉니다. 빈 줄과 중복을 자동으로 걸러 냅니다.",
+  "url": "https://mnledu.com/productivity/smart-list.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#productivity"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "스마트 리스트 변환기",
+      "item": "https://mnledu.com/productivity/smart-list.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#3B82F6; --accent2:#2563EB; --soft:#EFF6FF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 18px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    font-size:14.5px;font-weight:600;padding:11px 15px;cursor:pointer;min-height:46px;
+    font-family:inherit;transition:border-color .12s,background .12s,transform .06s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:#CBD5E1;background:#F8FAFC}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.sm{min-height:36px;padding:6px 11px;font-size:13px;border-radius:8px}
+
+  label.lab{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:8px}
+  .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
+  textarea, .fld{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px;
+    font-size:14.5px;line-height:1.85;color:var(--ink);outline:none;background:#fff;
+    font-family:ui-monospace,Consolas,monospace}
+  textarea{min-height:300px;resize:vertical}
+  textarea:focus, .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.16)}
+  textarea::placeholder{color:#CBD5E1}
+  select.fld{appearance:none;min-height:50px;cursor:pointer;font-family:inherit;font-size:15px;
+    padding-right:40px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 21px) 53%,calc(100% - 16px) 53%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  input.fld{min-height:46px;font-size:14.5px}
+  .chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    font-size:14px;padding:7px 0;margin-right:18px}
+  .chk input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+
+  .split{display:grid;gap:16px;grid-template-columns:1fr}
+  @media(min-width:940px){.split{grid-template-columns:1fr 1fr}}
+
+  #outBox{background:#0F172A;color:#E2E8F0;border-radius:11px;padding:14px;min-height:300px;
+    max-height:460px;overflow-y:auto;font-family:ui-monospace,Consolas,monospace;font-size:14px;
+    line-height:1.9;white-space:pre-wrap;word-break:break-all;margin:0;cursor:pointer}
+  #outBox.empty{color:#475569;white-space:normal;cursor:default}
+
+  #count{display:flex;gap:16px;flex-wrap:wrap;align-items:baseline;padding:12px 15px;
+    background:var(--soft);border:1px solid #BFDBFE;border-radius:11px;margin-top:12px;font-size:13.5px}
+  #count b{font-size:17px;font-weight:800;color:var(--accent2)}
+  #count .dim{color:var(--muted)}
+
+  .preset{display:grid;gap:7px;grid-template-columns:1fr;margin-top:10px}
+  @media(min-width:520px){.preset{grid-template-columns:1fr 1fr 1fr}}
+  .pv{background:var(--line2);border-radius:8px;padding:9px 11px;font-size:12.5px;color:var(--ink2);
+    font-family:ui-monospace,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  #custom{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line2)}
+  #custom.on{display:block}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:11px;padding:13px 21px;font-size:14.5px;
+    z-index:90;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<header class="wrap" style="padding:44px 18px 8px">
+  <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Smart List Formatter</p>
+  <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">스마트 리스트 변환기</h1>
+  <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
+    엑셀에서 세로로 복사한 목록을 <b>붙여넣을 곳에 맞는 한 줄</b>로 바꿔 드립니다.
+    빈 줄과 앞뒤 공백은 알아서 정리하고, 중복도 걸러 냅니다.
+  </p>
+</header>
+
+<section class="wrap" style="padding-top:20px">
+  <div class="card" style="padding:20px;margin-bottom:16px">
+    <label class="lab" for="target">🎯 어디에 붙여넣으시나요</label>
+    <select class="fld" id="target">
+      <option value="outlook">📧 Outlook 메일 수신자 — 세미콜론</option>
+      <option value="gmail">✉️ Gmail 메일 수신자 — 쉼표</option>
+      <option value="slack">💬 Slack · 메신저 멘션 — @와 띄어쓰기</option>
+      <option value="sql">🗄️ SQL 쿼리 IN 조건문 — 작은따옴표</option>
+      <option value="comma">📄 CSV 한 줄 — 쉼표만</option>
+      <option value="pipe">📊 세로줄 구분 — 파이프</option>
+      <option value="custom">⚙️ 직접 입력</option>
+    </select>
+    <div class="preset">
+      <div class="pv" id="pvSep"></div>
+      <div class="pv" id="pvSample"></div>
+      <div class="pv" id="pvNote"></div>
+    </div>
+
+    <div id="custom">
+      <div class="split" style="gap:12px">
+        <div>
+          <label class="lab" for="cSep">구분 기호</label>
+          <input class="fld mono" id="cSep" value=", " placeholder="예: | 또는 / ">
+          <p class="hint">항목 사이에 넣을 기호입니다. 공백도 그대로 반영됩니다.</p>
+        </div>
+        <div>
+          <label class="lab" for="cWrap">감쌀 기호 <span style="font-weight:400;color:var(--muted)">(선택)</span></label>
+          <input class="fld mono" id="cWrap" placeholder="예: &quot; 또는 [">
+          <p class="hint">각 항목을 감쌉니다. 여는 기호만 넣으면 짝을 맞춰 닫습니다.</p>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <label class="lab" for="cPrefix">앞에 붙일 글자 <span style="font-weight:400;color:var(--muted)">(선택)</span></label>
+        <input class="fld mono" id="cPrefix" placeholder="예: @ 또는 #" style="max-width:220px">
+      </div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="card" style="padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <label class="lab" for="src" style="margin:0">📋 붙여넣기 (세로 목록)</label>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm" id="sampleBtn">예시 넣기</button>
+          <button class="btn sm" id="clearBtn">비우기</button>
+        </div>
+      </div>
+      <textarea id="src" placeholder="엑셀에서 복사한 목록을 그대로 붙여넣으세요&#10;&#10;kim@company.com&#10;lee@company.com&#10;park@company.com"></textarea>
+      <p class="hint mono" id="srcInfo"></p>
+
+      <div style="border-top:1px solid var(--line2);margin-top:14px;padding-top:12px">
+        <p class="lab" style="margin-bottom:2px">🧹 정리 옵션</p>
+        <label class="chk"><input type="checkbox" id="opUnique" checked><span>중복 제거</span></label>
+        <label class="chk"><input type="checkbox" id="opCase"><span>대소문자 무시</span></label>
+        <label class="chk"><input type="checkbox" id="opSort"><span>가나다순 정렬</span></label>
+        <label class="chk"><input type="checkbox" id="opQuote"><span>따옴표 벗기기</span></label>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <label class="lab" style="margin:0">✨ 변환 결과 (가로 한 줄)</label>
+        <button class="btn sm" id="wrapBtn">줄바꿈 끄기</button>
+      </div>
+      <pre id="outBox" class="empty" title="눌러도 복사됩니다">왼쪽에 목록을 붙여넣으면 결과가 바로 나타납니다.</pre>
+      <div id="count">
+        <span>총 <b id="cnItems">0</b>개 변환</span>
+        <span class="dim" id="cnDup"></span>
+        <span class="dim" id="cnLen"></span>
+      </div>
+      <button class="btn p" id="copyBtn" style="width:100%;margin-top:12px;min-height:52px;font-size:15.5px" disabled>📋 결과 복사하기</button>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:30px 18px 46px;border-top:1px solid var(--line);margin-top:34px">
+  <p style="font-size:12.5px;color:var(--muted);line-height:1.8;margin:0">
+    모든 변환은 사용자의 브라우저 안에서만 이루어지며, 입력하신 내용은 어떤 서버로도 전송되지 않습니다.
+  </p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+var toastT = null;
+function toast(m){
+  var t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2300);
+}
+
+/* 붙여넣을 곳마다 항목을 나누는 기호가 다르다 */
+var PRESETS = {
+  outlook: { sep:'; ',  wrap:'',  prefix:'', name:'세미콜론과 공백',
+             note:'아웃룩 수신자 칸에 그대로 붙여넣으세요' },
+  gmail:   { sep:', ',  wrap:'',  prefix:'', name:'쉼표와 공백',
+             note:'지메일 받는사람 칸에 그대로 붙여넣으세요' },
+  slack:   { sep:' ',   wrap:'',  prefix:'@', name:'띄어쓰기와 @',
+             note:'이미 @가 붙은 이름은 겹쳐 붙이지 않습니다' },
+  sql:     { sep:', ',  wrap:"'", prefix:'', name:'작은따옴표와 쉼표',
+             note:'값 안의 작은따옴표는 자동으로 막아 줍니다' },
+  comma:   { sep:',',   wrap:'',  prefix:'', name:'쉼표만',
+             note:'공백 없이 쉼표로만 잇습니다' },
+  pipe:    { sep:' | ', wrap:'',  prefix:'', name:'파이프',
+             note:'표 형태로 옮길 때 쓰기 좋습니다' },
+  custom:  { sep:', ',  wrap:'',  prefix:'', name:'직접 정한 기호',
+             note:'아래에서 원하는 형태를 만드세요' }
+};
+/* 감싸는 기호는 여는 것과 닫는 것이 다를 수 있다 */
+var PAIR = { '(':')', '[':']', '{':'}', '<':'>' };
+
+var items = [], result = '', dupCount = 0;
+
+function readOpts(){
+  return {
+    unique: $('opUnique').checked,
+    caseInsensitive: $('opCase').checked,
+    sort: $('opSort').checked,
+    stripQuotes: $('opQuote').checked
+  };
+}
+
+/* 붙여넣은 세로 데이터를 항목 목록으로 정리한다 */
+function parseItems(text, o){
+  var t = String(text == null ? '' : text).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  /* 엑셀에서 여러 칸을 함께 복사하면 탭이 섞여 온다 */
+  var raw = t.split(/[\n\t]/);
+  var out = [];
+  raw.forEach(function(s){
+    s = s.trim();
+    /* 엑셀이 값을 통째로 따옴표로 감싸 보내는 경우를 벗긴다 */
+    if (s.length > 1 && s.charAt(0) === '"' && s.charAt(s.length-1) === '"'){
+      s = s.slice(1, -1).replace(/""/g, '"').trim();
+    }
+    if (o.stripQuotes) s = s.replace(/^['"]+|['"]+$/g, '').trim();
+    if (!s) return;
+    out.push(s);
+  });
+  var before = out.length;
+  if (o.unique){
+    var seen = {}, uniq = [];
+    out.forEach(function(s){
+      var k = o.caseInsensitive ? s.toLowerCase() : s;
+      if (Object.prototype.hasOwnProperty.call(seen, k)) return;
+      seen[k] = 1; uniq.push(s);
+    });
+    out = uniq;
+  }
+  dupCount = before - out.length;
+  if (o.sort) out = out.slice().sort(function(a, b){ return a.localeCompare(b, 'ko'); });
+  return out;
+}
+
+function currentCfg(){
+  var key = $('target').value;
+  var p = PRESETS[key] || PRESETS.gmail;
+  if (key !== 'custom') return { sep:p.sep, wrap:p.wrap, wrapEnd:p.wrap, prefix:p.prefix };
+  var w = $('cWrap').value;
+  var open = w.charAt(0) || '';
+  var close = w.length > 1 ? w.slice(1) : (PAIR[open] || open);
+  return { sep: $('cSep').value, wrap: open, wrapEnd: close, prefix: $('cPrefix').value };
+}
+
+function format(list, cfg){
+  return list.map(function(s){
+    var v = s;
+    if (cfg.wrap){
+      /* SQL 은 값 안의 작은따옴표를 두 번 써야 쿼리가 깨지지 않는다 */
+      if (cfg.wrap === "'") v = v.replace(/'/g, "''");
+      v = cfg.wrap + v + (cfg.wrapEnd || cfg.wrap);
+    }
+    if (cfg.prefix){
+      /* 이미 붙어 있으면 겹쳐 붙이지 않는다 */
+      v = (v.indexOf(cfg.prefix) === 0) ? v : cfg.prefix + v;
+    }
+    return v;
+  }).join(cfg.sep);
+}
+
+function update(){
+  var o = readOpts();
+  items = parseItems($('src').value, o);
+  result = format(items, currentCfg());
+
+  var box = $('outBox');
+  if (!items.length){
+    box.textContent = '왼쪽에 목록을 붙여넣으면 결과가 바로 나타납니다.';
+    box.classList.add('empty');
+  } else {
+    box.textContent = result;
+    box.classList.remove('empty');
+  }
+  $('cnItems').textContent = items.length.toLocaleString('en-US');
+  $('cnDup').textContent = dupCount ? '중복 ' + dupCount.toLocaleString('en-US') + '개 제거' : '';
+  $('cnLen').textContent = result ? result.length.toLocaleString('en-US') + '자' : '';
+  $('copyBtn').disabled = !items.length;
+
+  var v = $('src').value;
+  $('srcInfo').textContent = v
+    ? (v.split(/\n/).length.toLocaleString('en-US') + '줄 입력 · ' + v.length.toLocaleString('en-US') + '자')
+    : '';
+  updatePreview();
+}
+
+function updatePreview(){
+  var key = $('target').value;
+  var p = PRESETS[key] || PRESETS.gmail;
+  var demo = format(['aaa', 'bbb'], currentCfg());
+  $('pvSep').textContent = '구분 · ' + p.name;
+  $('pvSample').textContent = '예 · ' + demo;
+  $('pvNote').textContent = p.note;
+  $('custom').classList.toggle('on', key === 'custom');
+}
+
+/* ---------- 복사 ---------- */
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+$('copyBtn').addEventListener('click', function(){
+  if (!result){ toast('먼저 목록을 붙여넣어 주세요'); return; }
+  copyText(result, function(ok){
+    toast(ok ? items.length.toLocaleString('en-US') + '개를 복사했습니다' : '복사가 막혔습니다');
+  });
+});
+/* 결과 화면을 눌러도 복사되게 한다 */
+$('outBox').addEventListener('click', function(){
+  if (!result) return;
+  copyText(result, function(ok){ if (ok) toast('복사했습니다'); });
+});
+
+/* ---------- 이벤트 ---------- */
+$('src').addEventListener('input', update);
+['opUnique','opCase','opSort','opQuote','target'].forEach(function(id){
+  $(id).addEventListener('change', update);
+});
+['cSep','cWrap','cPrefix'].forEach(function(id){ $(id).addEventListener('input', update); });
+
+$('clearBtn').addEventListener('click', function(){
+  if (!$('src').value){ toast('이미 비어 있습니다'); return; }
+  $('src').value = ''; update();
+  toast('비웠습니다');
+});
+$('sampleBtn').addEventListener('click', function(){
+  $('src').value = [
+    'kim.cs@company.com', 'lee.yh@company.com', '', '  park.js@company.com  ',
+    'choi.ms@company.com', 'kim.cs@company.com', 'jung.sj@company.com'
+  ].join('\n');
+  update();
+  toast('예시를 넣었습니다 · 빈 줄과 중복이 정리됩니다');
+});
+$('wrapBtn').addEventListener('click', function(){
+  var b = $('outBox');
+  var wrapping = b.style.whiteSpace !== 'pre';
+  b.style.whiteSpace = wrapping ? 'pre' : 'pre-wrap';
+  b.style.overflowX = wrapping ? 'auto' : 'hidden';
+  this.textContent = wrapping ? '줄바꿈 켜기' : '줄바꿈 끄기';
+});
+
+update();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#1D4ED8}
+.tk-guide code{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13.5px;color:#0F172A}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#1D4ED8;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#1D4ED8}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>엑셀 한 열을 메일 수신자 칸에 넣으려면</h2>
+<p>명단이 담긴 엑셀에서 이메일 열을 드래그해 복사합니다. 아웃룩 수신자 칸에 붙여넣으면 주소가 줄줄이 세로로 들어가고, 발송을 누르면 주소 형식이 잘못됐다는 말이 돌아옵니다.</p>
+<p>결국 메모장에 붙여넣고 줄바꿈을 세미콜론으로 하나씩 바꾸거나, 엑셀에 이어붙이기 수식을 짜게 됩니다. 백 명이 넘으면 그것도 일입니다.</p>
+<p>이 도구는 그 과정을 없앱니다. 붙여넣고, 어디에 쓸지 고르면, 그 자리에서 한 줄로 바뀝니다.</p>
+
+<h2>왜 플랫폼마다 기호가 다른가</h2>
+<p>수신자를 나누는 기호가 서비스마다 다릅니다. <strong>아웃룩은 세미콜론, 지메일은 쉼표</strong>를 씁니다. 반대로 넣으면 주소 전체가 하나로 인식되어 발송이 막힙니다.</p>
+<dl>
+<dt>📧 Outlook</dt><dd><code>a@a.com; b@b.com</code> — 세미콜론과 공백으로 잇습니다.</dd>
+<dt>✉️ Gmail</dt><dd><code>a@a.com, b@b.com</code> — 쉼표와 공백으로 잇습니다.</dd>
+<dt>💬 Slack · 메신저</dt><dd><code>@user1 @user2</code> — 앞에 @를 붙여 띄어 씁니다. 이미 @가 붙어 있으면 겹쳐 붙이지 않습니다.</dd>
+<dt>🗄️ SQL IN 조건문</dt><dd><code>'item1', 'item2'</code> — 작은따옴표로 감쌉니다. 값 안에 작은따옴표가 있으면 두 번 써서 막아 줍니다.</dd>
+<dt>⚙️ 직접 입력</dt><dd>구분 기호, 감쌀 기호, 앞에 붙일 글자를 따로 정합니다. 대괄호나 세로줄 등 원하는 형태를 만들 수 있습니다.</dd>
+</dl>
+
+<h2>붙여넣기 전에 다듬을 것들</h2>
+<p>엑셀에서 복사한 데이터는 대개 지저분합니다. 중간에 빈 행이 끼어 있고, 앞뒤에 공백이 붙어 있고, 같은 주소가 두 번 들어가 있습니다.</p>
+<p>이 도구는 <strong>빈 줄과 앞뒤 공백을 자동으로 정리합니다.</strong> 여러 칸을 함께 복사해 탭이 섞여 들어와도 항목으로 나누어 처리하고, 엑셀이 값을 따옴표로 감싸 보내는 경우 그 따옴표도 벗겨 냅니다.</p>
+<ul>
+<li><strong>중복 제거</strong> — 기본으로 켜져 있습니다. 몇 개를 걸러 냈는지도 알려 드립니다.</li>
+<li><strong>대소문자 무시</strong> — <code>Kim@a.com</code>과 <code>kim@a.com</code>을 같은 것으로 봅니다.</li>
+<li><strong>가나다순 정렬</strong> — 명단을 순서대로 보고 싶을 때 씁니다.</li>
+<li><strong>따옴표 벗기기</strong> — 값마다 따옴표가 붙어 온 경우에 켜세요.</li>
+</ul>
+
+<h2>이렇게 써 보세요</h2><ol>
+<li>엑셀에서 열을 드래그해 복사한 뒤 <strong>왼쪽 칸에 붙여넣습니다.</strong></li>
+<li>위에서 <strong>어디에 쓸지</strong> 고릅니다. 예시가 함께 표시되므로 어떤 모양이 될지 미리 보실 수 있습니다.</li>
+<li>필요하면 정리 옵션을 조절합니다. 결과는 <strong>고칠 때마다 바로</strong> 바뀝니다.</li>
+<li><strong>결과 복사하기</strong>를 누르고 원하는 곳에 붙여넣습니다. 결과 화면을 눌러도 복사됩니다.</li>
+</ol>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>왜 플랫폼마다 구분자가 다른가요</dt><dd>아웃룩은 수신자를 세미콜론으로 나누고 지메일은 쉼표로 나눕니다. 잘못된 기호로 붙여넣으면 주소 전체가 하나로 인식되어 발송이 막힙니다. 붙여넣을 곳을 고르시면 그에 맞는 기호가 자동으로 적용됩니다.</dd>
+<dt>엑셀에서 복사한 그대로 붙여넣어도 되나요</dt><dd>됩니다. 빈 줄과 앞뒤 공백은 자동으로 정리되고, 여러 칸을 함께 복사해 탭이 섞여 들어와도 항목으로 나누어 처리합니다. 엑셀이 값을 따옴표로 감싸 보내는 경우에도 그 따옴표를 벗겨 냅니다.</dd>
+<dt>SQL 조건문에 쓸 때 주의할 점이 있나요</dt><dd>값 안에 작은따옴표가 들어 있으면 쿼리가 깨집니다. 그래서 이 도구는 값에 포함된 작은따옴표를 두 번 써서 막아 줍니다. 예를 들어 O'Brien은 'O''Brien'으로 나옵니다.</dd>
+<dt>중복은 어떻게 걸러 내나요</dt><dd>중복 제거를 켜면 같은 값이 처음 나온 것만 남기고 나머지를 지웁니다. 대소문자를 다르게 쓴 같은 주소까지 묶고 싶으시면 대소문자 무시를 함께 켜시면 됩니다. 몇 개를 걸러 냈는지도 함께 알려 드립니다.</dd>
+<dt>입력한 내용이 서버로 전송되나요</dt><dd>전송되지 않습니다. 모든 변환이 브라우저 안에서 이루어지므로 인터넷 연결을 끊고 쓰셔도 그대로 동작합니다. 사내 메일 주소나 고객 명단을 넣으셔도 밖으로 나가지 않습니다.</dd>
+<dt>원하는 기호를 직접 쓸 수 있나요</dt><dd>직접 입력을 고르시면 구분자와 앞뒤로 감쌀 기호, 각 항목 앞에 붙일 글자를 따로 정하실 수 있습니다. 세로줄이나 빗금으로 나누거나 대괄호로 감싸는 등 필요한 형태를 만들 수 있습니다.</dd>
+</dl>
+
+<p class="tk-guide-note">모든 변환은 사용자의 브라우저 안에서만 이루어지며 입력하신 내용은 어떤 서버로도 전송되지 않습니다. 페이지를 닫으면 입력한 내용도 함께 사라지므로 필요한 결과는 복사해 두시기 바랍니다. 많은 인원에게 메일을 보내실 때는 수신자 목록이 서로에게 보이지 않도록 숨은참조를 쓰시는 편이 좋습니다.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/productivity/text-diff.html">문서·계약서 정밀 비교기</a></li>
+<li><a href="https://mnledu.com/productivity/receipt-to-excel.html">영수증 지출결의서 변환기</a></li>
+<li><a href="https://mnledu.com/productivity/roster-maker.html">공평무사 당직표 생성기</a></li>
+<li><a href="https://mnledu.com/productivity/meeting-minutes.html">스마트 회의록</a></li>
+<li><a href="https://mnledu.com/productivity/qr-studio.html">맞춤형 QR코드 생성기</a></li>
+<li><a href="https://mnledu.com/productivity/date-calc.html">만능 날짜 계산기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+
+</body>
+</html>
