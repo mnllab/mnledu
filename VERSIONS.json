@@ -193,13 +193,18 @@
     ]
   },
   "pdf-signature": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "2026-08-28",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-28",
         "note": "최초 등록 (PRODUCTIVITY)"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-08-30",
+        "note": "배경제거 감도 조절, 회전, 카메라 촬영 기능 추가. 모바일 UI 개선"
       }
     ]
   },
@@ -473,13 +478,18 @@
     ]
   },
   "vocal-rhythm-master-studio": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "2026-08-30",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-30",
         "note": "최초 등록"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-08-30",
+        "note": "쿼리 파라미터(?lang=en) 방식의 런타임 언어 전환 로직 제거 — 다른 도구와 동일하게 정적 KO/EN 파일로 완전히 분리. 일부 SEO 태그 중복 제거"
       }
     ]
   },

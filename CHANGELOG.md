@@ -7,6 +7,7 @@
 
 - **이번 주 창업지원사업** (`kstartup-board`) v1.1 — 시작 페이지 최상단 고정(Pinned) 처리, 배지 NEW → BEST
 - **이번 주 창업지원사업** (`kstartup-board`) v1.2 — 고정 방식 변경 — 별도 PINNED 섹션 제거, 대신 어느 카테고리 그리드에서든 맨 앞으로. 배지 BEST → PINNED. 영문판은 고정 기능 제외
+- **PDF 서명 스탬프** (`pdf-signature`) v1.1 — 배경제거 감도 조절, 회전, 카메라 촬영 기능 추가. 모바일 UI 개선
 - **영수증 지출결의서 변환기** (`receipt-to-excel`) v2.0 — v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)
 - **엑셀·CSV 원클릭 분할 압축기** (`data-slicer`) v1.0 — 최초 등록
 - **원클릭 복붙 작업대** (`copy-desk`) v1.0 — 최초 등록
@@ -14,6 +15,7 @@
 - **패션 단속반** (`fashion-detector`) v1.0 — 최초 등록
 - **스마트 이미지 재단기** (`advanced-image-tailor`) v1.0 — 최초 등록
 - **보컬 & 리듬 마스터 스튜디오** (`vocal-rhythm-master-studio`) v1.0 — 최초 등록
+- **보컬 & 리듬 마스터 스튜디오** (`vocal-rhythm-master-studio`) v1.1 — 쿼리 파라미터(?lang=en) 방식의 런타임 언어 전환 로직 제거 — 다른 도구와 동일하게 정적 KO/EN 파일로 완전히 분리. 일부 SEO 태그 중복 제거
 - **스마트 텍스트 가공 공장** (`text-batch-factory`) v1.0 — 최초 등록
 
 ## 2026-08-29

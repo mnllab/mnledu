@@ -121,7 +121,7 @@ const TOOLS_DATA_EN = [
     id: 'pdf-signature',
     title: 'PDF Signature Stamp',
     category: 'PRODUCTIVITY',
-    desc: 'Strip the white background from a photo of your signature and stamp it onto any page of a PDF.',
+    desc: 'Clear the background from a photo of your signature or stamp and place it anywhere on a PDF, with rotation, sensitivity control and camera capture.',
     url: 'https://mnledu.com/en/productivity/pdf-signature.html',
     icon: 'signature',
     badge: 'NEW',

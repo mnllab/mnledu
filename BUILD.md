@@ -380,7 +380,56 @@ index.html / en/index.html 에 PINNED SECTION 을 추가했다.
   build-en.js 를 다시 돌리면 영문판도 따라간다.
 
 
+## 링크 공유하기 버튼 (2026-08-30)
+
+`inject-share.js` 신규 제작. 모든 도구 페이지 오른쪽 아래에 뜨는
+플로팅 공유 버튼. 버전 배지와 같은 원칙으로 자기 URL을 파일 안에
+정적으로 굳혀 넣어서, 그 페이지 파일 하나만 따로 올려도 정상 작동한다.
+
+- Web Share API 지원 브라우저(대부분 모바일) → OS 기본 공유 시트
+- 미지원(대부분 데스크톱) → 주소 입력창 + 복사 버튼 팝업
+- 한국어 "공유 · 이 도구 공유하기 · 링크 복사",
+  영문 "Share · Share this tool · Copy link" 로 언어별 분리
+- position:fixed 라 문서 안 삽입 위치와 무관하게 항상 화면에 뜬다
+
+**위치 규칙** : TOOLKIT:GUIDE_END 바로 뒤, TOOLKIT:VERSION_START 보다 앞.
+버전 배지와 마찬가지로 build-guides.js 를 다시 돌리면(baseline 32개 도구는
+매번 안내문이 통째로 재생성되므로) 문서 안 순서가 밀릴 수 있다 —
+그래서 표준 파이프라인 마지막에 inject-version.js 와 inject-share.js
+둘 다 전체로 한 번 더 돌려 순서를 정리한다.
+
+**사용법**
+```bash
+node inject-share.js            # 전체 도구
+node inject-share.js lotto      # 하나만
+```
+
+**버전 기록 원칙** : 이 기능은 도구 자체의 변경이 아니라 모든 도구에
+공통으로 씌우는 사이트 차원 UI 이므로, 버전 배지 시스템을 처음 넣었을
+때와 같은 이유로 61개 도구 각각의 버전을 올리지 않았다. 이 섹션이
+곧 그 기록이다.
+
+## 표준 파이프라인 (2026-08-30 갱신)
+
+새 도구를 추가하거나 여러 도구를 한꺼번에 고칠 때 마지막 순서:
+
+```bash
+node build-seo.js
+node patch-tool-pages.js --no-backup
+node build-guides.js
+node fix-paths.js
+node inject-version.js      # 전체 — build-guides.js 가 순서를 흩뜨렸을 수 있어 항상 마지막 근처
+node inject-share.js        # 전체 — 위와 같은 이유
+```
+
+기존 도구 하나만 고쳐서 `bump-version.js` 를 쓸 때는 그 스크립트가
+해당 도구의 inject-version 만 자동으로 불러준다. inject-share.js 는
+새로 만들었으므로 아직 bump-version.js 에 연결하지 않았다 — 도구
+자체가 아니라 사이트 공통 기능이라 도구 하나 고칠 때마다 다시 심을
+필요가 없기 때문이다(이미 있으면 건드리지 않음).
+
 ## kstartup-board 고정 방식 재조정 (2026-08-30, 오후 2차)
+
 
 별도 "PINNED SECTION" 헤더/구획을 없애고, 대신 카테고리·검색·태그 필터가
 무엇이든 그 결과 그리드의 맨 앞에 이 도구가 오도록 바꿨다
@@ -400,3 +449,22 @@ index.html / en/index.html 에 PINNED SECTION 을 추가했다.
 바꾸면 된다. en/index.html 은 그대로 빈 값 유지(build-en.js 가 항상
 비운다) — 영문판에 고정 기능을 쓰고 싶어지면 build-en.js 의 해당
 치환 줄을 지워야 한다.
+
+## pdf-signature · vocal-rhythm-master-studio 업데이트 (2026-08-30, 저녁)
+
+**pdf-signature** — 배경제거 감도 조절, 회전, 카메라 촬영 기능 추가
+(파일 크기 43KB → 67KB). catalog 설명 갱신, v1.1.
+
+**vocal-rhythm-master-studio** — 쿼리 파라미터(?lang=en) + 런타임 JS
+번역 방식을 완전히 제거하고 다른 도구와 동일하게 정적 KO/EN 파일로
+분리 완료. v1.1.
+
+⚠️ 작업 중 겪은 문제 — 업데이트 파일을 받아 기존 SEO/VERSION 블록을
+마커 기준으로 벗겨낼 때, patch-tool-pages.js 는 **한국어 페이지만
+재생성**하고 영문 페이지의 <head> 는 건드리지 않는다는 점을 놓쳐서
+영문판 SEO가 통째로 빠질 뻔했다. 또한 마커 밖에 남아있던 진짜 중복
+태그(canonical·hreflang·robots)를 지우다가 실수로 정상 태그까지
+함께 지워 복구하는 과정이 있었다. 앞으로 업데이트 파일을 받으면:
+1. 마커 안쪽만 벗기고 마커 밖 잔여물은 눈으로 직접 확인
+2. 영문 페이지는 patch-tool-pages.js 가 자동 재생성하지 않으므로
+   canonical/hreflang/OG 가 다 있는지 반드시 별도로 검증

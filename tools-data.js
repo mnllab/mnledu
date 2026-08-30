@@ -147,7 +147,7 @@ const TOOLS_DATA = [
     id: 'pdf-signature',
     title: 'PDF 서명 스탬프',
     category: 'PRODUCTIVITY',
-    desc: '서명 사진의 흰 배경을 지우고 PDF 원하는 자리에 올려 저장합니다. 파일은 브라우저 밖으로 나가지 않습니다.',
+    desc: '서명·도장 사진의 배경을 지워 투명하게 만들고 PDF 원하는 자리에 올려 저장합니다. 회전과 민감도 조절, 카메라 촬영도 됩니다.',
     url: 'https://mnledu.com/productivity/pdf-signature.html',
     icon: 'signature',
     badge: 'NEW',
