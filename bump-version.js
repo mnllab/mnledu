@@ -53,3 +53,4 @@ fs.writeFileSync(versionsPath, JSON.stringify(versions, null, 2) + '\n', 'utf8')
 console.log('VERSIONS.json 갱신 : ' + id + ' → v' + version + ' (' + today + ')');
 
 execFileSync('node', ['build-changelog.js'], { cwd: ROOT, stdio: 'inherit' });
+execFileSync('node', ['inject-version.js', id], { cwd: ROOT, stdio: 'inherit' });

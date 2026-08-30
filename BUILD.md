@@ -228,3 +228,52 @@ node bump-version.js <새-도구-id> 1.0 "최초 등록 (카테고리)"
 
 기존 파일을 다시 올리는 경우(동일 id) — 실제로 내용이 바뀐 부분만 골라
 diff 로 확인한 뒤 교체하고, 바뀐 게 없으면 그렇다고 알려주고 넘어간다.
+
+## 페이지 안 버전 배지 (2026-08-30 도입)
+
+VERSIONS.json 의 내용을 각 도구 페이지 "안에" 정적으로 구워 넣습니다.
+저작권 증빙용으로 방문자에게 공개되는 부분이라, 도구 파일 하나만
+따로 다시 올려도(사이트 전체를 같이 안 올려도) 그 파일 자체에
+버전·날짜·히스토리가 다 들어 있어 정상 표시됩니다. 실행 중에
+다른 파일을 불러오지 않습니다.
+
+위치 : 각 도구 페이지 하단, TOOLKIT:GUIDE_END 마커 바로 뒤.
+모양 : "v1.0 · 2026-08-29" 배지를 누르면 과거 버전 목록이 펼쳐짐.
+
+### ⚠️ 실행 순서를 반드시 지킬 것
+
+build-guides.js 는 안내문(GUIDE_START~END)을 통째로 지우고 항상
+</body> 바로 앞에 새로 꽂는다. 버전 배지가 그보다 먼저 있으면
+순서가 밀려 배지가 안내문보다 위로 올라간다(내용은 안 깨지지만
+보기에 어색함). 그래서:
+
+```bash
+node build-seo.js
+node patch-tool-pages.js --no-backup
+node build-guides.js        # ← 이게 실행되면 순서가 밀릴 수 있음
+node fix-paths.js
+node inject-version.js      # ← 반드시 build-guides.js 뒤, 맨 마지막에
+```
+
+새 도구를 추가하는 표준 파이프라인(위 BUILD.md 상단 "운영 방침"의
+5번)이 끝나면 항상 `node inject-version.js` (인자 없이 전체)를
+한 번 더 돌려서 54개 전체의 배지 위치를 맨 끝으로 정리한다.
+
+기존 도구 하나만 고쳐서 `bump-version.js` 를 쓸 때는 신경 쓸 필요 없다 —
+bump-version.js 가 마지막에 `inject-version.js <그 도구 id>` 를
+자동으로 호출한다 (build-guides.js 를 다시 안 돌리는 경우이므로 순서
+문제가 생기지 않음).
+
+### 파일
+
+- `inject-version.js` — 배지를 심는 스크립트. `node inject-version.js` (전체)
+  또는 `node inject-version.js <id>` (하나만).
+- `bump-version.js` 가 이제 VERSIONS.json 갱신 → CHANGELOG.md 재생성 →
+  해당 도구 inject-version 까지 한 번에 처리한다.
+
+### baseline 도구의 표시
+
+`addedDate: "untracked-baseline"` 이고 history 가 비어 있는 도구는
+배지에 "버전 기록 시작 전"이라고 정직하게 표시한다(가짜 날짜를
+채우지 않음). 그 도구를 처음 고쳐서 bump-version.js 를 쓰면 그때부터
+날짜가 붙기 시작한다.

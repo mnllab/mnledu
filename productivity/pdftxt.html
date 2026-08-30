@@ -426,6 +426,10 @@
 
 
 
+
+
+
+
 <!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
 
 <style>
@@ -483,12 +487,12 @@
 </dl>
 <p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
 <div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
-<li><a href="https://mnledu.com/productivity/pdf-signature.html">PDF 서명 스탬프</a></li>
-<li><a href="https://mnledu.com/productivity/qr-studio.html">맞춤형 QR코드 생성기</a></li>
-<li><a href="https://mnledu.com/productivity/meeting-minutes.html">스마트 회의록</a></li>
-<li><a href="https://mnledu.com/productivity/slot-coordinator.html">스마트 일정 코디네이터</a></li>
-<li><a href="https://mnledu.com/productivity/notepad.html">나만의 웹 메모장</a></li>
-<li><a href="https://mnledu.com/productivity/emailgen.html">반복 이메일 생성기</a></li>
+<li><a href="https://mnledu.com/productivity/receipt-to-excel.html">영수증 지출결의서 변환기</a></li>
+<li><a href="https://mnledu.com/productivity/roster-maker.html">공평무사 당직표 생성기</a></li>
+<li><a href="https://mnledu.com/productivity/sheet2memo.html">시트 포스트잇 대시보드</a></li>
+<li><a href="https://mnledu.com/productivity/smart-list.html">스마트 리스트 변환기</a></li>
+<li><a href="https://mnledu.com/productivity/text-diff.html">문서·계약서 정밀 비교기</a></li>
+<li><a href="https://mnledu.com/productivity/palette-picker.html">브랜드 컬러 추출기</a></li>
 </ul></div>
 <a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
 </div></section>
@@ -525,5 +529,31 @@
 }
 </script>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
 </body>
 </html>
