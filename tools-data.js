@@ -34,6 +34,36 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'text-batch-factory',
+    title: '스마트 텍스트 가공 공장',
+    category: 'PRODUCTIVITY',
+    desc: '붙여 넣은 텍스트를 브라우저 안에서 즉시 정리합니다. 마크다운 제거, 자막 분할, 리스트 넘버링을 조합해서 씁니다.',
+    url: 'https://mnledu.com/productivity/text-batch-factory.html',
+    icon: 'factory',
+    badge: 'NEW',
+    tags: ['#텍스트정리', '#자막', '#리스트가공', '#자동화']
+  },
+  {
+    id: 'data-slicer',
+    title: '엑셀·CSV 원클릭 분할 압축기',
+    category: 'PRODUCTIVITY',
+    desc: '기준 열을 고르면 그 값별로 파일을 나눠 ZIP 하나로 내려받습니다. 지역별·부서별로 쪼개 보내는 일을 한 번에 끝냅니다.',
+    url: 'https://mnledu.com/productivity/data-slicer.html',
+    icon: 'scissors',
+    badge: 'NEW',
+    tags: ['#엑셀', '#CSV', '#파일분할', '#자동화']
+  },
+  {
+    id: 'copy-desk',
+    title: '원클릭 복붙 작업대',
+    category: 'PRODUCTIVITY',
+    desc: '작업 중인 프롬프트·대본·링크를 카드로 모아 두고 편집 모드와 복사 모드를 오가며 씁니다. 타이핑하면 바로 저장됩니다.',
+    url: 'https://mnledu.com/productivity/copy-desk.html',
+    icon: 'clipboard-list',
+    badge: 'NEW',
+    tags: ['#복사', '#메모', '#자동저장', '#프롬프트']
+  },
+  {
     id: 'receipt-to-excel',
     title: '영수증 지출결의서 변환기',
     category: 'PRODUCTIVITY',
@@ -419,6 +449,26 @@ const TOOLS_DATA = [
   // 4. DESIGN & MEDIA (디자인 & 미디어)
   // ---------------------------------------------------------
   {
+    id: 'advanced-image-tailor',
+    title: '스마트 이미지 재단기',
+    category: 'DESIGN & MEDIA',
+    desc: '여러 장의 이미지를 같은 캔버스 규격으로 한 번에 맞춥니다. 맞춤 방식과 9분할 앵커를 지정해 일괄 ZIP으로 내보냅니다.',
+    url: 'https://mnledu.com/design-media/advanced-image-tailor.html',
+    icon: 'crop',
+    badge: 'NEW',
+    tags: ['#이미지편집', '#자르기', '#일괄처리', '#썸네일']
+  },
+  {
+    id: 'vocal-rhythm-master-studio',
+    title: '보컬 & 리듬 마스터 스튜디오',
+    category: 'DESIGN & MEDIA',
+    desc: '마이크로 실시간 음정을 스캔하고 나만의 스트로크 패턴으로 메트로놈을 연습합니다. 보컬과 반주를 함께 녹음할 수 있습니다.',
+    url: 'https://mnledu.com/design-media/vocal-rhythm-master-studio.html',
+    icon: 'mic',
+    badge: 'NEW',
+    tags: ['#보컬연습', '#메트로놈', '#음정', '#녹음']
+  },
+  {
     id: 'thumb-mockup',
     title: '썸네일·쇼츠 미리보기 시뮬레이터',
     category: 'DESIGN & MEDIA',
@@ -482,6 +532,26 @@ const TOOLS_DATA = [
   // ---------------------------------------------------------
   // 5. ENTERTAINMENT (오락 & 엔터테인먼트)
   // ---------------------------------------------------------
+  {
+    id: 'balance-game',
+    title: '밸런스 게임 자판기',
+    category: 'ENTERTAINMENT',
+    desc: '둘 중 하나만 고르는 밸런스 게임을 뽑아 줍니다. 직접 만든 질문을 넣거나 AI로 뽑은 것을 붙여넣어 늘릴 수 있습니다.',
+    url: 'https://mnledu.com/entertainment/balance-game.html',
+    icon: 'scale',
+    badge: 'NEW',
+    tags: ['#밸런스게임', '#선택', '#모임', '#쉬는시간']
+  },
+  {
+    id: 'fashion-detector',
+    title: '패션 단속반',
+    category: 'ENTERTAINMENT',
+    desc: '전신 사진을 올리면 상의·하의·신발 색을 뽑아 색조합을 판정합니다. 50가지 장난스러운 판정이 나옵니다.',
+    url: 'https://mnledu.com/entertainment/fashion-detector.html',
+    icon: 'shirt',
+    badge: 'NEW',
+    tags: ['#패션', '#색조합', '#재미', '#쉬는시간']
+  },
   {
     id: 'aggro-match',
     title: '어그로 매치',

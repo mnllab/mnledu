@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F8FAFC">
+
+<title>원클릭 복붙 작업대 · 복사 · 메모 | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="작업 중인 프롬프트·대본·링크를 카드로 모아 두고 편집 모드와 복사 모드를 오가며 씁니다. 타이핑하면 바로 저장됩니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/productivity/copy-desk.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/copy-desk.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/copy-desk.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/copy-desk.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://mnledu.com/productivity/copy-desk.html" />
+<meta property="og:title" content="원클릭 복붙 작업대 · 복사 · 메모 | TOOLKIT" />
+<meta property="og:description" content="작업 중인 프롬프트·대본·링크를 카드로 모아 두고 편집 모드와 복사 모드를 오가며 씁니다. 타이핑하면 바로 저장됩니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="원클릭 복붙 작업대 · 복사 · 메모 | TOOLKIT" />
+<meta name="twitter:description" content="작업 중인 프롬프트·대본·링크를 카드로 모아 두고 편집 모드와 복사 모드를 오가며 씁니다. 타이핑하면 바로 저장됩니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "원클릭 복붙 작업대",
+  "description": "작업 중인 프롬프트·대본·링크를 카드로 모아 두고 편집 모드와 복사 모드를 오가며 씁니다. 타이핑하면 바로 저장됩니다.",
+  "url": "https://mnledu.com/productivity/copy-desk.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "ko-KR",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "김장길",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#productivity"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "원클릭 복붙 작업대",
+      "item": "https://mnledu.com/productivity/copy-desk.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg:#F8FAFC; --panel:#FFFFFF; --line:#E2E8F0; --line2:#F1F5F9; --sub:#F8FAFC;
+    --ink:#0F172A; --ink2:#334155; --muted:#64748B;
+    --accent:#4F46E5; --accent2:#4338CA; --soft:#EEF2FF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard','Pretendard Variable',system-ui,-apple-system,'Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1440px;margin:0 auto;padding:0 16px}
+
+  .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;
+    font-size:13.5px;font-weight:600;padding:8px 12px;cursor:pointer;min-height:38px;
+    font-family:inherit;white-space:nowrap;transition:border-color .12s,background .12s,transform .06s}
+  .btn:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.p:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+  .btn.ic{min-height:34px;padding:6px 9px;font-size:13px}
+  .btn.dan{color:#B91C1C;border-color:#FECACA}
+  .btn.dan:hover:not(:disabled){background:#FEF2F2;border-color:#FCA5A5}
+
+  label.lab{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+  .hint{font-size:12px;color:var(--muted);line-height:1.7;margin:7px 0 0}
+  .fld{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+    font-size:14px;color:var(--ink);outline:none;background:var(--panel);min-height:42px;
+    font-family:inherit}
+  .fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.13)}
+  .fld::placeholder{color:#CBD5E1}
+  select.fld{appearance:none;cursor:pointer;padding-right:32px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 17px) 53%,calc(100% - 12px) 53%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+  /* ---------- 모드 스위치 ---------- */
+  #modeSw{display:inline-flex;background:var(--line2);border-radius:10px;padding:3px;gap:2px}
+  #modeSw button{border:0;background:transparent;color:var(--muted);font-family:inherit;
+    font-size:13px;font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer;
+    white-space:nowrap;transition:background .15s,color .15s}
+  #modeSw button.on{background:var(--panel);color:var(--accent);
+    box-shadow:0 1px 3px rgba(15,23,42,.1)}
+
+  /* ---------- 2분할 ---------- */
+  #desk{display:grid;gap:14px;grid-template-columns:1fr;
+    align-items:start;padding:16px 0 40px}
+  @media(min-width:960px){#desk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden}
+  .ph{padding:11px 14px;border-bottom:1px solid var(--line);background:var(--sub);
+    display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}
+  .ph b{font-size:13px;font-weight:800}
+  .ph small{font-size:11.5px;color:var(--muted)}
+
+  #shelf{padding:11px;max-height:min(70vh,720px);overflow-y:auto}
+  .memo{border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:9px;
+    cursor:pointer;position:relative;background:var(--panel);
+    transition:border-color .13s,transform .09s,box-shadow .13s,opacity .13s}
+  .memo:hover{border-color:var(--accent);box-shadow:0 3px 12px rgba(79,70,229,.1)}
+  .memo:active{transform:scale(.995)}
+  .memo.sel{border-color:var(--accent);background:var(--soft)}
+  .memo.dragging{opacity:.4}
+  .memo.over{border-top:2px solid var(--accent)}
+  .memo .top{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .memo .lb{font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:99px;flex:none}
+  .memo .ty{font-size:11px;color:var(--muted);flex:none}
+  .memo .nm{font-size:13.5px;font-weight:700;line-height:1.5;word-break:break-word;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .memo .pv{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:5px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    word-break:break-word;font-family:ui-monospace,Consolas,monospace}
+  .memo .tm{font-size:10.5px;color:var(--muted);margin-top:7px;opacity:.85}
+  .memo .thumb{width:100%;height:64px;object-fit:cover;border-radius:7px;margin-top:6px;
+    background:var(--line2);display:block}
+  .memo .acts{position:absolute;top:8px;right:8px;display:flex;gap:2px;opacity:0;
+    transition:opacity .12s}
+  .memo:hover .acts{opacity:1}
+  .memo .acts button{border:0;background:rgba(255,255,255,.94);color:var(--muted);
+    cursor:pointer;font-size:12px;padding:4px 6px;border-radius:6px;line-height:1;
+    box-shadow:0 1px 3px rgba(15,23,42,.12)}
+  .memo .acts button:hover{background:var(--accent);color:#fff}
+  .memo .grab{position:absolute;left:3px;top:50%;transform:translateY(-50%);
+    color:#CBD5E1;font-size:12px;cursor:grab;padding:6px 2px;opacity:0;transition:opacity .12s}
+  .memo:hover .grab{opacity:1}
+
+  /* 복사 모드 */
+  body.quick .memo::after{content:'📋';position:absolute;inset:0;display:flex;
+    align-items:center;justify-content:center;font-size:26px;
+    background:rgba(79,70,229,.9);color:#fff;border-radius:10px;opacity:0;
+    transition:opacity .14s;pointer-events:none}
+  body.quick .memo:hover::after{opacity:1}
+  body.quick .memo .acts{z-index:3}
+  body.quick .memo .grab{display:none}
+
+  #shelfEmpty{padding:38px 16px;text-align:center;color:var(--muted);font-size:13px;line-height:1.9}
+
+  /* ---------- 캔버스 ---------- */
+  #canvasBody{padding:16px}
+  #cvNone{padding:70px 20px;text-align:center;color:var(--muted);font-size:14px;line-height:1.95}
+  #cvNone .big{font-size:34px;margin-bottom:12px}
+  #cvForm > div{margin-bottom:11px}
+  #cvText{min-height:min(46vh,460px);resize:vertical;line-height:1.85;
+    font-family:ui-monospace,Consolas,monospace;font-size:13.5px}
+  #cvImgWrap{text-align:center;padding:14px;background:var(--line2);border-radius:11px}
+  #cvImg{max-width:100%;max-height:min(46vh,440px);object-fit:contain;border-radius:8px}
+  #cvMeta{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);
+    padding-top:11px;border-top:1px solid var(--line2);margin-top:12px}
+
+  /* ---------- 모달 ---------- */
+  #modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;
+    padding:18px;background:rgba(15,23,42,.42)}
+  #modal.on{display:flex}
+  #modalBox{background:var(--panel);border:1px solid var(--line);border-radius:14px;width:100%;
+    max-width:460px;max-height:88vh;overflow-y:auto;padding:20px;
+    box-shadow:0 24px 56px rgba(15,23,42,.24)}
+  #typeRow{display:grid;gap:6px;grid-template-columns:repeat(3,1fr)}
+  #typeRow button{border:1px solid var(--line);background:var(--panel);border-radius:9px;
+    padding:10px 6px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
+    color:var(--ink2);transition:border-color .12s,background .12s}
+  #typeRow button.on{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+  #imgDrop{border:2px dashed var(--line);border-radius:10px;padding:24px 14px;text-align:center;
+    cursor:pointer;background:var(--sub);font-size:13px;color:var(--muted)}
+  #imgDrop:hover{border-color:var(--accent);color:var(--ink)}
+  #imgPv{max-width:100%;max-height:150px;object-fit:contain;display:none;margin:0 auto}
+
+  #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);opacity:0;
+    background:var(--ink);color:#fff;border-radius:10px;padding:11px 19px;font-size:13.5px;
+    z-index:90;transition:opacity .16s,transform .16s;font-weight:700;max-width:90vw;
+    text-align:center;pointer-events:none;display:flex;align-items:center;gap:10px}
+  #toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+  #toast button{border:0;background:rgba(255,255,255,.2);color:#fff;border-radius:7px;
+    padding:5px 10px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+  #toast button:hover{background:rgba(255,255,255,.32)}
+  .saveDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#22C55E;
+    opacity:0;transition:opacity .2s;margin-right:4px}
+  .saveDot.on{opacity:1}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ---------- v2 기능용 편집 영역: 원본 캔버스 디자인에 맞춤 ---------- */
+  .btn.sm{min-height:32px;padding:5px 10px;font-size:12.5px;border-radius:8px}
+  #editBody{padding:16px}
+  #typeRow{margin-bottom:11px}
+  #typeRow button:disabled{opacity:.45;cursor:not-allowed}
+  #edRow{display:grid;gap:8px;grid-template-columns:1fr 150px;margin-bottom:11px}
+  @media(max-width:520px){#edRow{grid-template-columns:1fr}}
+  #edText{min-height:min(46vh,460px);resize:vertical;line-height:1.85;
+    font-family:ui-monospace,Consolas,monospace;font-size:13.5px}
+  #edImgWrap{border:2px dashed var(--line);border-radius:10px;padding:24px 14px;text-align:center;
+    cursor:pointer;background:var(--sub);font-size:13px;color:var(--muted);min-height:170px;
+    display:flex;align-items:center;justify-content:center}
+  #edImgWrap:hover{border-color:var(--accent);color:var(--ink)}
+  #edImgWrap.has{padding:14px;background:var(--line2)}
+  #edImgPv{max-width:100%;max-height:min(46vh,440px);object-fit:contain;display:none;border-radius:8px}
+  #edMeta{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);
+    padding-top:11px;border-top:1px solid var(--line2);margin-top:12px}
+  #edHead{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #edHeadWrap{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+  #edActs{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+  #stateTag{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;
+    background:var(--soft);color:var(--accent);white-space:nowrap}
+  #stateTag.edit{background:#FEF3C7;color:#A16207}
+  #edNote{margin-top:10px}
+
+  /* ---------- v2 다중 선택: 원본 카드 분위기를 해치지 않게 최소화 ---------- */
+  #shelfBar{padding:8px 11px;border-bottom:1px solid var(--line2);display:flex;gap:6px;
+    align-items:center;flex-wrap:wrap;background:var(--panel)}
+  #shelfBar.hidden{display:none}
+  #pickCount{font-size:11.5px;font-weight:700;color:var(--muted)}
+  .memo{padding-left:34px}
+  .memo .pick{position:absolute;left:10px;top:13px;width:15px;height:15px;
+    accent-color:var(--accent);cursor:pointer;z-index:3}
+  .memo.picked{border-color:#F59E0B;background:#FFFBEB}
+  .memo .grab{left:5px}
+  body.quick .memo .pick{z-index:3}
+  @media(max-width:959px){
+    #shelf{max-height:none}
+    #edText{min-height:280px}
+  }
+
+</style>
+</head>
+<body>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="wrap">
+  <header style="display:flex;align-items:center;gap:12px;padding:16px 0 8px;flex-wrap:wrap">
+    <div>
+      <h1 style="font-size:17px;font-weight:800;letter-spacing:-.02em;margin:0">🗒 복붙 작업대</h1>
+      <p class="hint" style="margin:2px 0 0">왼쪽에서 편집하고, 오른쪽에 보관하세요</p>
+    </div>
+    <span style="flex:1"></span>
+    <div id="modeSw" role="tablist">
+      <button data-m="edit" class="on">✍️ 편집</button>
+      <button data-m="quick">⚡ 퀵 복사</button>
+    </div>
+    <button class="btn p" id="addBtn">＋ 새 메모</button>
+  </header>
+
+  <div id="desk">
+    <!-- 편집창: 큰 화면에서는 왼쪽, 작은 화면에서는 위 -->
+    <div class="panel">
+      <div class="ph">
+        <div id="edHeadWrap">
+          <b id="edHead">✍️ 새 메모</b>
+          <span id="stateTag">작성 중</span>
+        </div>
+        <div id="edActs">
+          <button class="btn ic p" id="saveBtn">＋ 등록</button>
+          <button class="btn ic" id="copyEdBtn" title="지금 내용 복사">📋 복사</button>
+          <button class="btn ic" id="newBtn" title="새로 쓰기">🆕 새로</button>
+        </div>
+      </div>
+      <div id="editBody">
+        <div id="typeRow">
+          <button data-t="text" class="on">📝 텍스트</button>
+          <button data-t="link">🔗 링크</button>
+          <button data-t="image">🖼️ 이미지</button>
+        </div>
+
+        <div id="edRow">
+          <input class="fld" id="edTitle" placeholder="제목 — 비우면 첫 줄에서 가져옵니다" autocomplete="off">
+          <select class="fld" id="edLabel" aria-label="라벨"></select>
+        </div>
+
+        <div id="wrapText">
+          <textarea class="fld" id="edText" placeholder="프롬프트, 대본, 자주 쓰는 문구를 여기에 쓰세요.&#10;등록하면 오른쪽 보관함에 카드로 쌓입니다."></textarea>
+        </div>
+
+        <div id="wrapLink" style="display:none">
+          <input class="fld mono" id="edUrl" placeholder="example.com 또는 https://..." autocomplete="off">
+          <p class="hint">앞부분을 빼고 넣으셔도 알아서 붙입니다.</p>
+        </div>
+
+        <div id="wrapImg" style="display:none">
+          <div id="edImgWrap" role="button" tabindex="0">
+            <span id="edImgHint">📁 눌러서 고르기 · 끌어다 놓기 · 붙여넣기</span>
+            <img id="edImgPv" alt="">
+          </div>
+          <input type="file" id="edFile" accept="image/*" style="display:none">
+        </div>
+
+        <div id="edMeta"></div>
+        <p class="hint" id="edNote">단축키 <b class="mono">Ctrl+S</b> 저장 · <b class="mono">Ctrl+E</b> 모드 전환 · <b class="mono">Ctrl+N</b> 새 메모</p>
+      </div>
+    </div>
+
+    <!-- 보관함: 큰 화면에서는 오른쪽, 작은 화면에서는 아래 -->
+    <div class="panel">
+      <div class="ph">
+        <b>📚 보관함 <span class="mono" id="cnt" style="font-weight:600;color:var(--muted)"></span></b>
+        <div style="display:flex;gap:5px;align-items:center">
+          <select class="fld" id="filterLb" style="min-height:30px;font-size:12px;padding:4px 26px 4px 8px;width:auto" aria-label="라벨로 걸러 보기">
+            <option value="">전체</option>
+          </select>
+          <button class="btn ic dan" id="clearBtn" title="작업대 비우기">🧹</button>
+        </div>
+      </div>
+      <div id="shelfBar" class="hidden">
+        <span id="pickCount"></span>
+        <span style="flex:1"></span>
+        <button class="btn sm" id="pickAll">전체 선택</button>
+        <button class="btn sm" id="pickNone">선택 해제</button>
+        <button class="btn sm dan" id="pickDel">선택 삭제</button>
+      </div>
+      <div id="shelf"></div>
+    </div>
+  </div>
+
+  <p class="hint" style="padding-bottom:26px">
+    <span class="saveDot" id="dot"></span><span id="saveState">저절로 보관됩니다</span>
+    <span id="usage" class="mono"></span>
+    · 단축키 <b class="mono">Ctrl+E</b> 모드 전환 · <b class="mono">Ctrl+S</b> 저장 · <b class="mono">Ctrl+N</b> 새 메모
+  </p>
+</div>
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+var toastT = null;
+function toast(m, undoFn){
+  var t = $('toast');
+  t.innerHTML = '<span>' + esc(m) + '</span>';
+  if (undoFn){
+    var b = document.createElement('button');
+    b.textContent = '되돌리기';
+    b.addEventListener('click', function(){ t.classList.remove('on'); undoFn(); });
+    t.appendChild(b);
+  }
+  t.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ t.classList.remove('on'); }, undoFn ? 6000 : 1900);
+}
+function copyText(txt, done){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ done(true); }, fb);
+  } else fb();
+  function fb(){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta); done(ok);
+  }
+}
+function fmtSize(b){
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(0) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+function relTime(ts){
+  var d = Math.floor((Date.now() - ts) / 1000);
+  if (d < 60) return '방금';
+  if (d < 3600) return Math.floor(d/60) + '분 전';
+  if (d < 86400) return Math.floor(d/3600) + '시간 전';
+  if (d < 604800) return Math.floor(d/86400) + '일 전';
+  var t = new Date(ts);
+  return (t.getMonth()+1) + '월 ' + t.getDate() + '일';
+}
+
+var LABELS = [
+  { k:'none', n:'라벨 없음', bg:'#F1F5F9', fg:'#64748B' },
+  { k:'imp',  n:'🔴 중요',   bg:'#FEE2E2', fg:'#B91C1C' },
+  { k:'pr',   n:'🔵 프롬프트', bg:'#DBEAFE', fg:'#1D4ED8' },
+  { k:'lk',   n:'🟢 링크',   bg:'#DCFCE7', fg:'#15803D' },
+  { k:'ref',  n:'🟡 레퍼런스', bg:'#FEF3C7', fg:'#A16207' }
+];
+function labelOf(k){ return LABELS.filter(function(x){ return x.k === k; })[0] || LABELS[0]; }
+var TYPE_NAME = { text:'📝 텍스트', link:'🔗 링크', image:'🖼️ 이미지' };
+
+/* ============================================================
+   State
+   ============================================================ */
+var KEY = 'tk-copy-desk-v2';
+var state = { notes: [], seq: 1, mode: 'edit', filter: '' };
+var editId = null;          /* null 이면 새로 쓰는 중 */
+var edType = 'text', edImg = null, edW = 0, edH = 0;
+var picked = {};            /* 선택 삭제용 */
+var lsOk = true, saveT = null;
+
+function load(){
+  try {
+    var raw = localStorage.getItem(KEY) || localStorage.getItem('tk-copy-desk-v1');
+    if (!raw) return;
+    var o = JSON.parse(raw);
+    if (o && Array.isArray(o.notes)) state.notes = o.notes;
+    if (typeof o.seq === 'number') state.seq = o.seq;
+    if (o.mode) state.mode = o.mode;
+    if (typeof o.filter === 'string') state.filter = o.filter;
+  } catch(e){
+    lsOk = false;
+    $('saveState').textContent = '이 브라우저에서는 보관이 막혀 있습니다';
+  }
+}
+function save(){
+  if (!lsOk) return;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+    var d = $('dot'); d.classList.add('on');
+    $('saveState').textContent = '보관했습니다 · ' + new Date().toLocaleTimeString('ko-KR');
+    setTimeout(function(){ d.classList.remove('on'); }, 800);
+    updateUsage();
+  } catch(e){
+    lsOk = false;
+    $('saveState').textContent = '보관 공간이 가득 찼습니다';
+    toast('저장 공간이 가득 찼습니다 · 오래된 메모를 지워 주세요');
+  }
+}
+/* 한 글자마다 저장하면 느려진다. 손을 멈추면 저장한다 */
+function saveSoon(){ clearTimeout(saveT); saveT = setTimeout(save, 350); }
+window.addEventListener('beforeunload', function(){ clearTimeout(saveT); save(); });
+function updateUsage(){
+  try {
+    var n = (localStorage.getItem(KEY) || '').length;
+    $('usage').textContent = n ? ' · ' + fmtSize(n) : '';
+  } catch(e){}
+}
+
+/* ============================================================
+   Normalising input
+   ============================================================ */
+/* 제목을 비우면 본문 첫 줄을 쓴다. 마크다운 기호는 걷어 낸다 */
+function autoTitle(text){
+  var lines = String(text || '').split('\n');
+  for (var i = 0; i < lines.length; i++){
+    var s = lines[i].trim();
+    if (!s) continue;
+    s = s.replace(/^#{1,6}\s+/, '').replace(/^[-*+]\s+/, '').replace(/^\d+[.)]\s+/, '').trim();
+    if (s) return s.length > 40 ? s.slice(0, 40) + '…' : s;
+  }
+  return '';
+}
+function normUrl(v){
+  var s = String(v || '').trim();
+  if (!s) return null;
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = 'https://' + s;
+  try {
+    var u = new URL(s);
+    /* http 와 https 만 받는다. javascript: 같은 주소를 막기 위해서다 */
+    if (!/^https?:$/.test(u.protocol)) return null;
+    return u.href;
+  } catch(e){ return null; }
+}
+function noteText(n){
+  if (n.type === 'link') return n.url;
+  if (n.type === 'image') return n.data || '';
+  return n.body || '';
+}
+
+/* ============================================================
+   편집창
+   아무것도 안 고르면 새 메모, 카드를 고르면 그 메모를 고친다
+   ============================================================ */
+function setType(t, lock){
+  edType = t;
+  document.querySelectorAll('#typeRow button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.t === t);
+    b.disabled = !!lock;
+  });
+  $('wrapText').style.display = t === 'text' ? 'block' : 'none';
+  $('wrapLink').style.display = t === 'link' ? 'block' : 'none';
+  $('wrapImg').style.display  = t === 'image' ? 'block' : 'none';
+}
+function fillLabels(sel){
+  $('edLabel').innerHTML = LABELS.map(function(l){
+    return '<option value="' + l.k + '"' + (sel === l.k ? ' selected' : '') + '>' + esc(l.n) + '</option>';
+  }).join('');
+}
+function newMemo(keepType){
+  editId = null;
+  edImg = null; edW = 0; edH = 0;
+  $('edTitle').value = '';
+  $('edText').value = '';
+  $('edUrl').value = '';
+  $('edImgPv').style.display = 'none';
+  $('edImgHint').style.display = '';
+  $('edImgWrap').classList.remove('has');
+  fillLabels('none');
+  setType(keepType || 'text', false);
+  $('edHead').textContent = '✍️ 새 메모';
+  $('stateTag').textContent = '작성 중';
+  $('stateTag').classList.remove('edit');
+  $('saveBtn').textContent = '＋ 등록';
+  $('edMeta').innerHTML = '';
+  renderShelf();
+}
+function openMemo(id){
+  var n = state.notes.filter(function(x){ return x.id === id; })[0];
+  if (!n) return;
+  editId = id;
+  edImg = null;
+  $('edTitle').value = n.manualTitle ? n.title : '';
+  fillLabels(n.label || 'none');
+  /* 이미 만든 메모는 종류를 바꾸지 않는다 */
+  setType(n.type, true);
+  if (n.type === 'text') $('edText').value = n.body || '';
+  else if (n.type === 'link') $('edUrl').value = n.url || '';
+  else if (n.type === 'image'){
+    $('edImgPv').src = n.data || '';
+    $('edImgPv').style.display = 'block';
+    $('edImgHint').style.display = 'none';
+    $('edImgWrap').classList.add('has');
+  }
+  $('edHead').textContent = '✎ ' + (n.title || '(제목 없음)');
+  $('stateTag').textContent = '고치는 중';
+  $('stateTag').classList.add('edit');
+  $('saveBtn').textContent = '💾 수정 저장';
+  showMeta(n);
+  renderShelf();
+}
+function showMeta(n){
+  var lb = labelOf(n ? n.label : 'none');
+  var bits = [];
+  if (n){
+    bits.push(TYPE_NAME[n.type]);
+    if (n.label && n.label !== 'none')
+      bits.push('<span class="lb" style="background:' + lb.bg + ';color:' + lb.fg +
+        ';padding:2px 8px;border-radius:99px;font-size:11px;font-weight:800">' + esc(lb.n) + '</span>');
+    bits.push('만든 때 ' + new Date(n.at).toLocaleString('ko-KR'));
+    if (n.type === 'image') bits.push((n.w||'?') + '×' + (n.h||'?') + ' · ' + fmtSize(n.size||0));
+  }
+  if (edType === 'text'){
+    var v = $('edText').value;
+    bits.push('<span id="edLen">' + v.length.toLocaleString('en-US') + '자 · ' +
+      v.split('\n').length + '줄</span>');
+  }
+  $('edMeta').innerHTML = bits.join('');
+  $('edMeta').style.gap = '12px';
+}
+document.querySelectorAll('#typeRow button').forEach(function(b){
+  b.addEventListener('click', function(){
+    if (this.disabled) return;
+    setType(this.dataset.t, false);
+    showMeta(null);
+  });
+});
+$('edText').addEventListener('input', function(){
+  var v = this.value;
+  var el = $('edLen');
+  if (el) el.textContent = v.length.toLocaleString('en-US') + '자 · ' + v.split('\n').length + '줄';
+  /* 고치는 중이면 즉시 반영한다 */
+  if (editId !== null){
+    var n = state.notes.filter(function(x){ return x.id === editId; })[0];
+    if (n && n.type === 'text'){
+      n.body = v;
+      if (!n.manualTitle) n.title = autoTitle(v) || '(제목 없음)';
+      $('edHead').textContent = '✎ ' + n.title;
+      renderShelf();
+      saveSoon();
+    }
+  }
+});
+$('edUrl').addEventListener('input', function(){
+  if (editId === null) return;
+  var n = state.notes.filter(function(x){ return x.id === editId; })[0];
+  if (!n || n.type !== 'link') return;
+  var u = normUrl(this.value);
+  if (u){ n.url = u; renderShelf(); saveSoon(); }
+});
+$('edTitle').addEventListener('input', function(){
+  if (editId === null) return;
+  var n = state.notes.filter(function(x){ return x.id === editId; })[0];
+  if (!n) return;
+  var t = this.value.trim();
+  n.manualTitle = !!t;
+  n.title = t || autoTitle(n.body || '') || (n.type === 'link' ? n.url : '(제목 없음)');
+  $('edHead').textContent = '✎ ' + n.title;
+  renderShelf(); saveSoon();
+});
+$('edLabel').addEventListener('change', function(){
+  if (editId === null) return;
+  var n = state.notes.filter(function(x){ return x.id === editId; })[0];
+  if (!n) return;
+  n.label = this.value;
+  renderShelf(); saveSoon();
+});
+
+/* ---------- 저장 ---------- */
+$('saveBtn').addEventListener('click', function(){
+  var typed = $('edTitle').value.trim();
+  var lb = $('edLabel').value;
+
+  if (editId !== null){
+    /* 고치는 중에는 이미 반영돼 있다. 이미지만 새로 넣었으면 갈아 끼운다 */
+    var n = state.notes.filter(function(x){ return x.id === editId; })[0];
+    if (n && edType === 'image' && edImg){
+      n.data = edImg; n.w = edW; n.h = edH; n.size = Math.round(edImg.length * 0.75);
+      edImg = null;
+    }
+    if (n){ n.label = lb; }
+    renderShelf(); save();
+    toast('수정했습니다');
+    return;
+  }
+
+  var obj = null;
+  if (edType === 'text'){
+    var body = $('edText').value;
+    if (!body.trim()){ toast('내용을 넣어 주세요'); $('edText').focus(); return; }
+    obj = { id: state.seq++, type:'text', title: typed || autoTitle(body) || '(제목 없음)',
+      manualTitle: !!typed, body: body, label: lb, at: Date.now() };
+  } else if (edType === 'link'){
+    var u = normUrl($('edUrl').value);
+    if (!u){ toast('주소를 알아볼 수 없습니다'); $('edUrl').focus(); return; }
+    var auto = (function(){ try { return new URL(u).hostname.replace(/^www\./,''); } catch(e){ return u; } })();
+    obj = { id: state.seq++, type:'link', title: typed || auto, manualTitle: !!typed,
+      url: u, label: lb, at: Date.now() };
+  } else {
+    if (!edImg){ toast('그림을 넣어 주세요'); return; }
+    obj = { id: state.seq++, type:'image', title: typed || '그림', manualTitle: !!typed,
+      data: edImg, w: edW, h: edH, size: Math.round(edImg.length * 0.75),
+      label: lb, at: Date.now() };
+  }
+  state.notes.unshift(obj);
+  save();
+  toast('등록했습니다 · ' + obj.title);
+  newMemo(edType);           /* 같은 종류로 이어서 쓸 수 있게 둔다 */
+});
+$('newBtn').addEventListener('click', function(){
+  newMemo('text');
+  toast('새로 쓰기');
+  $('edText').focus();
+});
+$('addBtn').addEventListener('click', function(){
+  newMemo('text');
+  $('edText').focus();
+});
+$('copyEdBtn').addEventListener('click', function(){
+  var v = edType === 'text' ? $('edText').value
+        : edType === 'link' ? $('edUrl').value : (edImg || '');
+  if (!v.trim()){ toast('복사할 내용이 없습니다'); return; }
+  if (edType === 'image'){ copyImageData(v, $('edTitle').value || 'image'); return; }
+  copyText(v, function(ok){ toast(ok ? '복사했습니다' : '복사가 막혔습니다'); });
+});
+
+/* ---------- 이미지 ---------- */
+$('edImgWrap').addEventListener('click', function(){ $('edFile').click(); });
+$('edImgWrap').addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('edFile').click(); }
+});
+$('edFile').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  this.value = '';
+  if (f) takeImage(f);
+});
+$('edImgWrap').addEventListener('dragover', function(e){ e.preventDefault(); });
+$('edImgWrap').addEventListener('drop', function(e){
+  e.preventDefault();
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) takeImage(f);
+});
+document.addEventListener('paste', function(e){
+  if (edType !== 'image') return;
+  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  var dt = e.clipboardData; if (!dt) return;
+  var f = null;
+  if (dt.files && dt.files.length) f = dt.files[0];
+  if (!f && dt.items){
+    for (var i = 0; i < dt.items.length; i++){
+      if (dt.items[i].kind === 'file'){ f = dt.items[i].getAsFile(); break; }
+    }
+  }
+  if (f && /^image\//.test(f.type || '')){ e.preventDefault(); takeImage(f); }
+});
+/* 브라우저가 내주는 공간이 넉넉하지 않아 크기를 줄여 담는다.
+   투명한 배경이 있으면 PNG 를 지키고, 없으면 용량이 작은 JPEG 로 바꾼다 */
+function takeImage(file){
+  if (!/^image\//.test(file.type || '')){ toast('그림 파일이 아닙니다'); return; }
+  var url = URL.createObjectURL(file);
+  var im = new Image();
+  im.onload = function(){
+    var MAX = 800;
+    var k = Math.min(1, MAX / Math.max(im.naturalWidth, im.naturalHeight));
+    var w = Math.max(1, Math.round(im.naturalWidth * k));
+    var h = Math.max(1, Math.round(im.naturalHeight * k));
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    var ctx = c.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(im, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+
+    var hasAlpha = false;
+    try {
+      var d = ctx.getImageData(0, 0, w, h).data;
+      var step = Math.max(4, Math.floor(d.length / 4 / 20000) * 4);
+      for (var i = 3; i < d.length; i += step){
+        if (d[i] < 255){ hasAlpha = true; break; }
+      }
+    } catch(e){ hasAlpha = true; }
+
+    var out = hasAlpha ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', 0.82);
+    edImg = out; edW = w; edH = h;
+    $('edImgPv').src = out;
+    $('edImgPv').style.display = 'block';
+    $('edImgHint').style.display = 'none';
+    $('edImgWrap').classList.add('has');
+    var bytes = Math.round(out.length * 0.75);
+    $('edMeta').innerHTML = w + '×' + h + ' · ' + fmtSize(bytes) +
+      (k < 1 ? ' (줄여서 담았습니다)' : '') + (hasAlpha ? ' · 투명 배경 유지' : '');
+    if (!$('edTitle').value){
+      $('edTitle').value = String(file.name || '그림').replace(/\.[^.]+$/, '').slice(0, 30);
+    }
+  };
+  im.onerror = function(){ URL.revokeObjectURL(url); toast('그림을 읽지 못했습니다'); };
+  im.src = url;
+}
+
+/* ============================================================
+   Modes
+   ============================================================ */
+function applyMode(m){
+  state.mode = m;
+  document.body.classList.toggle('quick', m === 'quick');
+  document.querySelectorAll('#modeSw button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.m === m);
+  });
+}
+document.querySelectorAll('#modeSw button').forEach(function(b){
+  b.addEventListener('click', function(){ applyMode(this.dataset.m); save(); });
+});
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+function visible(){
+  if (!state.filter) return state.notes;
+  return state.notes.filter(function(n){ return n.label === state.filter; });
+}
+function renderShelf(){
+  var list = visible();
+  if (!list.length){
+    $('shelf').innerHTML = '<div id="shelfEmpty">' +
+      (state.notes.length ? '이 라벨에 해당하는 메모가 없습니다.'
+        : '아직 메모가 없습니다.<br>오른쪽 편집창에 쓰고 <b>＋ 등록</b>을 눌러 보세요.') + '</div>';
+  } else {
+    $('shelf').innerHTML = list.map(function(n){
+      var lb = labelOf(n.label);
+      var body = '';
+      if (n.type === 'image' && n.data){
+        body = '<img class="thumb" src="' + n.data + '" alt="" loading="lazy">';
+      } else {
+        var pv = n.type === 'link' ? n.url : (n.body || '');
+        if (pv) body = '<div class="pv">' + esc(pv) + '</div>';
+      }
+      return '<div class="memo' + (editId === n.id ? ' sel' : '') +
+        (picked[n.id] ? ' picked' : '') + '" data-id="' + n.id + '"' +
+        ' draggable="true" role="button" tabindex="0">' +
+        '<input type="checkbox" class="pick"' + (picked[n.id] ? ' checked' : '') +
+          ' aria-label="선택">' +
+        '<span class="grab">⠿</span>' +
+        '<div class="acts">' +
+          (n.type === 'link' ? '<button data-a="open" title="새 창으로 열기">↗</button>' : '') +
+          '<button data-a="copy" title="복사">📋</button>' +
+          '<button data-a="del" title="지우기">×</button>' +
+        '</div>' +
+        '<div class="top">' +
+          (n.label && n.label !== 'none'
+            ? '<span class="lb" style="background:' + lb.bg + ';color:' + lb.fg + '">' + esc(lb.n) + '</span>'
+            : '') +
+          '<span class="ty">' + TYPE_NAME[n.type] + '</span>' +
+        '</div>' +
+        '<div class="nm">' + esc(n.title || '(제목 없음)') + '</div>' +
+        body +
+        '<div class="tm">' + relTime(n.at) + '</div>' +
+      '</div>';
+    }).join('');
+  }
+  $('cnt').textContent = state.notes.length
+    ? '(' + (state.filter ? list.length + '/' : '') + state.notes.length + ')' : '';
+  renderFilter();
+  renderPickBar();
+}
+function renderFilter(){
+  var sel = $('filterLb');
+  var used = {};
+  state.notes.forEach(function(n){ if (n.label && n.label !== 'none') used[n.label] = 1; });
+  var html = '<option value="">전체</option>';
+  LABELS.forEach(function(l){
+    if (l.k === 'none' || !used[l.k]) return;
+    html += '<option value="' + l.k + '">' + esc(l.n) + '</option>';
+  });
+  if (sel.innerHTML !== html) sel.innerHTML = html;
+  sel.value = state.filter;
+}
+function pickedIds(){
+  return Object.keys(picked).filter(function(k){ return picked[k]; }).map(Number);
+}
+function renderPickBar(){
+  var ids = pickedIds();
+  var bar = $('shelfBar');
+  bar.classList.toggle('hidden', !state.notes.length);
+  $('pickCount').textContent = ids.length ? ids.length + '개 선택함' : '선택해서 지울 수 있습니다';
+  $('pickDel').disabled = !ids.length;
+  $('pickNone').disabled = !ids.length;
+}
+function updateUsageAll(){ updateUsage(); }
+
+/* ============================================================
+   Shelf actions
+   ============================================================ */
+$('shelf').addEventListener('change', function(ev){
+  var cb = ev.target.closest('.pick');
+  if (!cb) return;
+  var id = +cb.closest('.memo').dataset.id;
+  picked[id] = cb.checked;
+  cb.closest('.memo').classList.toggle('picked', cb.checked);
+  renderPickBar();
+});
+$('shelf').addEventListener('click', function(ev){
+  if (ev.target.closest('.pick')) return;
+  var act = ev.target.closest('[data-a]');
+  var card = ev.target.closest('.memo');
+  if (!card) return;
+  var id = +card.dataset.id;
+  var n = state.notes.filter(function(x){ return x.id === id; })[0];
+  if (!n) return;
+  if (act){
+    ev.stopPropagation();
+    if (act.dataset.a === 'open'){ window.open(n.url, '_blank', 'noopener'); return; }
+    if (act.dataset.a === 'copy'){ doCopy(n); return; }
+    if (act.dataset.a === 'del'){ removeNotes([id]); return; }
+  }
+  if (state.mode === 'quick'){ doCopy(n); return; }
+  openMemo(id);
+});
+$('shelf').addEventListener('keydown', function(ev){
+  if (ev.key !== 'Enter' && ev.key !== ' ') return;
+  var card = ev.target.closest('.memo');
+  if (!card) return;
+  ev.preventDefault();
+  card.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+});
+function doCopy(n){
+  var v = noteText(n);
+  if (!v){ toast('복사할 내용이 없습니다'); return; }
+  if (n.type === 'image'){ copyImageData(n.data, n.title || 'image'); return; }
+  copyText(v, function(ok){ toast(ok ? '복사했습니다 · ' + (n.title || '') : '복사가 막혔습니다'); });
+}
+/* 이미지는 그림 자체를 클립보드에 담아야 문서에 붙여넣을 수 있다.
+   받아 주는 형식이 PNG 뿐이라 그때 한 번 더 바꾼다 */
+function copyImageData(dataUrl, name){
+  if (!dataUrl){ toast('복사할 그림이 없습니다'); return; }
+  if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write){
+    downloadData(dataUrl, name + '.png');
+    toast('이 브라우저는 그림 복사를 막고 있어 파일로 저장했습니다');
+    return;
+  }
+  var im = new Image();
+  im.onload = function(){
+    var c = document.createElement('canvas');
+    c.width = im.naturalWidth; c.height = im.naturalHeight;
+    c.getContext('2d').drawImage(im, 0, 0);
+    c.toBlob(function(b){
+      if (!b){ toast('그림을 준비하지 못했습니다'); return; }
+      navigator.clipboard.write([ new ClipboardItem({ 'image/png': b }) ]).then(function(){
+        toast('그림을 복사했습니다 · 붙여넣기 하세요');
+      }, function(){
+        downloadData(dataUrl, name + '.png');
+        toast('그림 복사가 막혀 파일로 저장했습니다');
+      });
+    }, 'image/png');
+  };
+  im.onerror = function(){ toast('그림을 읽지 못했습니다'); };
+  im.src = dataUrl;
+}
+function downloadData(dataUrl, name){
+  try {
+    var a = document.createElement('a');
+    a.href = dataUrl; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  } catch(e){}
+}
+/* 여러 개를 한 번에 지우고 되돌릴 수 있게 자리까지 기억해 둔다 */
+function removeNotes(ids){
+  if (!ids.length) return;
+  var backup = [];
+  ids.forEach(function(id){
+    var i = state.notes.findIndex(function(x){ return x.id === id; });
+    if (i >= 0) backup.push({ at: i, note: state.notes[i] });
+  });
+  if (!backup.length) return;
+  var names = backup.map(function(b){ return b.note.title || '메모'; });
+  state.notes = state.notes.filter(function(x){ return ids.indexOf(x.id) < 0; });
+  ids.forEach(function(id){ delete picked[id]; });
+  if (editId !== null && ids.indexOf(editId) >= 0) newMemo('text');
+  renderShelf(); save();
+  var msg = backup.length === 1 ? '"' + names[0] + '" 을(를) 지웠습니다'
+    : backup.length + '개를 지웠습니다';
+  toast(msg, function(){
+    backup.sort(function(a, b){ return a.at - b.at; }).forEach(function(b){
+      state.notes.splice(Math.min(b.at, state.notes.length), 0, b.note);
+    });
+    renderShelf(); save();
+    toast('되살렸습니다');
+  });
+}
+$('pickAll').addEventListener('click', function(){
+  visible().forEach(function(n){ picked[n.id] = true; });
+  renderShelf();
+});
+$('pickNone').addEventListener('click', function(){
+  picked = {};
+  renderShelf();
+});
+$('pickDel').addEventListener('click', function(){
+  var ids = pickedIds();
+  if (!ids.length){ toast('먼저 지울 메모를 골라 주세요'); return; }
+  if (!window.confirm('고르신 ' + ids.length + '개를 지울까요?')) return;
+  removeNotes(ids);
+});
+$('filterLb').addEventListener('change', function(){
+  state.filter = this.value; renderShelf(); save();
+});
+$('clearBtn').addEventListener('click', function(){
+  if (!state.notes.length){ toast('이미 비어 있습니다'); return; }
+  if (!window.confirm('메모 ' + state.notes.length + '개를 모두 지울까요?')) return;
+  var backup = state.notes.slice();
+  state.notes = []; picked = {}; state.filter = '';
+  newMemo('text');
+  renderShelf(); save();
+  toast('작업대를 비웠습니다', function(){
+    state.notes = backup;
+    renderShelf(); save();
+    toast('되살렸습니다');
+  });
+});
+
+/* ---------- Drag to reorder ---------- */
+var dragId = null;
+$('shelf').addEventListener('dragstart', function(ev){
+  var card = ev.target.closest('.memo');
+  if (!card || state.mode === 'quick'){ ev.preventDefault(); return; }
+  dragId = +card.dataset.id;
+  card.classList.add('dragging');
+  try { ev.dataTransfer.effectAllowed = 'move'; ev.dataTransfer.setData('text/plain', String(dragId)); } catch(e){}
+});
+$('shelf').addEventListener('dragend', function(){
+  dragId = null;
+  $('shelf').querySelectorAll('.memo').forEach(function(c){ c.classList.remove('dragging','over'); });
+});
+$('shelf').addEventListener('dragover', function(ev){
+  if (dragId === null) return;
+  ev.preventDefault();
+  var card = ev.target.closest('.memo');
+  $('shelf').querySelectorAll('.memo').forEach(function(c){ c.classList.remove('over'); });
+  if (card && +card.dataset.id !== dragId) card.classList.add('over');
+});
+$('shelf').addEventListener('drop', function(ev){
+  if (dragId === null) return;
+  ev.preventDefault();
+  var card = ev.target.closest('.memo');
+  if (!card) return;
+  var toId = +card.dataset.id;
+  if (toId === dragId) return;
+  var from = state.notes.findIndex(function(x){ return x.id === dragId; });
+  var to = state.notes.findIndex(function(x){ return x.id === toId; });
+  if (from < 0 || to < 0) return;
+  var moved = state.notes.splice(from, 1)[0];
+  state.notes.splice(to, 0, moved);
+  dragId = null;
+  renderShelf(); save();
+});
+
+/* ---------- 단축키 ---------- */
+document.addEventListener('keydown', function(ev){
+  var mod = ev.ctrlKey || ev.metaKey;
+  if (!mod) return;
+  var k = ev.key.toLowerCase();
+  if (k === 's'){ ev.preventDefault(); $('saveBtn').click(); }
+  else if (k === 'e'){ ev.preventDefault(); applyMode(state.mode === 'edit' ? 'quick' : 'edit'); save(); }
+  else if (k === 'n'){ ev.preventDefault(); $('newBtn').click(); }
+});
+
+/* ============================================================
+   Startup
+   ============================================================ */
+load();
+applyMode(state.mode || 'edit');
+$('filterLb').value = state.filter || '';
+newMemo('text');
+renderShelf();
+updateUsage();
+/* 시간 표시를 이따금 새로 고친다 */
+setInterval(renderShelf, 60000);
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:54px 20px 62px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:750px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.95;color:#334155;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.9;color:#334155;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#4338CA}
+.tk-guide code{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#0F172A}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0F172A;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.9;color:#334155;margin:6px 0 18px;padding-bottom:18px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:17px 19px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:13px;font-size:13px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#4338CA;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#4338CA}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>창을 여덟 개 띄워 놓고 오가는 작업</h2>
+<p>프롬프트를 다듬으면서 챗봇 창에 붙여넣고, 대본 초안을 고치면서 문서에 옮기고, 참고 링크를 찾아 두었다가 다시 씁니다. 그때마다 어느 창에 뭘 적어 뒀는지 헤맵니다.</p>
+<p>메모장을 쓰자니 여러 개를 띄워야 하고, 문서에 몰아 적자니 필요한 부분만 골라 복사하기가 번거롭습니다. 이 도구는 <strong>그 사이를 메웁니다.</strong> 작업 중인 것들을 카드로 세워 두고, 고칠 때는 고치고 쓸 때는 눌러서 꺼냅니다.</p>
+
+<h2>모드를 나눈 이유</h2>
+<p>글을 다듬는 일과 여기저기 붙여 넣는 일은 손놀림이 다릅니다. 다듬을 때는 카드를 눌러 펼쳐야 하고, 붙여 넣을 때는 누르는 즉시 복사돼야 합니다. 한 화면에서 둘 다 하려면 매번 다른 곳을 눌러야 해서 헷갈립니다.</p>
+<dl>
+<dt>✍️ 편집 모드</dt><dd>카드를 누르면 오른쪽 편집창에 펼쳐집니다. 이어서 쓰면 <strong>글자를 칠 때마다 카드에도 반영</strong>되고, 손을 멈추면 저장됩니다.</dd>
+<dt>⚡ 퀵 복사 모드</dt><dd>카드에 마우스를 올리면 복사 표시가 덮이고, 누르면 바로 클립보드에 담깁니다. 링크는 주소가 복사되고 화살표를 누르면 새 창으로 열립니다.</dd>
+</dl>
+<p><code>Ctrl+E</code>로 오갈 수 있고, <code>Ctrl+S</code>로 저장, <code>Ctrl+N</code>으로 새로 쓰기입니다.</p>
+
+<h2>편집창이 곧 입력창입니다</h2>
+<p>따로 <strong>새 메모 단추를 누를 필요가 없습니다.</strong> 오른쪽 편집창에 그냥 쓰고 등록을 누르면 왼쪽 보관함에 카드로 쌓입니다.</p>
+<p>이미 있는 카드를 누르면 그 내용이 편집창에 올라오고 단추가 <strong>수정 저장</strong>으로 바뀝니다. 고친 내용은 타이핑하는 즉시 카드에 반영되니, 사실 단추를 안 눌러도 됩니다.</p>
+<p>새로 쓰던 중이었는지 고치던 중이었는지는 편집창 오른쪽 위에 표시됩니다.</p>
+
+<h2>제목은 알아서 붙습니다</h2>
+<p>제목 칸을 비워 두시면 <strong>본문 첫 줄을 가져다 씁니다.</strong> 앞의 빈 줄은 건너뛰고, 샵 기호나 목록 표시 같은 것은 걷어 낸 뒤 가져옵니다.</p>
+<p>이후 본문 첫 줄을 고치면 제목도 따라 바뀝니다. 다만 제목을 직접 적으신 뒤로는 건드리지 않습니다. 일부러 다르게 붙이신 것일 테니까요.</p>
+
+<h2>라벨과 순서</h2>
+<p>라벨을 붙여 두면 카드에 색 배지가 뜨고, 위쪽 드롭다운으로 그 라벨만 골라 볼 수 있습니다. 쓰지 않은 라벨은 목록에 나오지 않습니다.</p>
+<p>카드를 <strong>끌어다 원하는 자리에 놓으면</strong> 순서가 바뀝니다. 손이 자주 가는 것을 위로 올려 두세요. 바뀐 순서도 함께 저장됩니다.</p>
+<p>카드 왼쪽 체크상자로 <strong>여러 개를 골라 한 번에 지울</strong> 수도 있습니다. 지운 뒤에는 되돌리기가 잠깐 뜹니다.</p>
+
+<h2>이미지는 줄여서 담습니다</h2>
+<p>브라우저가 내주는 저장 공간이 넉넉하지 않습니다. 그래서 긴 변을 800픽셀로 줄이고 용량이 작은 형식으로 바꿔 담습니다.</p>
+<p>다만 <strong>투명한 배경이 있는 그림은 형식을 그대로</strong> 둡니다. 로고처럼 배경이 비어 있어야 하는 것들이 있기 때문입니다. 화면 아래에 지금 얼마나 썼는지 표시되며, 한도에 가까워지면 알려 드립니다.</p>
+<p>이미지 카드를 누르면 그림 자체가 클립보드에 담기므로 문서나 발표 자료에 그대로 붙여넣으실 수 있습니다.</p>
+
+<h2>실수로 지우셔도</h2>
+<p>메모를 지우거나 작업대를 비우면 <strong>되돌리기가 잠깐 뜹니다.</strong> 그 사이에 누르시면 그대로 살아납니다. 다만 몇 초가 지나면 사라지니, 오래 보관하실 것은 따로 옮겨 두시는 편이 좋습니다.</p>
+<p>이 도구는 <strong>작업 중인 것을 잠깐 두는 곳</strong>입니다. 오래 두실 자료라면 문서나 별도 도구에 정리해 두세요.</p>
+
+<h2>자주 묻는 질문</h2><dl>
+<dt>두 가지 모드는 어떻게 다른가요</dt><dd>편집 모드에서는 카드를 누르면 오른쪽에 펼쳐져 이어서 쓰실 수 있고, 복사 모드에서는 누르는 즉시 내용이 클립보드에 담깁니다. 글을 다듬을 때와 여기저기 붙여 넣을 때가 다르기 때문에 나눠 두었습니다. 단축키로도 오갈 수 있습니다.</dd>
+<dt>새 메모는 어떻게 만드나요</dt><dd>오른쪽 편집창에 바로 쓰고 등록을 누르시면 됩니다. 따로 단추를 눌러 창을 열 필요가 없습니다. 이미 있는 카드를 누르면 그 내용이 편집창에 올라오고, 단추가 수정 저장으로 바뀝니다.</dd>
+<dt>제목을 비워 두면 어떻게 되나요</dt><dd>본문의 첫 줄을 제목으로 씁니다. 앞의 빈 줄은 건너뛰고, 마크다운 기호나 목록 표시는 걷어 낸 뒤 가져옵니다. 이후 본문 첫 줄을 고치시면 제목도 따라 바뀌지만, 제목을 직접 적으신 뒤로는 그대로 둡니다.</dd>
+<dt>타이핑한 내용이 언제 저장되나요</dt><dd>글자를 칠 때마다 화면은 바로 바뀌고, 손을 멈추면 저장됩니다. 한 글자마다 저장하면 느려지기 때문입니다. 탭을 닫기 직전에도 한 번 더 저장하므로 실수로 닫으셔도 남습니다.</dd>
+<dt>이미지는 얼마나 넣을 수 있나요</dt><dd>브라우저가 내주는 공간이 넉넉하지 않아 긴 변을 800픽셀로 줄이고 용량이 작은 형식으로 바꿔 담습니다. 투명한 배경이 있는 그림은 형식을 그대로 둡니다. 화면 아래에 지금 얼마나 썼는지 보여 드리며 한도에 가까워지면 알려 드립니다.</dd>
+<dt>카드 순서를 바꿀 수 있나요</dt><dd>카드를 끌어다 원하는 자리에 놓으시면 됩니다. 손이 자주 가는 것을 위로 올려 두시면 편합니다. 바뀐 순서도 함께 저장됩니다.</dd>
+<dt>작업대를 비우면 되돌릴 수 있나요</dt><dd>비우기 전에 한 번 확인을 받고, 비운 직후에는 되돌리기가 잠깐 뜹니다. 그 시간이 지나면 되돌릴 수 없으니 남겨 둘 내용은 미리 복사해 두시기 바랍니다.</dd>
+</dl>
+
+<p class="tk-guide-note">모든 처리는 사용자의 브라우저 안에서만 이루어지며 저장하신 내용은 어떤 서버로도 전송되지 않습니다. 이 브라우저의 저장 공간을 쓰므로 다른 기기에서는 보이지 않고, 저장 공간을 비우거나 시크릿 창을 쓰시면 사라집니다. 작업 중인 것을 잠깐 두는 용도이니 오래 보관하실 자료는 별도로 정리해 주시기 바랍니다.</p>
+
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/productivity/asset-hub.html">원클릭 에셋 허브</a></li>
+<li><a href="https://mnledu.com/productivity/text-workbench.html">스마트 텍스트 워크벤치</a></li>
+<li><a href="https://mnledu.com/productivity/smart-list.html">스마트 리스트 변환기</a></li>
+<li><a href="https://mnledu.com/productivity/sheet2memo.html">시트 포스트잇 대시보드</a></li>
+<li><a href="https://mnledu.com/productivity/data-harvester.html">스마트 데이터 수집·복원기</a></li>
+<li><a href="https://mnledu.com/productivity/text-diff.html">문서·계약서 정밀 비교기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">최초 등록</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+
+
+</body>
+</html>

@@ -271,13 +271,18 @@
     ]
   },
   "receipt-to-excel": {
-    "version": "1.0",
+    "version": "2.0",
     "addedDate": "2026-08-29",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-29",
         "note": "최초 등록 (PRODUCTIVITY)"
+      },
+      {
+        "version": "2.0",
+        "date": "2026-08-30",
+        "note": "v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)"
       }
     ]
   },
@@ -399,6 +404,83 @@
         "version": "1.0",
         "date": "2026-08-29",
         "note": "최초 등록. DESIGN & MEDIA로 잘못 배치했다가 원본 canonical 기준으로 PRODUCTIVITY 로 정정"
+      }
+    ]
+  },
+  "data-slicer": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
+      }
+    ]
+  },
+  "copy-desk": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
+      }
+    ]
+  },
+  "balance-game": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
+      }
+    ]
+  },
+  "fashion-detector": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
+      }
+    ]
+  },
+  "advanced-image-tailor": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
+      }
+    ]
+  },
+  "vocal-rhythm-master-studio": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
+      }
+    ]
+  },
+  "text-batch-factory": {
+    "version": "1.0",
+    "addedDate": "2026-08-30",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-30",
+        "note": "최초 등록"
       }
     ]
   }

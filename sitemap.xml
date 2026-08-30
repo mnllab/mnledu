@@ -62,6 +62,60 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://mnledu.com/productivity/text-batch-factory.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/text-batch-factory.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/text-batch-factory.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/text-batch-factory.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/text-batch-factory.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/text-batch-factory.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/text-batch-factory.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/text-batch-factory.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/productivity/data-slicer.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/data-slicer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/data-slicer.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/data-slicer.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/data-slicer.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/data-slicer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/data-slicer.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/data-slicer.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/productivity/copy-desk.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/copy-desk.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/copy-desk.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/copy-desk.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/copy-desk.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/copy-desk.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/copy-desk.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/productivity/copy-desk.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://mnledu.com/productivity/receipt-to-excel.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/productivity/receipt-to-excel.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/receipt-to-excel.html"/>
@@ -728,6 +782,42 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://mnledu.com/design-media/advanced-image-tailor.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/advanced-image-tailor.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/advanced-image-tailor.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/advanced-image-tailor.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/design-media/advanced-image-tailor.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/advanced-image-tailor.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/advanced-image-tailor.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/advanced-image-tailor.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/design-media/vocal-rhythm-master-studio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/vocal-rhythm-master-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/vocal-rhythm-master-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/vocal-rhythm-master-studio.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/design-media/vocal-rhythm-master-studio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/vocal-rhythm-master-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/vocal-rhythm-master-studio.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/vocal-rhythm-master-studio.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://mnledu.com/design-media/thumb-mockup.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/thumb-mockup.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/thumb-mockup.html"/>
@@ -831,6 +921,42 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/design-media/teleprompter.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/teleprompter.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/design-media/teleprompter.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/entertainment/balance-game.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/balance-game.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/balance-game.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/balance-game.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/balance-game.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/balance-game.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/balance-game.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/balance-game.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/entertainment/fashion-detector.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/fashion-detector.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/fashion-detector.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/fashion-detector.html"/>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/entertainment/fashion-detector.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/entertainment/fashion-detector.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/entertainment/fashion-detector.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/entertainment/fashion-detector.html"/>
     <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

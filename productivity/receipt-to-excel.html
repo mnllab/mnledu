@@ -94,6 +94,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<!-- Stable build: OpenCV removed. Perspective correction uses lightweight Canvas processing. -->
 
 <style>
   :root{
@@ -161,7 +162,7 @@
 
   /* ---------- 표 ---------- */
   #tblWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
-  table{width:100%;border-collapse:collapse;font-size:14px;min-width:920px}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:1240px}
   thead th{background:var(--th);text-align:left;padding:12px 11px;font-size:12.5px;font-weight:700;
     color:var(--ink2);border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;z-index:1}
   tbody td{padding:0;border-bottom:1px solid var(--line2);vertical-align:middle}
@@ -195,6 +196,87 @@
   .sec{padding:34px 0}
   .sec h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
   .sec .sub{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.75}
+
+  /* ---------- OCR 사진 편집 ---------- */
+  #editorWrap{display:none;margin-top:14px}
+  #editorWrap.on{display:block}
+  #editStage{position:relative;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:12px;
+    background:#E5E7EB;touch-action:none;user-select:none}
+  #editCanvas{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#E5E7EB}
+  #cropBox{position:absolute;border:2px solid var(--accent);background:rgba(29,78,216,.06);box-shadow:0 0 0 9999px rgba(15,23,42,.30);cursor:move;touch-action:none}
+  .cropHandle{position:absolute;width:24px;height:24px;border:3px solid #fff;background:var(--accent);border-radius:50%;
+    box-shadow:0 1px 5px rgba(15,23,42,.35);touch-action:none}
+  .cropHandle.tl{left:-12px;top:-12px;cursor:nwse-resize}.cropHandle.tr{right:-12px;top:-12px;cursor:nesw-resize}
+  .cropHandle.bl{left:-12px;bottom:-12px;cursor:nesw-resize}.cropHandle.br{right:-12px;bottom:-12px;cursor:nwse-resize}
+  #cropTag{position:absolute;left:8px;top:8px;background:var(--accent);color:#fff;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;pointer-events:none}
+  .editTools{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+  .toolBox{border:1px solid var(--line);border-radius:11px;padding:11px;background:#FCFCFB}
+  .toolBox.wide{grid-column:1/-1}
+  .toolRow{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+  .toolRow .btn{flex:1;min-width:90px}
+  .toolSelect{width:100%;min-height:42px;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;color:var(--ink);font:inherit}
+  .rangeRow{display:grid;grid-template-columns:82px 1fr 42px;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin-top:8px}
+  .rangeRow input{width:100%;accent-color:var(--accent)}
+  #qualityGuide{margin-top:12px;padding:12px 13px;border:1px solid #BFDBFE;background:#EFF6FF;border-radius:11px;font-size:12.5px;line-height:1.7;color:#334155}
+  #qualityGuide b{color:#1D4ED8}
+  #ocrBtn{width:100%;margin-top:12px}
+  #queueNote{margin-top:8px;font-size:12px;color:var(--muted)}
+
+  .uploadActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .uploadActions .btn{min-width:0}
+  .optGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;margin-top:10px}
+  .optCheck{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.45;color:var(--ink2);cursor:pointer}
+  .optCheck input{margin-top:2px;accent-color:var(--accent)}
+  #prepNote{margin-top:9px;padding:9px 10px;border-radius:9px;background:#F8FAFC;border:1px solid var(--line);font-size:11.8px;color:var(--muted);line-height:1.55}
+  .qualityTips{margin:7px 0 0;padding-left:17px}
+  .qualityTips li{margin-top:3px}
+
+  /* ---------- 모바일 ---------- */
+  @media(max-width:720px){
+    .wrap{padding-left:12px;padding-right:12px}
+    header.wrap{padding-top:28px!important}
+    #main{gap:12px}
+    #main>.card{padding:14px!important}
+    #drop{padding:25px 14px}
+    .editTools{grid-template-columns:1fr}
+    .uploadActions{grid-template-columns:1fr}
+    .optGrid{grid-template-columns:1fr}
+    .toolBox.wide{grid-column:auto}
+    .toolRow .btn{min-width:0}
+    #tblWrap{overflow:visible;border:0}
+    table{min-width:0;border-collapse:separate;border-spacing:0;width:100%}
+    thead{display:none}
+    tbody,tbody tr,tbody td{display:block;width:100%}
+    tbody tr{position:relative;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:#fff;padding:8px 10px 10px}
+    tbody tr.sel{background:var(--soft)}
+    tbody td{border:0!important;padding:0!important;display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;min-height:42px}
+    tbody td::before{font-size:11.5px;font-weight:700;color:var(--muted);padding:8px 7px 8px 0}
+    tbody td:nth-child(1){position:absolute;right:42px;top:7px;width:32px;display:block;min-height:32px}
+    tbody td:nth-child(1)::before{display:none}
+    tbody td:nth-child(2)::before{content:var(--lbl-date)}
+    tbody td:nth-child(3)::before{content:var(--lbl-store)}
+    tbody td:nth-child(4)::before{content:var(--lbl-item)}
+    tbody td:nth-child(5)::before{content:var(--lbl-unit)}
+    tbody td:nth-child(6)::before{content:var(--lbl-qty)}
+    tbody td:nth-child(7)::before{content:var(--lbl-amount)}
+    tbody td:nth-child(8)::before{content:var(--lbl-pay)}
+    tbody td:nth-child(9)::before{content:var(--lbl-acct)}
+    tbody td:nth-child(10)::before{content:var(--lbl-note)}
+    tbody td:nth-child(11){position:absolute;right:5px;top:3px;width:38px;display:block;min-height:36px}
+    tbody td:nth-child(11)::before{display:none}
+    .ed,select.cell{min-height:40px;padding:9px 8px;border-radius:7px;background:#F8FAFC}
+    .ed.num{text-align:left}
+    #emptyRow{border:1px solid var(--line);border-radius:12px}
+    #sumBar{gap:8px 15px;padding:12px}
+    #sumBar b{font-size:17px}
+    #tblWrap+ #sumBar{margin-top:12px}
+    #main>.card:last-child>div:last-of-type{grid-template-columns:1fr!important}
+    .cropHandle{width:28px;height:28px}
+    .cropHandle.tl{left:-14px;top:-14px}.cropHandle.tr{right:-14px;top:-14px}.cropHandle.bl{left:-14px;bottom:-14px}.cropHandle.br{right:-14px;bottom:-14px}
+  }
+
+  :root{--lbl-date:'일자';--lbl-store:'상호명';--lbl-item:'품목명';--lbl-unit:'단가';--lbl-qty:'수량';--lbl-amount:'금액';--lbl-pay:'결제수단';--lbl-acct:'계정과목';--lbl-note:'비고';}
+
   @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -206,7 +288,7 @@
   <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px">Receipt to Excel</p>
   <h1 style="font-size:clamp(25px,4.6vw,35px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;line-height:1.28">영수증 지출결의서 변환기</h1>
   <p style="font-size:15px;color:var(--ink2);line-height:1.9;margin:0;max-width:730px">
-    영수증 사진에서 날짜와 금액, 상호를 읽어 표로 만듭니다. 여러 장을 이어 붙인 뒤 <b>엑셀에 붙여넣기만</b> 하면 됩니다.
+    영수증 사진에서 날짜와 상호, 금액을 읽고 일반형은 품목별 세목까지 행으로 나눠 표로 만듭니다. 여러 장을 이어 붙인 뒤 <b>엑셀에 붙여넣기만</b> 하면 됩니다.
     사진은 서버로 전송되지 않고 이 브라우저 안에서 처리됩니다.
   </p>
 </header>
@@ -222,29 +304,58 @@
       <div class="ic">🧾</div>
       <p>사진을 여기에 놓아 주세요
         <small>눌러서 고르기 · 끌어다 놓기 · <b class="mono">Ctrl</b>+<b class="mono">V</b> 붙여넣기</small>
-        <small>여러 장을 한 번에 고르셔도 됩니다</small>
+        <small>여러 장을 고르면 한 장씩 확인한 뒤 판독합니다</small>
       </p>
     </div>
     <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+    <div class="uploadActions"><button type="button" class="btn" id="browseBtn">🖼 사진 선택</button><button type="button" class="btn p" id="cameraBtn">📷 카메라로 바로 촬영</button></div>
 
-    <div id="pvWrap">
-      <img id="pv" alt="영수증 미리보기">
-      <p id="pvName" class="mono"></p>
-    </div>
+    <div id="qualityGuide"><b>사진 품질이 인식률을 크게 좌우합니다.</b><ul class="qualityTips"><li>영수증 네 모서리가 가능하면 모두 보이게 찍기</li><li>화면을 영수증으로 크게 채우고 흔들림 없이 초점 맞추기</li><li>그림자·손가락·강한 반사를 피하고 밝게 찍기</li><li>비스듬히 찍혀도 자동으로 펴지만, 정면에 가까울수록 더 정확합니다</li><li><b>일반형 영수증은 한 사진에 세부 항목이 약 10개 이내</b>가 잘 읽힙니다. 더 길면 위·아래로 나눠 촬영해 이어서 판독하세요.</li></ul></div>
 
-    <div id="prog">
-      <div id="progBar"><div id="progFill"></div></div>
-      <p id="progMsg"></p>
-    </div>
-
-    <div id="rawWrap">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px">
-        <span class="lab" style="margin:0">읽어 낸 원문</span>
-        <button class="btn sm" id="rawToggle">접기</button>
+    <div id="editorWrap">
+      <div id="editStage">
+        <canvas id="editCanvas"></canvas>
+        <div id="cropBox"><span id="cropTag">읽을 영역</span><i class="cropHandle tl" data-h="tl"></i><i class="cropHandle tr" data-h="tr"></i><i class="cropHandle bl" data-h="bl"></i><i class="cropHandle br" data-h="br"></i></div>
       </div>
-      <pre id="raw"></pre>
-      <p class="hint">인식이 어긋났다면 이 원문을 보고 표에서 직접 고쳐 주세요.</p>
+      <p id="pvName" class="mono"></p>
+      <p class="hint">파란 사각형 안쪽만 판독합니다. <b>영수증 영역 다시 찾기</b>는 가벼운 색상·밝기 분석만 사용하므로 바로 조작할 수 있습니다. 원근 보정은 실제 판독 단계에서만 적용합니다.</p>
+
+      <div class="editTools">
+        <div class="toolBox">
+          <label class="lab" for="langSel">인식 언어</label>
+          <select id="langSel" class="toolSelect"><option value="kor" selected>한국어 · 기본</option><option value="eng">English</option><option value="kor+eng">한국어 + English</option></select>
+        </div>
+        <div class="toolBox">
+          <label class="lab" for="receiptType">영수증 유형</label>
+          <select id="receiptType" class="toolSelect"><option value="itemized" selected>일반형 · 품목/단가/수량/금액</option><option value="simple">간편형 · 총액 1건</option></select>
+        </div>
+        <div class="toolBox">
+          <label class="lab">회전</label>
+          <div class="toolRow"><button class="btn sm" id="rotL">↶ 90°</button><button class="btn sm" id="rotR">↷ 90°</button></div>
+        </div>
+        <div class="toolBox wide">
+          <label class="lab">사진 보정</label>
+          <div class="toolRow"><button class="btn sm" id="autoCrop">영수증 영역 다시 찾기</button><button class="btn sm" id="resetEdit">원본 설정</button></div>
+          <div class="rangeRow"><span>기울기</span><input id="deskew" type="range" min="-5" max="5" step="0.2" value="0"><output id="deskewVal">0°</output></div>
+          <div class="rangeRow"><span>밝기</span><input id="brightness" type="range" min="-40" max="40" step="2" value="0"><output id="brightVal">0</output></div>
+          <div class="rangeRow"><span>대비</span><input id="contrast" type="range" min="0" max="80" step="5" value="30"><output id="contrastVal">30</output></div>
+          <div class="optGrid">
+            <label class="optCheck"><input type="checkbox" id="perspectiveMode" checked><span><b>가벼운 원근보정</b><br>영수증 위·아래 폭 차이를 간단히 보정합니다. 무거운 OpenCV는 사용하지 않습니다.</span></label>
+            <label class="optCheck"><input type="checkbox" id="autoEnhance" checked><span><b>OCR 자동 선명화</b><br>최적화된 작업본에 회색조와 대비 보정을 적용합니다.</span></label>
+            <label class="optCheck"><input type="checkbox" id="grayMode"><span><b>강한 흑백</b><br>감열지가 많이 바랬을 때 직접 켜 보세요.</span></label>
+            <label class="optCheck"><input type="checkbox" id="precisionOcr" checked><span><b>2단계 정밀 OCR · 기본</b><br>기본 판독 뒤 한 번 더 읽고, 더 나은 단어·행·수치만 합칩니다. 일반형에서는 기본으로 사용합니다.</span></label>
+            <label class="optCheck"><input type="checkbox" id="deepPrecisionOcr"><span><b>3단계 추가 보강 · 선택</b><br>간격이 심하게 깨지거나 희미한 글자가 남을 때만 한 번 더 확인합니다. 처리 시간이 더 걸립니다.</span></label>
+          </div>
+          <div id="prepNote"><b>일반형은 상호명을 자동 입력하지 않습니다.</b> 거래처 정보가 사진 상단에 없거나 제조사와 혼동될 수 있어 빈칸으로 두며, 품목명과 비고의 공백은 OCR 오류를 줄이기 위해 자동 제거합니다.<br><b>기본 판독은 2단계</b>입니다. 첫 OCR 결과를 유지한 채 두 번째 OCR에서 더 잘 읽힌 단어·행·수치만 보강합니다. <b>3단계 추가 보강</b>은 희미하거나 간격이 많이 깨진 영수증에서만 선택해 주세요. 품목명은 OCR 띄어쓰기 오류를 줄이기 위해 표에 넣을 때 공백을 모두 제거합니다.</div>
+        </div>
+      </div>
+      <button class="btn p" id="ocrBtn">🔍 보정해서 이 영역 판독하기</button>
+      <p id="queueNote"></p>
     </div>
+
+    <div id="prog"><div id="progBar"><div id="progFill"></div></div><p id="progMsg"></p></div>
+    <div id="rawWrap"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px"><span class="lab" style="margin:0">읽어 낸 원문</span><button class="btn sm" id="rawToggle">접기</button></div><pre id="raw"></pre><p class="hint">일반형은 OCR 좌표를 표처럼 해석합니다. 기본 순서는 품목명 → 단가 → 수량 → 금액이며, 같은 품목의 두 번째 줄에 나온 제조사·분류·설명은 비고로 붙입니다. 2, 500처럼 갈라진 금액도 2,500으로 복원합니다. 품목명은 하 이 로 손처럼 잘못 벌어진 공백을 제거해 하이로손처럼 붙여 넣습니다.</p></div>
   </div>
 
   <!-- 우측 -->
@@ -264,7 +375,10 @@
           <tr>
             <th style="width:42px"><input type="checkbox" id="chkAll" aria-label="전체 선택"></th>
             <th style="width:124px">일자</th>
-            <th style="min-width:170px">상호명</th>
+            <th style="min-width:150px">상호명</th>
+            <th style="min-width:190px">품목명</th>
+            <th style="width:108px;text-align:right">단가</th>
+            <th style="width:72px;text-align:right">수량</th>
             <th style="width:118px;text-align:right">금액</th>
             <th style="width:132px">결제수단</th>
             <th style="width:142px">계정과목</th>
@@ -313,7 +427,7 @@ function toast(m){
 }
 
 var PAY = ['법인카드','개인카드','현금','계좌이체','기타'];
-var ACCT = ['식대','여비교통비','접대비','소모품비','도서인쇄비','통신비','회의비','복리후생비','교육훈련비','기타'];
+var ACCT = ['식대','회의비','접대비','여비교통비','숙박비','차량유지비','소모품비','사무용품비','도서인쇄비','통신비','의약품비','의료비','복리후생비','교육훈련비','광고선전비','소프트웨어·구독료','지급수수료','운반비','수선유지비','임차료','보험료','세금과공과','수도광열비','연구개발비','외주용역비','기타'];
 
 /* ============================================================
    영수증 텍스트에서 값을 뽑아내는 부분
@@ -381,19 +495,38 @@ function parseAmount(text){
 
 function parseStore(text){
   var lines = text.split(/\r?\n/).map(function(s){ return s.trim(); }).filter(Boolean);
-  /* 1) 상호명이라고 적힌 줄 */
+  /* Explicit merchant/store labels are the strongest evidence and may appear anywhere. */
   for (var i = 0; i < lines.length; i++){
-    var m = lines[i].match(/(?:상\s*호|가\s*맹\s*점|점\s*포|매\s*장)\s*(?:명)?\s*[:：]?\s*(.+)/);
+    var m = lines[i].match(/(?:상\s*호|가\s*맹\s*점|점\s*포|매\s*장|merchant|store|shop|vendor)\s*(?:명|name)?\s*[:：]?\s*(.+)/i);
     if (m && m[1].trim().length >= 2) return cleanStore(m[1]);
   }
-  /* 2) 법인 표기가 있는 줄 */
-  for (var k = 0; k < lines.length; k++){
-    if (/\(\s*[주유재사]\s*\)|주식회사/.test(lines[k])) return cleanStore(lines[k]);
+  /* Find the item-table header. A merchant should normally be above it, not inside the item body. */
+  var tableAt = -1;
+  for (var h = 0; h < lines.length; h++){
+    var z = lines[h].replace(/\s+/g,'');
+    if (/(상품명|품명|품목).*(단가|가격|수량|금액)|(?:item|description).*(?:price|qty|quantity|amount)/i.test(z)) { tableAt = h; break; }
   }
-  /* 3) 윗부분에서 그럴듯한 줄 */
-  for (var p = 0; p < Math.min(5, lines.length); p++){
+  var topLimit = tableAt >= 0 ? tableAt : Math.min(8, lines.length);
+  function normCorp(v){ return String(v||'').toLowerCase().replace(/\s+/g,'').replace(/[()㈜.,]/g,''); }
+  function detailLike(v){
+    v=String(v||'');
+    var nums=v.match(/\d[\d,.]*/g)||[];
+    return /^\s*\d{1,3}[.)-]?\s*[^0-9]/.test(v) || nums.length>=2 || metaRowText(v);
+  }
+  /* Count corporation-like lines in the whole OCR. Repeated ones in item rows are usually manufacturers. */
+  var corpCount={};
+  lines.forEach(function(v){ if (/(\(\s*[주유재사]\s*\)|주식회사|㈜|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(v)){var k=normCorp(v.replace(/\d[\d,.]*/g,''));if(k)corpCount[k]=(corpCount[k]||0)+1;} });
+  /* A corporation name is accepted as merchant only near the receipt header, never from a numeric item row. */
+  for (var k = 0; k < topLimit; k++){
+    var c=lines[k]; if(detailLike(c)) continue;
+    if (/(\(\s*[주유재사]\s*\)|주식회사|㈜|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(c)){
+      var nk=normCorp(c); if((corpCount[nk]||0)<=1) return cleanStore(c);
+    }
+  }
+  /* Last fallback: a plausible header line only. If the crop starts in the item table, leave merchant blank rather than inventing one. */
+  for (var p = 0; p < topLimit; p++){
     var s = lines[p];
-    if (/사업자|대표자|주소|전화|TEL|영수증|번호|\d{3}-\d{2}-\d{5}/i.test(s)) continue;
+    if (detailLike(s) || /사업자|대표자|주소|전화|TEL|영수증|번호|receipt|invoice|date|time|\d{3}-\d{2}-\d{5}/i.test(s)) continue;
     if (s.replace(/[^가-힣A-Za-z]/g,'').length >= 2) return cleanStore(s);
   }
   return '';
@@ -402,23 +535,44 @@ function cleanStore(s){
   return s.replace(/[:：]/g,' ').replace(/\s+/g,' ').trim().slice(0, 40);
 }
 
-/* 상호를 보고 계정과목을 짐작한다 */
-function guessAcct(store){
-  var s = String(store || '');
-  if (/커피|카페|스타벅스|투썸|이디야|빽다방|메가|컴포즈|폴바셋/i.test(s)) return '식대';
-  if (/식당|김밥|국밥|한우|고기|분식|맥도날드|버거|피자|치킨|본죽|백반|해장/i.test(s)) return '식대';
-  if (/택시|주유|고속|철도|코레일|버스|하이패스|주차/i.test(s)) return '여비교통비';
-  if (/문구|오피스|다이소|알파|모닝글로리/i.test(s)) return '소모품비';
-  if (/서점|교보|영풍|알라딘|인쇄|출력/i.test(s)) return '도서인쇄비';
-  if (/KT|SKT|LG유플러스|통신/i.test(s)) return '통신비';
-  if (/마트|편의점|이마트|GS25|CU|세븐일레븐|홈플러스|코스트코|COSTCO/i.test(s)) return '소모품비';
-  return '식대';
+/* 상호와 OCR 원문을 보고 계정과목을 짐작한다. 구체적인 업종을 먼저 검사하고 애매한 업종은 뒤로 보낸다. */
+var ACCT_RULES = [
+  ['의약품비', /약국|약방|제약|의약품|약품|pharma|pharmacy|drug\s*store|한미약품|유한양행|종근당|대웅제약|녹십자|동아제약|광동제약|일동제약|보령제약|보령|JW중외|중외제약|동국제약|신풍제약|휴온스|부광약품|삼진제약|일양약품|대원제약|안국약품|명문제약|경동제약|환인제약/i],
+  ['의료비', /병원|의원|치과|한의원|안과|이비인후과|정형외과|내과|외과|피부과|산부인과|소아과|검진|건강검진|clinic|hospital|dental|medical\s*center|의료원/i],
+  ['숙박비', /호텔|모텔|리조트|펜션|게스트하우스|숙박|hotel|motel|resort|hostel|guest\s*house|airbnb|agoda|booking\.com|야놀자|여기어때|신라스테이|롯데호텔|조선호텔|메리어트|marriott|hilton|하얏트|hyatt/i],
+  ['차량유지비', /주유|충전소|세차|타이어|정비|카센터|오토큐|블루핸즈|speedmate|스피드메이트|sk에너지|gs칼텍스|s-oil|soil|현대오일뱅크|exxon|shell|chevron|esso|gas\s*station|fuel/i],
+  ['여비교통비', /택시|카카오.?t|티맵택시|우티|uber|lyft|철도|코레일|srt|ktx|지하철|metro|subway|버스|고속버스|시외버스|항공|airline|airways|대한항공|아시아나|제주항공|진에어|티웨이|에어서울|에어부산|주차|parking|하이패스|toll|쏘카|soc(ar|a)|그린카|렌터카|rent.?a.?car/i],
+  ['운반비', /택배|우체국|대한통운|cj대한통운|한진택배|롯데택배|로젠택배|경동택배|dhl|fedex|\bups\b|\bems\b|courier|shipping/i],
+  ['통신비', /skt|sk텔레콤|kt\s|케이티|lg유플러스|u\+|통신|휴대폰|mobile|telecom|internet|broadband|와이파이|wifi/i],
+  ['소프트웨어·구독료', /adobe|microsoft|office\s*365|github|notion|slack|zoom|dropbox|google\s*workspace|canva|figma|openai|chatgpt|anthropic|claude|aws|amazon\s*web\s*services|azure|cloudflare|vercel|netlify|atlassian|jira|confluence|subscription|software/i],
+  ['광고선전비', /google\s*ads|meta\s*ads|facebook\s*ads|instagram\s*ads|네이버.?광고|카카오.?광고|카카오모먼트|광고대행|마케팅|marketing|advertis/i],
+  ['교육훈련비', /학원|교육원|연수원|세미나|컨퍼런스|강의|수강|교육비|udemy|coursera|class101|패스트캠퍼스|인프런|inflearn|conference|seminar|academy|training/i],
+  ['도서인쇄비', /서점|교보문고|영풍문고|알라딘|yes24|예스24|book|books|bookstore|인쇄|출력|복사|프린트|print|printing|copy\s*shop|kinko/i],
+  ['사무용품비', /문구|오피스디포|office\s*depot|staples|알파문구|모닝글로리|문구점|stationery|사무용품|토너|잉크|프린터용지|복사용지/i],
+  ['연구개발비', /thermo\s*fisher|sigma.?aldrich|merck|fisher\s*scientific|\blab\b|laboratory|실험|시약|연구재료|과학기자재|바이오|bio\s|gene|genomics|rs\s*components/i],
+  ['수선유지비', /수리|수선|정비소|서비스센터|service\s*center|repair|maintenance|as센터|a\/s센터/i],
+  ['임차료', /임대|렌탈|공유오피스|패스트파이브|fastfive|wework|스파크플러스|rent|rental|lease/i],
+  ['보험료', /보험|화재해상|생명보험|손해보험|삼성화재|현대해상|db손해보험|kb손해보험|메리츠|한화생명|교보생명|insurance/i],
+  ['세금과공과', /국세|지방세|세무서|구청|시청|군청|정부24|전자납부|과태료|등록면허세|인지세|tax|government|municipal/i],
+  ['수도광열비', /한국전력|한전|전기요금|도시가스|가스요금|수도요금|상하수도|kepco|electric|electricity|gas\s*bill|water\s*bill/i],
+  ['외주용역비', /크몽|kmong|숨고|soomgo|프리랜서|freelance|외주|용역|consulting|consultant|agency|에이전시/i],
+  ['복리후생비', /헬스|피트니스|gym|fitness|건강관리|복지|워크샵|워크숍|문화상품권|기프트카드|gift\s*card/i],
+  ['접대비', /주점|호프|와인바|와인.?바|bar\b|pub\b|izakaya|이자카야|유흥|룸살롱|칵테일/i],
+  ['회의비', /회의실|비즈니스센터|conference\s*room|meeting\s*room|스터디카페|study\s*cafe/i],
+  ['식대', /커피|카페|cafe|coffee|스타벅스|starbucks|투썸|이디야|빽다방|메가커피|컴포즈|폴바셋|식당|김밥|국밥|한우|고기|분식|맥도날드|mcdonald|버거|burger|피자|pizza|치킨|본죽|백반|해장|restaurant|diner|kitchen|grill|sushi|deli|bistro|bakery|베이커리|파리바게뜨|뚜레쥬르|배달의민족|배민|요기요|coupang\s*eats|쿠팡이츠/i],
+  ['소모품비', /다이소|daiso|마트|이마트|홈플러스|롯데마트|코스트코|costco|편의점|gs25|cu\b|세븐일레븐|7-eleven|ministop|미니스톱|emart|market|\bmart\b|walmart|tesco|aldi|lidl|생활용품|철물/i],
+  ['지급수수료', /토스페이먼츠|toss\s*payments|kg이니시스|inicis|nice페이|nicepay|kcp|paypal|stripe|payment\s*fee|수수료|fee\b/i]
+];
+function guessAcct(store, rawText){
+  var s = (String(store||'') + ' ' + String(rawText||'').slice(0,2500)).replace(/\s+/g,' ');
+  for (var i=0;i<ACCT_RULES.length;i++) if (ACCT_RULES[i][1].test(s)) return ACCT_RULES[i][0];
+  return '기타';
 }
 
 /* ============================================================
    표
    ============================================================ */
-var rows = [];      /* {id, date, store, amount, pay, acct, memo} */
+var rows = [];      /* {id, date, store, item, unit, qty, amount, pay, acct, memo} */
 var seq = 1;
 
 function addRow(data, silent){
@@ -426,9 +580,12 @@ function addRow(data, silent){
     id: seq++,
     date: (data && data.date) || '',
     store: (data && data.store) || '',
+    item: (data && data.item) || '',
+    unit: (data && data.unit) || '',
+    qty: (data && data.qty) || '',
     amount: (data && data.amount) || '',
     pay: (data && data.pay) || PAY[0],
-    acct: (data && data.acct) || ACCT[0],
+    acct: (data && data.acct) || ACCT[ACCT.length-1],
     memo: (data && data.memo) || ''
   };
   rows.push(r);
@@ -441,6 +598,14 @@ function addRow(data, silent){
     }
   }
   return r;
+}
+function addRowsBatch(list){
+  if(!list || !list.length) return;
+  list.forEach(function(data){
+    rows.push({id:seq++,date:data.date||'',store:data.store||'',item:data.item||'',unit:data.unit||'',qty:data.qty||'',amount:data.amount||'',pay:data.pay||PAY[0],acct:data.acct||ACCT[ACCT.length-1],memo:data.memo||''});
+  });
+  render();
+  var tb=$('tbody'),last=tb.lastElementChild;if(last&&last.scrollIntoView){try{last.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}
 }
 
 function render(){
@@ -455,6 +620,9 @@ function render(){
         '<td class="ctr"><input type="checkbox" class="rc" aria-label="줄 선택"></td>' +
         '<td><div class="ed mono" contenteditable="true" data-f="date" data-ph="YYYY-MM-DD">' + esc(r.date) + '</div></td>' +
         '<td><div class="ed" contenteditable="true" data-f="store" data-ph="상호명">' + esc(r.store) + '</div></td>' +
+        '<td><div class="ed" contenteditable="true" data-f="item" data-ph="품목명">' + esc(r.item) + '</div></td>' +
+        '<td><div class="ed num" contenteditable="true" data-f="unit" data-ph="0">' + esc(r.unit) + '</div></td>' +
+        '<td><div class="ed num" contenteditable="true" data-f="qty" data-ph="1">' + esc(r.qty) + '</div></td>' +
         '<td><div class="ed num" contenteditable="true" data-f="amount" data-ph="0">' + esc(r.amount) + '</div></td>' +
         '<td>' + sel('pay', PAY, r.pay) + '</td>' +
         '<td>' + sel('acct', ACCT, r.acct) + '</td>' +
@@ -501,13 +669,18 @@ $('tbody').addEventListener('input', function(ev){
 /* 금액 칸은 편집이 끝날 때 콤마를 다시 찍는다 */
 $('tbody').addEventListener('focusout', function(ev){
   var ed = ev.target.closest('.ed');
-  if (!ed || ed.dataset.f !== 'amount') return;
+  if (!ed || ['amount','unit','qty'].indexOf(ed.dataset.f) < 0) return;
   var tr = ed.closest('tr');
   var r = rows.find(function(x){ return x.id === +tr.dataset.id; });
   if (!r) return;
-  var n = toNum(r.amount);
-  var t = n ? n.toLocaleString('en-US') : '';
-  r.amount = t; ed.textContent = t;
+  if (ed.dataset.f === 'qty'){
+    var q = Math.max(0, parseInt(String(r.qty||'').replace(/[^0-9]/g,''),10) || 0);
+    r.qty = q ? String(q) : ''; ed.textContent = r.qty;
+  } else {
+    var n = toNum(r[ed.dataset.f]);
+    var t = n ? n.toLocaleString('en-US') : '';
+    r[ed.dataset.f] = t; ed.textContent = t;
+  }
   updateSum();
 });
 $('tbody').addEventListener('change', function(ev){
@@ -563,154 +736,389 @@ $('clearAll').addEventListener('click', function(){
 });
 
 /* ============================================================
-   OCR
+   OCR + 사진 전처리
    ============================================================ */
-var worker = null, busy = false;
-var queue = [];
+var worker = null, workerLang = '', busy = false, queue = [], doneCount = 0;
+var currentFile = null, srcImg = new Image(), srcUrl = '', workBase = null, previewRAF = 0;
+var rot90 = 0, fineRot = 0, crop = {x:.04,y:.04,w:.92,h:.92};
+var dragCrop = null, dragStart = null;
 
 function setProg(on, pct, msg){
   $('prog').classList.toggle('on', !!on);
   if (typeof pct === 'number') $('progFill').style.width = Math.max(0, Math.min(100, pct)) + '%';
   if (msg) $('progMsg').textContent = msg;
 }
-
+function langCode(){ return $('langSel').value === 'kor+eng' ? ['kor','eng'] : [$('langSel').value]; }
 async function getWorker(){
-  if (worker) return worker;
-  if (typeof Tesseract === 'undefined') throw new Error('tesseract missing');
-  setProg(true, 4, '한글 인식 자료를 내려받는 중입니다 · 처음 한 번만 받습니다');
-  worker = await Tesseract.createWorker(['kor','eng'], 1, {
-    logger: function(m){
+  var code = $('langSel').value;
+  if (worker && workerLang === code) return worker;
+  if (worker){ try{ await worker.terminate(); }catch(e){} worker = null; }
+  if (typeof Tesseract === 'undefined') throw new Error('인식 엔진을 불러오지 못했습니다');
+  setProg(true, 4, '인식 자료를 내려받는 중입니다 · 처음 한 번만 받습니다');
+  worker = await Tesseract.createWorker(langCode(), 1, {
+    logger:function(m){
       if (!m || typeof m.progress !== 'number') return;
       var pct = Math.round(m.progress * 100);
       if (m.status === 'recognizing text') setProg(true, pct, '글자를 읽는 중입니다 · ' + pct + '%');
-      else if (/load|initial|download/i.test(m.status || '')) setProg(true, Math.min(pct, 95), '인식 자료를 준비하는 중입니다 · ' + pct + '%');
+      else if (/load|initial|download/i.test(m.status||'')) setProg(true, Math.min(pct,95), '인식 자료를 준비하는 중입니다 · ' + pct + '%');
     }
   });
+  workerLang = code;
   return worker;
 }
-
-function readFile(file){
-  return new Promise(function(res, rej){
-    var r = new FileReader();
-    r.onload = function(e){ res(e.target.result); };
-    r.onerror = function(){ rej(new Error('read failed')); };
-    r.readAsDataURL(file);
+function sleep(ms){ return new Promise(function(r){setTimeout(r,ms)}); }
+function cloneCanvas(c){ var o=document.createElement('canvas');o.width=c.width;o.height=c.height;o.getContext('2d').drawImage(c,0,0);return o; }
+function resetControls(){
+  rot90=0; fineRot=0; crop={x:.04,y:.04,w:.92,h:.92};
+  $('deskew').value=0; $('brightness').value=0; $('contrast').value=30; $('grayMode').checked=false;
+  if($('perspectiveMode')) $('perspectiveMode').checked=true;
+  if($('autoEnhance')) $('autoEnhance').checked=true;
+  if($('precisionOcr')) $('precisionOcr').checked=true;
+  if($('deepPrecisionOcr')) $('deepPrecisionOcr').checked=false;
+  syncVals();
+}
+function syncVals(){ $('deskewVal').value=(+fineRot).toFixed(1).replace('.0','')+'°'; $('brightVal').value=$('brightness').value; $('contrastVal').value=$('contrast').value; }
+function workingMaxSide(){var mobile=window.matchMedia&&window.matchMedia('(max-width: 760px)').matches;return mobile?1450:1750}
+function loadEditor(file){
+  currentFile=file; resetControls(); $('pvName').textContent=file.name||'카메라 촬영 이미지'; workBase=null;
+  if(srcUrl) URL.revokeObjectURL(srcUrl); srcUrl=URL.createObjectURL(file); srcImg=new Image();
+  srcImg.onload=function(){
+    $('drop').style.display='none'; $('editorWrap').classList.add('on'); setProg(true,2,'사진을 가볍게 최적화하는 중입니다');
+    requestAnimationFrame(function(){setTimeout(function(){
+      try{
+        var w=srcImg.naturalWidth||1,h=srcImg.naturalHeight||1,max=workingMaxSide(),k=Math.min(1,max/Math.max(w,h));
+        workBase=document.createElement('canvas');workBase.width=Math.max(1,Math.round(w*k));workBase.height=Math.max(1,Math.round(h*k));
+        var bx=workBase.getContext('2d');bx.imageSmoothingEnabled=true;bx.imageSmoothingQuality='high';bx.drawImage(srcImg,0,0,workBase.width,workBase.height);
+        /* The full decoded camera image is no longer needed after the bounded working copy exists. */
+        srcImg.src=''; if(srcUrl){URL.revokeObjectURL(srcUrl);srcUrl=''};
+        drawPreview(); setProg(false); setTimeout(function(){autoDetectReceipt(true)},40); updateQueueNote();
+      }catch(e){console.error(e);setProg(false);toast('사진 최적화에 실패했습니다 · 다른 사진으로 시도해 주세요')}
+    },0)})
+  };
+  srcImg.onerror=function(){ setProg(false); toast('사진을 읽지 못했습니다'); }; srcImg.src=srcUrl;
+}
+function rotatedCanvas(maxSide){
+  if(!workBase||!workBase.width)return null;
+  var a=(rot90+fineRot)*Math.PI/180,w=workBase.width,h=workBase.height,ca=Math.abs(Math.cos(a)),sa=Math.abs(Math.sin(a)),bw=Math.ceil(w*ca+h*sa),bh=Math.ceil(w*sa+h*ca);
+  var scale=Math.min(1,(maxSide||workingMaxSide())/Math.max(bw,bh)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(bw*scale));c.height=Math.max(1,Math.round(bh*scale));
+  var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.save();x.translate(c.width/2,c.height/2);x.rotate(a);x.scale(scale,scale);x.drawImage(workBase,-w/2,-h/2);x.restore();return c;
+}
+function drawPreview(){
+  var src=rotatedCanvas(window.innerWidth<760?720:900);if(!src)return;var c=$('editCanvas');c.width=src.width;c.height=src.height;c.getContext('2d').drawImage(src,0,0);layoutCrop();
+}
+function schedulePreview(){if(previewRAF)cancelAnimationFrame(previewRAF);previewRAF=requestAnimationFrame(function(){previewRAF=0;drawPreview()})}
+function layoutCrop(){
+  var c=$('editCanvas'),b=$('cropBox');if(!c.width)return;var r=c.getBoundingClientRect(),stage=$('editStage').getBoundingClientRect(),ox=r.left-stage.left,oy=r.top-stage.top;
+  b.style.left=(ox+r.width*crop.x)+'px';b.style.top=(oy+r.height*crop.y)+'px';b.style.width=(r.width*crop.w)+'px';b.style.height=(r.height*crop.h)+'px';
+}
+window.addEventListener('resize',function(){if(currentFile)layoutCrop()});
+function autoDetectReceipt(showToast){
+  var c=$('editCanvas');if(!c.width)return;
+  var W=c.width,H=c.height,sw=Math.min(240,W),sh=Math.max(1,Math.round(H*sw/W)),t=document.createElement('canvas');t.width=sw;t.height=sh;
+  var x=t.getContext('2d');x.drawImage(c,0,0,sw,sh);var d=x.getImageData(0,0,sw,sh).data,cols=new Uint16Array(sw),rows2=new Uint16Array(sh),count=0;
+  for(var yy=0;yy<sh;yy++)for(var xx=0;xx<sw;xx++){var k=(yy*sw+xx)*4,r=d[k],g=d[k+1],b=d[k+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),lum=.2126*r+.7152*g+.0722*b;if(lum>135&&mx-mn<92){cols[xx]++;rows2[yy]++;count++}}
+  var x1=0,x2=sw-1,y1=0,y2=sh-1,ct=.15*sh,rt=.15*sw;while(x1<sw-1&&cols[x1]<ct)x1++;while(x2>x1&&cols[x2]<ct)x2--;while(y1<sh-1&&rows2[y1]<rt)y1++;while(y2>y1&&rows2[y2]<rt)y2--;
+  var found=count>sw*sh*.09&&x2-x1>sw*.22&&y2-y1>sh*.22;if(found){crop={x:Math.max(0,x1/sw-.03),y:Math.max(0,y1/sh-.025),w:Math.min(1,(x2-x1+1)/sw+.06),h:Math.min(1,(y2-y1+1)/sh+.05)};crop.w=Math.min(crop.w,1-crop.x);crop.h=Math.min(crop.h,1-crop.y)}else crop={x:.03,y:.03,w:.94,h:.94};layoutCrop();
+  if(showToast)toast(found?'영수증 영역을 빠르게 추정했습니다 · 파란 박스를 확인해 주세요':'영수증 경계를 확실히 찾지 못해 거의 전체를 선택했습니다')
+}
+function cropPoint(ev){var e=ev.touches?ev.touches[0]:ev,r=$('editCanvas').getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
+function cropStart(ev,handle){ev.preventDefault();dragCrop=handle||'move';dragStart={p:cropPoint(ev),c:{x:crop.x,y:crop.y,w:crop.w,h:crop.h}}}
+$('cropBox').addEventListener('mousedown',function(e){if(!e.target.dataset.h)cropStart(e,'move')});$('cropBox').addEventListener('touchstart',function(e){if(!e.target.dataset.h)cropStart(e,'move')},{passive:false});
+document.querySelectorAll('.cropHandle').forEach(function(h){h.addEventListener('mousedown',function(e){cropStart(e,this.dataset.h)});h.addEventListener('touchstart',function(e){cropStart(e,this.dataset.h)},{passive:false})});
+function cropMove(ev){if(!dragCrop)return;ev.preventDefault();var p=cropPoint(ev),dx=p.x-dragStart.p.x,dy=p.y-dragStart.p.y,c0=dragStart.c,n={x:c0.x,y:c0.y,w:c0.w,h:c0.h},min=.08;if(dragCrop==='move'){n.x=Math.max(0,Math.min(1-c0.w,c0.x+dx));n.y=Math.max(0,Math.min(1-c0.h,c0.y+dy))}else{var l=c0.x,t=c0.y,r=c0.x+c0.w,b=c0.y+c0.h;if(dragCrop.indexOf('l')>=0)l=Math.max(0,Math.min(r-min,c0.x+dx));if(dragCrop.indexOf('r')>=0)r=Math.min(1,Math.max(l+min,c0.x+c0.w+dx));if(dragCrop.indexOf('t')>=0)t=Math.max(0,Math.min(b-min,c0.y+dy));if(dragCrop.indexOf('b')>=0)b=Math.min(1,Math.max(t+min,c0.y+c0.h+dy));n={x:l,y:t,w:r-l,h:b-t}}crop=n;layoutCrop()}
+window.addEventListener('mousemove',cropMove);window.addEventListener('touchmove',cropMove,{passive:false});window.addEventListener('mouseup',function(){dragCrop=null});window.addEventListener('touchend',function(){dragCrop=null});
+function ocrMaxSide(){var mobile=window.matchMedia&&window.matchMedia('(max-width: 760px)').matches;return mobile?1350:1650}
+function cropHighRes(){
+  /* Rotate from a bounded source, crop first, then resize only if needed. */
+  var cap=ocrMaxSide()+420,src=rotatedCanvas(cap),sx=Math.round(src.width*crop.x),sy=Math.round(src.height*crop.y),sw=Math.max(1,Math.round(src.width*crop.w)),sh=Math.max(1,Math.round(src.height*crop.h)),out=document.createElement('canvas');
+  var maxSide=ocrMaxSide(),k=Math.min(1,maxSide/Math.max(sw,sh));out.width=Math.max(1,Math.round(sw*k));out.height=Math.max(1,Math.round(sh*k));var x=out.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(src,sx,sy,sw,sh,0,0,out.width,out.height);return out;
+}
+function median(a){if(!a.length)return 0;a=a.slice().sort(function(x,y){return x-y});var m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2}
+function lightPerspectiveCorrect(c){
+  if(!$('perspectiveMode').checked)return cloneCanvas(c);
+  var sw=Math.min(240,c.width),sh=Math.max(1,Math.round(c.height*sw/c.width)),t=document.createElement('canvas');t.width=sw;t.height=sh;var tx=t.getContext('2d');tx.drawImage(c,0,0,sw,sh);var d=tx.getImageData(0,0,sw,sh).data;
+  var left=[],right=[],ys=[];for(var y=2;y<sh-2;y+=2){var l=-1,r=-1;for(var x=0;x<sw;x++){var k=(y*sw+x)*4,rr=d[k],gg=d[k+1],bb=d[k+2],mx=Math.max(rr,gg,bb),mn=Math.min(rr,gg,bb),lum=.2126*rr+.7152*gg+.0722*bb;if(lum>132&&mx-mn<96){l=x;break}}for(var x2=sw-1;x2>=0;x2--){var k2=(y*sw+x2)*4,rr2=d[k2],gg2=d[k2+1],bb2=d[k2+2],mx2=Math.max(rr2,gg2,bb2),mn2=Math.min(rr2,gg2,bb2),lum2=.2126*rr2+.7152*gg2+.0722*bb2;if(lum2>132&&mx2-mn2<96){r=x2;break}}if(l>=0&&r-l>sw*.35){left.push(l);right.push(r);ys.push(y)}}
+  if(ys.length<Math.max(12,sh*.12))return cloneCanvas(c);var topL=[],topR=[],botL=[],botR=[];for(var i=0;i<ys.length;i++){var q=ys[i]/sh;if(q>.08&&q<.35){topL.push(left[i]);topR.push(right[i])}else if(q>.65&&q<.92){botL.push(left[i]);botR.push(right[i])}}
+  if(!topL.length||!botL.length)return cloneCanvas(c);var tl=median(topL),tr=median(topR),bl=median(botL),br=median(botR),tw=tr-tl,bw=br-bl;if(tw<sw*.35||bw<sw*.35)return cloneCanvas(c);
+  var change=Math.abs(tw-bw)/Math.max(tw,bw),sideShift=(Math.abs(tl-bl)+Math.abs(tr-br))/sw;if(change<.035&&sideShift<.04)return cloneCanvas(c);if(change>.55||sideShift>.7)return cloneCanvas(c);
+  var scaleX=c.width/sw,targetW=Math.max(1,Math.round(Math.max(tw,bw)*scaleX)),out=document.createElement('canvas');out.width=Math.min(targetW,ocrMaxSide());out.height=c.height;var ox=out.getContext('2d');ox.fillStyle='#fff';ox.fillRect(0,0,out.width,out.height);var stripe=6;
+  for(var yy=0;yy<c.height;yy+=stripe){var p=(yy+stripe*.5)/Math.max(1,c.height-1),sl=(tl+(bl-tl)*p)*scaleX,sr=(tr+(br-tr)*p)*scaleX,swid=Math.max(1,sr-sl),hh=Math.min(stripe,c.height-yy);ox.drawImage(c,sl,yy,swid,hh,0,yy,out.width,hh)}return out;
+}
+function manualAdjust(c,forceGray){
+  var maxSide=ocrMaxSide(),long=Math.max(c.width,c.height),scale=Math.min(1.35,Math.max(.55,maxSide/Math.max(1,long))),o=document.createElement('canvas');
+  o.width=Math.max(1,Math.round(c.width*scale));o.height=Math.max(1,Math.round(c.height*scale));var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  var br=+$('brightness').value,ct=+$('contrast').value,force=forceGray||$('grayMode').checked;
+  /* Canvas filters avoid a JavaScript per-pixel loop on multi-megapixel images. */
+  x.filter='brightness('+Math.max(55,100+br)+'%) contrast('+Math.max(70,100+ct)+'%)'+(force?' grayscale(100%)':'');
+  x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
+}
+function otsuBinary(c){
+  var max=1200,k0=Math.min(1,max/Math.max(c.width,c.height)),o=document.createElement('canvas');o.width=Math.max(1,Math.round(c.width*k0));o.height=Math.max(1,Math.round(c.height*k0));var x=o.getContext('2d');x.drawImage(c,0,0,o.width,o.height);var im=x.getImageData(0,0,o.width,o.height),d=im.data,h=new Uint32Array(256),n=0;
+  for(var i=0;i<d.length;i+=4){var v=Math.round(.299*d[i]+.587*d[i+1]+.114*d[i+2]);h[v]++;n++}var sum=0;for(var j=0;j<256;j++)sum+=j*h[j];var wb=0,sb=0,best=-1,th=145;for(var t=0;t<256;t++){wb+=h[t];if(!wb)continue;var wf=n-wb;if(!wf)break;sb+=t*h[t];var mb=sb/wb,mf=(sum-sb)/wf,vv=wb*wf*(mb-mf)*(mb-mf);if(vv>best){best=vv;th=t}}for(var q=0;q<d.length;q+=4){var y=.299*d[q]+.587*d[q+1]+.114*d[q+2],v2=y>th?255:0;d[q]=d[q+1]=d[q+2]=v2}x.putImageData(im,0,0);return o;
+}
+async function enhancedVariants(){
+  setProg(true,5,'OCR용 사진을 준비하는 중입니다');await sleep(20);var base=cropHighRes();
+  if($('perspectiveMode').checked){setProg(true,7,'가벼운 원근 보정 중입니다');await sleep(0);base=lightPerspectiveCorrect(base)}
+  var forceGray=$('autoEnhance').checked||$('grayMode').checked;return manualAdjust(base,forceGray);
+}
+function parseTsvWords(tsv){
+  if(!tsv)return [];var ls=String(tsv).split(/\r?\n/),out=[];
+  for(var i=1;i<ls.length;i++){if(!ls[i])continue;var p=ls[i].split('\t');if(p.length<12||+p[0]!==5)continue;var txt=p.slice(11).join('\t').trim(),conf=+p[10];if(!txt||conf<8)continue;var l=+p[6],t=+p[7],w=+p[8],h=+p[9];if(!isFinite(l+t+w+h)||w<=0||h<=0)continue;out.push({text:txt,conf:conf,left:l,top:t,width:w,height:h,right:l+w,cx:l+w/2,cy:t+h/2});}
+  return out;
+}
+function medianNum(a){if(!a.length)return 12;var b=a.slice().sort(function(x,y){return x-y}),m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2}
+function visualRowsFromTsv(tsv){
+  var words=parseTsvWords(tsv);if(!words.length)return {rows:[],width:1,text:''};var hs=words.map(function(w){return w.height}),tol=Math.max(5,medianNum(hs)*.62),rows=[];
+  words.sort(function(a,b){return a.cy-b.cy||a.left-b.left});
+  words.forEach(function(w){var best=null,bd=1e9;for(var j=Math.max(0,rows.length-5);j<rows.length;j++){var d=Math.abs(rows[j].cy-w.cy);if(d<=tol&&d<bd){best=rows[j];bd=d}}if(!best){best={cy:w.cy,words:[]};rows.push(best)}best.words.push(w);best.cy=best.words.reduce(function(a,z){return a+z.cy},0)/best.words.length;});
+  rows.sort(function(a,b){return a.cy-b.cy});var pageW=1;
+  rows.forEach(function(r){r.words.sort(function(a,b){return a.left-b.left});r.words.forEach(function(w){pageW=Math.max(pageW,w.right)});r.text=r.words.map(function(w){return w.text}).join(' ')});
+  var txt=rows.map(function(r){var line='',last=0,unit=Math.max(5,pageW/86);r.words.forEach(function(w){var gap=Math.max(1,Math.min(12,Math.round((w.left-last)/unit)));line+=new Array(gap+1).join(' ')+w.text;last=w.right});return line.trimEnd()}).join('\n');
+  return {rows:rows,width:pageW,text:txt};
+}
+function cleanNumericText(v){
+  return String(v||'').trim().replace(/[₩원$€£\s]/g,'').replace(/[Oo]/g,'0').replace(/[Il|]/g,'1').replace(/[^0-9,.-]/g,'');
+}
+function isNumericWord(v){var s=String(v||'').trim().replace(/[₩원$€£\s]/g,'');return /^[0-9OoIl|,.-]+$/.test(s)&&/[0-9OoIl|]/.test(s);}
+function numberToken(v){
+  var s=cleanNumericText(v);if(!/[0-9]/.test(s))return null;
+  var n=parseInt(s.replace(/[,.]/g,''),10);if(!isFinite(n)||n<0||n>100000000)return null;return n;
+}
+function moneyToken(v){var n=numberToken(v);return n!==null&&n>=10?n:null;}
+function numericGroups(words,W){
+  var src=words.filter(function(w){return w.cx>W*.38&&(isNumericWord(w.text)||/^[,.]$/.test(String(w.text).trim()))}).sort(function(a,b){return a.left-b.left}),out=[];
+  src.forEach(function(w){
+    var raw=cleanNumericText(w.text),last=out.length?out[out.length-1]:null,gap=last?w.left-last.right:9999,join=false;
+    if(!/[0-9]/.test(raw)){
+      if(last&&/^[,.]+$/.test(raw)&&gap<=Math.max(30,last.height*1.6)){last.raw+=raw;last.text+=(last.text?' ':'')+w.text;last.right=w.right;last.cx=(last.left+last.right)/2;last.words.push(w);}
+      return;
+    }
+    if(last){
+      var near=Math.max(7,Math.min(24,Math.max(last.height,w.height)*.70));
+      join=/[,.]$/.test(last.raw)||/^[,.]/.test(raw)||gap<=near;
+      if(join&&!/[,.]$/.test(last.raw)&&!/^[,.]/.test(raw)&&gap>Math.max(6,Math.min(last.height,w.height)*.38))join=false;
+    }
+    if(join){last.raw+=raw;last.text+=(last.text?' ':'')+w.text;last.right=w.right;last.cx=(last.left+last.right)/2;last.height=Math.max(last.height,w.height);last.words.push(w);}
+    else out.push({raw:raw,text:w.text,left:w.left,right:w.right,cx:w.cx,height:w.height,words:[w]});
   });
+  out.forEach(function(g){g.value=numberToken(g.raw)});return out.filter(function(g){return g.value!==null});
 }
-
-async function processOne(file){
-  var url = await readFile(file);
-  $('pv').src = url;
-  $('pvWrap').classList.add('on');
-  $('pvName').textContent = file.name || '붙여넣은 이미지';
-
-  var w = await getWorker();
-  setProg(true, 8, '글자를 읽는 중입니다');
-  var out = await w.recognize(url);
-  var text = (out && out.data && out.data.text) || '';
-
-  $('raw').textContent = text.trim() || '(읽어 낸 글자가 없습니다)';
-  $('rawWrap').classList.add('on');
-
-  var date = parseDate(text);
-  var store = parseStore(text);
-  var amount = parseAmount(text);
-  addRow({ date:date, store:store, amount:amount, acct:guessAcct(store) });
-
-  var missing = [];
-  if (!date) missing.push('일자');
-  if (!store) missing.push('상호');
-  if (!amount) missing.push('금액');
-  return missing;
+function leadIndexInfo(r,W){
+  var w=r&&r.words&&r.words[0];if(!w||w.cx>W*.22)return null;
+  var t=String(w.text||'').trim(),m=t.match(/^(\d{1,3})[.)-]?(.*)$/);
+  if(!m)return null;
+  /* Large money-like values at the left are not line indexes. */
+  var n=+m[1];if(n>300)return null;
+  return {index:m[1],rest:(m[2]||'').replace(/^[.)-]+/,'').trim()};
 }
-
-async function handleFiles(files){
-  var list = Array.prototype.slice.call(files).filter(function(f){
-    return /^image\//.test(f.type || '');
+function stripLeadIndex(words,W){
+  var a=words.slice();if(!a.length)return a;
+  var info=leadIndexInfo({words:a},W);if(!info)return a;
+  if(info.rest){a[0]=Object.assign({},a[0],{text:info.rest});}
+  else a.shift();
+  return a;
+}
+function wordsLeftText(r,cut,W){
+  var a=r.words.filter(function(w){return w.cx<Math.min(cut==null?W*.64:cut,W*.68)});a=stripLeadIndex(a,W);
+  return a.map(function(w){return w.text}).join(' ').replace(/^[·•:_-]+|[·•:_-]+$/g,'').replace(/\s+/g,' ').trim();
+}
+function hasLeadIndex(r,W){return !!leadIndexInfo(r,W);}
+function textStrength(s){return String(s||'').replace(/[^가-힣A-Za-z]/g,'').length;}
+function looksAuxiliaryText(s){
+  s=String(s||'').replace(/\s+/g,' ').trim();
+  if(!s)return false;
+  return /(제\s*약|약\s*품|제\s*조|판\s*매|유\s*통|수\s*입|개\s*발|해\s*외\s*개\s*발|의\s*약\s*외\s*품|건강\s*기능|식\s*품|주\s*식\s*회\s*사|\(\s*주\s*\)|㈜|\(\s*유\s*\)|pharma|pharmaceutical|laborator|manufacturer|manufactured|distributed|distributor|imported|importer|developer|development|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(s);
+}
+function metaRowText(s){return /(상품\s*명|품\s*명|품목|단가|수량|금액|합계|총\s*액|총\s*계|부가세|과세|면세|공급가|결제|승인|카드|현금|거스름|사업자|대표자|전화|TEL|주소|일시|영수증|전표|receipt|subtotal|grand\s*total|total|tax|amount|quantity|qty|price|unit\s*price)/i.test(String(s||''));}
+function detectHeaderColumns(vr){
+  var W=vr.width,best=null;
+  vr.rows.slice(0,Math.max(8,Math.ceil(vr.rows.length*.65))).forEach(function(r){
+    var cols={unit:null,qty:null,total:null},hits=0;
+    r.words.forEach(function(w){var t=String(w.text||'').replace(/\s+/g,'');
+      if(/^(단가|판매가|가격|unitprice|unit|price)$/i.test(t)){cols.unit=w.cx;hits++;}
+      else if(/^(수량|qty|quantity|count)$/i.test(t)){cols.qty=w.cx;hits++;}
+      else if(/^(금액|합계금액|amount|total)$/i.test(t)){cols.total=w.cx;hits++;}
+    });
+    if(hits>=2&&(!best||hits>best.hits))best={unit:cols.unit,qty:cols.qty,total:cols.total,hits:hits};
   });
-  if (!list.length){ toast('이미지 파일이 아닙니다'); return; }
-  if (busy){ queue = queue.concat(list); toast('처리 중입니다 · ' + list.length + '장을 줄 세웠습니다'); return; }
-
-  busy = true;
-  var done = 0, warned = 0;
-  try {
-    while (list.length){
-      var f = list.shift();
-      done++;
-      if (done > 1 || list.length) setProg(true, null, done + '번째 사진을 읽는 중입니다');
-      var missing = await processOne(f);
-      if (missing.length) warned++;
-      if (!list.length && queue.length){ list = queue; queue = []; }
-    }
-    setProg(false);
-    var msg = done + '장을 처리했습니다';
-    if (warned) msg += ' · ' + warned + '건은 일부 항목을 찾지 못했으니 확인해 주세요';
-    toast(msg);
-  } catch(e){
-    setProg(false);
-    console.error(e);
-    toast('글자를 읽지 못했습니다 · 연결을 확인한 뒤 다시 시도해 주세요');
-  } finally {
-    busy = false;
-  }
+  return best||{unit:null,qty:null,total:null,hits:0};
 }
-
-/* 넣는 방법 세 가지 */
-$('drop').addEventListener('click', function(){ $('fileInput').click(); });
-$('drop').addEventListener('keydown', function(ev){
-  if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); $('fileInput').click(); }
-});
-$('fileInput').addEventListener('change', function(e){
-  var f = e.target.files;
-  if (f && f.length) handleFiles(f);
-  this.value = '';
-});
-var dragDepth = 0;
-window.addEventListener('dragenter', function(e){
-  if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0){
-    dragDepth++; document.body.classList.add('dragging');
+function nearestGroup(groups,x,maxD,filter){
+  if(x==null)return null;var best=null,bd=1e9;
+  groups.forEach(function(g){if(filter&&!filter(g))return;var d=Math.abs(g.cx-x);if(d<bd&&d<=maxD){best=g;bd=d}});return best;
+}
+function inferFields(groups,W,cols){
+  if(!groups.length)return {unit:'',qty:'',amount:'',first:null};
+  var amountG=null,qtyG=null,unitG=null,range=W*.15;
+  if(cols&&cols.total!=null)amountG=nearestGroup(groups,cols.total,range,function(g){return moneyToken(g.raw)!==null});
+  if(!amountG){for(var i=groups.length-1;i>=0;i--){if(moneyToken(groups[i].raw)!==null&&groups[i].cx>W*.62){amountG=groups[i];break;}}}
+  if(!amountG)return {unit:'',qty:'',amount:'',first:null};
+  var before=groups.filter(function(g){return g.right<amountG.left+2});
+  if(cols&&cols.qty!=null)qtyG=nearestGroup(before,cols.qty,range,function(g){return g.value>=1&&g.value<=999&&Math.floor(g.value)===g.value});
+  if(!qtyG){for(var q=before.length-1;q>=0;q--){var qv=before[q].value;if(qv>=1&&qv<=99&&Math.floor(qv)===qv){qtyG=before[q];break;}}}
+  var beforeUnit=before.filter(function(g){return !qtyG||g!==qtyG});
+  if(cols&&cols.unit!=null)unitG=nearestGroup(beforeUnit,cols.unit,range,function(g){return moneyToken(g.raw)!==null});
+  if(!unitG){for(var u=beforeUnit.length-1;u>=0;u--){if(moneyToken(beforeUnit[u].raw)!==null){unitG=beforeUnit[u];break;}}}
+  var amount=amountG.value,qty=qtyG?qtyG.value:'',unit=unitG?unitG.value:'';
+  if(!qty&&unit&&amount>=unit){var iq=amount/unit;if(iq>=1&&iq<=99&&Math.abs(iq-Math.round(iq))<.001)qty=Math.round(iq);}
+  if(qty&&!unit&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
+  if(unit&&!qty&&unit===amount)qty=1;
+  if(qty&&unit&&Math.abs(unit*qty-amount)>Math.max(2,amount*.025)){
+    var fixed=false;
+    for(var j=beforeUnit.length-1;j>=0;j--){var uv=beforeUnit[j].value;if(uv>=10&&Math.abs(uv*qty-amount)<=Math.max(2,amount*.025)){unit=uv;unitG=beforeUnit[j];fixed=true;break;}}
+    if(!fixed&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
   }
-});
-window.addEventListener('dragleave', function(){
-  dragDepth = Math.max(0, dragDepth - 1);
-  if (!dragDepth) document.body.classList.remove('dragging');
-});
-window.addEventListener('dragover', function(e){ e.preventDefault(); });
-window.addEventListener('drop', function(e){
-  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
-  if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-});
-document.addEventListener('paste', function(e){
-  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
-  if (e.target && e.target.isContentEditable) return;
-  var dt = e.clipboardData;
-  if (!dt) return;
-  if (dt.files && dt.files.length){
-    for (var i = 0; i < dt.files.length; i++){
-      if (/^image\//.test(dt.files[i].type || '')){ e.preventDefault(); handleFiles(dt.files); return; }
+  var first=unitG||qtyG||amountG;
+  groups.forEach(function(g){if(g.left<first.left&&g.cx>W*.40)first=g;});
+  return {unit:unit||'',qty:qty||'',amount:amount||'',first:first,amountG:amountG,qtyG:qtyG,unitG:unitG};
+}
+function rowGap(a,b){if(!a||!b)return 9999;var ah=medianNum(a.words.map(function(w){return w.height})),bh=medianNum(b.words.map(function(w){return w.height}));return Math.abs(b.cy-a.cy)/Math.max(8,(ah+bh)/2);}
+function parseItemRows(tsv){
+  var vr=visualRowsFromTsv(tsv),W=vr.width,cols=detectHeaderColumns(vr),infos=[],used={};
+  vr.rows.forEach(function(r,idx){
+    var groups=numericGroups(r.words,W),fields=inferFields(groups,W,cols),cut=fields.first?fields.first.left-4:W*.64,left=wordsLeftText(r,cut,W);
+    infos.push({idx:idx,row:r,groups:groups,fields:fields,left:left,lead:hasLeadIndex(r,W),meta:metaRowText(r.text),hasData:!!fields.amount});
+  });
+  var items=[];
+  for(var i=0;i<infos.length;i++){
+    var cur=infos[i];if(!cur.hasData||cur.meta)continue;
+    var prev=i>0?infos[i-1]:null,next=i+1<infos.length?infos[i+1]:null,item='',note='',consumePrev=false,consumeNext=false;
+    var prevOK=prev&&!prev.hasData&&!prev.meta&&!used[prev.idx]&&textStrength(prev.left)>=2&&rowGap(prev.row,cur.row)<=2.50;
+    var curText=cur.left;
+
+    /* Rule 1: a numbered text-only row followed by a numeric row is a two-line item.
+       The numbered row is the product name. Any left text on the numeric row is note/manufacturer, never part of the name. */
+    if(prevOK&&prev.lead){
+      item=prev.left;consumePrev=true;if(curText)note=curText;
     }
-  }
-  var items = dt.items || [];
-  for (var k = 0; k < items.length; k++){
-    if (items[k].kind === 'file' && items[k].type && items[k].type.indexOf('image') === 0){
-      var f = items[k].getAsFile();
-      if (f){ e.preventDefault(); handleFiles([f]); return; }
+    /* Rule 2: one-line receipts often carry item number/name and values on the same row. */
+    else if(cur.lead&&textStrength(curText)>=2){
+      item=curText;
     }
+    /* Rule 3: without a line number, a clearly auxiliary left label on the numeric row belongs in note. */
+    else if(prevOK&&curText&&looksAuxiliaryText(curText)){
+      item=prev.left;note=curText;consumePrev=true;
+    }
+    /* Rule 4: value-only numeric row inherits the immediately preceding text row as its item name. */
+    else if(prevOK&&!curText){
+      item=prev.left;consumePrev=true;
+    }
+    /* Rule 5: standard one-line item. */
+    else if(textStrength(curText)>=2){
+      item=curText;
+    }
+    else if(prevOK){
+      item=prev.left;consumePrev=true;
+    }
+
+    if(textStrength(item)<2||metaRowText(item))continue;
+    /* A text-only auxiliary line immediately below a one-line item is note/manufacturer. */
+    if(next&&!next.hasData&&!next.meta&&!used[next.idx]&&!next.lead&&textStrength(next.left)>=2&&rowGap(cur.row,next.row)<=2.15&&looksAuxiliaryText(next.left)){
+      note=(note?note+' · ':'')+next.left;consumeNext=true;
+    }
+    if(consumePrev)used[prev.idx]=1;if(consumeNext)used[next.idx]=1;used[cur.idx]=1;
+    items.push({name:compactItemName(item),unit:cur.fields.unit,qty:cur.fields.qty,amount:cur.fields.amount,note:note,y:cur.row.cy});
   }
-});
-
-$('rawToggle').addEventListener('click', function(){
-  var r = $('raw');
-  var hidden = r.style.display === 'none';
-  r.style.display = hidden ? 'block' : 'none';
-  this.textContent = hidden ? '접기' : '펼치기';
-});
-
+  var seen={},ded=[];items.forEach(function(x){var k=x.name.replace(/\s/g,'').toLowerCase()+'|'+x.amount;if(seen[k])return;seen[k]=1;ded.push(x)});
+  return {items:ded.slice(0,10),totalFound:ded.length,overflow:ded.length>10,visualText:vr.text,columns:cols};
+}
+function compactItemName(s){return String(s||'').replace(/\s+/g,'').trim();}
+function compactNote(s){return String(s||'').replace(/\s+/g,'').trim();}
+function itemMemo(x){return compactNote(x.note||'');}
+async function recognizeVariant(w,c,mode,needLayout){
+  var P=Tesseract.PSM||{},psm;
+  if(mode==='sparse') psm=P.SPARSE_TEXT||'11';
+  else if(mode==='block') psm=P.SINGLE_BLOCK||P.SINGLE_COLUMN||'6';
+  else psm=P.AUTO||'3';
+  await w.setParameters({tessedit_pageseg_mode:psm,preserve_interword_spaces:'1',user_defined_dpi:mode==='block'?'320':'300'});
+  return await w.recognize(c,{},needLayout?{text:true,tsv:true}:{text:true});
+}
+function precisionVariant(c){
+  /* Keep exactly the same geometry as the first pass so TSV word coordinates can be merged safely. */
+  var o=document.createElement('canvas');o.width=c.width;o.height=c.height;var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  x.filter='grayscale(100%) contrast(118%) brightness(103%)';x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
+}
+function deepPrecisionVariant(c){
+  /* Third pass stays conservative: same geometry, stronger contrast, no hard binarisation. */
+  var o=document.createElement('canvas');o.width=c.width;o.height=c.height;var x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  x.filter='grayscale(100%) contrast(132%) brightness(101%)';x.drawImage(c,0,0,o.width,o.height);x.filter='none';return o;
+}
+function normItemName(s){return String(s||'').toLowerCase().replace(/[^0-9a-z가-힣]/g,'')}
+function nameSim(a,b){
+  a=normItemName(a);b=normItemName(b);if(!a||!b)return 0;if(a===b)return 1;if(a.indexOf(b)>=0||b.indexOf(a)>=0)return .88;
+  var A={},B={},i;for(i=0;i<a.length-1;i++)A[a.slice(i,i+2)]=1;for(i=0;i<b.length-1;i++)B[b.slice(i,i+2)]=1;var hit=0,tot=0;Object.keys(A).forEach(function(k){tot++;if(B[k])hit++});Object.keys(B).forEach(function(k){if(!A[k])tot++});return tot?hit/tot:0;
+}
+function itemMathScore(it){var u=+it.unit||0,q=+it.qty||0,a=+it.amount||0,s=0;if(a)s+=3;if(u)s+=2;if(q)s+=1;if(u&&q&&a&&Math.abs(u*q-a)<=Math.max(2,a*.025))s+=4;return s}
+function itemTextScore(it){
+  var n=String(it.name||''),letters=textStrength(n),noise=(n.match(/[�□■]/g)||[]).length,aux=looksAuxiliaryText(n)?1:0;
+  return letters*1.2-noise*4-aux*28;
+}
+function mergeItemPair(a,b){
+  var an=compactItemName(a.name),bn=b?compactItemName(b.name):'',o={name:an,unit:a.unit,qty:a.qty,amount:a.amount,note:a.note||'',y:a.y};
+  if(b){
+    /* Precision OCR sometimes appends the manufacturer/note to a correctly read product name. Keep the clean base name. */
+    if(an&&bn.indexOf(an)===0&&bn.length>an.length){var sx=bn.slice(an.length);if(looksAuxiliaryText(sx)){if(!o.note)o.note=sx;}else if(itemTextScore(b)>itemTextScore(a)+1.5)o.name=bn;}
+    else if(bn&&an.indexOf(bn)===0&&an.length>bn.length){var sa=an.slice(bn.length);if(looksAuxiliaryText(sa)){o.name=bn;if(!o.note)o.note=sa;}else if(itemTextScore(b)>itemTextScore(a)+1.5)o.name=bn;}
+    else if(itemTextScore(b)>itemTextScore(a)+1.5)o.name=bn;
+  }
+  var am=itemMathScore(a),bm=b?itemMathScore(b):-1;if(b&&bm>am){o.unit=b.unit;o.qty=b.qty;o.amount=b.amount}else if(b){if(!o.unit&&b.unit)o.unit=b.unit;if(!o.qty&&b.qty)o.qty=b.qty;if(!o.amount&&b.amount)o.amount=b.amount}
+  if(b&&b.note&&(!o.note||textStrength(b.note)>textStrength(o.note)+2))o.note=b.note;
+  return o;
+}
+function mergeStructuredCandidates(a,b,rtype){
+  var o=Object.assign({},a);o.precisionText=b&&b.text||'';o.precisionUsed=true;o.conf=Math.max(+a.conf||0,+b.conf||0);
+  if(!o.date&&b.date)o.date=b.date;if(!o.store&&b.store)o.store=b.store;if(!o.amount&&b.amount)o.amount=b.amount;
+  if(rtype!=='itemized'){o.score=Math.max(a.score||0,b.score||0);return o}
+  var P=(a.items||[]).slice(),S=(b.items||[]),used={},merged=[];
+  P.forEach(function(p){var best=-1,bscore=-1;for(var i=0;i<S.length;i++){if(used[i])continue;var q=S[i],score=0,sim=nameSim(p.name,q.name),dy=Math.abs((+p.y||0)-(+q.y||0));if(sim>=.55)score+=5*sim;if(p.amount&&q.amount&&+p.amount===+q.amount)score+=4;if(dy<=38)score+=3*(1-dy/50);if(p.unit&&q.unit&&+p.unit===+q.unit)score+=1;if(score>bscore){bscore=score;best=i}}if(best>=0&&bscore>=4.2){used[best]=1;merged.push(mergeItemPair(p,S[best]))}else merged.push(p)});
+  S.forEach(function(q,i){if(used[i])return;var dup=merged.some(function(p){return nameSim(p.name,q.name)>.72||(p.amount&&q.amount&&+p.amount===+q.amount&&Math.abs((+p.y||0)-(+q.y||0))<28)});if(!dup&&itemMathScore(q)>=3&&textStrength(q.name)>=2)merged.push(q)});
+  merged.sort(function(x,y){return (+x.y||0)-(+y.y||0)});o.items=merged.slice(0,10);o.itemFound=merged.length;o.itemOverflow=merged.length>10;o.visualText=a.visualText||b.visualText;o.score=Math.max(a.score||0,b.score||0)+Math.min(12,o.items.length);return o;
+}
+function candidate(out,rtype){
+  var text=(out&&out.data&&out.data.text)||'',date=parseDate(text),store=parseStore(text),amount=parseAmount(text),conf=+(out&&out.data&&out.data.confidence)||0,fields=(date?1:0)+(store?1:0)+(amount?1:0),items=[],visualText='';
+  if(rtype==='itemized'){var pr=parseItemRows((out&&out.data&&out.data.tsv)||'');items=pr.items;visualText=pr.visualText;var itemScore=Math.min(10,items.length)*34;return{text:text,date:date,store:store,amount:amount,conf:conf,fields:fields,items:items,visualText:visualText,itemOverflow:pr.overflow,itemFound:pr.totalFound,score:itemScore+fields*25+Math.min(100,conf)*.25};}
+  return{text:text,date:date,store:store,amount:amount,conf:conf,fields:fields,items:items,visualText:visualText,itemOverflow:false,itemFound:0,score:fields*55+Math.min(100,conf)*.45+Math.min(20,text.replace(/\s/g,'').length/40)};
+}
+async function scanCurrent(){
+  if(!currentFile){toast('사진을 먼저 넣어 주세요');return}if(busy)return;busy=true;$('ocrBtn').disabled=true;
+  try{
+    setProg(true,2,'판독 준비 중입니다');await sleep(30);var w=await getWorker(),first=await enhancedVariants(),rtype=$('receiptType').value,needLayout=rtype==='itemized',firstMode=rtype==='simple'?'sparse':'auto';
+    setProg(true,10,rtype==='simple'?'금액 중심으로 1단계 판독 중입니다':'1단계 · 글자 위치와 행 구조를 읽는 중입니다');var a=candidate(await recognizeVariant(w,first,firstMode,needLayout),rtype),best=a,precisionApplied=false,deepApplied=false;
+    if($('precisionOcr')&&$('precisionOcr').checked){
+      setProg(true,52,'2단계 정밀 OCR로 행과 단어를 교차 확인하는 중입니다');await sleep(30);var pc=precisionVariant(first);
+      try{var b=candidate(await recognizeVariant(w,pc,rtype==='itemized'?'block':'sparse',needLayout),rtype);best=mergeStructuredCandidates(a,b,rtype);precisionApplied=true}finally{pc.width=1;pc.height=1}
+    }
+    if($('deepPrecisionOcr')&&$('deepPrecisionOcr').checked){
+      setProg(true,76,'3단계 추가 OCR로 빠진 글자와 수치를 확인하는 중입니다');await sleep(30);var dc=deepPrecisionVariant(first);
+      try{var c3=candidate(await recognizeVariant(w,dc,rtype==='itemized'?'sparse':'auto',needLayout),rtype);best=mergeStructuredCandidates(best,c3,rtype);deepApplied=true}finally{dc.width=1;dc.height=1}
+    }
+    if(rtype==='itemized'&&best.items.length){
+      var batch=best.items.map(function(it){return{date:best.date,store:'',item:compactItemName(it.name),unit:it.unit?Number(it.unit).toLocaleString('ko-KR'):'',qty:it.qty?String(it.qty):'',amount:Number(it.amount).toLocaleString('ko-KR'),acct:guessAcct(it.name+' '+(it.note||''),best.text),memo:itemMemo(it)}});addRowsBatch(batch);
+      var structured='[ 좌→우로 재구성한 OCR 행 ]\n'+(best.visualText||best.text.trim())+'\n\n[ 추출한 품목 · 품목명 | 단가 | 수량 | 금액 | 비고 ]\n'+best.items.map(function(it,i){return String(i+1).padStart(2,'0')+' | '+compactItemName(it.name)+' | '+(it.unit?Number(it.unit).toLocaleString('ko-KR'):'')+' | '+(it.qty||'')+' | '+Number(it.amount).toLocaleString('ko-KR')+' | '+compactNote(it.note||'')}).join('\n')+'\n\n[ OCR 원문 ]\n'+best.text.trim();$('raw').textContent=structured;$('rawWrap').classList.add('on');doneCount+=best.items.length;
+      var isum=best.items.reduce(function(z,it){return z+(+it.amount||0)},0),receiptTotal=toNum(best.amount),msg=best.items.length+'개 품목을 행으로 추출했습니다 · OCR '+Math.round(best.conf)+'%'+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'');if(best.itemOverflow)msg+=' · 한 사진에서는 앞 10개만 반영';if(receiptTotal&&Math.abs(isum-receiptTotal)>Math.max(100,receiptTotal*.04))msg+=' · 품목합계와 영수증 총액이 달라 확인 필요';toast(msg);
+    }else{
+      $('raw').textContent=best.text.trim()||'(읽어 낸 글자가 없습니다)';$('rawWrap').classList.add('on');var acct=guessAcct(best.store,best.text);addRow({date:best.date,store:(rtype==='itemized'?'':best.store),item:'',amount:best.amount,acct:acct});doneCount++;
+      var missing=[];if(!best.date)missing.push('일자');if(!best.store)missing.push('상호');if(!best.amount)missing.push('금액');var msg2=rtype==='itemized'?'품목 행을 충분히 구분하지 못해 총액 1건으로 넣었습니다':'판독 완료';msg2+=' · OCR '+Math.round(best.conf)+'%'+(precisionApplied?' · 2단계 정밀':'')+(deepApplied?' · 3단계 추가':'');if(missing.length)msg2+=' · '+missing.join('·')+' 확인 필요';toast(msg2);
+    }
+    setProg(false);if(workBase){workBase.width=1;workBase.height=1;workBase=null}currentFile=null;if(queue.length){var n=queue.shift();loadEditor(n);toast('다음 사진을 불러왔습니다 · 범위를 확인한 뒤 판독해 주세요')}else{$('editorWrap').classList.remove('on');$('drop').style.display='';updateQueueNote()}
+  }catch(e){console.error(e);setProg(false);toast('글자를 읽지 못했습니다 · 사진을 더 크게 찍거나 범위를 좁혀 다시 시도해 주세요')}finally{busy=false;$('ocrBtn').disabled=false}
+}
+function updateQueueNote(){var n=queue.length;$('queueNote').textContent=n?'대기 중인 사진 '+n+'장':''}
+function handleFiles(files){var list=Array.prototype.slice.call(files).filter(function(f){return /^image\//.test(f.type||'')});if(!list.length){toast('이미지 파일이 아닙니다');return}var room=Math.max(0,10-queue.length),accepted=0,skipped=0;if(currentFile||busy){var add=list.slice(0,room);skipped=list.length-add.length;queue=queue.concat(add);accepted=add.length;updateQueueNote();toast(accepted+'장을 대기열에 추가했습니다'+(skipped?' · '+skipped+'장은 대기열 10장 제한으로 제외했습니다':''));return}var first=list.shift();var add2=list.slice(0,10);skipped=list.length-add2.length;queue=queue.concat(add2);loadEditor(first);if(skipped)toast('현재 사진과 대기열 10장까지만 받았습니다 · 나머지는 이 묶음 처리 후 이어서 넣어 주세요')}
+$('ocrBtn').addEventListener('click',scanCurrent);$('autoCrop').addEventListener('click',function(){var b=this;if(b.disabled)return;b.disabled=true;requestAnimationFrame(function(){setTimeout(function(){try{autoDetectReceipt(true)}finally{b.disabled=false}},0)})});
+$('rotL').addEventListener('click',function(){rot90=(rot90-90)%360;crop={x:.04,y:.04,w:.92,h:.92};drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('rotR').addEventListener('click',function(){rot90=(rot90+90)%360;crop={x:.04,y:.04,w:.92,h:.92};drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});
+$('resetEdit').addEventListener('click',function(){resetControls();drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('deskew').addEventListener('input',function(){fineRot=+this.value;syncVals();schedulePreview()});$('brightness').addEventListener('input',syncVals);$('contrast').addEventListener('input',syncVals);
+/* 넣는 방법 */
+$('drop').addEventListener('click',function(){$('fileInput').click()});$('browseBtn').addEventListener('click',function(){$('fileInput').click()});$('cameraBtn').addEventListener('click',function(){$('cameraInput').click()});$('drop').addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();$('fileInput').click()}});
+$('fileInput').addEventListener('change',function(e){if(e.target.files&&e.target.files.length)handleFiles(e.target.files);this.value=''});$('cameraInput').addEventListener('change',function(e){if(e.target.files&&e.target.files.length)handleFiles(e.target.files);this.value=''});
+var dragDepth=0;window.addEventListener('dragenter',function(e){if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0){dragDepth++;document.body.classList.add('dragging')}});window.addEventListener('dragleave',function(){dragDepth=Math.max(0,dragDepth-1);if(!dragDepth)document.body.classList.remove('dragging')});window.addEventListener('dragover',function(e){e.preventDefault()});window.addEventListener('drop',function(e){e.preventDefault();dragDepth=0;document.body.classList.remove('dragging');if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});
+document.addEventListener('paste',function(e){if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.target&&e.target.isContentEditable)return;var dt=e.clipboardData;if(!dt)return;if(dt.files&&dt.files.length){for(var i=0;i<dt.files.length;i++)if(/^image\//.test(dt.files[i].type||'')){e.preventDefault();handleFiles(dt.files);return}}var items=dt.items||[];for(var k=0;k<items.length;k++)if(items[k].kind==='file'&&items[k].type&&items[k].type.indexOf('image')===0){var f=items[k].getAsFile();if(f){e.preventDefault();handleFiles([f]);return}}});
+$('rawToggle').addEventListener('click',function(){var r=$('raw'),hidden=r.style.display==='none';r.style.display=hidden?'block':'none';this.textContent=hidden?'접기':'펼치기'});
 /* ============================================================
    내보내기
    ============================================================ */
-var HEAD = ['일자','상호명','금액','결제수단','계정과목','비고'];
-function rowArr(r){ return [r.date, r.store, r.amount, r.pay, r.acct, r.memo]; }
+var HEAD = ['일자','상호명','품목명','단가','수량','금액','결제수단','계정과목','비고'];
+function rowArr(r){ return [r.date, r.store, r.item, r.unit, r.qty, r.amount, r.pay, r.acct, r.memo]; }
 
 /* 탭으로 나누면 엑셀이 칸을 그대로 나눈다. 값 안의 탭과 줄바꿈은 공백으로 바꾼다 */
 function tsvText(){
@@ -731,7 +1139,7 @@ function csvText(){
   rows.forEach(function(r){ out.push(rowArr(r).map(cell).join(',')); });
   var sum = rows.reduce(function(a, r){ return a + toNum(r.amount); }, 0);
   out.push('');
-  out.push(['합계','','' + sum.toLocaleString('en-US'),'','',''].map(cell).join(','));
+  out.push(['합계','','','','','' + sum.toLocaleString('en-US'),'','',''].map(cell).join(','));
   return out.join('\n');
 }
 function copyText(txt, done){
@@ -801,7 +1209,7 @@ render();
 <section class="tk-guide"><div class="tk-guide-inner">
 <h2>월말마다 영수증을 한 장씩 옮겨 적는 일</h2>
 <p>서랍에 모아 둔 영수증을 꺼내 놓고 엑셀을 켭니다. 날짜 치고, 상호 치고, 금액 치고, 다음 장. 스무 장이면 한 시간이 사라지고 중간에 한 번쯤은 숫자를 잘못 칩니다.</p>
-<p>이 도구는 그 옮겨 적는 부분을 대신합니다. 사진을 넣으면 글자를 읽어 날짜와 금액, 상호를 뽑아 표에 한 줄로 넣습니다. 어긋난 곳은 표에서 바로 고치고, 다 되면 엑셀에 붙여넣으시면 됩니다.</p>
+<p>이 도구는 그 옮겨 적는 부분을 대신합니다. 사진을 넣으면 글자를 읽어 날짜와 금액, 상호를 뽑습니다. 일반형은 OCR 글자 좌표를 표처럼 해석해 품목명·단가·수량·금액을 열별로 배치합니다. 숫자가 붙은 두 번째 줄이 제조사·분류라면 바로 위 제품명과 한 품목으로 묶고 해당 문구는 비고에 넣으며, 한 사진에서 최대 10개 품목을 행으로 나눠 넣습니다. 어긋난 곳은 표에서 바로 고치고, 다 되면 엑셀에 붙여넣으시면 됩니다.</p>
 
 <h2>사진은 어디에도 올라가지 않습니다</h2>
 <p>영수증에는 회사 이름과 결제 내역이 그대로 담겨 있습니다. 그런 사진을 모르는 서버에 올리는 일이 마음 편할 리 없습니다.</p>
@@ -811,17 +1219,18 @@ render();
 <dt>📅 결제 일자</dt><dd>2025-08-14, 25/08/14, 2025년 8월 14일 어느 쪽으로 적혀 있어도 <strong>연-월-일</strong> 형식으로 바꿉니다. 13월이나 2월 30일처럼 있을 수 없는 날짜는 걸러 내고 다음 후보를 찾습니다.</dd>
 <dt>💰 결제 금액</dt><dd>합계, 승인금액, 받을금액 같은 말 주변에서 찾습니다. 그 줄에 금액이 없으면 바로 다음 줄까지 봅니다. 승인번호나 사업자번호가 금액으로 잘못 잡히지 않도록 번호가 적힌 줄은 건너뜁니다.</dd>
 <dt>🏢 상호명</dt><dd>상호명이나 가맹점이라고 적힌 줄을 먼저 봅니다. 없으면 (주)나 (유) 같은 법인 표기를 찾고, 그것도 없으면 영수증 윗부분에서 사업자번호나 전화번호가 아닌 줄을 고릅니다.</dd>
-<dt>📁 계정과목</dt><dd>상호를 보고 짐작해 미리 채워 둡니다. 카페나 식당이면 식대, 택시나 주유소면 여비교통비 하는 식입니다. 물론 표에서 바꾸실 수 있습니다.</dd>
+<dt>📁 계정과목</dt><dd>상호명과 OCR 원문을 함께 보고 내장 키워드 사전으로 자동 추정합니다. 약국·제약사는 의약품비, 병원·의원은 의료비, 호텔은 숙박비, 주유·정비는 차량유지비, 소프트웨어 서비스는 소프트웨어·구독료처럼 업종별 규칙을 폭넓게 넣었습니다. 편의점·마트처럼 구매 품목에 따라 달라지는 곳은 정확히 단정하기 어려우므로 표에서 확인해 주세요.</dd>
 </dl>
 
 <h2>인식은 완벽하지 않습니다</h2>
 <p>영수증은 인쇄 상태가 제각각입니다. 감열지가 바래거나, 접힌 자국이 지나가거나, 글씨가 흐릿하면 사람이 봐도 헷갈립니다.</p>
 <p>그래서 <strong>표의 모든 칸을 눌러 바로 고칠 수 있게</strong> 했습니다. 왼쪽에는 읽어 낸 원문을 그대로 보여 드리니, 어디가 어긋났는지 대조해 보시면 됩니다. 세 항목 중 하나라도 못 찾으면 처리가 끝날 때 몇 건인지 알려 드리고, 아래 합계 줄에도 확인이 필요한 줄 수가 표시됩니다.</p>
-<p>사진을 잘 찍으시면 인식도 좋아집니다. 밝은 곳에서 영수증을 평평하게 펴고 글자가 화면에 가득 차게 찍으시면 대체로 잘 읽힙니다.</p>
+<p>OCR은 사진 상태의 영향을 크게 받습니다. 영수증 네 모서리가 보이도록 화면을 크게 채우고, 그림자·빛반사·흔들림 없이 글자가 또렷하게 찍힌 사진을 사용해 주세요. <strong>일반형 영수증은 한 사진에 세부 항목이 약 10개 이내</strong>가 안정적이며, 더 긴 영수증은 위·아래로 나눠 찍어 이어서 처리하는 편이 좋습니다. 판독은 원본에서 선택 영역을 자른 뒤 OCR에 필요한 수준으로 해상도를 자동 최적화하고, 사다리꼴 원근과 대비를 보정합니다. 심하게 휘었거나 초점이 나간 사진까지 완전히 복원할 수는 없습니다.</p>
 
 <h2>이렇게 써 보세요</h2><ol>
-<li>영수증 사진을 넣습니다. 눌러서 고르거나, 끌어다 놓거나, <strong>Ctrl+V</strong>로 붙여넣습니다.</li>
-<li>여러 장을 한 번에 고르면 차례대로 처리되어 표에 쌓입니다.</li>
+<li>영수증 사진을 고르거나 <strong>카메라로 바로 촬영</strong>합니다. 끌어다 놓기와 <strong>Ctrl+V</strong>도 사용할 수 있습니다.</li>
+<li>자동으로 잡힌 <strong>읽을 영역을 확인</strong>하고, 필요하면 회전·기울기·밝기·대비를 조정합니다.</li>
+<li><strong>일반형(품목·세부내역 있음)</strong> 또는 <strong>간편형(금액 중심)</strong>을 고르고, 한국어·영어·혼합 중 인식 언어를 선택한 뒤 판독합니다. 여러 장은 한 장씩 확인하며, 대기열은 최대 10장까지만 잡아두고 처리가 끝나면 다음 묶음을 이어서 넣을 수 있습니다.</li>
 <li>표에서 <strong>어긋난 칸을 눌러 고칩니다.</strong> 결제수단과 계정과목은 목록에서 고르시면 됩니다.</li>
 <li>빠진 영수증은 <strong>빈 줄 추가</strong>로 직접 넣으셔도 됩니다.</li>
 <li><strong>엑셀로 복사</strong>를 누른 뒤 엑셀에서 붙여넣기 하면 칸이 그대로 나뉩니다.</li>
@@ -870,10 +1279,12 @@ render();
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-29</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
+
 
 
 

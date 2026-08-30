@@ -3,6 +3,17 @@
 이 파일은 자동 생성됩니다. 손으로 고치지 말고 `node bump-version.js` 로 기록을 남기세요.
 원본은 `VERSIONS.json` 입니다.
 
+## 2026-08-30
+
+- **영수증 지출결의서 변환기** (`receipt-to-excel`) v2.0 — v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)
+- **엑셀·CSV 원클릭 분할 압축기** (`data-slicer`) v1.0 — 최초 등록
+- **원클릭 복붙 작업대** (`copy-desk`) v1.0 — 최초 등록
+- **밸런스 게임 자판기** (`balance-game`) v1.0 — 최초 등록
+- **패션 단속반** (`fashion-detector`) v1.0 — 최초 등록
+- **스마트 이미지 재단기** (`advanced-image-tailor`) v1.0 — 최초 등록
+- **보컬 & 리듬 마스터 스튜디오** (`vocal-rhythm-master-studio`) v1.0 — 최초 등록
+- **스마트 텍스트 가공 공장** (`text-batch-factory`) v1.0 — 최초 등록
+
 ## 2026-08-29
 
 - **힐링 바이오리듬** (`biorhythm`) v1.0 — 최초 등록 (LIFESTYLE 최상단)
