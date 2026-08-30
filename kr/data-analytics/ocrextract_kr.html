@@ -6,7 +6,7 @@
 <title>OCR 텍스트 추출기 · OCR · 이미지 | TOOLKIT</title>
 
 <!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
-<meta name="description" content="이미지 속 한글과 영문을 텍스트로 뽑아냅니다. 인식 신뢰도를 함께 보여 주고 줄바꿈까지 정리해 줍니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="description" content="이미지 속 글자를 텍스트로 뽑아냅니다. 고정밀 온디바이스 AI OCR과 문서 레이아웃 인식을 선택 적용할 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
 <meta name="author" content="Janggil Kim" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <link rel="canonical" href="https://mnledu.com/kr/data-analytics/ocrextract_kr.html" />
@@ -19,12 +19,12 @@
 <meta property="og:locale" content="ko_KR" />
 <meta property="og:url" content="https://mnledu.com/kr/data-analytics/ocrextract_kr.html" />
 <meta property="og:title" content="OCR 텍스트 추출기 · OCR · 이미지 | TOOLKIT" />
-<meta property="og:description" content="이미지 속 한글과 영문을 텍스트로 뽑아냅니다. 인식 신뢰도를 함께 보여 주고 줄바꿈까지 정리해 줍니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta property="og:description" content="이미지 속 글자를 텍스트로 뽑아냅니다. 고정밀 온디바이스 AI OCR과 문서 레이아웃 인식을 선택 적용할 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
 <meta property="og:image" content="https://mnledu.com/og-image.png" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="OCR 텍스트 추출기 · OCR · 이미지 | TOOLKIT" />
-<meta name="twitter:description" content="이미지 속 한글과 영문을 텍스트로 뽑아냅니다. 인식 신뢰도를 함께 보여 주고 줄바꿈까지 정리해 줍니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
+<meta name="twitter:description" content="이미지 속 글자를 텍스트로 뽑아냅니다. 고정밀 온디바이스 AI OCR과 문서 레이아웃 인식을 선택 적용할 수 있습니다. 설치와 로그인 없이 브라우저에서 바로 실행되며, 입력한 내용은 서버로 전송되지 않습니다." />
 <meta name="twitter:image" content="https://mnledu.com/og-image.png" />
 
 <script type="application/ld+json">
@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "OCR 텍스트 추출기",
-  "description": "이미지 속 한글과 영문을 텍스트로 뽑아냅니다. 인식 신뢰도를 함께 보여 주고 줄바꿈까지 정리해 줍니다.",
+  "description": "이미지 속 글자를 텍스트로 뽑아냅니다. 고정밀 온디바이스 AI OCR과 문서 레이아웃 인식을 선택 적용할 수 있습니다.",
   "url": "https://mnledu.com/kr/data-analytics/ocrextract_kr.html",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Web",
@@ -188,6 +188,60 @@
   }
   #toast.show{ opacity:1; transform:translate(-50%, 0); }
 
+  /* ---------- 선택형 로컬 AI ---------- */
+  .ai-panel{margin:0 0 16px;border:1px solid var(--hair);border-radius:10px;background:#fff;overflow:hidden}
+  .ai-panel summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 15px;cursor:pointer;font-size:13px;font-weight:650;color:var(--ink);user-select:none}
+  .ai-panel summary::-webkit-details-marker{display:none}
+  .ai-panel summary:after{content:'+';font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--muted);font-size:15px}
+  .ai-panel[open] summary:after{content:'−'}
+  .ai-summary-note{font-size:11.5px;font-weight:400;color:var(--muted);margin-left:auto;text-align:right}
+  .ai-options-body{border-top:1px solid var(--hair);padding:12px;display:grid;gap:10px;grid-template-columns:1fr}
+  @media(min-width:860px){.ai-options-body{grid-template-columns:1fr 1fr}}
+  .ai-option{border:1px solid var(--hair);border-radius:8px;padding:13px;background:#FAFBFC}
+  .ai-option-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .ai-option-title{font-size:13px;font-weight:700;color:var(--ink)}
+  .ai-state{font-size:10.5px;color:var(--muted);white-space:nowrap}
+  .ai-option p{margin:0;font-size:11.8px;line-height:1.65;color:var(--muted)}
+  .ai-consent{display:flex;align-items:flex-start;gap:7px;margin-top:9px;font-size:11.5px;line-height:1.55;color:var(--ink);cursor:pointer}
+  .ai-consent input{margin-top:2px;accent-color:var(--steel)}
+  .ai-setup{width:100%;margin-top:9px;min-height:38px}
+  .ai-setup.ready{border-color:#A7D7C7;background:#F0FDF4;color:#166534}
+  .ai-note{margin-top:7px!important;font-size:10.8px!important;line-height:1.55!important;color:var(--muted)!important}
+  .ai-action{border-color:#C7D8E8;background:#F6FAFD;color:#245B86}
+  .ai-action:hover:not([disabled]){border-color:#9BBBD5;background:#EEF6FB}
+  .ai-restore{color:#64748B}
+
+  /* ---------- Markdown editor / local preview ---------- */
+  .md-viewbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+  .md-tabs{display:inline-flex;border:1px solid var(--hair);border-radius:7px;overflow:hidden;background:#fff}
+  .md-tab{border:0;border-right:1px solid var(--hair);background:#fff;color:var(--muted);font:inherit;font-size:11.5px;font-weight:650;padding:7px 10px;cursor:pointer}
+  .md-tab:last-child{border-right:0}
+  .md-tab.active{background:#EEF5FA;color:var(--steel)}
+  .md-tab:focus-visible{outline:2px solid var(--steel);outline-offset:-2px}
+  .md-hint{font-size:10.8px;color:var(--muted);line-height:1.45}
+  #previewPane{min-height:clamp(260px,40vh,520px);max-height:58vh;overflow:auto;padding:2px 0 14px}
+  .md-preview{font-size:14.5px;line-height:1.82;color:var(--ink);overflow-wrap:anywhere}
+  .md-preview h1,.md-preview h2,.md-preview h3,.md-preview h4,.md-preview h5,.md-preview h6{color:var(--ink);font-weight:750;line-height:1.35;margin:1.25em 0 .55em}
+  .md-preview h1{font-size:1.55em;border-bottom:1px solid var(--hair);padding-bottom:.28em}
+  .md-preview h2{font-size:1.32em;border-bottom:1px solid #EEF1F4;padding-bottom:.22em}
+  .md-preview h3{font-size:1.16em}.md-preview h4{font-size:1.05em}
+  .md-preview p{margin:.72em 0}
+  .md-preview ul,.md-preview ol{margin:.7em 0;padding-left:1.55em}
+  .md-preview li{margin:.22em 0}
+  .md-preview blockquote{margin:.8em 0;padding:.25em 0 .25em .9em;border-left:3px solid #B7C7D6;color:var(--muted)}
+  .md-preview pre{overflow:auto;margin:.85em 0;padding:12px 13px;border:1px solid var(--hair);border-radius:7px;background:#F7F9FB;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;line-height:1.65;white-space:pre}
+  .md-preview code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.9em;background:#F2F4F6;border-radius:4px;padding:.08em .3em}
+  .md-preview pre code{background:none;padding:0;border-radius:0}
+  .md-preview strong{font-weight:750}.md-preview em{font-style:italic}.md-preview del{color:var(--muted)}
+  .md-preview hr{border:0;border-top:1px solid var(--hair);margin:1.25em 0}
+  .md-table-wrap{overflow-x:auto;margin:.9em 0;border:1px solid var(--hair);border-radius:7px}
+  .md-preview table{width:100%;border-collapse:collapse;min-width:420px;font-size:13px}
+  .md-preview th{background:#F4F7F9;font-weight:700;text-align:left}
+  .md-preview th,.md-preview td{padding:8px 10px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);vertical-align:top}
+  .md-preview tr:last-child td{border-bottom:0}.md-preview th:last-child,.md-preview td:last-child{border-right:0}
+  .md-empty{color:#9AA7B4;font-size:13px;padding:26px 4px;text-align:center}
+  @media(max-width:640px){.ai-summary-note{display:none}.ai-panel summary{padding:12px}.ai-options-body{padding:10px}}
+
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 </style>
 </head>
@@ -211,6 +265,27 @@
       <button id="newBtn" class="btn hidden">다른 이미지</button>
     </div>
   </header>
+
+  <details id="aiDetails" class="ai-panel">
+    <summary><span>🤖 로컬 AI 옵션 · 선택</span><span class="ai-summary-note">동의하지 않으면 기존 OCR 그대로 사용</span></summary>
+    <div class="ai-options-body">
+      <div class="ai-option">
+        <div class="ai-option-head"><span class="ai-option-title">고정밀 온디바이스 AI OCR</span><span id="onDeviceAiState" class="ai-state">기본 OCR 사용 중</span></div>
+        <p>PP-OCRv5의 텍스트 검출 + 한국어·영어 인식 모델을 브라우저 안에서 실행합니다. 작은 글자, 영수증, 표, 스캔 문서에서 인식률과 줄 위치 복원이 좋아집니다.</p>
+        <label class="ai-consent"><input type="checkbox" id="onDeviceConsent"><span><b>AI 모델 다운로드 및 브라우저 저장에 동의</b><br>초기 1회 약 30MB 내외의 모델·런타임 파일을 받습니다. 이미지와 OCR 결과는 전송하지 않습니다.</span></label>
+        <button type="button" class="btn ai-setup" id="onDeviceSetupBtn" disabled>🤖 고정밀 AI OCR 준비하기</button>
+        <p id="onDeviceAiNote" class="ai-note">한 번 받은 파일은 브라우저 로컬 캐시를 우선 사용합니다. 같은 도메인의 TOOLKIT 영수증 AI와 모델 캐시를 공유합니다.</p>
+      </div>
+      <div class="ai-option">
+        <div class="ai-option-head"><span class="ai-option-title">문서 레이아웃 AI</span><span id="smartAiState" class="ai-state">사용 안 함</span></div>
+        <p>약 4.7MB의 PP-DocLayout-S가 이미지에서 <b>제목·본문·표·헤더·푸터·각주</b> 영역을 찾습니다. 생성형 언어모델 없이 OCR 좌표와 결합해 읽기 순서와 문서 구조를 복원합니다.</p>
+        <label class="ai-consent"><input type="checkbox" id="smartAiConsent"><span><b>문서 구조 모델 다운로드 및 브라우저 저장에 동의</b><br>초기 1회 약 5MB를 추가로 받습니다. 이미지와 추출 텍스트는 외부로 전송하지 않습니다.</span></label>
+        <button type="button" class="btn ai-setup" id="smartAiSetupBtn" disabled>🧩 문서 구조 모델 준비하기</button>
+        <p id="smartAiNote" class="ai-note">고정밀 온디바이스 AI OCR을 먼저 준비한 뒤 사용할 수 있습니다. 준비되면 체크가 켜진 동안 OCR 좌표와 레이아웃 영역을 자동 결합합니다.</p>
+      </div>
+    </div>
+  </details>
+
 
   <!-- 붙여넣기 안내 -->
   <div id="dropzone" tabindex="0" role="button" aria-label="이미지 붙여넣기">
@@ -248,11 +323,14 @@
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-hair px-5 py-2.5">
         <span class="text-[12px] font-medium tracking-wide text-muted">추출 결과</span>
         <div class="flex flex-wrap items-center gap-2">
-          <select id="copyFmt" class="btn py-1.5 text-[12px]" aria-label="복사 형식">
+          <select id="copyFmt" class="btn py-1.5 text-[12px]" aria-label="복사·저장 형식">
             <option value="plain" selected>메모장용</option>
             <option value="word">워드·한글용</option>
+            <option value="markdown">Markdown (.md)</option>
           </select>
           <button id="saveBtn" class="btn py-1.5 text-[12px]">저장</button>
+          <button id="smartFormatBtn" class="btn ai-action py-1.5 text-[12px]" disabled>🧩 문서 구조 적용</button>
+          <button id="smartRestoreBtn" class="btn ai-restore py-1.5 text-[12px] hidden">OCR 원본 복원</button>
         </div>
       </div>
 
@@ -270,12 +348,25 @@
       <div id="errBox" class="hidden border-b border-hair px-5 py-3 text-[12.5px] leading-relaxed text-alert"></div>
 
       <div class="px-5 pt-4 sm:px-6">
-        <textarea id="output" spellcheck="false"
-          placeholder="이미지를 넣으면 인식된 글자가 여기에 표시됩니다. 직접 고칠 수도 있습니다."></textarea>
+        <div class="md-viewbar">
+          <div class="md-tabs" role="tablist" aria-label="결과 보기">
+            <button type="button" id="editViewBtn" class="md-tab active" role="tab" aria-selected="true">텍스트 편집</button>
+            <button type="button" id="previewViewBtn" class="md-tab" role="tab" aria-selected="false">Markdown 미리보기</button>
+          </div>
+          <span id="mdModeHint" class="md-hint">미리보기 렌더링도 이 브라우저 안에서만 처리합니다.</span>
+        </div>
+        <div id="editPane">
+          <textarea id="output" spellcheck="false"
+            placeholder="이미지를 넣으면 인식된 글자가 여기에 표시됩니다. 직접 고칠 수도 있습니다."></textarea>
+        </div>
+        <div id="previewPane" class="hidden">
+          <article id="mdPreview" class="md-preview"><div class="md-empty">Markdown 미리보기가 여기에 표시됩니다.</div></article>
+        </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hair px-5 py-2.5 text-[12px] text-muted sm:px-6">
         <label class="opt"><input type="checkbox" id="optJoin" checked>줄바꿈 정리</label>
+        <label class="opt"><input type="checkbox" id="optLayout">표·열 간격 유지</label>
         <span>글자 <b id="chars" class="num ml-0.5 font-medium text-ink">0</b></span>
         <span id="confInfo" class="num"></span>
         <button id="copyBtn" class="btn btn-primary ml-auto py-1.5 text-[12px]">결과 텍스트 전체 복사</button>
@@ -307,13 +398,22 @@
   const charsEl  = document.getElementById('chars');
   const confInfo = document.getElementById('confInfo');
   const optJoin  = document.getElementById('optJoin');
+  const optLayout = document.getElementById('optLayout');
   const copyFmt  = document.getElementById('copyFmt');
   const redoBtn  = document.getElementById('redoBtn');
   const newBtn   = document.getElementById('newBtn');
+  const editViewBtn = document.getElementById('editViewBtn');
+  const previewViewBtn = document.getElementById('previewViewBtn');
+  const editPane = document.getElementById('editPane');
+  const previewPane = document.getElementById('previewPane');
+  const mdPreview = document.getElementById('mdPreview');
+  const mdModeHint = document.getElementById('mdModeHint');
 
   let currentBlob = null;
   let rawText = '';
+  let layoutText = '';
   let busy = false;
+  let mdPreviewActive = false;
 
   /* ---------- 토스트 ---------- */
   const toastEl = document.getElementById('toast');
@@ -348,6 +448,7 @@
       newBtn.classList.remove('hidden');
 
       currentBlob = blob;
+      rawText = ''; layoutText = ''; resetSmartResult();
       URL.revokeObjectURL(url);
       recognize();
     };
@@ -393,6 +494,1004 @@
     window.addEventListener(t, function (ev) { if (!dropzone.contains(ev.target)) ev.preventDefault(); });
   });
 
+
+  /* ---------- 선택형 온디바이스 AI OCR ---------- */
+  const TK_KO = true;
+  function LS(koText, enText) { return TK_KO ? koText : enText; }
+
+  /* ---------- Markdown local preview ---------- */
+  function mdEscape(v){
+    return String(v==null?'':v).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function mdInline(v){
+    let src=String(v==null?'':v),codes=[];
+    src=src.replace(/`([^`\n]+)`/g,function(_,c){
+      const id=codes.length;codes.push(mdEscape(c));return '\u0000MDCODE'+id+'\u0000';
+    });
+    let t=mdEscape(src);
+    t=t.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+    t=t.replace(/__([^_\n]+)__/g,'<strong>$1</strong>');
+    t=t.replace(/~~([^~\n]+)~~/g,'<del>$1</del>');
+    t=t.replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,!?:;])/g,'$1<em>$2</em>');
+    t=t.replace(/\u0000MDCODE(\d+)\u0000/g,function(_,n){return '<code>'+codes[+n]+'</code>';});
+    return t;
+  }
+  function mdTableCells(line){
+    let s=String(line||'').trim();
+    if(s.startsWith('|'))s=s.slice(1);
+    if(s.endsWith('|'))s=s.slice(0,-1);
+    return s.split('|').map(function(x){return x.trim();});
+  }
+  function mdIsTableSep(line){
+    return /^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(String(line||''));
+  }
+  function mdIsSpecial(lines,i){
+    const l=lines[i]||'',n=lines[i+1]||'';
+    return !l.trim() || /^```/.test(l.trim()) || /^#{1,6}\s+/.test(l) ||
+      /^\s*>\s?/.test(l) || /^\s*[-+*]\s+/.test(l) || /^\s*\d+[.)]\s+/.test(l) ||
+      /^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(l) ||
+      (l.indexOf('|')>=0 && mdIsTableSep(n)) || (l.indexOf('\t')>=0);
+  }
+  function mdRenderTable(rows,hasHead){
+    if(!rows.length)return '';
+    const cols=Math.max.apply(null,rows.map(function(r){return r.length;}));
+    let h='<div class="md-table-wrap"><table>';
+    let start=0;
+    if(hasHead){
+      h+='<thead><tr>'+rows[0].map(function(c){return '<th>'+mdInline(c)+'</th>';}).join('')+'</tr></thead>';
+      start=1;
+    }
+    h+='<tbody>';
+    for(let i=start;i<rows.length;i++){
+      h+='<tr>';
+      for(let c=0;c<cols;c++)h+='<td>'+mdInline(rows[i][c]||'')+'</td>';
+      h+='</tr>';
+    }
+    return h+'</tbody></table></div>';
+  }
+  function renderMarkdownSafe(md){
+    const lines=String(md||'').replace(/\r\n?/g,'\n').split('\n'),out=[];
+    for(let i=0;i<lines.length;){
+      const line=lines[i],trim=line.trim();
+      if(!trim){i++;continue;}
+      if(/^```/.test(trim)){
+        const lang=trim.slice(3).trim().replace(/[^A-Za-z0-9_+.-]/g,'').slice(0,24);
+        const code=[];i++;
+        while(i<lines.length&&!/^```\s*$/.test(lines[i].trim())){code.push(lines[i]);i++;}
+        if(i<lines.length)i++;
+        out.push('<pre><code'+(lang?' data-lang="'+mdEscape(lang)+'"':'')+'>'+mdEscape(code.join('\n'))+'</code></pre>');
+        continue;
+      }
+      const hm=line.match(/^\s*(#{1,6})\s+(.+)$/);
+      if(hm){const lv=hm[1].length;out.push('<h'+lv+'>'+mdInline(hm[2].trim())+'</h'+lv+'>');i++;continue;}
+      if(/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)){out.push('<hr>');i++;continue;}
+      if(line.indexOf('|')>=0 && i+1<lines.length && mdIsTableSep(lines[i+1])){
+        const rows=[mdTableCells(line)];i+=2;
+        while(i<lines.length&&lines[i].indexOf('|')>=0&&lines[i].trim()){rows.push(mdTableCells(lines[i]));i++;}
+        out.push(mdRenderTable(rows,true));continue;
+      }
+      if(line.indexOf('\t')>=0){
+        const rows=[];
+        while(i<lines.length&&lines[i].indexOf('\t')>=0&&lines[i].trim()){
+          rows.push(lines[i].split('\t').map(function(x){return x.trim();}));i++;
+        }
+        if(rows.length){out.push(mdRenderTable(rows,false));continue;}
+      }
+      if(/^\s*>\s?/.test(line)){
+        const q=[];
+        while(i<lines.length&&/^\s*>\s?/.test(lines[i])){q.push(lines[i].replace(/^\s*>\s?/,''));i++;}
+        out.push('<blockquote>'+q.map(mdInline).join('<br>')+'</blockquote>');continue;
+      }
+      if(/^\s*[-+*]\s+/.test(line)){
+        const li=[];
+        while(i<lines.length&&/^\s*[-+*]\s+/.test(lines[i])){li.push(lines[i].replace(/^\s*[-+*]\s+/,''));i++;}
+        out.push('<ul>'+li.map(function(x){return '<li>'+mdInline(x)+'</li>';}).join('')+'</ul>');continue;
+      }
+      if(/^\s*\d+[.)]\s+/.test(line)){
+        const li=[];
+        while(i<lines.length&&/^\s*\d+[.)]\s+/.test(lines[i])){li.push(lines[i].replace(/^\s*\d+[.)]\s+/,''));i++;}
+        out.push('<ol>'+li.map(function(x){return '<li>'+mdInline(x)+'</li>';}).join('')+'</ol>');continue;
+      }
+      const p=[line.trim()];i++;
+      while(i<lines.length&&!mdIsSpecial(lines,i)){p.push(lines[i].trim());i++;}
+      out.push('<p>'+p.map(mdInline).join('<br>')+'</p>');
+    }
+    return out.join('') || '<div class="md-empty">'+LS('미리볼 내용이 없습니다.','Nothing to preview.')+'</div>';
+  }
+  function refreshMarkdownPreview(){
+    if(!mdPreview)return;
+    mdPreview.innerHTML=renderMarkdownSafe(output.value);
+  }
+  function setResultView(view){
+    mdPreviewActive=view==='preview';
+    editPane.classList.toggle('hidden',mdPreviewActive);
+    previewPane.classList.toggle('hidden',!mdPreviewActive);
+    editViewBtn.classList.toggle('active',!mdPreviewActive);
+    previewViewBtn.classList.toggle('active',mdPreviewActive);
+    editViewBtn.setAttribute('aria-selected',String(!mdPreviewActive));
+    previewViewBtn.setAttribute('aria-selected',String(mdPreviewActive));
+    if(mdPreviewActive)refreshMarkdownPreview();
+  }
+  function refreshFormatUi(){
+    const md=copyFmt.value==='markdown';
+    const sf=document.getElementById('smartFormatBtn'),sv=document.getElementById('saveBtn'),cp=document.getElementById('copyBtn');
+    if(sf)sf.textContent=md?LS('🧩 Markdown 구조 적용','🧩 Apply Markdown layout'):LS('🧩 문서 구조 적용','🧩 Apply document layout');
+    if(sv)sv.textContent=md?LS('Markdown 저장','Save Markdown'):LS('저장','Save');
+    if(cp)cp.textContent=md?LS('Markdown 전체 복사','Copy Markdown'):LS('결과 텍스트 전체 복사','Copy all recognised text');
+    if(mdModeHint)mdModeHint.textContent=md
+      ?LS('문서 레이아웃 AI를 쓰면 제목·표·본문 영역을 Markdown 구조로 표현할 수 있습니다.','Document layout AI can express detected headings, tables and body regions as Markdown.')
+      :LS('Markdown 미리보기는 로컬 렌더링이며 원문을 서버로 보내지 않습니다.','Markdown preview is rendered locally and sends no content to a server.');
+    if(mdPreviewActive)refreshMarkdownPreview();
+    if(typeof refreshSmartAction==='function')refreshSmartAction();
+  }
+  editViewBtn.addEventListener('click',function(){setResultView('edit');});
+  previewViewBtn.addEventListener('click',function(){setResultView('preview');});
+  copyFmt.addEventListener('change',refreshFormatUi);
+  const OD_ORT_VERSION = '1.29.0';
+  const OD_ORT_BASE = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@' + OD_ORT_VERSION + '/dist/';
+  const OD_REC_MODEL_URL = 'https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/korean/rec.onnx';
+  const OD_DET_MODEL_URL = 'https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det_onnx/resolve/main/inference.onnx';
+  const OD_DICT_URL = 'https://huggingface.co/monkt/paddleocr-onnx/resolve/main/languages/korean/dict.txt';
+  /* Receipt AI와 동일한 저장소/키를 사용해 같은 origin에서 다시 받지 않게 한다. */
+  const OD_DB_NAME = 'toolkit-ondevice-receipt-ai', OD_DB_VERSION = 1, OD_STORE = 'assets', OD_DET_LONG_SIDE = 1280;
+  let odWorker = null, odReady = false, odInitBusy = false, odInitWait = null, odInferWait = null, odBackend = '', odObjectUrls = [];
+
+  function localProgress(label, pct) {
+    progress.classList.remove('hidden');
+    const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
+    progText.textContent = label + (label.endsWith('…') ? '' : '…') + ' (' + p + '%)';
+    barFill.style.width = p + '%';
+  }
+  function hideProgressSoon() { setTimeout(function() { if (!busy && !odInitBusy && !smBusy) progress.classList.add('hidden'); }, 500); }
+  function odSetState(v) { const e=document.getElementById('onDeviceAiState'); if(e)e.textContent=v; }
+  function odSetNote(v) { const e=document.getElementById('onDeviceAiNote'); if(e)e.textContent=v; }
+  function odUseEnabled() { const c=document.getElementById('onDeviceConsent'); return !!(odReady && c && c.checked); }
+  function odRefreshUi() {
+    const c=document.getElementById('onDeviceConsent'), b=document.getElementById('onDeviceSetupBtn'); if(!c||!b)return;
+    if(odReady) { b.disabled=true; b.classList.add('ready'); b.textContent=LS('✓ 고정밀 AI OCR 준비 완료','✓ High-accuracy AI OCR ready'); odSetState(c.checked?LS('온디바이스 AI 사용 중','On-device AI active'):LS('모델 준비됨 · 기본 OCR 사용','Model ready · standard OCR active')); }
+    else { b.classList.remove('ready'); b.disabled=!c.checked||odInitBusy; b.textContent=odInitBusy?LS('AI OCR 준비 중...','Preparing AI OCR...'):LS('🤖 고정밀 AI OCR 준비하기','🤖 Prepare high-accuracy AI OCR'); odSetState(c.checked?LS('다운로드 대기','Ready to download'):LS('기본 OCR 사용 중','Standard OCR active')); }
+  }
+  function odOpenDb() { return new Promise(function(resolve,reject) { if(!('indexedDB' in window)) return reject(new Error('IndexedDB unsupported')); const req=indexedDB.open(OD_DB_NAME,OD_DB_VERSION); req.onupgradeneeded=function(){const db=req.result;if(!db.objectStoreNames.contains(OD_STORE))db.createObjectStore(OD_STORE,{keyPath:'key'})}; req.onsuccess=function(){resolve(req.result)}; req.onerror=function(){reject(req.error)}; }); }
+  async function odGet(key) { const db=await odOpenDb(); return await new Promise(function(resolve,reject){const tx=db.transaction(OD_STORE,'readonly'),req=tx.objectStore(OD_STORE).get(key);req.onsuccess=function(){resolve(req.result||null)};req.onerror=function(){reject(req.error)};tx.oncomplete=function(){db.close()};}); }
+  async function odPut(key,bytes) { const db=await odOpenDb(); return await new Promise(function(resolve,reject){const tx=db.transaction(OD_STORE,'readwrite');tx.objectStore(OD_STORE).put({key:key,bytes:bytes,savedAt:Date.now()});tx.oncomplete=function(){db.close();resolve()};tx.onerror=function(){db.close();reject(tx.error)};}); }
+  function odFmt(bytes) { if(!bytes||!isFinite(bytes))return ''; return bytes<1048576?Math.round(bytes/1024)+' KB':(bytes/1048576).toFixed(1)+' MB'; }
+  async function odFetch(url,key,onProgress) {
+    try { const cached=await odGet(key); if(cached&&cached.bytes){if(onProgress)onProgress(1,true,cached.bytes.byteLength||0);return cached.bytes;} } catch(e) { console.warn('AI cache read failed',e); }
+    if(!navigator.onLine) throw new Error(LS('오프라인이며 필요한 AI 파일이 캐시에 없습니다','Offline and the required AI file is not cached'));
+    const res=await fetch(url,{mode:'cors',credentials:'omit',cache:'no-cache'}); if(!res.ok)throw new Error('AI asset download failed ('+res.status+')'); const total=Number(res.headers.get('content-length'))||0;
+    if(!res.body){const ab=await res.arrayBuffer();try{await odPut(key,ab)}catch(e){}if(onProgress)onProgress(1,false,ab.byteLength);return ab;}
+    const reader=res.body.getReader(),chunks=[];let got=0;while(true){const rr=await reader.read();if(rr.done)break;chunks.push(rr.value);got+=rr.value.byteLength;if(onProgress)onProgress(total?got/total:.35,false,got)}
+    const merged=new Uint8Array(got);let off=0;chunks.forEach(function(ch){merged.set(ch,off);off+=ch.byteLength});const buf=merged.buffer;try{await odPut(key,buf)}catch(e){console.warn(e)}if(onProgress)onProgress(1,false,got);return buf;
+  }
+  function odBlob(bytes,type) { const u=URL.createObjectURL(new Blob([bytes],{type:type}));odObjectUrls.push(u);return u; }
+
+function odWorkerMain() {
+    'use strict';
+
+    let ort = null;
+    let recSession = null;
+    let detSession = null;
+    let layoutSession = null;
+    let sessionProvider = 'wasm';
+    const baseOptions = { graphOptimizationLevel: 'all', enableCpuMemArena: true, enableMemPattern: true };
+    let dictionary = [];
+    let actualBackend = 'WASM';
+    let detLongSide = 1280;
+
+    self.onmessage = async (event) => {
+      const msg = event.data;
+      try {
+        if (msg.type === 'init') await init(msg);
+        if (msg.type === 'init-layout') await initLayout(msg);
+        if (msg.type === 'infer') await infer(msg.image, !!msg.lowResolutionSource);
+      } catch (error) {
+        self.postMessage({ type: 'error', message: error?.message || String(error), stack: error?.stack || '' });
+      }
+    };
+
+    async function init(msg) {
+      self.postMessage({ type: 'status', message: 'ONNX Runtime 모듈을 Worker에 연결 중...' });
+      const imported = await import(msg.ortBundleUrl);
+      ort = imported.default?.InferenceSession ? imported.default : imported;
+
+      ort.env.logLevel = 'warning';
+      ort.env.wasm.proxy = false;
+      ort.env.wasm.simd = true;
+      ort.env.wasm.numThreads = self.crossOriginIsolated ? Math.min(4, self.navigator?.hardwareConcurrency || 2) : 1;
+      ort.env.wasm.wasmPaths = { mjs: msg.ortRuntimeMjsUrl, wasm: msg.ortWasmUrl };
+
+      detLongSide = msg.detLongSide || 1280;
+      dictionary = msg.dictText.replace(/\r/g, '').split('\n');
+      if (dictionary[dictionary.length - 1] === '') dictionary.pop();
+
+      const recBytes = new Uint8Array(msg.recModelBuffer);
+      const detBytes = new Uint8Array(msg.detModelBuffer);
+      async function createSessions(provider) {
+        const options = { ...baseOptions, executionProviders: [provider] };
+        self.postMessage({ type: 'status', message: '텍스트 검출 AI 그래프를 준비 중...' });
+        detSession = await ort.InferenceSession.create(detBytes, options);
+        self.postMessage({ type: 'status', message: '한국어 인식 AI 그래프를 준비 중...' });
+        recSession = await ort.InferenceSession.create(recBytes, options);
+      }
+
+      if (msg.preferWebGPU) {
+        try {
+          await createSessions('webgpu');
+          actualBackend = 'WebGPU';
+          sessionProvider = 'webgpu';
+        } catch (gpuError) {
+          try { detSession?.release?.(); } catch (_) {}
+          try { recSession?.release?.(); } catch (_) {}
+          detSession = null;
+          recSession = null;
+          self.postMessage({ type: 'status', message: 'WebGPU 초기화 실패 · WASM SIMD로 전환합니다.' });
+          await createSessions('wasm');
+          actualBackend = 'WASM SIMD';
+          sessionProvider = 'wasm';
+        }
+      } else {
+        await createSessions('wasm');
+        actualBackend = 'WASM SIMD';
+        sessionProvider = 'wasm';
+      }
+
+      self.postMessage({
+        type: 'ready',
+        backend: actualBackend,
+        detInput: detSession.inputNames?.[0] || 'x',
+        recInput: recSession.inputNames?.[0] || 'x'
+      });
+    }
+
+    async function initLayout(msg) {
+      if (!ort || !recSession || !detSession) throw new Error('High-accuracy OCR must be initialised first.');
+      try { layoutSession?.release?.(); } catch (_) {}
+      const bytes = new Uint8Array(msg.layoutModelBuffer);
+      self.postMessage({ type: 'layout-status', message: 'Preparing PP-DocLayout-S...' });
+      let layoutProvider=sessionProvider;
+      try { layoutSession = await ort.InferenceSession.create(bytes, { ...baseOptions, executionProviders: [layoutProvider] }); }
+      catch (e) { if(layoutProvider!=='webgpu')throw e; layoutProvider='wasm'; layoutSession=await ort.InferenceSession.create(bytes,{...baseOptions,executionProviders:['wasm']}); }
+      self.postMessage({ type: 'layout-ready', backend: layoutProvider==='webgpu'?'WebGPU':'WASM SIMD' });
+    }
+
+    function layoutTensor(image) {
+      const sw=image.width,sh=image.height,src=new Uint8ClampedArray(image.data),W=480,H=480,plane=W*H,out=new Float32Array(plane*3),mean=[.485,.456,.406],std=[.229,.224,.225];
+      for(let y=0;y<H;y++){
+        const fy=(y+.5)*sh/H-.5,y0=Math.max(0,Math.min(sh-1,Math.floor(fy))),y1=Math.max(0,Math.min(sh-1,y0+1)),wy=Math.max(0,Math.min(1,fy-y0));
+        for(let x=0;x<W;x++){
+          const fx=(x+.5)*sw/W-.5,x0=Math.max(0,Math.min(sw-1,Math.floor(fx))),x1=Math.max(0,Math.min(sw-1,x0+1)),wx=Math.max(0,Math.min(1,fx-x0));
+          const i00=(y0*sw+x0)*4,i10=(y0*sw+x1)*4,i01=(y1*sw+x0)*4,i11=(y1*sw+x1)*4,di=y*W+x;
+          for(let c=0;c<3;c++){const a=src[i00+c]*(1-wx)+src[i10+c]*wx,b=src[i01+c]*(1-wx)+src[i11+c]*wx,v=(a*(1-wy)+b*wy)/255;out[c*plane+di]=(v-mean[c])/std[c];}
+        }
+      }
+      return {data:out,scale:new Float32Array([H/sh,W/sw])};
+    }
+
+    async function detectLayout(image){
+      if(!layoutSession)return [];
+      const prep=layoutTensor(image),feeds={};
+      const names=layoutSession.inputNames||['image','scale_factor'];
+      feeds[names[0]]=new ort.Tensor('float32',prep.data,[1,3,480,480]);
+      feeds[names[1]]=new ort.Tensor('float32',prep.scale,[1,2]);
+      const outs=await layoutSession.run(feeds),vals=Object.values(outs);let det=null,num=null;
+      for(const t of vals){const d=t.dims||[];if(d.length>=2&&d[d.length-1]===6)det=t;else if(t.data&&t.data.length<=4)num=t;}
+      if(!det)return [];
+      const labels=['paragraph_title','image','text','number','abstract','content','figure_title','formula','table','table_title','reference','doc_title','footnote','header','algorithm','footer','seal','chart_title','chart','formula_number','header_image','footer_image','aside_text'];
+      const n=num&&num.data&&num.data.length?Math.min(Math.max(0,Number(num.data[0])||0),Math.floor(det.data.length/6)):Math.floor(det.data.length/6),regions=[];
+      for(let i=0;i<n;i++){const o=i*6,cls=Math.round(Number(det.data[o])),score=Number(det.data[o+1]),x1=Number(det.data[o+2]),y1=Number(det.data[o+3]),x2=Number(det.data[o+4]),y2=Number(det.data[o+5]);if(score<.3||!isFinite(x1+y1+x2+y2)||x2<=x1||y2<=y1)continue;regions.push({classId:cls,label:labels[cls]||('class_'+cls),score:score,x1:x1,y1:y1,x2:x2,y2:y2});}
+      return regions;
+    }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function detectorTensor(image) {
+      const src = new Uint8ClampedArray(image.data);
+      const sw = image.width;
+      const sh = image.height;
+      const maxSide = Math.max(sw, sh);
+      const ratio = maxSide > detLongSide ? detLongSide / maxSide : 1;
+      let rw = Math.max(32, Math.round((sw * ratio) / 32) * 32);
+      let rh = Math.max(32, Math.round((sh * ratio) / 32) * 32);
+      rw = Math.min(4000, rw);
+      rh = Math.min(4000, rh);
+
+      const plane = rw * rh;
+      const tensor = new Float32Array(plane * 3);
+      const means = [0.485, 0.456, 0.406];
+      const stds = [0.229, 0.224, 0.225];
+
+      for (let y = 0; y < rh; y++) {
+        const sy = Math.min(sh - 1, Math.round((y + 0.5) * sh / rh - 0.5));
+        for (let x = 0; x < rw; x++) {
+          const sx = Math.min(sw - 1, Math.round((x + 0.5) * sw / rw - 0.5));
+          const si = (sy * sw + sx) * 4;
+          const di = y * rw + x;
+          // PaddleOCR DecodeImage uses BGR for this detector.
+          tensor[di] = (src[si + 2] / 255 - means[0]) / stds[0];
+          tensor[plane + di] = (src[si + 1] / 255 - means[1]) / stds[1];
+          tensor[plane * 2 + di] = (src[si] / 255 - means[2]) / stds[2];
+        }
+      }
+      return { tensor, width: rw, height: rh, sourceWidth: sw, sourceHeight: sh };
+    }
+
+    function extractProbabilityMap(output) {
+      const dims = output.dims || [];
+      const data = output.data;
+      let h, w, offset = 0;
+      if (dims.length === 4) {
+        h = dims[dims.length - 2];
+        w = dims[dims.length - 1];
+      } else if (dims.length === 3) {
+        h = dims[1];
+        w = dims[2];
+      } else if (dims.length === 2) {
+        h = dims[0];
+        w = dims[1];
+      } else {
+        throw new Error(`예상하지 못한 검출 출력 차원: ${JSON.stringify(dims)}`);
+      }
+      const len = h * w;
+      return { data: data.subarray ? data.subarray(offset, offset + len) : data.slice(offset, offset + len), width: w, height: h };
+    }
+
+    function dilateMask(mask, w, h) {
+      const horizontal = new Uint8Array(mask.length);
+      const out = new Uint8Array(mask.length);
+      const rx = 2;
+      const ry = 1;
+
+      for (let y = 0; y < h; y++) {
+        let count = 0;
+        for (let x = -rx; x <= rx; x++) if (x >= 0 && x < w) count += mask[y * w + x];
+        for (let x = 0; x < w; x++) {
+          horizontal[y * w + x] = count > 0 ? 1 : 0;
+          const removeX = x - rx;
+          const addX = x + rx + 1;
+          if (removeX >= 0) count -= mask[y * w + removeX];
+          if (addX < w) count += mask[y * w + addX];
+        }
+      }
+
+      for (let x = 0; x < w; x++) {
+        let count = 0;
+        for (let y = -ry; y <= ry; y++) if (y >= 0 && y < h) count += horizontal[y * w + x];
+        for (let y = 0; y < h; y++) {
+          out[y * w + x] = count > 0 ? 1 : 0;
+          const removeY = y - ry;
+          const addY = y + ry + 1;
+          if (removeY >= 0) count -= horizontal[removeY * w + x];
+          if (addY < h) count += horizontal[addY * w + x];
+        }
+      }
+      return out;
+    }
+
+    function overlapRatioY(a, b) {
+      const top = Math.max(a.y, b.y);
+      const bottom = Math.min(a.y + a.height, b.y + b.height);
+      const overlap = Math.max(0, bottom - top);
+      return overlap / Math.max(1, Math.min(a.height, b.height));
+    }
+
+    function mergeNearbyBoxes(boxes) {
+      if (!boxes.length) return [];
+      const sorted = boxes.slice().sort((a, b) => (a.y + a.height / 2) - (b.y + b.height / 2) || a.x - b.x);
+      const lines = [];
+
+      for (const box of sorted) {
+        const cy = box.y + box.height / 2;
+        let best = null;
+        let bestDist = Infinity;
+        for (const line of lines) {
+          const avgH = line.heightSum / line.boxes.length;
+          const dist = Math.abs(cy - line.cy);
+          if (dist <= Math.max(avgH, box.height) * 0.62 && dist < bestDist) {
+            best = line;
+            bestDist = dist;
+          }
+        }
+        if (!best) {
+          lines.push({ boxes: [box], cy, heightSum: box.height });
+        } else {
+          best.boxes.push(box);
+          best.cy = best.boxes.reduce((s, b) => s + b.y + b.height / 2, 0) / best.boxes.length;
+          best.heightSum += box.height;
+        }
+      }
+
+      const merged = [];
+      for (const line of lines) {
+        const row = line.boxes.sort((a, b) => a.x - b.x);
+        let cur = { ...row[0] };
+        for (let i = 1; i < row.length; i++) {
+          const b = row[i];
+          const gap = b.x - (cur.x + cur.width);
+          const h = Math.max(cur.height, b.height);
+          const canMerge = gap <= Math.max(8, h * 0.72) && overlapRatioY(cur, b) > 0.48;
+          if (canMerge) {
+            const x1 = Math.min(cur.x, b.x);
+            const y1 = Math.min(cur.y, b.y);
+            const x2 = Math.max(cur.x + cur.width, b.x + b.width);
+            const y2 = Math.max(cur.y + cur.height, b.y + b.height);
+            cur = { x: x1, y: y1, width: x2 - x1, height: y2 - y1, score: Math.max(cur.score || 0, b.score || 0) };
+          } else {
+            merged.push(cur);
+            cur = { ...b };
+          }
+        }
+        merged.push(cur);
+      }
+      return merged.sort((a, b) => a.y - b.y || a.x - b.x);
+    }
+
+    function connectedBoxes(probMap, detInfo) {
+      const w = probMap.width;
+      const h = probMap.height;
+      const probs = probMap.data;
+      const baseMask = new Uint8Array(w * h);
+      for (let i = 0; i < baseMask.length; i++) baseMask[i] = probs[i] >= 0.30 ? 1 : 0;
+      const mask = dilateMask(baseMask, w, h);
+
+      const stack = new Int32Array(w * h);
+      const raw = [];
+      const sx = detInfo.sourceWidth / w;
+      const sy = detInfo.sourceHeight / h;
+      const minPixels = Math.max(8, Math.round(w * h * 0.000008));
+
+      for (let seed = 0; seed < mask.length; seed++) {
+        if (!mask[seed]) continue;
+        let top = 0;
+        stack[top++] = seed;
+        mask[seed] = 0;
+        let minX = w, minY = h, maxX = 0, maxY = 0, pixels = 0;
+
+        while (top) {
+          const idx = stack[--top];
+          const y = Math.floor(idx / w);
+          const x = idx - y * w;
+          pixels++;
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+
+          const left = idx - 1, right = idx + 1, up = idx - w, down = idx + w;
+          if (x > 0 && mask[left]) { mask[left] = 0; stack[top++] = left; }
+          if (x + 1 < w && mask[right]) { mask[right] = 0; stack[top++] = right; }
+          if (y > 0 && mask[up]) { mask[up] = 0; stack[top++] = up; }
+          if (y + 1 < h && mask[down]) { mask[down] = 0; stack[top++] = down; }
+        }
+
+        if (pixels < minPixels) continue;
+        const bw = maxX - minX + 1;
+        const bh = maxY - minY + 1;
+        if (bw < 3 || bh < 3) continue;
+
+        let scoreSum = 0;
+        let scoreCount = 0;
+        for (let yy = minY; yy <= maxY; yy++) {
+          const off = yy * w;
+          for (let xx = minX; xx <= maxX; xx++) {
+            const p = probs[off + xx];
+            if (p >= 0.30) { scoreSum += p; scoreCount++; }
+          }
+        }
+        const score = scoreCount ? scoreSum / scoreCount : 0;
+        if (score < 0.43) continue;
+
+        let x = minX * sx;
+        let y = minY * sy;
+        let width = bw * sx;
+        let height = bh * sy;
+        const padX = Math.max(3, height * 0.16);
+        const padY = Math.max(2, height * 0.10);
+        x = clamp(x - padX, 0, detInfo.sourceWidth - 1);
+        y = clamp(y - padY, 0, detInfo.sourceHeight - 1);
+        width = clamp(width + padX * 2, 1, detInfo.sourceWidth - x);
+        height = clamp(height + padY * 2, 1, detInfo.sourceHeight - y);
+        if (width < 10 || height < 7) continue;
+        raw.push({ x: Math.round(x), y: Math.round(y), width: Math.round(width), height: Math.round(height), score });
+        if (raw.length >= 1000) break;
+      }
+
+      const merged = mergeNearbyBoxes(raw);
+      return merged
+        .filter(b => b.width >= 12 && b.height >= 7 && b.width * b.height >= 100)
+        .slice(0, 180);
+    }
+
+    async function detectText(image) {
+      const prep = detectorTensor(image);
+      const inputName = detSession.inputNames[0];
+      const outputName = detSession.outputNames[0];
+      const tensor = new ort.Tensor('float32', prep.tensor, [1, 3, prep.height, prep.width]);
+      const outputMap = await detSession.run({ [inputName]: tensor });
+      const probMap = extractProbabilityMap(outputMap[outputName]);
+      const detInfo = {
+        sourceWidth: image.width,
+        sourceHeight: image.height,
+        detectorWidth: prep.width,
+        detectorHeight: prep.height
+      };
+      return connectedBoxes(probMap, detInfo);
+    }
+
+    function grayOf(r, g, b) { return Math.round(r * 0.299 + g * 0.587 + b * 0.114); }
+
+    function otsu(gray) {
+      const hist = new Uint32Array(256);
+      for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
+      const total = gray.length;
+      let sum = 0;
+      for (let t = 0; t < 256; t++) sum += t * hist[t];
+      let sumB = 0, wB = 0, maxVar = -1, threshold = 127;
+      for (let t = 0; t < 256; t++) {
+        wB += hist[t];
+        if (!wB) continue;
+        const wF = total - wB;
+        if (!wF) break;
+        sumB += t * hist[t];
+        const mB = sumB / wB;
+        const mF = (sum - sumB) / wF;
+        const between = wB * wF * (mB - mF) * (mB - mF);
+        if (between > maxVar) { maxVar = between; threshold = t; }
+      }
+      return threshold;
+    }
+
+    function cropImage(image, box) {
+      const src = new Uint8ClampedArray(image.data);
+      const sw = image.width;
+      const sh = image.height;
+      const pad = Math.max(2, Math.round(box.height * 0.10));
+      const x0 = clamp(Math.floor(box.x - pad), 0, sw - 1);
+      const y0 = clamp(Math.floor(box.y - pad), 0, sh - 1);
+      const x1 = clamp(Math.ceil(box.x + box.width + pad), x0 + 1, sw);
+      const y1 = clamp(Math.ceil(box.y + box.height + pad), y0 + 1, sh);
+      const cw = x1 - x0;
+      const ch = y1 - y0;
+      const out = new Uint8ClampedArray(cw * ch * 4);
+      for (let y = 0; y < ch; y++) {
+        const srcStart = ((y0 + y) * sw + x0) * 4;
+        const dstStart = y * cw * 4;
+        out.set(src.subarray(srcStart, srcStart + cw * 4), dstStart);
+      }
+      return { data: out, width: cw, height: ch };
+    }
+
+    function variantStats(crop) {
+      const pixels = crop.width * crop.height;
+      const gray = new Uint8Array(pixels);
+      const hist = new Uint32Array(256);
+      for (let p = 0, i = 0; p < pixels; p++, i += 4) {
+        const g = grayOf(crop.data[i], crop.data[i + 1], crop.data[i + 2]);
+        gray[p] = g;
+        hist[g]++;
+      }
+      const lowTarget = pixels * 0.02;
+      const highTarget = pixels * 0.98;
+      let cum = 0, low = 0, high = 255;
+      for (let i = 0; i < 256; i++) { cum += hist[i]; if (cum >= lowTarget) { low = i; break; } }
+      cum = 0;
+      for (let i = 0; i < 256; i++) { cum += hist[i]; if (cum >= highTarget) { high = i; break; } }
+      if (high - low < 32) { low = Math.max(0, low - 16); high = Math.min(255, high + 16); }
+      const threshold = otsu(gray);
+      return { gray, low, high, threshold };
+    }
+
+    function resizeRecTensor(crop, variant, stats) {
+      const src = crop.data;
+      const sw = crop.width;
+      const sh = crop.height;
+      const dstH = 48;
+      let dstW = Math.round(dstH * (sw / Math.max(1, sh)));
+      dstW = Math.max(32, Math.min(1600, Math.ceil(dstW / 8) * 8));
+      const plane = dstH * dstW;
+      const tensor = new Float32Array(plane * 3);
+      const range = Math.max(1, stats.high - stats.low);
+
+      function sampleChannel(x, y, channel) {
+        const sx = clamp((x + 0.5) * sw / dstW - 0.5, 0, sw - 1);
+        const sy = clamp((y + 0.5) * sh / dstH - 0.5, 0, sh - 1);
+        const x0 = Math.floor(sx), y0 = Math.floor(sy);
+        const x1 = Math.min(sw - 1, x0 + 1), y1 = Math.min(sh - 1, y0 + 1);
+        const wx = sx - x0, wy = sy - y0;
+        const i00 = (y0 * sw + x0) * 4 + channel;
+        const i10 = (y0 * sw + x1) * 4 + channel;
+        const i01 = (y1 * sw + x0) * 4 + channel;
+        const i11 = (y1 * sw + x1) * 4 + channel;
+        const top = src[i00] + (src[i10] - src[i00]) * wx;
+        const bottom = src[i01] + (src[i11] - src[i01]) * wx;
+        return top + (bottom - top) * wy;
+      }
+
+      for (let y = 0; y < dstH; y++) {
+        for (let x = 0; x < dstW; x++) {
+          const r = sampleChannel(x, y, 0);
+          const g = sampleChannel(x, y, 1);
+          const b = sampleChannel(x, y, 2);
+          let c0, c1, c2;
+
+          if (variant === 'original') {
+            c0 = b; c1 = g; c2 = r; // BGR
+          } else {
+            let gray = r * 0.299 + g * 0.587 + b * 0.114;
+            if (variant === 'enhanced') gray = clamp((gray - stats.low) * 255 / range, 0, 255);
+            if (variant === 'binary') gray = gray < stats.threshold ? 0 : 255;
+            c0 = c1 = c2 = gray;
+          }
+
+          const idx = y * dstW + x;
+          tensor[idx] = c0 / 127.5 - 1;
+          tensor[plane + idx] = c1 / 127.5 - 1;
+          tensor[plane * 2 + idx] = c2 / 127.5 - 1;
+        }
+      }
+      return { tensor, width: dstW, height: dstH };
+    }
+
+    function decodeCTC(output) {
+      const dims = output.dims;
+      if (!dims || dims.length < 3) throw new Error(`예상하지 못한 OCR 출력 차원: ${JSON.stringify(dims)}`);
+      const T = dims[dims.length - 2];
+      const C = dims[dims.length - 1];
+      const data = output.data;
+      const chars = [''];
+      for (const ch of dictionary) chars.push(ch);
+      while (chars.length < C) chars.push(' ');
+
+      let prev = -1;
+      let text = '';
+      let confidenceSum = 0;
+      let confidenceCount = 0;
+
+      for (let t = 0; t < T; t++) {
+        const offset = t * C;
+        let maxIndex = 0;
+        let maxValue = -Infinity;
+        let minValue = Infinity;
+        let sumRaw = 0;
+        for (let c = 0; c < C; c++) {
+          const v = Number(data[offset + c]);
+          sumRaw += v;
+          if (v > maxValue) { maxValue = v; maxIndex = c; }
+          if (v < minValue) minValue = v;
+        }
+
+        let maxProb;
+        if (minValue >= 0 && maxValue <= 1.00001 && sumRaw > 0.75 && sumRaw < 1.25) {
+          maxProb = maxValue;
+        } else {
+          let sumExp = 0;
+          for (let c = 0; c < C; c++) sumExp += Math.exp(Number(data[offset + c]) - maxValue);
+          maxProb = 1 / Math.max(1, sumExp);
+        }
+
+        if (maxIndex !== 0 && maxIndex !== prev) {
+          text += chars[maxIndex] ?? '';
+          confidenceSum += maxProb;
+          confidenceCount++;
+        }
+        prev = maxIndex;
+      }
+
+      return {
+        text: text.replace(/\s+/g, ' ').trim(),
+        confidence: confidenceCount ? confidenceSum / confidenceCount : 0
+      };
+    }
+
+    function textPlausibility(text) {
+      if (!text) return -1;
+      const chars = [...text];
+      if (!chars.length) return -1;
+      let useful = 0, odd = 0;
+      for (const ch of chars) {
+        if (/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ₩%.,:+\-_/()&*@#]/.test(ch)) useful++;
+        else if (!/\s/.test(ch)) odd++;
+      }
+      let score = useful / chars.length * 0.10 - odd / chars.length * 0.15;
+      if (/\d/.test(text)) score += 0.015;
+      if (/[가-힣]/.test(text)) score += 0.015;
+      return score;
+    }
+
+    async function runRecognition(crop, variant) {
+      const stats = variantStats(crop);
+      const prep = resizeRecTensor(crop, variant, stats);
+      const inputName = recSession.inputNames[0];
+      const outputName = recSession.outputNames[0];
+      const inputTensor = new ort.Tensor('float32', prep.tensor, [1, 3, prep.height, prep.width]);
+      const outputMap = await recSession.run({ [inputName]: inputTensor });
+      const decoded = decodeCTC(outputMap[outputName]);
+      return { ...decoded, variant };
+    }
+
+    function shouldRetry(candidate, lowRes, crop) {
+      if (lowRes) return true;
+      if (!candidate.text || candidate.text.length <= 2) return true;
+      if (candidate.confidence < 0.82) return true;
+      if (crop.height < 32) return true;
+      const odd = (candidate.text.match(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ₩%.,:+\-_/()&*@#\s]/g) || []).length;
+      return odd > Math.max(1, candidate.text.length * 0.18);
+    }
+
+    async function recognizeBox(image, box, lowRes) {
+      const crop = cropImage(image, box);
+      const candidates = [];
+      const primary = await runRecognition(crop, 'enhanced');
+      candidates.push(primary);
+
+      if (shouldRetry(primary, lowRes, crop)) {
+        candidates.push(await runRecognition(crop, 'original'));
+        candidates.push(await runRecognition(crop, 'binary'));
+      }
+
+      candidates.sort((a, b) => {
+        const sa = a.confidence + textPlausibility(a.text);
+        const sb = b.confidence + textPlausibility(b.text);
+        return sb - sa;
+      });
+      return { ...candidates[0], tried: candidates.length };
+    }
+
+    function fallbackLineBoxes(image) {
+      const src = new Uint8ClampedArray(image.data);
+      const w = image.width, h = image.height;
+      const gray = new Uint8Array(w * h);
+      for (let p = 0, i = 0; p < gray.length; p++, i += 4) gray[p] = grayOf(src[i], src[i + 1], src[i + 2]);
+      const threshold = otsu(gray);
+      const rowInk = new Uint32Array(h);
+      const step = w > 1800 ? 2 : 1;
+      for (let y = 0; y < h; y++) {
+        let count = 0;
+        for (let x = 0; x < w; x += step) if (gray[y * w + x] < threshold) count++;
+        rowInk[y] = count;
+      }
+      const activeThreshold = Math.max(2, Math.floor((w / step) * 0.006));
+      const maxGap = Math.max(3, Math.round(h * 0.003));
+      const minHeight = Math.max(7, Math.round(h * 0.005));
+      const bands = [];
+      let start = -1, last = -1;
+      for (let y = 0; y < h; y++) {
+        const active = rowInk[y] >= activeThreshold;
+        if (active && start < 0) { start = y; last = y; }
+        else if (active) last = y;
+        else if (start >= 0 && y - last > maxGap) {
+          if (last - start + 1 >= minHeight) bands.push([start, last]);
+          start = -1; last = -1;
+        }
+      }
+      if (start >= 0 && last - start + 1 >= minHeight) bands.push([start, last]);
+
+      const out = [];
+      for (const [y0r, y1r] of bands) {
+        const y0 = Math.max(0, y0r - 4), y1 = Math.min(h - 1, y1r + 4);
+        let xmin = w - 1, xmax = 0, found = false;
+        for (let y = y0; y <= y1; y++) {
+          for (let x = 0; x < w; x += step) {
+            if (gray[y * w + x] < threshold) { found = true; xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); }
+          }
+        }
+        if (found) out.push({ x: Math.max(0, xmin - 8), y: y0, width: Math.min(w - xmin + 8, xmax - xmin + 17), height: y1 - y0 + 1, score: 0 });
+      }
+      return out.slice(0, 120);
+    }
+
+    function composeLayout(results) {
+      const items = results.filter(r => r.text).sort((a, b) => (a.box.y + a.box.height / 2) - (b.box.y + b.box.height / 2) || a.box.x - b.box.x);
+      const lines = [];
+      for (const item of items) {
+        const cy = item.box.y + item.box.height / 2;
+        let best = null;
+        let bestDist = Infinity;
+        for (const line of lines) {
+          const avgH = line.items.reduce((s, r) => s + r.box.height, 0) / line.items.length;
+          const d = Math.abs(cy - line.cy);
+          if (d <= Math.max(avgH, item.box.height) * 0.62 && d < bestDist) { best = line; bestDist = d; }
+        }
+        if (!best) lines.push({ cy, items: [item] });
+        else {
+          best.items.push(item);
+          best.cy = best.items.reduce((s, r) => s + r.box.y + r.box.height / 2, 0) / best.items.length;
+        }
+      }
+      lines.sort((a, b) => a.cy - b.cy);
+
+      const textLines = [];
+      for (const line of lines) {
+        line.items.sort((a, b) => a.box.x - b.box.x);
+        let text = '';
+        let prev = null;
+        for (const item of line.items) {
+          if (prev) {
+            const gap = item.box.x - (prev.box.x + prev.box.width);
+            const unit = Math.max(6, (prev.box.height + item.box.height) * 0.28);
+            const spaces = gap <= unit * 0.35 ? 0 : clamp(Math.round(gap / unit), 1, 10);
+            text += ' '.repeat(spaces);
+          }
+          text += item.text;
+          prev = item;
+        }
+        if (text.trim()) textLines.push(text.trimEnd());
+      }
+      return textLines.join('\n').trim();
+    }
+
+    async function infer(image, lowRes) {
+      if (!recSession || !detSession) throw new Error('OCR 세션이 아직 준비되지 않았습니다.');
+      const started = performance.now();
+      self.postMessage({ type: 'phase', phase: 'detect', message: 'AI 텍스트 영역 검출 중...' });
+
+      let boxes = await detectText(image);
+      let usedFallback = false;
+      if (!boxes.length) {
+        boxes = fallbackLineBoxes(image);
+        usedFallback = true;
+      }
+      if (!boxes.length) throw new Error('텍스트 영역을 찾지 못했습니다. 더 선명한 원본 이미지를 사용해 주세요.');
+
+      self.postMessage({ type: 'detected', count: boxes.length, boxes, usedFallback });
+      const results = [];
+      let retryCount = 0;
+      for (let i = 0; i < boxes.length; i++) {
+        const box = boxes[i];
+        const decoded = await recognizeBox(image, box, lowRes);
+        retryCount += Math.max(0, decoded.tried - 1);
+        if (decoded.text) results.push({ ...decoded, index: i, box });
+        self.postMessage({ type: 'infer-progress', current: i + 1, total: boxes.length, retries: retryCount });
+      }
+
+      const text = composeLayout(results);
+      let layoutRegions=[];
+      if(layoutSession){self.postMessage({type:'layout-status',message:'Detecting document layout...'});try{layoutRegions=await detectLayout(image);}catch(e){self.postMessage({type:'layout-warning',message:e?.message||String(e)});}}
+      self.postMessage({
+        type: 'result',
+        backend: actualBackend,
+        elapsedMs: performance.now() - started,
+        results,
+        boxes,
+        layoutRegions,
+        text,
+        usedFallback,
+        retryCount
+      });
+    }
+  }
+
+  function odResultToData(msg) {
+    let sum=0,cnt=0;(msg.results||[]).forEach(function(r){if(String(r.text||'').trim()){sum+=Math.max(0,Math.min(100,(+r.confidence||0)*100));cnt++;}});
+    return {text:String(msg.text||'').trim(),confidence:cnt?sum/cnt:0,backend:msg.backend||odBackend,boxes:msg.boxes||[],results:msg.results||[],layoutRegions:msg.layoutRegions||[]};
+  }
+  function odHandleWorker(ev) {
+    const m=ev.data||{};
+    if(m.type==='status'){localProgress(LS('온디바이스 AI 런타임 초기화','Initialising on-device AI runtime'),92);return;}
+    if(m.type==='ready'){odReady=true;odInitBusy=false;odBackend=m.backend||'';odRefreshUi();if(typeof smRefreshUi==='function')smRefreshUi();localProgress(LS('고정밀 AI OCR 준비 완료 · ','High-accuracy AI OCR ready · ')+odBackend,100);if(odInitWait){odInitWait.resolve(m);odInitWait=null}hideProgressSoon();return;}
+    if(m.type==='layout-status'){localProgress(LS('문서 레이아웃 AI 초기화','Initialising document layout AI'),88);return;}
+    if(m.type==='layout-ready'){if(smInitWait){const q=smInitWait;smInitWait=null;q.resolve(m);}return;}
+    if(m.type==='layout-warning'){console.warn('Document layout warning',m.message||'');return;}
+    if(m.type==='phase'){localProgress(LS('AI가 텍스트 영역을 찾는 중','AI is detecting text regions'),18);return;}
+    if(m.type==='detected'){localProgress(LS('텍스트 영역 ','Detected ')+m.count+LS('개 감지 · 영역별 인식',' text regions · recognising each region'),27);return;}
+    if(m.type==='infer-progress'){const p=27+Math.round(68*(m.current/Math.max(1,m.total)));localProgress(LS('AI OCR ','AI OCR ')+m.current+'/'+m.total+LS(' · 재검증 ',' · rechecks ')+(m.retries||0),p);return;}
+    if(m.type==='result'){if(odInferWait){const q=odInferWait;odInferWait=null;q.resolve(odResultToData(m));}return;}
+    if(m.type==='error'){console.error(m.stack||m.message);const err=new Error(m.message||'On-device AI failed');if(odInferWait){const q=odInferWait;odInferWait=null;q.reject(err)}if(odInitWait){const q=odInitWait;odInitWait=null;q.reject(err)}if(smInitWait){const q=smInitWait;smInitWait=null;q.reject(err)}odInitBusy=false;odRefreshUi();if(typeof smRefreshUi==='function')smRefreshUi();}
+  }
+  async function odSetup() {
+    if(odReady){odRefreshUi();return} if(odInitBusy)return; const c=document.getElementById('onDeviceConsent'); if(!c||!c.checked){toast(LS('먼저 AI 모델 다운로드 동의에 체크해 주세요','Tick the AI model download consent box first'));return;}
+    odInitBusy=true;odRefreshUi();
+    try {
+      const preferWebGPU=!!navigator.gpu,mode=preferWebGPU?'webgpu':'wasm',runtime=preferWebGPU?{bundle:OD_ORT_BASE+'ort.webgpu.bundle.min.mjs',mjs:OD_ORT_BASE+'ort-wasm-simd-threaded.jsep.mjs',wasm:OD_ORT_BASE+'ort-wasm-simd-threaded.jsep.wasm'}:{bundle:OD_ORT_BASE+'ort.wasm.bundle.min.mjs',mjs:OD_ORT_BASE+'ort-wasm-simd-threaded.mjs',wasm:OD_ORT_BASE+'ort-wasm-simd-threaded.wasm'};
+      const assets=[
+        {key:'od-ort-'+OD_ORT_VERSION+'-'+mode+'-bundle',name:'ONNX Runtime JS',url:runtime.bundle,weight:.04},
+        {key:'od-ort-'+OD_ORT_VERSION+'-'+mode+'-mjs',name:'ONNX Runtime loader',url:runtime.mjs,weight:.04},
+        {key:'od-ort-'+OD_ORT_VERSION+'-'+mode+'-wasm',name:'WebAssembly runtime',url:runtime.wasm,weight:.42},
+        {key:'od-ppocrv5-mobile-det-v1',name:'PP-OCRv5 detector',url:OD_DET_MODEL_URL,weight:.12},
+        {key:'od-ppocrv5-korean-rec-v1',name:'PP-OCRv5 KO/EN recogniser',url:OD_REC_MODEL_URL,weight:.35},
+        {key:'od-ppocrv5-korean-dict-v1',name:'OCR dictionary',url:OD_DICT_URL,weight:.03}
+      ];
+      let done=0;const buffers={};
+      for(const a of assets){localProgress(LS('AI 파일 확인 · ','Checking AI file · ')+a.name,Math.round(done*88));buffers[a.key]=await odFetch(a.url,a.key,function(fr,cached,bytes){const gp=Math.round((done+a.weight*Math.max(0,Math.min(1,fr)))*88);localProgress(LS('고정밀 AI 준비 ','Preparing high-accuracy AI ')+gp+'% · '+a.name+' · '+(cached?LS('캐시','cache'):LS('다운로드 ','download ')+odFmt(bytes)),gp)});done+=a.weight;}
+      const bundleUrl=odBlob(buffers['od-ort-'+OD_ORT_VERSION+'-'+mode+'-bundle'],'text/javascript'),mjsUrl=odBlob(buffers['od-ort-'+OD_ORT_VERSION+'-'+mode+'-mjs'],'text/javascript'),wasmUrl=odBlob(buffers['od-ort-'+OD_ORT_VERSION+'-'+mode+'-wasm'],'application/wasm');
+      const workerUrl=URL.createObjectURL(new Blob(['('+odWorkerMain.toString()+')();'],{type:'text/javascript'}));odObjectUrls.push(workerUrl);odWorker=new Worker(workerUrl,{type:'module'});odWorker.onmessage=odHandleWorker;odWorker.onerror=function(e){if(odInitWait){odInitWait.reject(new Error(e.message||'AI Worker error'));odInitWait=null}};
+      const dictText=new TextDecoder('utf-8').decode(buffers['od-ppocrv5-korean-dict-v1']),rec=buffers['od-ppocrv5-korean-rec-v1'],det=buffers['od-ppocrv5-mobile-det-v1'];
+      const readyPromise=new Promise(function(resolve,reject){odInitWait={resolve:resolve,reject:reject}});odWorker.postMessage({type:'init',ortBundleUrl:bundleUrl,ortRuntimeMjsUrl:mjsUrl,ortWasmUrl:wasmUrl,recModelBuffer:rec,detModelBuffer:det,dictText:dictText,preferWebGPU:preferWebGPU,detLongSide:OD_DET_LONG_SIDE},[rec,det]);await readyPromise;
+      try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+      odSetNote(LS('준비 완료 · '+odBackend+' · 이후에는 브라우저 캐시를 우선 사용합니다.','Ready · '+odBackend+' · browser cache will be reused on later visits.'));
+      toast(LS('고정밀 온디바이스 AI OCR 준비 완료','High-accuracy on-device AI OCR is ready'));
+    } catch(e) {console.error(e);odReady=false;odInitBusy=false;progress.classList.add('hidden');odSetNote(LS('AI 준비 실패 · 기본 OCR은 계속 사용할 수 있습니다. 네트워크·저장공간을 확인해 주세요.','AI setup failed · standard OCR still works. Check network and storage.'));toast(LS('AI OCR을 준비하지 못했습니다','Could not prepare AI OCR'));} finally {odInitBusy=false;odRefreshUi();}
+  }
+  function odPreparedCanvas() {
+    const maxSide=Math.max(canvas.width,canvas.height)||1; let target=maxSide;
+    if(maxSide<1600)target=Math.min(1600,maxSide*4); else if(maxSide>2400)target=2400;
+    const scale=target/maxSide,o=document.createElement('canvas');o.width=Math.max(1,Math.round(canvas.width*scale));o.height=Math.max(1,Math.round(canvas.height*scale));const x=o.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(canvas,0,0,o.width,o.height);return o;
+  }
+  async function odRecognizeCurrent() {
+    if(!odReady||!odWorker)throw new Error('AI not ready'); const c=odPreparedCanvas(),x=c.getContext('2d',{willReadFrequently:true}),im=x.getImageData(0,0,c.width,c.height),buf=im.data.buffer,low=Math.max(canvas.width,canvas.height)<1000;
+    return await new Promise(function(resolve,reject){const timer=setTimeout(function(){if(odInferWait){odInferWait=null;reject(new Error(LS('AI 판독 시간이 너무 오래 걸립니다','AI recognition timed out')))}},180000);odInferWait={resolve:function(v){clearTimeout(timer);resolve(v)},reject:function(e){clearTimeout(timer);reject(e)}};odWorker.postMessage({type:'infer',image:{width:im.width,height:im.height,data:buf},lowResolutionSource:low},[buf]);});
+  }
+  document.getElementById('onDeviceConsent').addEventListener('change',function(){odRefreshUi();if(typeof smRefreshUi==='function')smRefreshUi();});
+  document.getElementById('onDeviceSetupBtn').addEventListener('click',odSetup);
+  odRefreshUi();
+
+  /* ---------- 경량 문서 레이아웃 AI · PP-DocLayout-S ---------- */
+  const OD_LAYOUT_MODEL_URL='https://huggingface.co/stefanj0/PP-DocLayout-S-ONNX/resolve/main/pp_doclayout_s.onnx';
+  let smReady=false,smBusy=false,smInitWait=null,smartBackup=null,lastAiData=null;
+  function smSetState(v){const e=document.getElementById('smartAiState');if(e)e.textContent=v;}
+  function smSetNote(v){const e=document.getElementById('smartAiNote');if(e)e.textContent=v;}
+  function smUseEnabled(){const c=document.getElementById('smartAiConsent');return !!(smReady&&c&&c.checked&&odUseEnabled());}
+  function refreshSmartAction(){const b=document.getElementById('smartFormatBtn');if(b)b.disabled=!(smUseEnabled()&&lastAiData&&lastAiData.results&&lastAiData.results.length&&!busy&&!smBusy);}
+  function smRefreshUi(){
+    const c=document.getElementById('smartAiConsent'),b=document.getElementById('smartAiSetupBtn');if(!c||!b)return;
+    if(smReady){b.disabled=true;b.classList.add('ready');b.textContent=LS('✓ 문서 구조 모델 준비 완료','✓ Document layout ready');smSetState(c.checked&&odUseEnabled()?LS('레이아웃 복원 사용 중','Layout restoration active'):LS('모델 준비됨 · 사용 안 함','Model ready · off'));}
+    else{b.classList.remove('ready');b.disabled=!c.checked||smBusy||!odReady;b.textContent=smBusy?LS('문서 구조 모델 준비 중...','Preparing document layout...'):LS('🧩 문서 구조 모델 준비하기','🧩 Prepare document layout');smSetState(!odReady?LS('고정밀 AI OCR 필요','High-accuracy OCR required'):(c.checked?LS('다운로드 대기','Ready to download'):LS('사용 안 함','Off')));}
+    if(!odReady)smSetNote(LS('고정밀 온디바이스 AI OCR을 먼저 준비한 뒤 사용할 수 있습니다.','Prepare high-accuracy on-device AI OCR first.'));
+    refreshSmartAction();
+  }
+  async function smSetup(){
+    if(smReady||smBusy)return;const c=document.getElementById('smartAiConsent');
+    if(!odReady){toast(LS('먼저 고정밀 온디바이스 AI OCR을 준비해 주세요','Prepare high-accuracy on-device AI OCR first'));return;}
+    if(!c||!c.checked){toast(LS('먼저 문서 구조 모델 다운로드에 동의해 주세요','Please agree to download the document-layout model first'));return;}
+    smBusy=true;smRefreshUi();localProgress(LS('문서 구조 모델 확인','Checking document-layout model'),5);
+    try{
+      const buf=await odFetch(OD_LAYOUT_MODEL_URL,'od-pp-doclayout-s-v1',function(fr,cached,bytes){const p=Math.round(8+78*Math.max(0,Math.min(1,fr)));localProgress(LS('문서 구조 AI 준비 · ','Preparing document layout · ')+(cached?LS('캐시','cache'):LS('다운로드 ','download ')+odFmt(bytes)),p);});
+      const ready=new Promise(function(resolve,reject){smInitWait={resolve:resolve,reject:reject};});
+      odWorker.postMessage({type:'init-layout',layoutModelBuffer:buf},[buf]);await ready;smReady=true;
+      smSetNote(LS('준비 완료 · 약 5MB 레이아웃 모델 · 생성형 AI 없이 OCR 좌표와 결합합니다.','Ready · ~5 MB layout model · combines regions with OCR coordinates without generative AI.'));
+      localProgress(LS('문서 구조 모델 준비 완료','Document layout ready'),100);toast(LS('문서 구조 모델 준비 완료','Document layout model is ready'));hideProgressSoon();
+    }catch(e){console.error(e);smSetNote(LS('문서 구조 모델 준비 실패 · 기본 OCR과 고정밀 OCR은 계속 사용할 수 있습니다.','Layout setup failed · standard and high-accuracy OCR still work.'));toast(LS('문서 구조 모델을 준비하지 못했습니다','Could not prepare document layout'));progress.classList.add('hidden');}
+    finally{smBusy=false;smRefreshUi();}
+  }
+  function resetSmartResult(){smartBackup=null;lastAiData=null;const r=document.getElementById('smartRestoreBtn');if(r)r.classList.add('hidden');refreshSmartAction();}
+  function boxArea(b){return Math.max(0,+b.width||0)*Math.max(0,+b.height||0);}
+  function centerIn(box,reg){const cx=box.x+box.width/2,cy=box.y+box.height/2;return cx>=reg.x1&&cx<=reg.x2&&cy>=reg.y1&&cy<=reg.y2;}
+  function overlapArea(box,reg){const x1=Math.max(box.x,reg.x1),y1=Math.max(box.y,reg.y1),x2=Math.min(box.x+box.width,reg.x2),y2=Math.min(box.y+box.height,reg.y2);return Math.max(0,x2-x1)*Math.max(0,y2-y1);}
+  function groupRows(items){
+    const sorted=items.slice().sort(function(a,b){return (a.box.y+a.box.height/2)-(b.box.y+b.box.height/2)||a.box.x-b.box.x;});const rows=[];
+    sorted.forEach(function(it){const cy=it.box.y+it.box.height/2;let best=null,dist=1e9;rows.forEach(function(r){const d=Math.abs(cy-r.cy),h=Math.max(r.h,it.box.height);if(d<=h*.62&&d<dist){best=r;dist=d;}});if(!best)rows.push({items:[it],cy:cy,h:it.box.height});else{best.items.push(it);best.cy=best.items.reduce(function(s,x){return s+x.box.y+x.box.height/2;},0)/best.items.length;best.h=best.items.reduce(function(s,x){return s+x.box.height;},0)/best.items.length;}});
+    return rows.sort(function(a,b){return a.cy-b.cy;}).map(function(r){r.items.sort(function(a,b){return a.box.x-b.box.x;});return r;});
+  }
+  function rowText(row,useTabs){let out='',prev=null;row.items.forEach(function(it){if(prev){const gap=it.box.x-(prev.box.x+prev.box.width),h=Math.max(prev.box.height,it.box.height);if(useTabs&&gap>h*.9)out+='\t';else if(gap>h*.28)out+=' ';}out+=String(it.text||'').trim();prev=it;});return out.trim();}
+  function tableRows(items){return groupRows(items).map(function(r){let cells=[];r.items.forEach(function(it){const parts=String(it.text||'').trim().split(/\t+|\s{2,}/).filter(Boolean);if(parts.length>1)cells=cells.concat(parts);else if(parts[0])cells.push(parts[0]);});return cells;}).filter(function(r){return r.length;});}
+  function looksLikeHeader(row,next){if(!row||row.length<2||!next)return false;const digit=function(s){return (String(s).match(/\d/g)||[]).length;},a=row.reduce(function(s,x){return s+digit(x);},0),b=next.reduce(function(s,x){return s+digit(x);},0);return a<=Math.max(1,b*.35);}
+  function markdownTable(rows){
+    const counts={};rows.forEach(function(r){if(r.length>=2&&r.length<=8)counts[r.length]=(counts[r.length]||0)+1;});let cols=0,n=0;Object.keys(counts).forEach(function(k){if(counts[k]>n){cols=+k;n=counts[k];}});if(cols<2||n<2)return '';
+    const rr=rows.filter(function(r){return r.length===cols;});if(rr.length<2||!looksLikeHeader(rr[0],rr[1]))return '';
+    const escCell=function(v){return String(v).replace(/\|/g,'\\|').trim();};let out='| '+rr[0].map(escCell).join(' | ')+' |\n| '+Array(cols).fill('---').join(' | ')+' |';for(let i=1;i<rr.length;i++)out+='\n| '+rr[i].map(escCell).join(' | ')+' |';return out;
+  }
+  function regionReadingOrder(regions,pageW){
+    const useful=regions.filter(function(r){return r.score>=.3&&['image','chart','seal','header_image','footer_image'].indexOf(r.label)<0;});
+    const full=useful.filter(function(r){return (r.x2-r.x1)>pageW*.62;}).sort(function(a,b){return a.y1-b.y1||a.x1-b.x1;});
+    const narrow=useful.filter(function(r){return full.indexOf(r)<0;});
+    if(narrow.length>=4){const left=narrow.filter(function(r){return (r.x1+r.x2)/2<pageW*.5;}),right=narrow.filter(function(r){return (r.x1+r.x2)/2>=pageW*.5;});const cross=left.length>=2&&right.length>=2&&left.every(function(r){return r.x2<pageW*.62;})&&right.every(function(r){return r.x1>pageW*.38;});if(cross){const topFull=full.filter(function(r){return r.y2<Math.min.apply(null,narrow.map(function(x){return x.y1;}));});const restFull=full.filter(function(r){return topFull.indexOf(r)<0;});return topFull.concat(left.sort(function(a,b){return a.y1-b.y1;}),right.sort(function(a,b){return a.y1-b.y1;}),restFull.sort(function(a,b){return a.y1-b.y1;}));}}
+    return useful.sort(function(a,b){const ay=(a.y1+a.y2)/2,by=(b.y1+b.y2)/2,ah=a.y2-a.y1,bh=b.y2-b.y1;if(Math.abs(ay-by)<=Math.max(ah,bh)*.35)return a.x1-b.x1;return ay-by;});
+  }
+  function buildStructuredFromAi(ai,markdown){
+    if(!ai||!ai.results||!ai.results.length)return '';const regs=(ai.layoutRegions||[]).slice();if(!regs.length)return ai.text||'';
+    const maxX=ai.results.reduce(function(m,it){return Math.max(m,it.box.x+it.box.width);},1);const ordered=regionReadingOrder(regs,maxX),used=new Set(),parts=[];
+    ordered.forEach(function(reg){const items=[];ai.results.forEach(function(it,idx){if(used.has(idx))return;const oa=overlapArea(it.box,reg),ratio=oa/Math.max(1,boxArea(it.box));if(centerIn(it.box,reg)||ratio>.42)items.push({it:it,idx:idx,ratio:ratio});});if(!items.length)return;items.forEach(function(x){used.add(x.idx);});const list=items.map(function(x){return x.it;}),rows=groupRows(list);let text='';
+      if(reg.label==='table'){const tr=tableRows(list),mt=markdown?markdownTable(tr):'';if(mt)text=mt;else text=rows.map(function(r){return rowText(r,true);}).join('\n');}
+      else{text=rows.map(function(r){return rowText(r,false);}).filter(Boolean).join(reg.label==='text'||reg.label==='content'||reg.label==='abstract'?' ':'\n');if(markdown&&text){if(reg.label==='doc_title')text='# '+text;else if(['paragraph_title','table_title','figure_title','chart_title'].indexOf(reg.label)>=0)text='## '+text;else if(['footnote','aside_text'].indexOf(reg.label)>=0)text=text.split('\n').map(function(x){return '> '+x;}).join('\n');}}
+      if(text.trim())parts.push(text.trim());
+    });
+    const leftovers=[];ai.results.forEach(function(it,idx){if(!used.has(idx)&&String(it.text||'').trim())leftovers.push(it);});if(leftovers.length)parts.push(groupRows(leftovers).map(function(r){return rowText(r,false);}).join('\n'));
+    return parts.filter(Boolean).join('\n\n').trim()||ai.text||'';
+  }
+  async function smartFormatCurrent(){
+    if(!smUseEnabled()){toast(LS('문서 구조 모델과 고정밀 AI OCR을 먼저 준비해 주세요','Prepare document layout and high-accuracy AI OCR first'));return;}if(!lastAiData){toast(LS('먼저 이미지를 고정밀 AI로 인식해 주세요','Run high-accuracy AI OCR first'));return;}if(busy||smBusy)return;
+    smartBackup={raw:rawText,layout:layoutText,text:output.value,join:optJoin.checked,layoutOpt:optLayout.checked};const formatted=buildStructuredFromAi(lastAiData,copyFmt.value==='markdown');if(!formatted){toast(LS('적용할 문서 구조를 찾지 못했습니다','No document structure was found'));return;}
+    layoutText=formatted;output.value=formatted;optJoin.checked=false;optLayout.checked=false;optJoin.disabled=false;document.getElementById('smartRestoreBtn').classList.remove('hidden');updateCount();refreshMarkdownPreview();refreshFormatUi();toast(LS('문서 구조를 적용했습니다 · 원본 복원도 가능합니다','Document structure applied · you can restore the OCR original'));
+  }
+  function restoreSmartOriginal(){if(!smartBackup)return;rawText=smartBackup.raw;layoutText=smartBackup.layout;optJoin.checked=smartBackup.join;optLayout.checked=smartBackup.layoutOpt;output.value=smartBackup.text;updateCount();refreshMarkdownPreview();refreshFormatUi();smartBackup=null;document.getElementById('smartRestoreBtn').classList.add('hidden');toast(LS('구조 적용 전 OCR 결과로 복원했습니다','Restored the OCR result from before layout formatting'));refreshSmartAction();}
+  document.getElementById('smartAiConsent').addEventListener('change',smRefreshUi);
+  document.getElementById('smartAiSetupBtn').addEventListener('click',smSetup);
+  document.getElementById('smartFormatBtn').addEventListener('click',smartFormatCurrent);
+  document.getElementById('smartRestoreBtn').addEventListener('click',restoreSmartOriginal);
+  smRefreshUi();
+
+
   /* ---------- OCR ---------- */
   // Tesseract가 알려주는 단계 이름을 우리말로 바꾼다
   const STATUS = {
@@ -411,41 +1510,55 @@
   }
 
   async function recognize() {
-    if (!currentBlob) return;
-    if (typeof Tesseract === 'undefined') {
-      showErr('OCR 엔진을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요. (Tesseract.js는 CDN에서 내려받습니다)');
-      return;
-    }
-
+    if (!currentBlob || busy) return;
     busy = true;
     clearErr();
     progress.classList.remove('hidden');
     redoBtn.disabled = true;
     langSel.disabled = true;
-    setProgress('initializing tesseract', 0);
-
+    resetSmartResult();
     try {
-      const result = await Tesseract.recognize(currentBlob, langSel.value, {
-        logger: function (m) { setProgress(m.status, m.progress); }
-      });
-
-      rawText = (result && result.data && result.data.text) ? result.data.text : '';
+      let conf = null, usedAI = false;
+      if (odUseEnabled()) {
+        try {
+          localProgress('고정밀 온디바이스 AI OCR 시작', 5);
+          const ai = await odRecognizeCurrent();
+          rawText = ai.text || '';
+          lastAiData = ai;
+          layoutText = rawText;
+          if(smUseEnabled()&&ai.layoutRegions&&ai.layoutRegions.length){
+            smartBackup={raw:rawText,layout:rawText,text:rawText,join:optJoin.checked,layoutOpt:optLayout.checked};
+            const structured=buildStructuredFromAi(ai,copyFmt.value==='markdown');
+            if(structured){layoutText=structured;rawText=structured;optJoin.checked=false;optLayout.checked=false;document.getElementById('smartRestoreBtn').classList.remove('hidden');}
+          }
+          conf = Math.round(ai.confidence || 0);
+          usedAI = true;
+          confInfo.textContent = 'AI · ' + (ai.backend || odBackend || 'local') + (ai.layoutRegions&&ai.layoutRegions.length&&smUseEnabled() ? ' · Layout' : '') + ' · 신뢰도 ' + conf + '%';
+        } catch (aiErr) {
+          console.warn('On-device AI OCR fallback', aiErr);
+          toast('AI OCR 처리에 문제가 있어 기본 OCR로 자동 전환합니다');
+        }
+      }
+      if (!usedAI) {
+        if (typeof Tesseract === 'undefined') throw new Error('OCR 엔진을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.');
+        const result = await Tesseract.recognize(currentBlob, langSel.value, { logger: function (m) { setProgress(m.status, m.progress); } });
+        rawText = (result && result.data && result.data.text) ? result.data.text : '';
+        lastAiData = null;
+        layoutText = rawText;
+        conf = result && result.data && typeof result.data.confidence === 'number' ? Math.round(result.data.confidence) : null;
+        confInfo.textContent = conf !== null ? '기본 OCR · 신뢰도 ' + conf + '%' : '기본 OCR';
+      }
       applyText();
-
-      const conf = result && result.data && typeof result.data.confidence === 'number'
-        ? Math.round(result.data.confidence) : null;
-      confInfo.textContent = conf !== null ? '인식 신뢰도 ' + conf + '%' : '';
       confInfo.style.color = (conf !== null && conf < 70) ? 'var(--alert)' : 'var(--muted)';
-
-      toast(rawText.trim() ? '추출이 끝났습니다' : '글자를 찾지 못했습니다');
+      toast(rawText.trim() ? (usedAI ? '고정밀 AI 추출이 끝났습니다' : '추출이 끝났습니다') : '글자를 찾지 못했습니다');
     } catch (e) {
-      showErr('인식에 실패했습니다 : ' + (e && e.message ? e.message : '알 수 없는 오류') +
-              ' · 언어 데이터를 내려받지 못했을 수 있으니 연결 상태를 확인해 주세요.');
+      showErr('인식에 실패했습니다 : ' + (e && e.message ? e.message : '알 수 없는 오류'));
     } finally {
       busy = false;
       progress.classList.add('hidden');
       redoBtn.disabled = false;
       langSel.disabled = false;
+      refreshSmartAction();
     }
   }
 
@@ -470,8 +1583,12 @@
   }
 
   function applyText() {
-    output.value = optJoin.checked ? tidy(rawText) : rawText.replace(/\r\n?/g, '\n').trim();
+    if (optLayout.checked) output.value = (layoutText || rawText).replace(/\r\n?/g, '\n').trim();
+    else output.value = optJoin.checked ? tidy(rawText) : rawText.replace(/\r\n?/g, '\n').trim();
+    optJoin.disabled = optLayout.checked;
     updateCount();
+    refreshSmartAction();
+    refreshMarkdownPreview();
   }
 
   function updateCount() {
@@ -479,7 +1596,8 @@
   }
 
   optJoin.addEventListener('change', applyText);
-  output.addEventListener('input', updateCount);
+  optLayout.addEventListener('change', applyText);
+  output.addEventListener('input', function(){ updateCount(); refreshSmartAction(); refreshMarkdownPreview(); });
   langSel.addEventListener('change', function () { if (currentBlob) recognize(); });
   redoBtn.addEventListener('click', function () { if (currentBlob) recognize(); });
 
@@ -487,7 +1605,11 @@
     if (busy) { toast('인식이 끝난 뒤에 눌러 주세요'); return; }
     currentBlob = null;
     rawText = '';
+    layoutText = '';
     output.value = '';
+    resetSmartResult();
+    refreshMarkdownPreview();
+    setResultView('edit');
     confInfo.textContent = '';
     updateCount();
     clearErr();
@@ -502,8 +1624,8 @@
   /* ---------- 복사 · 저장 ---------- */
   function formatted() {
     const t = output.value.replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '');
-    if (copyFmt.value === 'plain') return t;
-    return t.split('\n').join('\r\n');
+    if (copyFmt.value === 'word') return t.split('\n').join('\r\n');
+    return t;
   }
 
   function legacyCopy(text) {
@@ -537,22 +1659,25 @@
     if (!output.value.trim()) { toast('저장할 내용이 없습니다'); return; }
     const d = new Date();
     const p = function (x) { return String(x).padStart(2, '0'); };
+    const isMd = copyFmt.value === 'markdown';
     const name = 'OCR추출_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) +
-                 '_' + p(d.getHours()) + p(d.getMinutes()) + '.txt';
+                 '_' + p(d.getHours()) + p(d.getMinutes()) + (isMd ? '.md' : '.txt');
     try {
-      // UTF-8 BOM : 윈도우 메모장에서 한글이 깨지지 않도록
-      const blob = new Blob(['\uFEFF' + formatted()], { type: 'text/plain;charset=utf-8' });
+      const body = (isMd ? '' : '\uFEFF') + formatted();
+      const blob = new Blob([body], { type: isMd ? 'text/markdown;charset=utf-8' : 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = name;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-      toast('저장되었습니다!');
+      toast(isMd ? 'Markdown 파일로 저장했습니다!' : '저장되었습니다!');
     } catch (e) {
       toast('브라우저가 다운로드를 막았습니다');
     }
   });
 
+  refreshFormatUi();
+  setResultView('edit');
   dropzone.focus();
 })();
 </script>
@@ -678,6 +1803,31 @@
 }
 </script>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">고정밀 온디바이스 AI OCR(PP-OCRv5) 옵션 추가 — 사용자 동의 시 약 30MB 모델을 받아 작은 글자·영수증·표·스캔 문서 인식률과 줄 위치 복원을 개선. 문서 레이아웃 AI(PP-DocLayout-S, 약 5MB)로 제목·본문·표·헤더·푸터 영역을 인식해 읽기 순서 복원. Markdown 내보내기 추가. 기본 OCR(Tesseract)은 동의 없이 그대로 유지</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
@@ -761,30 +1911,7 @@
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
-<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
-<style>
-.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
-.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
-  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
-  font-family:ui-monospace,monospace}
-.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
-.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
-.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
-.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
-  border-top:1px solid #e2e8f0}
-.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
-  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
-.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
-.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
-.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
-.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
-</style>
-<div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
-</div>
-<!-- TOOLKIT:VERSION_END -->
+
+
 </body>
 </html>

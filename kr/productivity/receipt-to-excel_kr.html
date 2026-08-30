@@ -129,10 +129,32 @@
   .hint{font-size:12.5px;color:var(--muted);line-height:1.75;margin:8px 0 0}
   .modeGuide{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#F8FAFC;color:var(--ink2);font-size:12.5px;line-height:1.75}
 
-  /* ---------- 좌우 배치 ---------- */
-  #main{display:grid;gap:18px;grid-template-columns:1fr;align-items:start}
-  @media(min-width:1060px){#main{grid-template-columns:minmax(430px,460px) minmax(0,1fr);gap:22px}}
-  @media(min-width:1320px){#main{grid-template-columns:minmax(470px,500px) minmax(0,1fr);gap:24px}}
+  /* ---------- 작업 영역 배치 ---------- */
+  #main{display:grid;gap:18px;grid-template-columns:1fr;grid-template-areas:'input' 'options' 'result';align-items:start}
+  #receiptInputCard{grid-area:input;min-width:0}
+  #expenseCard{grid-area:result;min-width:0}
+  #scanOptionsCard{grid-area:options;min-width:0}
+  .scanOptionsHead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:11px}
+  .scanOptionsHead .lab{margin:0}
+  .scanOptionsSub{font-size:11.8px;color:var(--muted)}
+  .scanOptionsGrid{display:grid;grid-template-columns:1fr;gap:10px}
+  #scanOptionsCard #qualityGuide,#scanOptionsCard .odAiBox{margin-top:0;height:100%}
+  #editorWrap{scroll-margin-top:16px}
+  #ocrBtn{width:100%;margin:10px 0 12px}
+  @media(min-width:1060px){
+    #main{grid-template-columns:minmax(420px,.88fr) minmax(0,1.12fr);grid-template-areas:'input result' 'options options';column-gap:22px;row-gap:20px}
+    #receiptInputCard,#expenseCard{align-self:stretch}
+    #expenseCard{display:flex;flex-direction:column}
+    #expenseCard #tblWrap{min-height:300px}
+    #receiptInputCard #drop{padding:25px 18px}
+    #receiptInputCard #editCanvas{max-height:560px}
+    #scanOptionsCard{padding:17px 18px!important}
+    .scanOptionsGrid{grid-template-columns:minmax(0,.9fr) minmax(0,1.05fr) minmax(0,1.05fr);gap:12px;align-items:stretch}
+  }
+  @media(min-width:1320px){
+    #main{grid-template-columns:minmax(485px,.9fr) minmax(0,1.1fr);column-gap:24px}
+    #expenseCard #tblWrap{min-height:330px}
+  }
   #main>.card{min-width:0}
 
   /* ---------- 업로드 ---------- */
@@ -222,7 +244,6 @@
   .rangeRow input{width:100%;accent-color:var(--accent)}
   #qualityGuide{margin-top:12px;padding:12px 13px;border:1px solid #BFDBFE;background:#EFF6FF;border-radius:11px;font-size:12.5px;line-height:1.7;color:#334155}
   #qualityGuide b{color:#1D4ED8}
-  #ocrBtn{width:100%;margin-top:12px}
   #queueNote{margin-top:8px;font-size:12px;color:var(--muted)}
 
   .uploadActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -301,7 +322,7 @@
     #sumBar{gap:8px 15px;padding:12px}
     #sumBar b{font-size:17px}
     #tblWrap+ #sumBar{margin-top:12px}
-    #main>.card:last-child>div:last-of-type{grid-template-columns:1fr!important}
+    #expenseCard>div:last-of-type{grid-template-columns:1fr!important}
     .cropHandle{width:28px;height:28px}
     .cropHandle.tl{left:-14px;top:-14px}.cropHandle.tr{right:-14px;top:-14px}.cropHandle.bl{left:-14px;bottom:-14px}.cropHandle.br{right:-14px;bottom:-14px}
   }
@@ -328,7 +349,7 @@
 <div id="main">
 
   <!-- 좌측 -->
-  <div class="card" style="padding:20px">
+  <div id="receiptInputCard" class="card" style="padding:20px">
     <p class="lab" style="margin-bottom:12px">📷 영수증 이미지</p>
 
     <div id="drop" role="button" tabindex="0">
@@ -342,24 +363,12 @@
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
     <div class="uploadActions"><button type="button" class="btn" id="browseBtn">🖼 사진 선택</button><button type="button" class="btn p" id="cameraBtn">📷 카메라로 바로 촬영</button></div>
 
-    <div id="qualityGuide"><b>사진 품질이 인식률을 크게 좌우합니다.</b><ul class="qualityTips"><li>영수증 네 모서리가 가능하면 모두 보이게 찍기</li><li>화면을 영수증으로 크게 채우고 흔들림 없이 초점 맞추기</li><li>그림자·손가락·강한 반사를 피하고 밝게 찍기</li><li>비스듬히 찍혀도 자동으로 펴지만, 정면에 가까울수록 더 정확합니다</li><li><b>일반형 영수증은 한 사진에 세부 항목이 약 10개 이내</b>가 잘 읽힙니다. 더 길면 위·아래로 나눠 촬영해 이어서 판독하세요.</li></ul></div>
+    
 
-    <div id="onDeviceAiBox" class="odAiBox">
-      <div class="odAiHead"><div class="odAiTitle">🤖 온디바이스 AI 고정밀 판독 <span class="odAiBadge">선택</span></div><span id="onDeviceAiState" class="odAiState">기본 OCR 사용 중</span></div>
-      <p class="odAiDesc">AI 텍스트 검출 + 한국어·영문 인식 모델을 이 브라우저에 저장해 더 정밀하게 읽습니다. 저해상도 사진은 AI 경로에서 최대 4배까지 확대 보강합니다. <b>최초 준비 시 모델과 WebAssembly 런타임 수십 MB를 내려받지만, 영수증 사진과 판독 결과는 외부로 전송하지 않습니다.</b></p>
-      <label class="odAiConsent"><input type="checkbox" id="onDeviceConsent"><span><b>온디바이스 AI 모델 다운로드 및 로컬 저장에 동의합니다.</b><br>한 번 받은 파일은 브라우저 IndexedDB 캐시에서 다시 사용합니다.</span></label>
-      <button type="button" class="btn odAiSetup" id="onDeviceSetupBtn" disabled>🤖 온디바이스 AI 준비하기</button>
-      <div id="onDeviceAiNote" class="odAiNote">동의 체크 후 버튼이 활성화됩니다. AI가 준비되면 체크가 켜져 있는 동안 판독 버튼이 자동으로 온디바이스 AI를 사용합니다. 기존 2·3단계 OCR 대신 AI 내부 다중 전처리 재검증을 사용합니다.</div>
-    </div>
+    
 
 
-    <div id="smartAiBox" class="odAiBox smAiBox">
-      <div class="odAiHead"><div class="odAiTitle">🧠 경량 AI 영수증 구조 분석 <span class="odAiBadge">선택 · 저부하</span></div><span id="smartAiState" class="odAiState">기본 규칙 분석 사용 중</span></div>
-      <p class="odAiDesc">생성형 언어모델 대신 다국어 <b>의미 임베딩 모델</b>이 OCR 행을 상품·제조사·할인·합계·세금·결제정보 등으로 분류하고, 기존 좌표·수학 검증과 함께 애매한 구조만 보강합니다. 문장을 새로 생성하지 않아 메모리 사용과 환각 위험을 크게 낮췄습니다.</p>
-      <label class="odAiConsent"><input type="checkbox" id="smartAiConsent"><span><b>경량 의미분석 모델 다운로드 및 로컬 저장에 동의합니다.</b><br>INT8 모델과 토크나이저 약 140MB를 브라우저 캐시에 저장합니다. OCR 내용은 외부로 전송되지 않습니다.</span></label>
-      <button type="button" class="btn odAiSetup smAiSetup" id="smartAiSetupBtn" disabled>🧠 경량 AI 구조 분석 준비하기</button>
-      <div id="smartAiNote" class="odAiNote">준비 후에도 기존 규칙 파서가 우선 동작하며, 애매한 영수증에서만 보조 분류를 실행합니다. GPU 메모리 급증을 피하기 위해 Web Worker의 CPU/WASM + INT8 경로로 제한합니다.</div>
-    </div>
+    
 
     <div id="editorWrap">
       <div id="editStage">
@@ -368,6 +377,8 @@
       </div>
       <p id="pvName" class="mono"></p>
       <p class="hint">파란 사각형 안쪽만 판독합니다. <b>영수증 영역 다시 찾기</b>는 가벼운 색상·밝기 분석만 사용하므로 바로 조작할 수 있습니다. 원근 보정은 실제 판독 단계에서만 적용합니다.</p>
+
+      <button class="btn p" id="ocrBtn">🔍 보정해서 이 영역 판독하기</button>
 
       <div class="editTools">
         <div class="toolBox">
@@ -399,7 +410,6 @@
           <div id="prepNote"><b>일반형은 상호명을 자동 입력하지 않습니다.</b> 거래처 정보가 사진 상단에 없거나 제조사와 혼동될 수 있어 빈칸으로 두며, 품목명과 비고의 공백은 OCR 오류를 줄이기 위해 자동 제거합니다.<br><b>기본 판독은 2단계</b>입니다. 첫 OCR 결과를 유지한 채 두 번째 OCR에서 더 잘 읽힌 단어·행·수치만 보강합니다. <b>3단계 추가 보강</b>은 희미하거나 간격이 많이 깨진 영수증에서만 선택해 주세요. 품목명은 OCR 띄어쓰기 오류를 줄이기 위해 표에 넣을 때 공백을 모두 제거합니다.</div>
         </div>
       </div>
-      <button class="btn p" id="ocrBtn">🔍 보정해서 이 영역 판독하기</button>
       <p id="queueNote"></p>
     </div>
 
@@ -415,7 +425,7 @@
   </div>
 
   <!-- 우측 -->
-  <div class="card" style="padding:20px">
+  <div id="expenseCard" class="card" style="padding:20px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
       <p class="lab" style="margin:0">📊 지출 내역 <span id="rowCount" class="mono" style="color:var(--ink)"></span></p>
       <div style="display:flex;gap:7px;flex-wrap:wrap">
@@ -458,6 +468,27 @@
       <button class="btn" id="csvBtn">💾 CSV 내려받기</button>
     </div>
     <p class="hint">엑셀로 복사를 누른 뒤 엑셀에서 붙여넣기 하시면 칸이 그대로 나뉘어 들어갑니다.</p>
+  </div>
+
+  <div id="scanOptionsCard" class="card" style="padding:18px 20px">
+    <div class="scanOptionsHead"><p class="lab">⚙️ 인식 옵션</p><span class="scanOptionsSub">사진을 넣고 바로 판독할 수 있으며, 아래 옵션은 필요할 때만 설정합니다.</span></div>
+    <div class="scanOptionsGrid">
+      <div id="qualityGuide"><b>사진 품질이 인식률을 크게 좌우합니다.</b><ul class="qualityTips"><li>영수증 네 모서리가 가능하면 모두 보이게 찍기</li><li>화면을 영수증으로 크게 채우고 흔들림 없이 초점 맞추기</li><li>그림자·손가락·강한 반사를 피하고 밝게 찍기</li><li>비스듬히 찍혀도 자동으로 펴지만, 정면에 가까울수록 더 정확합니다</li><li><b>일반형 영수증은 한 사진에 세부 항목이 약 10개 이내</b>가 잘 읽힙니다. 더 길면 위·아래로 나눠 촬영해 이어서 판독하세요.</li></ul></div>
+      <div id="onDeviceAiBox" class="odAiBox">
+      <div class="odAiHead"><div class="odAiTitle">🤖 온디바이스 AI 고정밀 판독 <span class="odAiBadge">선택</span></div><span id="onDeviceAiState" class="odAiState">기본 OCR 사용 중</span></div>
+      <p class="odAiDesc">AI 텍스트 검출 + 한국어·영문 인식 모델을 이 브라우저에 저장해 더 정밀하게 읽습니다. 저해상도 사진은 AI 경로에서 최대 4배까지 확대 보강합니다. <b>최초 준비 시 모델과 WebAssembly 런타임 수십 MB를 내려받지만, 영수증 사진과 판독 결과는 외부로 전송하지 않습니다.</b></p>
+      <label class="odAiConsent"><input type="checkbox" id="onDeviceConsent"><span><b>온디바이스 AI 모델 다운로드 및 로컬 저장에 동의합니다.</b><br>한 번 받은 파일은 브라우저 IndexedDB 캐시에서 다시 사용합니다.</span></label>
+      <button type="button" class="btn odAiSetup" id="onDeviceSetupBtn" disabled>🤖 온디바이스 AI 준비하기</button>
+      <div id="onDeviceAiNote" class="odAiNote">동의 체크 후 버튼이 활성화됩니다. AI가 준비되면 체크가 켜져 있는 동안 판독 버튼이 자동으로 온디바이스 AI를 사용합니다. 기존 2·3단계 OCR 대신 AI 내부 다중 전처리 재검증을 사용합니다.</div>
+    </div>
+      <div id="smartAiBox" class="odAiBox smAiBox">
+      <div class="odAiHead"><div class="odAiTitle">🧠 경량 AI 영수증 구조 분석 <span class="odAiBadge">선택 · 저부하</span></div><span id="smartAiState" class="odAiState">기본 규칙 분석 사용 중</span></div>
+      <p class="odAiDesc">생성형 언어모델 대신 다국어 <b>의미 임베딩 모델</b>이 OCR 행을 상품·제조사·할인·합계·세금·결제정보 등으로 분류하고, 기존 좌표·수학 검증과 함께 애매한 구조만 보강합니다. 문장을 새로 생성하지 않아 메모리 사용과 환각 위험을 크게 낮췄습니다.</p>
+      <label class="odAiConsent"><input type="checkbox" id="smartAiConsent"><span><b>경량 의미분석 모델 다운로드 및 로컬 저장에 동의합니다.</b><br>INT8 모델과 토크나이저 약 140MB를 브라우저 캐시에 저장합니다. OCR 내용은 외부로 전송되지 않습니다.</span></label>
+      <button type="button" class="btn odAiSetup smAiSetup" id="smartAiSetupBtn" disabled>🧠 경량 AI 구조 분석 준비하기</button>
+      <div id="smartAiNote" class="odAiNote">준비 후에도 기존 규칙 파서가 우선 동작하며, 애매한 영수증에서만 보조 분류를 실행합니다. GPU 메모리 급증을 피하기 위해 Web Worker의 CPU/WASM + INT8 경로로 제한합니다.</div>
+    </div>
+    </div>
   </div>
 
 </div>
@@ -988,12 +1019,23 @@ function looksAuxiliaryText(s){
 function metaRowText(s){return /(상품\s*명|품\s*명|품목|단가|수량|금액|합계|총\s*액|총\s*계|판매\s*총\s*액|판매총액|받을\s*금액|결제\s*대상\s*금액|순매출액|부가세|과세|면세|공급가|결제|승인|카드|현금|거스름|사업자|대표자|전화|TEL|주소|일시|영수증|전표|receipt|subtotal|grand\s*total|total|tax|amount|quantity|qty|price|unit\s*price)/i.test(String(s||''));}
 function detectHeaderColumns(vr){
   var W=vr.width,best=null;
+  function virtualCenter(w,t,term){var i=t.indexOf(term);if(i<0||!t.length)return w.cx;return w.left+w.width*((i+term.length/2)/t.length);}
   vr.rows.slice(0,Math.max(8,Math.ceil(vr.rows.length*.65))).forEach(function(r){
     var cols={unit:null,qty:null,total:null},hits=0;
-    r.words.forEach(function(w){var t=String(w.text||'').replace(/\s+/g,'');
-      if(/^(단가|판매가|가격|unitprice|unit|price)$/i.test(t)){cols.unit=w.cx;hits++;}
-      else if(/^(수량|qty|quantity|count)$/i.test(t)){cols.qty=w.cx;hits++;}
-      else if(/^(금액|합계금액|amount|total)$/i.test(t)){cols.total=w.cx;hits++;}
+    r.words.forEach(function(w){var t=String(w.text||'').replace(/\s+/g,'').toLowerCase();
+      if(/^(단가|판매가|가격|unitprice|unit|price)$/.test(t)){if(cols.unit==null){cols.unit=w.cx;hits++;}}
+      else if(/^(수량|qty|quantity|count)$/.test(t)){if(cols.qty==null){cols.qty=w.cx;hits++;}}
+      else if(/^(금액|합계금액|amount|total)$/.test(t)){if(cols.total==null){cols.total=w.cx;hits++;}}
+      else{
+        /* Low-resolution receipts often glue adjacent header cells: 단가 + 수량 -> 단가수량. */
+        var uTerm='',qTerm='';
+        if(t.indexOf('단가')>=0&&t.indexOf('수량')>=0){uTerm='단가';qTerm='수량';}
+        else if(t.indexOf('unitprice')>=0&&(t.indexOf('qty')>=0||t.indexOf('quantity')>=0)){uTerm='unitprice';qTerm=t.indexOf('quantity')>=0?'quantity':'qty';}
+        else if(t.indexOf('price')>=0&&t.indexOf('qty')>=0){uTerm='price';qTerm='qty';}
+        if(uTerm&&qTerm){if(cols.unit==null){cols.unit=virtualCenter(w,t,uTerm);hits++;}if(cols.qty==null){cols.qty=virtualCenter(w,t,qTerm);hits++;}}
+        /* A clipped 금액 header is frequently recognised as just 금 at the far right. */
+        if(cols.total==null&&(/^(금|액)$/.test(t)||/^(amt)$/.test(t))&&w.cx>W*.66){cols.total=w.cx;hits++;}
+      }
     });
     if(hits>=2&&(!best||hits>best.hits))best={unit:cols.unit,qty:cols.qty,total:cols.total,hits:hits};
   });
@@ -1003,8 +1045,53 @@ function nearestGroup(groups,x,maxD,filter){
   if(x==null)return null;var best=null,bd=1e9;
   groups.forEach(function(g){if(filter&&!filter(g))return;var d=Math.abs(g.cx-x);if(d<bd&&d<=maxD){best=g;bd=d}});return best;
 }
+function numericDigits(v){return cleanNumericText(v).replace(/[^0-9]/g,'');}
+function numericPrefixMatches(raw,expected){var d=numericDigits(raw),e=String(Math.max(0,Math.round(+expected||0)));return !!(d&&e&&d.length<e.length&&e.indexOf(d)===0);}
+function fusedMoneyQty(raw){
+  var s=cleanNumericText(raw),m=s.match(/^([0-9]{1,3}(?:[,.][0-9]{3})+)([0-9]{1,2})$/),out=[];
+  if(!m)return out;
+  var unit=numberToken(m[1]);
+  /* Try a 2-digit quantity first only when it remains a valid thousands-formatted money prefix. */
+  for(var k=Math.min(2,m[2].length);k>=1;k--){var q=+m[2].slice(-k),prefix=s.slice(0,s.length-k),u=numberToken(prefix);if(u>=10&&q>=1&&q<=99)out.push({unit:u,qty:q,rawUnit:prefix});}
+  if(!out.length&&unit>=10){var q0=+m[2];if(q0>=1&&q0<=99)out.push({unit:unit,qty:q0,rawUnit:m[1]});}
+  return out;
+}
+function repairFusedNumericFields(groups,W,cols){
+  var best=null,range=W*.17;
+  groups.forEach(function(g,gi){
+    var splits=fusedMoneyQty(g.raw);if(!splits.length)return;
+    splits.forEach(function(s){
+      var expected=s.unit*s.qty;if(expected<10||expected>100000000)return;
+      var right=groups.filter(function(h,j){return j!==gi&&h.cx>g.cx&&h.left>=g.left});
+      var tail=null;
+      if(cols&&cols.total!=null)tail=nearestGroup(right,cols.total,range);
+      if(!tail&&right.length)tail=right[right.length-1];
+      var score=0;
+      if(g.cx>W*.42)score+=1;
+      if(cols&&cols.unit!=null&&Math.abs(g.left-cols.unit)<range*1.4)score+=1;
+      if(cols&&cols.qty!=null&&g.right>=cols.qty-range)score+=1;
+      if(tail){
+        if(tail.value===expected)score+=8;
+        else if(numericPrefixMatches(tail.raw,expected))score+=6;
+        else if(tail.value>0&&tail.value<100&&String(expected).indexOf(String(tail.value))===0)score+=4;
+        if(cols&&cols.total!=null&&Math.abs(tail.cx-cols.total)<=range)score+=2;
+        else if(tail.cx>W*.70)score+=1;
+      }
+      /* Exact arithmetic plus a right-hand total fragment is strong evidence of a glued unit/qty token. */
+      if(score>=7&&(!best||score>best.score))best={score:score,unit:s.unit,qty:s.qty,amount:expected,first:g,unitG:g,qtyG:g,amountG:tail||g,repaired:'fused-unit-qty'};
+    });
+  });
+  return best;
+}
+function repairTruncatedAmount(unit,qty,amount,amountG){
+  if(!unit||!qty)return amount;var expected=unit*qty;if(expected<10||expected>100000000||amount===expected)return amount;
+  /* 25, beside 2,500 x 10 is much more plausibly clipped 25,000 than a literal 25. */
+  if(amountG&&numericPrefixMatches(amountG.raw,expected))return expected;
+  return amount;
+}
 function inferFields(groups,W,cols){
   if(!groups.length)return {unit:'',qty:'',amount:'',first:null};
+  var fused=repairFusedNumericFields(groups,W,cols);if(fused)return fused;
   var amountG=null,qtyG=null,unitG=null,range=W*.15;
   if(cols&&cols.total!=null)amountG=nearestGroup(groups,cols.total,range,function(g){return moneyToken(g.raw)!==null});
   if(!amountG){for(var i=groups.length-1;i>=0;i--){if(moneyToken(groups[i].raw)!==null&&groups[i].cx>W*.62){amountG=groups[i];break;}}}
@@ -1020,9 +1107,13 @@ function inferFields(groups,W,cols){
   if(qty&&!unit&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
   if(unit&&!qty&&unit===amount)qty=1;
   if(qty&&unit&&Math.abs(unit*qty-amount)>Math.max(2,amount*.025)){
-    var fixed=false;
-    for(var j=beforeUnit.length-1;j>=0;j--){var uv=beforeUnit[j].value;if(uv>=10&&Math.abs(uv*qty-amount)<=Math.max(2,amount*.025)){unit=uv;unitG=beforeUnit[j];fixed=true;break;}}
-    if(!fixed&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
+    var repairedAmount=repairTruncatedAmount(unit,qty,amount,amountG);
+    if(repairedAmount!==amount)amount=repairedAmount;
+    else{
+      var fixed=false;
+      for(var j=beforeUnit.length-1;j>=0;j--){var uv=beforeUnit[j].value;if(uv>=10&&Math.abs(uv*qty-amount)<=Math.max(2,amount*.025)){unit=uv;unitG=beforeUnit[j];fixed=true;break;}}
+      if(!fixed&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
+    }
   }
   var first=unitG||qtyG||amountG;
   groups.forEach(function(g){if(g.left<first.left&&g.cx>W*.40)first=g;});
@@ -2487,8 +2578,8 @@ render();
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.3 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.4 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->

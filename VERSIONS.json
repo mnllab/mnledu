@@ -46,9 +46,15 @@
     "history": []
   },
   "voicenote": {
-    "version": "1.0",
+    "version": "2.0",
     "addedDate": "untracked-baseline",
-    "history": []
+    "history": [
+      {
+        "version": "2.0",
+        "date": "2026-08-30",
+        "note": "고정밀 AI 재인식(Whisper-base q8) 옵션 추가 — 실시간 받아쓰기는 기존 Web Speech 그대로 쓰고, 사용자 동의 시 마지막 녹음 최대 3분을 별도 Worker에서 다시 인식해 텍스트를 교체. 약 100MB 모델을 브라우저에 캐시"
+      }
+    ]
   },
   "cagrcal": {
     "version": "1.0",
@@ -56,9 +62,15 @@
     "history": []
   },
   "ocrextract": {
-    "version": "1.0",
+    "version": "2.0",
     "addedDate": "untracked-baseline",
-    "history": []
+    "history": [
+      {
+        "version": "2.0",
+        "date": "2026-08-30",
+        "note": "고정밀 온디바이스 AI OCR(PP-OCRv5) 옵션 추가 — 사용자 동의 시 약 30MB 모델을 받아 작은 글자·영수증·표·스캔 문서 인식률과 줄 위치 복원을 개선. 문서 레이아웃 AI(PP-DocLayout-S, 약 5MB)로 제목·본문·표·헤더·푸터 영역을 인식해 읽기 순서 복원. Markdown 내보내기 추가. 기본 OCR(Tesseract)은 동의 없이 그대로 유지"
+      }
+    ]
   },
   "gov-fund-calc": {
     "version": "1.0",
@@ -286,7 +298,7 @@
     ]
   },
   "receipt-to-excel": {
-    "version": "2.3",
+    "version": "2.4",
     "addedDate": "2026-08-29",
     "history": [
       {
@@ -313,6 +325,11 @@
         "version": "2.3",
         "date": "2026-08-30",
         "note": "경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선"
+      },
+      {
+        "version": "2.4",
+        "date": "2026-08-30",
+        "note": "안정성·정확도 소폭 개선"
       }
     ]
   },

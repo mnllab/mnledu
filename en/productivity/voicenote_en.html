@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Offline Voice Notes | TOOLKIT</title>
-
 <!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
-<meta name="description" content="Dictate notes with speech recognition that runs inside your brows… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta name="description" content="Dictate notes locally, then optionally re-run the last recording through an on-device Whisper model for higher accuracy. Nothing is sent to a server." />
 <meta name="author" content="Janggil Kim" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <link rel="canonical" href="https://mnledu.com/en/productivity/voicenote_en.html" />
@@ -18,43 +17,16 @@
 <meta property="og:site_name" content="TOOLKIT" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:url" content="https://mnledu.com/en/productivity/voicenote_en.html" />
-<meta property="og:title" content="Offline Voice Notes · voice · dictation | TOOLKIT" />
-<meta property="og:description" content="Dictate notes with speech recognition that runs inside your brows… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
+<meta property="og:title" content="Offline Voice Notes | TOOLKIT" />
+<meta property="og:description" content="Dictate notes locally, then optionally re-run the last recording through an on-device Whisper model for higher accuracy. Nothing is sent to a server." />
 <meta property="og:image" content="https://mnledu.com/og-image.png" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Offline Voice Notes · voice · dictation | TOOLKIT" />
-<meta name="twitter:description" content="Dictate notes with speech recognition that runs inside your brows… Runs in your browser with no install or sign up, and nothing you enter is sent to a server." />
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Offline Voice Notes",
-  "description": "Dictate notes with speech recognition that runs inside your browser, not on a server.",
-  "url": "https://mnledu.com/en/productivity/voicenote_en.html",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Web",
-  "inLanguage": "en-US",
-  "isAccessibleForFree": true,
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "author": {
-    "@type": "Person",
-    "name": "Janggil Kim",
-    "url": "https://mnledu.com/en/about.html"
-  },
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "TOOLKIT",
-    "url": "https://mnledu.com/en/"
-  }
-}
-</script>
+<meta name="twitter:title" content="Offline Voice Notes | TOOLKIT" />
+<meta name="twitter:description" content="Dictate notes locally, then optionally re-run the last recording through an on-device Whisper model for higher accuracy. Nothing is sent to a server." />
 <!-- TOOLKIT:SEO_END -->
+
+
 
 
 
@@ -160,7 +132,8 @@
     padding:8px 12px; cursor:pointer;
     transition:border-color .12s, background .12s;
   }
-  .btn:hover{ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn:hover:not([disabled]){ border-color:#C3CCD6; background:#FAFBFC; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; }
   .btn:focus-visible{ outline:2px solid var(--steel); outline-offset:1px; }
   select.btn{ padding-right:26px; cursor:pointer; }
 
@@ -260,6 +233,27 @@ recieve → receive</textarea>
     </div>
   </details>
 
+
+  <!-- Optional high-accuracy re-transcription -->
+  <details id="whisperPanel" class="mt-4 rounded-lg border border-hair bg-white">
+    <summary class="cursor-pointer px-5 py-3 text-[12px] font-medium tracking-wide text-muted hover:text-ink">
+      🎙 High-accuracy AI re-transcription <span id="whisperState" class="ml-1 text-ink">Optional</span>
+    </summary>
+    <div class="border-t border-hair px-5 py-4">
+      <p class="mb-3 text-[12px] leading-relaxed text-muted">Live dictation still uses the existing Web Speech path. When you ask for it, Whisper-base q8 <b>re-listens to the last recording locally</b> and replaces that session's text. No generative language model is used.</p>
+      <label class="flex cursor-pointer items-start gap-2 text-[12px] leading-relaxed text-ink">
+        <input type="checkbox" id="whisperConsent" class="mt-0.5" style="accent-color:var(--steel);width:15px;height:15px;">
+        <span><b>I agree to download the high-accuracy speech model and keep a local recording buffer</b><br><span class="text-muted">The first setup caches roughly 100 MB of model files. Audio is never uploaded, and the last recording stays only in memory.</span></span>
+      </label>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button id="whisperSetupBtn" class="btn" disabled>🎙 Prepare high-accuracy AI</button>
+        <button id="whisperRedoBtn" class="btn" disabled>Re-transcribe last recording</button>
+        <button id="whisperRestoreBtn" class="btn hidden">Restore previous dictation</button>
+      </div>
+      <p id="whisperNote" class="mt-2 text-[11.5px] leading-relaxed text-muted">Runs q8/WASM in a separate Worker to limit resource use. Re-transcription processes up to the most recent 3 minutes of the last recording.</p>
+    </div>
+  </details>
+
   <!-- 마이크 -->
   <div class="mt-8 flex flex-col items-center gap-3">
     <button id="micBtn" aria-label="Start recognition">
@@ -304,6 +298,7 @@ recieve → receive</textarea>
 
 <script>
 (function () {
+  function L10N(ko,en){return document.documentElement.lang==='ko'?ko:en;}
   const notepad   = document.getElementById('notepad');
   const interimEl = document.getElementById('interim');
   const micBtn    = document.getElementById('micBtn');
@@ -377,6 +372,9 @@ recieve → receive</textarea>
 
   /* ---------- Web Speech API ---------- */
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SRPhrase = window.SpeechRecognitionPhrase || window.webkitSpeechRecognitionPhrase;
+  const canPhrases = !!(SR && SRPhrase && ('phrases' in SR.prototype));
+  const canPunctuation = !!(SR && ('unspokenPunctuation' in SR.prototype));
   let recognition = null;
   let recording = false;    // 사용자가 의도한 상태
   let restarting = false;
@@ -466,7 +464,7 @@ recieve → receive</textarea>
 
   function checkLocal() {
     if (!canLocal || !SR.available) return;
-    SR.available({ langs: [langSel.value], processLocally: true }).then(function (v) {
+    Promise.resolve().then(function(){return SR.available({ langs: [langSel.value], processLocally: true, quality: 'dictation' });}).catch(function(){return SR.available({ langs: [langSel.value], processLocally: true });}).then(function (v) {
       localState = v;
       log('on-device model (' + langSel.value + ') state · ' + v);
       applyLocalState();
@@ -499,11 +497,11 @@ recieve → receive</textarea>
     log('model install started · ' + langSel.value);
     showWarn('Downloading the recognition model. It is a large file and may take a few minutes, so please keep this window open.');
 
-    SR.install({ langs: [langSel.value], processLocally: true }).then(function (ok) {
+    Promise.resolve().then(function(){return SR.install({ langs: [langSel.value], processLocally: true, quality: 'dictation' });}).catch(function(){return SR.install({ langs: [langSel.value], processLocally: true });}).then(function (ok) {
       log('install result · ' + ok);
       if (ok) {
         // 곧바로 true를 반환해도 실제 설치가 안 된 경우가 있어 상태를 다시 확인한다
-        SR.available({ langs: [langSel.value], processLocally: true }).then(function (v) {
+        Promise.resolve().then(function(){return SR.available({ langs: [langSel.value], processLocally: true, quality: 'dictation' });}).catch(function(){return SR.available({ langs: [langSel.value], processLocally: true });}).then(function (v) {
           log('recheck after install · ' + v);
           localState = v;
           applyLocalState();
@@ -533,6 +531,7 @@ recieve → receive</textarea>
   });
 
   log('SpeechRecognition ' + (SR ? 'available' : 'unavailable'));
+  log('context bias '+(canPhrases?'available':'unavailable')+' · auto punctuation '+(canPunctuation?'available':'unavailable'));
 
   function envHint() {
     if (isFile) return 'Opened as a file:// page, recognition returns nothing even with microphone permission. Run python3 -m http.server in this folder and open it through localhost instead, then open http://localhost:8000/voice-notepad.html in Chrome.';
@@ -570,12 +569,21 @@ recieve → receive</textarea>
     updateCount();
   }
 
+  function bestAlternative(res) {
+    if (!res || !res.length) return '';
+    const dict=parseDict(),terms=dict.terms.map(function(t){return t.toLowerCase();});let bestText=res[0].transcript||'',bestScore=-1e9;
+    for(let i=0;i<res.length;i++){const a=res[i],t=String(a.transcript||''),low=t.toLowerCase();let score=typeof a.confidence==='number'&&a.confidence>0?a.confidence:.45;terms.forEach(function(term){if(low.indexOf(term)>=0)score+=.08;});dict.rules.forEach(function(r){if(low.indexOf(String(r.from).toLowerCase())>=0)score+=.025;if(low.indexOf(String(r.to).toLowerCase())>=0)score+=.07;});if(score>bestScore){bestScore=score;bestText=t;}}
+    return bestText;
+  }
+
   function buildRecognition() {
     const r = new SR();
     r.lang = langSel.value;
     r.continuous = useContinuous;
     r.interimResults = true;
-    r.maxAlternatives = 1;
+    r.maxAlternatives = 3;
+    if (canPunctuation) { try { r.unspokenPunctuation = true; } catch (e) {} }
+    if (canPhrases) { try { const d=parseDict(); r.phrases=d.terms.slice(0,80).map(function(t){ return new SRPhrase(t,4.0); }); log('context bias · '+r.phrases.length+' phrase(s)'); } catch (e) { log('context bias unavailable · '+(e&&e.name||'')); } }
     if (canLocal && localMode.checked && localState === 'available') {
       try { r.processLocally = true; log('starting in on-device mode'); } catch (e) {}
     }
@@ -637,7 +645,7 @@ recieve → receive</textarea>
       let finals = 0;
       for (let i = ev.resultIndex; i < ev.results.length; i++) {
         const res = ev.results[i];
-        if (res.isFinal) { appendFinal(res[0].transcript); finals++; }
+        if (res.isFinal) { appendFinal(bestAlternative(res)); finals++; }
         else interim += res[0].transcript;
       }
       log('onresult · ' + finals + ' final, ' + interim.length + ' interim chars');
@@ -705,6 +713,7 @@ recieve → receive</textarea>
     fallbackTried = false;
     useContinuous = true;
     recognition = buildRecognition();
+    whisperSessionStart = notepad.value;
     recording = true;
     sessions = 1;
     startAttempts = 0;
@@ -714,6 +723,8 @@ recieve → receive</textarea>
     micBtn.setAttribute('aria-label', 'Stop recognition');
     try {
       recognition.start();
+      startWhisperCapture();
+      refreshWhisperUi();
       log('start() called');
     } catch (e) {
       recording = false;
@@ -740,6 +751,7 @@ recieve → receive</textarea>
     const pending = interimEl.textContent.trim();
     if (pending) appendFinal(pending);
     interimEl.textContent = '';
+    stopWhisperCapture();
 
     try { recognition.stop(); } catch (e) {}
     // 서버 응답을 기다리며 onend가 오지 않는 경우가 있어 강제 종료를 예약한다
@@ -758,6 +770,7 @@ recieve → receive</textarea>
   langSel.addEventListener('change', function () {
     log('language changed · ' + langSel.value);
     checkLocal();
+    refreshWhisperUi();
     if (recording) { stop(); setTimeout(start, 400); }
     toast(langSel.value === 'ko-KR' ? 'Recognising in Korean' : 'Recognising in English');
   });
@@ -770,7 +783,7 @@ recieve → receive</textarea>
   });
 
   /* ---------- 용어 사전 기반 교정 ---------- */
-  // Web Speech API에는 용어 힌트를 넣을 수 없어서, 인식된 뒤에 사전으로 바로잡는다.
+  // 지원 브라우저에서는 사전 용어를 contextual bias로 먼저 전달하고, 확정 결과는 기존 교정기로 한 번 더 보정한다.
   // 한글은 자모로 분해해 비교해야 발음이 뭉개진 경우를 잡을 수 있다.
   const CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
   const JUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
@@ -947,6 +960,73 @@ recieve → receive</textarea>
     toast(r.changes.length ? r.changes.length + ' corrections made' : 'Nothing needed changing');
   });
 
+
+  /* ---------- 선택형 Whisper-base q8 고정밀 재인식 ---------- */
+  const WHISPER_LIB_URL='https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/+esm';
+  const WHISPER_MODEL_ID='onnx-community/whisper-base';
+  const whisperConsent=document.getElementById('whisperConsent');
+  const whisperSetupBtn=document.getElementById('whisperSetupBtn');
+  const whisperRedoBtn=document.getElementById('whisperRedoBtn');
+  const whisperRestoreBtn=document.getElementById('whisperRestoreBtn');
+  const whisperState=document.getElementById('whisperState');
+  const whisperNote=document.getElementById('whisperNote');
+  let whisperWorker=null,whisperWorkerUrl='',whisperReady=false,whisperBusy=false,whisperInitWait=null,whisperInferWait=null;
+  let mediaRecorder=null,mediaStream=null,audioChunks=[],lastAudioBlob=null,whisperSessionStart='',lastSessionBaseText='',lastSessionFinalText='',whisperBackupText=null;
+  function setWhisperState(t){if(whisperState)whisperState.textContent=t;}
+  function setWhisperNote(t){if(whisperNote)whisperNote.textContent=t;}
+  function refreshWhisperUi(){
+    if(!whisperConsent||!whisperSetupBtn)return;
+    whisperSetupBtn.disabled=whisperReady||whisperBusy||!whisperConsent.checked||recording;
+    whisperSetupBtn.textContent=whisperBusy?L10N('고정밀 AI 준비 중...','Preparing high-accuracy AI...'):(whisperReady?L10N('✓ 고정밀 AI 준비 완료','✓ High-accuracy AI ready'):L10N('🎙 고정밀 AI 준비','🎙 Prepare high-accuracy AI'));
+    whisperRedoBtn.disabled=!whisperReady||!lastAudioBlob||whisperBusy||recording;
+    setWhisperState(whisperReady?(whisperConsent.checked?L10N('준비됨','Ready'):L10N('준비됨 · 꺼짐','Ready · off')):(whisperConsent.checked?L10N('다운로드 가능','Ready to download'):L10N('선택','Optional')));
+  }
+  function whisperWorkerMain(){
+    'use strict';let asr=null;
+    self.onmessage=async function(ev){const m=ev.data||{};try{
+      if(m.type==='init'){
+        const hf=await import(m.libUrl);hf.env.useBrowserCache=true;if('useWasmCache' in hf.env)hf.env.useWasmCache=true;hf.env.allowRemoteModels=true;hf.env.allowLocalModels=false;
+        try{if(hf.env.backends&&hf.env.backends.onnx&&hf.env.backends.onnx.wasm)hf.env.backends.onnx.wasm.numThreads=Math.max(1,Math.min(2,self.navigator&&self.navigator.hardwareConcurrency||1));}catch(_){ }
+        const progress_callback=function(p){self.postMessage({type:'progress',status:String(p&&p.status||''),file:String(p&&p.file||p&&p.name||''),progress:Number(p&&p.progress),loaded:Number(p&&p.loaded),total:Number(p&&p.total)});};
+        asr=await hf.pipeline('automatic-speech-recognition',m.modelId,{device:'wasm',dtype:'q8',progress_callback:progress_callback});self.postMessage({type:'ready'});
+      }else if(m.type==='infer'){
+        if(!asr)throw new Error('Whisper is not ready');const audio=new Float32Array(m.audioBuffer);const out=await asr(audio,{language:m.language==='ko-KR'?'korean':'english',task:'transcribe',chunk_length_s:20,stride_length_s:4,return_timestamps:false});self.postMessage({type:'result',id:m.id,text:String(out&&out.text||'').trim()});
+      }
+    }catch(e){self.postMessage({type:'error',id:m.id||'',message:e&&e.message||String(e),stack:e&&e.stack||''});}};
+  }
+  function ensureWhisperWorker(){
+    if(whisperWorker)return whisperWorker;const src='('+whisperWorkerMain.toString()+')();';whisperWorkerUrl=URL.createObjectURL(new Blob([src],{type:'text/javascript'}));whisperWorker=new Worker(whisperWorkerUrl,{type:'module'});
+    whisperWorker.onmessage=function(ev){const m=ev.data||{};if(m.type==='progress'){let p=isFinite(m.progress)?m.progress:0;if(p>0&&p<=1)p*=100;const fn=(m.file||'').split('/').pop();setWhisperNote(L10N('고정밀 음성모델 준비 중','Preparing high-accuracy speech model')+(fn?' · '+fn:'')+(p?' · '+Math.round(p)+'%':''));return;}if(m.type==='ready'&&whisperInitWait){const q=whisperInitWait;whisperInitWait=null;q.resolve();return;}if(m.type==='result'&&whisperInferWait&&m.id===whisperInferWait.id){const q=whisperInferWait;whisperInferWait=null;q.resolve(m.text);return;}if(m.type==='error'){console.error(m.stack||m.message);if(whisperInferWait&&(!m.id||m.id===whisperInferWait.id)){const q=whisperInferWait;whisperInferWait=null;q.reject(new Error(m.message||'Whisper failed'));return;}if(whisperInitWait){const q=whisperInitWait;whisperInitWait=null;q.reject(new Error(m.message||'Whisper setup failed'));}}};
+    whisperWorker.onerror=function(e){if(whisperInitWait){const q=whisperInitWait;whisperInitWait=null;q.reject(new Error(e.message||'Worker error'));}if(whisperInferWait){const q=whisperInferWait;whisperInferWait=null;q.reject(new Error(e.message||'Worker error'));}};return whisperWorker;
+  }
+  async function setupWhisper(){
+    if(whisperReady||whisperBusy)return;if(!whisperConsent.checked){toast(L10N('먼저 모델 다운로드에 동의해 주세요','Agree to the model download first'));return;}whisperBusy=true;refreshWhisperUi();setWhisperNote(L10N('Whisper-base q8 모델을 로컬 캐시에 준비합니다. 브라우저를 닫지 마세요.','Preparing Whisper-base q8 in the local browser cache. Keep this tab open.'));
+    try{const w=ensureWhisperWorker();await new Promise(function(resolve,reject){whisperInitWait={resolve:resolve,reject:reject};w.postMessage({type:'init',libUrl:WHISPER_LIB_URL,modelId:WHISPER_MODEL_ID});});whisperReady=true;setWhisperNote(L10N('준비 완료 · q8/WASM 저부하 모드 · 마지막 녹음만 수동 재인식합니다.','Ready · q8/WASM low-load mode · re-transcribes only when you ask.'));toast(L10N('고정밀 음성 AI 준비 완료','High-accuracy speech AI is ready'));}
+    catch(e){console.error(e);setWhisperNote(L10N('모델 준비 실패 · 네트워크 또는 브라우저 저장공간을 확인해 주세요.','Setup failed · check network or browser storage.'));toast(L10N('고정밀 음성 AI를 준비하지 못했습니다','Could not prepare high-accuracy speech AI'));}
+    finally{whisperBusy=false;refreshWhisperUi();}
+  }
+  async function startWhisperCapture(){
+    lastAudioBlob=null;audioChunks=[];whisperBackupText=null;whisperRestoreBtn.classList.add('hidden');refreshWhisperUi();if(!whisperConsent.checked||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||typeof MediaRecorder==='undefined')return;
+    try{mediaStream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});const opts={};if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))opts.mimeType='audio/webm;codecs=opus';mediaRecorder=new MediaRecorder(mediaStream,opts);mediaRecorder.ondataavailable=function(e){if(e.data&&e.data.size)audioChunks.push(e.data);};mediaRecorder.onstop=function(){if(audioChunks.length){lastAudioBlob=new Blob(audioChunks,{type:mediaRecorder.mimeType||'audio/webm'});setWhisperNote(L10N('마지막 녹음이 메모리에 준비되었습니다 · 고정밀 재인식을 누를 수 있습니다.','Last recording is buffered in memory · high-accuracy re-transcription is available.'));}if(mediaStream){mediaStream.getTracks().forEach(function(t){t.stop();});mediaStream=null;}mediaRecorder=null;refreshWhisperUi();};mediaRecorder.start(1000);log(L10N('고정밀 재인식용 로컬 녹음 시작','local buffer started for high-accuracy re-transcription'));}
+    catch(e){log(L10N('로컬 녹음 버퍼 시작 실패 · ','local recording buffer failed · ')+(e&&e.name||''));setWhisperNote(L10N('고정밀 재인식용 녹음을 열지 못했습니다. 실시간 받아쓰기는 계속 사용할 수 있습니다.','Could not open the local re-transcription buffer. Live dictation still works.'));}
+  }
+  function stopWhisperCapture(){lastSessionBaseText=whisperSessionStart;lastSessionFinalText=notepad.value;if(mediaRecorder&&mediaRecorder.state!=='inactive'){try{mediaRecorder.stop();}catch(_){}}else if(mediaStream){mediaStream.getTracks().forEach(function(t){t.stop();});mediaStream=null;}refreshWhisperUi();}
+  async function audioTo16k(blob){
+    const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)throw new Error('AudioContext unavailable');const ab=await blob.arrayBuffer(),ctx=new Ctx();let decoded;try{decoded=await ctx.decodeAudioData(ab.slice(0));}finally{try{await ctx.close();}catch(_){}}
+    const len=decoded.length,channels=decoded.numberOfChannels,mono=new Float32Array(len);for(let c=0;c<channels;c++){const d=decoded.getChannelData(c);for(let i=0;i<len;i++)mono[i]+=d[i]/channels;}
+    const srcRate=decoded.sampleRate,target=16000,outLen=Math.max(1,Math.round(mono.length*target/srcRate)),out=new Float32Array(outLen);for(let i=0;i<outLen;i++){const pos=i*srcRate/target,j=Math.floor(pos),f=pos-j,a=mono[Math.min(j,mono.length-1)]||0,b=mono[Math.min(j+1,mono.length-1)]||a;out[i]=a+(b-a)*f;}
+    const max=target*180;return out.length>max?out.slice(out.length-max):out;
+  }
+  async function retranscribeLast(){
+    if(!whisperReady||!lastAudioBlob||whisperBusy)return;whisperBusy=true;refreshWhisperUi();micBtn.disabled=true;setWhisperNote(L10N('마지막 녹음을 16kHz로 변환하고 고정밀 재인식 중입니다...','Converting the last recording to 16 kHz and re-transcribing locally...'));
+    try{const audio=await audioTo16k(lastAudioBlob),id='asr-'+Date.now()+'-'+Math.random().toString(36).slice(2),w=ensureWhisperWorker();const text=await new Promise(function(resolve,reject){const timer=setTimeout(function(){if(whisperInferWait&&whisperInferWait.id===id){whisperInferWait=null;reject(new Error('Whisper timed out'));}},240000);whisperInferWait={id:id,resolve:function(v){clearTimeout(timer);resolve(v);},reject:function(e){clearTimeout(timer);reject(e);}};w.postMessage({type:'infer',id:id,audioBuffer:audio.buffer,language:langSel.value},[audio.buffer]);});if(!text)throw new Error('No speech text');
+      const corrected=autoFix.checked?correct(text,parseDict(),parseFloat(strictness.value)).text:text;whisperBackupText=notepad.value;const base=lastSessionBaseText||'';if(lastSessionFinalText&&whisperBackupText===lastSessionFinalText&&whisperBackupText.indexOf(base)===0){const gap=base&&corrected&&!/\s$/.test(base)?' ':'';notepad.value=base+gap+corrected;}else{const gap=notepad.value&&!/\s$/.test(notepad.value)?'\n':'';notepad.value+=gap+corrected;}updateCount();whisperRestoreBtn.classList.remove('hidden');setWhisperNote(L10N('고정밀 재인식 완료 · 필요하면 기존 받아쓰기를 복원할 수 있습니다.','High-accuracy re-transcription complete · you can restore the previous dictation if needed.'));toast(L10N('고정밀 재인식 완료','High-accuracy re-transcription complete'));}
+    catch(e){console.error(e);setWhisperNote(L10N('고정밀 재인식에 실패했습니다 · 기존 받아쓰기 결과는 그대로 유지됩니다.','High-accuracy re-transcription failed · the existing dictation is unchanged.'));toast(L10N('고정밀 재인식 실패','High-accuracy re-transcription failed'));}
+    finally{whisperBusy=false;micBtn.disabled=!SR;refreshWhisperUi();}
+  }
+  whisperConsent.addEventListener('change',refreshWhisperUi);whisperSetupBtn.addEventListener('click',setupWhisper);whisperRedoBtn.addEventListener('click',retranscribeLast);whisperRestoreBtn.addEventListener('click',function(){if(whisperBackupText==null)return;notepad.value=whisperBackupText;whisperBackupText=null;updateCount();this.classList.add('hidden');toast(L10N('기존 받아쓰기를 복원했습니다','Previous dictation restored'));});refreshWhisperUi();
+
+
   /* ---------- 복사 · Save · Reset ---------- */
   // 워드·한글은 CRLF를 문단 구분으로 읽는다. LF만 넘기면 문단이 붙거나 빈 줄이 더 생긴다.
   const copyFmt = document.getElementById('copyFmt');
@@ -1015,6 +1095,7 @@ recieve → receive</textarea>
     if (!notepad.value.trim() || confirm('This clears everything you have written. Continue?')) {
       notepad.value = '';
       interimEl.textContent = '';
+      lastAudioBlob = null; audioChunks = []; whisperBackupText = null; lastSessionBaseText = ''; lastSessionFinalText = ''; if(whisperRestoreBtn)whisperRestoreBtn.classList.add('hidden'); refreshWhisperUi();
       updateCount();
       notepad.focus();
     }
@@ -1140,6 +1221,31 @@ recieve → receive</textarea>
 }
 </script>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.0 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">고정밀 AI 재인식(Whisper-base q8) 옵션 추가 — 실시간 받아쓰기는 기존 Web Speech 그대로 쓰고, 사용자 동의 시 마지막 녹음 최대 3분을 별도 Worker에서 다시 인식해 텍스트를 교체. 약 100MB 모델을 브라우저에 캐시</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
@@ -1223,31 +1329,8 @@ Share
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
-<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
-<style>
-.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
-.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
-  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
-  font-family:ui-monospace,monospace}
-.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
-.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
-.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
-.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
-  border-top:1px solid #e2e8f0}
-.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
-  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
-.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
-.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
-.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
-.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
-</style>
-<div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
-</div>
-<!-- TOOLKIT:VERSION_END -->
+
+
 
 
 
