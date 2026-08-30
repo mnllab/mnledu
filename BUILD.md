@@ -468,3 +468,21 @@ node inject-share.js        # 전체 — 위와 같은 이유
 1. 마커 안쪽만 벗기고 마커 밖 잔여물은 눈으로 직접 확인
 2. 영문 페이지는 patch-tool-pages.js 가 자동 재생성하지 않으므로
    canonical/hreflang/OG 가 다 있는지 반드시 별도로 검증
+
+## receipt-to-excel v15 업데이트 (2026-08-30, 밤)
+
+일반형(품목별 OCR 표 인식)·간편형(총액만 빠르게 인식) 두 가지 모드로
+개편. 품목명 아래 숫자만 있는 줄(제조사·분류 표기)은 바로 위 품목과
+자동으로 묶어 한 행으로 처리, 사진당 최대 10개 품목. v2.1.
+
+지난번 교훈(patch-tool-pages.js 는 KO만 재생성)을 반영해 이번엔
+영문판 SEO 를 배치 직후 바로 손으로 재구성했고, 마커 밖 잔여물도
+육안으로 먼저 확인한 뒤 진행해 이번엔 사고 없이 끝났다.
+
+inject-share.js 를 이 도구 하나에 대해 개별 실행한 뒤 bump-version.js
+(내부에서 inject-version.js 호출)를 실행하는 순서라, 결과 파일의
+마커 순서가 GUIDE → VERSION → SHARE 가 되었다(원래 의도한
+GUIDE → SHARE → VERSION 과 다름). SHARE 블록은 position:fixed 라
+문서 순서와 무관하게 항상 같은 화면 위치에 뜨므로 실제 렌더링에는
+영향이 없다. 순서를 하나로 통일하고 싶으면 두 스크립트를 항상
+inject-share.js → inject-version.js 순서로 실행할 것.

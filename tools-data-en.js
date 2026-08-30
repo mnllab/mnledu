@@ -41,7 +41,7 @@ const TOOLS_DATA_EN = [
     id: 'receipt-to-excel',
     title: 'Receipt to Expense Sheet',
     category: 'PRODUCTIVITY',
-    desc: 'Reads the date, amount and merchant from a receipt photo and lays it out as an expense sheet ready for a spreadsheet.',
+    desc: 'Reads the date, amount and merchant from a receipt photo. Choose a detailed mode for line items or a simple mode for the total only.',
     url: 'https://mnledu.com/en/productivity/receipt-to-excel.html',
     icon: 'receipt',
     badge: 'NEW',
