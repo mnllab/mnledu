@@ -815,11 +815,11 @@ $('resetBtn').addEventListener('click', function(){
 (function(){
   var flagKey = "mnledu_visited_" + "sheet2memo";
   try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
-  var key = "mnledu-com-toolkit-v1-" + "sheet2memo";
-  fetch("https://countapi.mileshilliard.com/api/v1/hit/" + key).catch(function(){});
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "sheet2memo").catch(function(){});
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
+
 
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>

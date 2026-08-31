@@ -1426,6 +1426,8 @@
 
           
 
+          
+
           <!-- TOOLKIT:LANG_START -->
           <a href="https://mnledu.com/en/" title="View in English" hreflang="en"
             class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
@@ -2252,9 +2254,11 @@
       }
     }
 
-    // 조회수 : 검색·필터와 무관하게 한 번만 전체를 불러와 캐시해 두고,
+    // 방문자 수 : 검색·필터와 무관하게 한 번만 전체를 불러와 캐시해 두고,
     // 카드가 새로 그려질 때마다(필터가 바뀔 때도) 캐시에서 채워 넣는다.
-    var VIEWCOUNT_PREFIX = 'mnledu-com-toolkit-v1-';
+    // 2026-08-31 : Cloudflare Workers + KV 자체 운영으로 전환.
+    // 이 계정 전용 Worker 라 키 충돌 걱정이 없어 접두어는 쓰지 않는다.
+    var COUNTER_ENDPOINT = 'https://toolkit-counter.mnl-laboratoire.workers.dev';
     var viewCountCache = {};
     var viewCountLoaded = false;
 
@@ -2280,7 +2284,7 @@
       if (viewCountLoaded) { paintViewCounts(); return; }
       viewCountLoaded = true;
       var jobs = DATA.map(function (t) {
-        return fetch('https://countapi.mileshilliard.com/api/v1/get/' + VIEWCOUNT_PREFIX + t.id)
+        return fetch(COUNTER_ENDPOINT + '/get/' + t.id)
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (data) { if (data && data.value != null) viewCountCache[t.id] = +data.value; })
           .catch(function () {});
@@ -2292,7 +2296,7 @@
     // "방문자 수" — 같은 브라우저에서 새로고침해도 다시 안 늘어난다.
     // localStorage 에 이미 방문 표시가 있으면 카운트를 올리지 않고,
     // 표시가 없을 때만 1 늘린 뒤 그 자리에서 최신 값을 읽어와 푸터에 그린다.
-    var SITE_VIEWCOUNT_KEY = VIEWCOUNT_PREFIX + 'site-home';
+    var SITE_VIEWCOUNT_KEY = 'site-home';
     function paintSiteViewCount(n) {
       var el = document.getElementById('site-viewcount');
       if (!el || typeof n !== 'number') return;
@@ -2304,7 +2308,7 @@
       var alreadyVisited = false;
       try { alreadyVisited = !!localStorage.getItem(flagKey); if (!alreadyVisited) localStorage.setItem(flagKey, '1'); } catch (e) {}
       var endpoint = (alreadyVisited ? 'get' : 'hit') + '/' + SITE_VIEWCOUNT_KEY;
-      fetch('https://countapi.mileshilliard.com/api/v1/' + endpoint)
+      fetch(COUNTER_ENDPOINT + '/' + endpoint)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) { if (data && data.value != null) paintSiteViewCount(+data.value); })
         .catch(function () {});

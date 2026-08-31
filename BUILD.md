@@ -745,3 +745,38 @@ v2.5 → v2.6. 영문판 업로드 파일에 GUIDE_END 마커가 중복 삽입�
 있었음(단순 복붙 흔적으로 추정, 기능엔 영향 없음) — 배치 후 발견해서
 정리. 업로드 폴더는 읽기 전용이라 원본 수정 시도는 실패했고, 저장소에
 복사한 뒤 그 자리에서 정리하는 방식으로 처리.
+
+## 방문자 카운터 — Cloudflare Workers + KV 로 자체 운영 전환 (2026-08-31)
+
+countapi.mileshilliard.com (남의 무료 서비스) 을 Cloudflare Workers +
+KV 로 교체. 사용자 본인 Cloudflare 계정 안에서 도는 자체 운영이라,
+countapi.xyz 가 겪었던 것처럼 남의 서비스가 갑자기 죽어서 카운터가
+통째로 안 뜨는 일이 없다. 무료 티어로 충분(일 10만 요청).
+
+### Worker 설정 (사용자가 Cloudflare 대시보드에서 직접 진행)
+
+- Worker 이름 : `toolkit-counter`
+- 주소 : `https://toolkit-counter.mnl-laboratoire.workers.dev`
+- KV 네임스페이스 : `toolkit-counters`, 바인딩 변수명 `COUNTER_KV`
+- 엔드포인트 : `GET /hit/<key>` (조회 시 +1), `GET /get/<key>` (조회만)
+- 응답 형식은 예전 countapi 와 동일하게 맞춤: `{"key":"...","value":N}`
+  — 그래서 클라이언트 코드 쪽은 URL 만 바꾸면 됐고 파싱 로직은 그대로.
+- key 형식 제한: `^[a-zA-Z0-9_-]{1,100}$` (Worker 코드 안에 검증 포함)
+
+### 바뀐 파일
+
+- `inject-viewcount.js` — COUNTER_ENDPOINT 를 새 Worker 주소로 변경.
+  이 계정 전용 Worker 라 예전에 쓰던 키 충돌 방지용 접두어
+  (`mnledu-com-toolkit-v1-`) 는 제거 — 도구 id 를 그대로 key 로 씀.
+  61개 도구 전체 재적용.
+- `index.html` (→ en/index.html 은 build-en.js 로 자동 반영) —
+  `loadViewCounts()` · `loadSiteViewCount()` 의 fetch 대상을
+  `COUNTER_ENDPOINT` 로 교체, `VIEWCOUNT_PREFIX` 변수 제거.
+
+### ⚠️ key 가 예전 서비스와 다르다 — 카운트가 0부터 다시 시작됨
+
+접두어를 없애면서 key 이름 자체가 달라졌고, 애초에 KV 저장소도
+완전히 새 것이라 **지금까지 countapi.mileshilliard.com 에 쌓여 있던
+방문자 수는 이어지지 않는다.** 전부 0부터 다시 세어진다. 데이터
+손실이라기보다 새 시스템으로 넘어가며 생기는 자연스러운 리셋 —
+사용자에게 미리 고지함.

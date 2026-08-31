@@ -1,8 +1,16 @@
 /**
  * inject-viewcount.js
  * ---------------------------------------------------------------
- * 각 도구 페이지에 방문자 수 집계 신호를 심습니다. CountAPI 대체
- * 서비스(무료·가입 불필요) 를 씁니다.
+ * 각 도구 페이지에 방문자 수 집계 신호를 심습니다.
+ *
+ * 2026-08-31 : Cloudflare Workers + KV 로 자체 운영 전환.
+ * (예전엔 countapi.mileshilliard.com 같은 남의 무료 서비스를 썼는데,
+ * countapi.xyz 가 실제로 서비스 종료된 걸 겪은 뒤 자체 운영으로 바꿨다.
+ * Worker 는 mnledu 소유 Cloudflare 계정 안에서 돌아가므로 남의 서비스가
+ * 죽어서 카운터가 통째로 안 뜨는 일이 없다.)
+ *
+ * Worker 는 이 계정 전용이라 키 충돌 걱정이 없어, 예전에 쓰던 접두어
+ * (mnledu-com-toolkit-v1-) 는 걷어내고 도구 id 를 그대로 key 로 쓴다.
  *
  * "조회수"가 아니라 "방문자 수" 다 — 같은 브라우저에서 새로고침하거나
  * 다시 열어도 두 번 세지 않는다. localStorage 에 "이미 방문함" 표시를
@@ -27,10 +35,7 @@ const vm = require('vm');
 
 const ROOT = __dirname;
 const SITE = 'https://mnledu.com';
-// countapi.xyz 는 서비스 종료됨(2024년 SSL 만료 확인). 대체 서비스 사용.
-// 이 서비스는 namespace 개념이 없어 key 하나로 구분하므로, 충돌 방지를 위해
-// 고유 접두어(mnledu-com-toolkit-v1-)를 모든 key 앞에 붙인다.
-const KEY_PREFIX = 'mnledu-com-toolkit-v1-';
+const COUNTER_ENDPOINT = 'https://toolkit-counter.mnl-laboratoire.workers.dev';
 const START = '<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->';
 const END = '<!-- TOOLKIT:VIEWCOUNT_END -->';
 const GUIDE_END = '<!-- TOOLKIT:GUIDE_END -->';
@@ -52,8 +57,7 @@ function widget(toolId) {
     '(function(){',
     '  var flagKey = "mnledu_visited_" + ' + JSON.stringify(toolId) + ';',
     '  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }',
-    '  var key = ' + JSON.stringify(KEY_PREFIX) + ' + ' + JSON.stringify(toolId) + ';',
-    '  fetch("https://countapi.mileshilliard.com/api/v1/hit/" + key).catch(function(){});',
+    '  fetch(' + JSON.stringify(COUNTER_ENDPOINT) + ' + "/hit/" + ' + JSON.stringify(toolId) + ').catch(function(){});',
     '})();',
     '</script>',
     END
