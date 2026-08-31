@@ -245,6 +245,10 @@
   #qualityGuide{margin-top:12px;padding:12px 13px;border:1px solid #BFDBFE;background:#EFF6FF;border-radius:11px;font-size:12.5px;line-height:1.7;color:#334155}
   #qualityGuide b{color:#1D4ED8}
   #queueNote{margin-top:8px;font-size:12px;color:var(--muted)}
+  #enhancePreviewBox{margin-top:11px;padding:9px;border:1px solid var(--line);border-radius:11px;background:#F8FAFC}
+  .enhancePreviewHead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:7px}
+  .enhancePreviewHint{font-size:10.8px;font-weight:500;color:var(--muted)}
+  #enhancePreviewCanvas{display:block;width:100%;height:auto;max-height:320px;object-fit:contain;border:1px solid var(--line);border-radius:9px;background:#E5E7EB}
 
   .uploadActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
   .uploadActions .btn{min-width:0}
@@ -404,6 +408,10 @@
           <div class="rangeRow"><span>기울기</span><input id="deskew" type="range" min="-5" max="5" step="0.2" value="0"><output id="deskewVal">0°</output></div>
           <div class="rangeRow"><span>밝기</span><input id="brightness" type="range" min="-40" max="40" step="2" value="0"><output id="brightVal">0</output></div>
           <div class="rangeRow"><span>대비</span><input id="contrast" type="range" min="0" max="80" step="5" value="30"><output id="contrastVal">30</output></div>
+          <div id="enhancePreviewBox">
+            <div class="enhancePreviewHead"><span>🔍 보정 결과 미리보기</span><span class="enhancePreviewHint">OCR이 실제로 보게 될 화면입니다</span></div>
+            <canvas id="enhancePreviewCanvas"></canvas>
+          </div>
           <div class="optGrid">
             <label class="optCheck"><input type="checkbox" id="perspectiveMode" checked><span><b>가벼운 원근보정</b><br>영수증 위·아래 폭 차이를 간단히 보정합니다. 무거운 OpenCV는 사용하지 않습니다.</span></label>
             <label class="optCheck"><input type="checkbox" id="shadowNormalize" checked><span><b>자동 그림자·조명 균일화</b><br>종이의 완만한 밝기 그라데이션을 추정해 어두운 부분만 선택적으로 보정합니다.</span></label>
@@ -831,7 +839,7 @@ $('clearAll').addEventListener('click', function(){
    OCR + 사진 전처리
    ============================================================ */
 var worker = null, workerLang = '', busy = false, queue = [], doneCount = 0;
-var currentFile = null, srcImg = new Image(), srcUrl = '', workBase = null, previewRAF = 0;
+var currentFile = null, srcImg = new Image(), srcUrl = '', workBase = null, previewRAF = 0, enhancePreviewRAF = 0;
 var rot90 = 0, fineRot = 0, crop = {x:.04,y:.04,w:.92,h:.92};
 var dragCrop = null, dragStart = null;
 
@@ -898,8 +906,38 @@ function rotatedCanvas(maxSide){
 }
 function drawPreview(){
   var src=rotatedCanvas(window.innerWidth<760?720:900);if(!src)return;var c=$('editCanvas');c.width=src.width;c.height=src.height;c.getContext('2d').drawImage(src,0,0);layoutCrop();
+  scheduleEnhancePreview();
 }
 function schedulePreview(){if(previewRAF)cancelAnimationFrame(previewRAF);previewRAF=requestAnimationFrame(function(){previewRAF=0;drawPreview()})}
+/* Live "what OCR will actually see" preview. Mirrors enhancedVariants()'s steps (perspective ->
+   shadow normalize -> brightness/contrast/grayscale) but on a small downscaled copy so it can
+   redraw smoothly while the user drags a slider, instead of only appearing after the OCR button
+   is pressed on the full-resolution image. */
+function buildEnhancePreview(){
+  if(!workBase||!workBase.width)return null;
+  var previewCap=560,src=rotatedCanvas(previewCap+140);
+  var sx=Math.round(src.width*crop.x),sy=Math.round(src.height*crop.y),sw=Math.max(1,Math.round(src.width*crop.w)),sh=Math.max(1,Math.round(src.height*crop.h));
+  var k=Math.min(1,previewCap/Math.max(sw,sh)),base=document.createElement('canvas');
+  base.width=Math.max(1,Math.round(sw*k));base.height=Math.max(1,Math.round(sh*k));
+  var bx=base.getContext('2d');bx.imageSmoothingEnabled=true;bx.imageSmoothingQuality='high';bx.drawImage(src,sx,sy,sw,sh,0,0,base.width,base.height);
+  if($('perspectiveMode')&&$('perspectiveMode').checked)base=lightPerspectiveCorrect(base);
+  if($('shadowNormalize')&&$('shadowNormalize').checked){var sn=normalizeReceiptIllumination(base);base=sn.canvas;}
+  var forceGray=($('autoEnhance')&&$('autoEnhance').checked)||($('grayMode')&&$('grayMode').checked);
+  var br=+$('brightness').value,ct=+$('contrast').value,out=document.createElement('canvas');
+  out.width=base.width;out.height=base.height;var ox=out.getContext('2d');
+  ox.filter='brightness('+Math.max(55,100+br)+'%) contrast('+Math.max(70,100+ct)+'%)'+(forceGray?' grayscale(100%)':'');
+  ox.drawImage(base,0,0);ox.filter='none';return out;
+}
+function updateEnhancePreview(){
+  var canvas=$('enhancePreviewCanvas');if(!canvas)return;
+  var out=buildEnhancePreview();
+  if(!out){canvas.width=0;canvas.height=0;return;}
+  canvas.width=out.width;canvas.height=out.height;canvas.getContext('2d').drawImage(out,0,0);
+}
+function scheduleEnhancePreview(){
+  if(enhancePreviewRAF)cancelAnimationFrame(enhancePreviewRAF);
+  enhancePreviewRAF=requestAnimationFrame(function(){enhancePreviewRAF=0;updateEnhancePreview()});
+}
 function layoutCrop(){
   var c=$('editCanvas'),b=$('cropBox');if(!c.width)return;var r=c.getBoundingClientRect(),stage=$('editStage').getBoundingClientRect(),ox=r.left-stage.left,oy=r.top-stage.top;
   b.style.left=(ox+r.width*crop.x)+'px';b.style.top=(oy+r.height*crop.y)+'px';b.style.width=(r.width*crop.w)+'px';b.style.height=(r.height*crop.h)+'px';
@@ -911,14 +949,14 @@ function autoDetectReceipt(showToast){
   var x=t.getContext('2d');x.drawImage(c,0,0,sw,sh);var d=x.getImageData(0,0,sw,sh).data,cols=new Uint16Array(sw),rows2=new Uint16Array(sh),count=0;
   for(var yy=0;yy<sh;yy++)for(var xx=0;xx<sw;xx++){var k=(yy*sw+xx)*4,r=d[k],g=d[k+1],b=d[k+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),lum=.2126*r+.7152*g+.0722*b;if(lum>135&&mx-mn<92){cols[xx]++;rows2[yy]++;count++}}
   var x1=0,x2=sw-1,y1=0,y2=sh-1,ct=.15*sh,rt=.15*sw;while(x1<sw-1&&cols[x1]<ct)x1++;while(x2>x1&&cols[x2]<ct)x2--;while(y1<sh-1&&rows2[y1]<rt)y1++;while(y2>y1&&rows2[y2]<rt)y2--;
-  var found=count>sw*sh*.09&&x2-x1>sw*.22&&y2-y1>sh*.22;if(found){crop={x:Math.max(0,x1/sw-.03),y:Math.max(0,y1/sh-.025),w:Math.min(1,(x2-x1+1)/sw+.06),h:Math.min(1,(y2-y1+1)/sh+.05)};crop.w=Math.min(crop.w,1-crop.x);crop.h=Math.min(crop.h,1-crop.y)}else crop={x:.03,y:.03,w:.94,h:.94};layoutCrop();
+  var found=count>sw*sh*.09&&x2-x1>sw*.22&&y2-y1>sh*.22;if(found){crop={x:Math.max(0,x1/sw-.03),y:Math.max(0,y1/sh-.025),w:Math.min(1,(x2-x1+1)/sw+.06),h:Math.min(1,(y2-y1+1)/sh+.05)};crop.w=Math.min(crop.w,1-crop.x);crop.h=Math.min(crop.h,1-crop.y)}else crop={x:.03,y:.03,w:.94,h:.94};layoutCrop();scheduleEnhancePreview();
   if(showToast)toast(found?'영수증 영역을 빠르게 추정했습니다 · 파란 박스를 확인해 주세요':'영수증 경계를 확실히 찾지 못해 거의 전체를 선택했습니다')
 }
 function cropPoint(ev){var e=ev.touches?ev.touches[0]:ev,r=$('editCanvas').getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
 function cropStart(ev,handle){ev.preventDefault();dragCrop=handle||'move';dragStart={p:cropPoint(ev),c:{x:crop.x,y:crop.y,w:crop.w,h:crop.h}}}
 $('cropBox').addEventListener('mousedown',function(e){if(!e.target.dataset.h)cropStart(e,'move')});$('cropBox').addEventListener('touchstart',function(e){if(!e.target.dataset.h)cropStart(e,'move')},{passive:false});
 document.querySelectorAll('.cropHandle').forEach(function(h){h.addEventListener('mousedown',function(e){cropStart(e,this.dataset.h)});h.addEventListener('touchstart',function(e){cropStart(e,this.dataset.h)},{passive:false})});
-function cropMove(ev){if(!dragCrop)return;ev.preventDefault();var p=cropPoint(ev),dx=p.x-dragStart.p.x,dy=p.y-dragStart.p.y,c0=dragStart.c,n={x:c0.x,y:c0.y,w:c0.w,h:c0.h},min=.08;if(dragCrop==='move'){n.x=Math.max(0,Math.min(1-c0.w,c0.x+dx));n.y=Math.max(0,Math.min(1-c0.h,c0.y+dy))}else{var l=c0.x,t=c0.y,r=c0.x+c0.w,b=c0.y+c0.h;if(dragCrop.indexOf('l')>=0)l=Math.max(0,Math.min(r-min,c0.x+dx));if(dragCrop.indexOf('r')>=0)r=Math.min(1,Math.max(l+min,c0.x+c0.w+dx));if(dragCrop.indexOf('t')>=0)t=Math.max(0,Math.min(b-min,c0.y+dy));if(dragCrop.indexOf('b')>=0)b=Math.min(1,Math.max(t+min,c0.y+c0.h+dy));n={x:l,y:t,w:r-l,h:b-t}}crop=n;layoutCrop()}
+function cropMove(ev){if(!dragCrop)return;ev.preventDefault();var p=cropPoint(ev),dx=p.x-dragStart.p.x,dy=p.y-dragStart.p.y,c0=dragStart.c,n={x:c0.x,y:c0.y,w:c0.w,h:c0.h},min=.08;if(dragCrop==='move'){n.x=Math.max(0,Math.min(1-c0.w,c0.x+dx));n.y=Math.max(0,Math.min(1-c0.h,c0.y+dy))}else{var l=c0.x,t=c0.y,r=c0.x+c0.w,b=c0.y+c0.h;if(dragCrop.indexOf('l')>=0)l=Math.max(0,Math.min(r-min,c0.x+dx));if(dragCrop.indexOf('r')>=0)r=Math.min(1,Math.max(l+min,c0.x+c0.w+dx));if(dragCrop.indexOf('t')>=0)t=Math.max(0,Math.min(b-min,c0.y+dy));if(dragCrop.indexOf('b')>=0)b=Math.min(1,Math.max(t+min,c0.y+c0.h+dy));n={x:l,y:t,w:r-l,h:b-t}}crop=n;layoutCrop();scheduleEnhancePreview()}
 window.addEventListener('mousemove',cropMove);window.addEventListener('touchmove',cropMove,{passive:false});window.addEventListener('mouseup',function(){dragCrop=null});window.addEventListener('touchend',function(){dragCrop=null});
 function ocrMaxSide(){var mobile=window.matchMedia&&window.matchMedia('(max-width: 760px)').matches;return mobile?1350:1650}
 function cropHighRes(){
@@ -1019,6 +1057,18 @@ function numberToken(v){
   var n=parseInt(s.replace(/[,.]/g,''),10);if(!isFinite(n)||n<0||n>100000000)return null;return n;
 }
 function moneyToken(v){var n=numberToken(v);return n!==null&&n>=10?n:null;}
+/* Quantity tokens are sometimes decimal (liters at a pump, kg on a scale, e.g. "56.383").
+   numberToken() strips both ',' and '.' as thousands separators, which turns "56.383" into 56383 —
+   fine for money (KRW has no fractional unit) but wrong for a quantity. When the integer-stripped
+   value doesn't look like a plausible small quantity, but the raw token has the shape N.NNN (a single
+   dot, no comma, 1-3 decimal digits), treat it as a real decimal quantity instead. */
+function qtyCandidateValue(g){
+  if(!g)return null;
+  if(g.value!=null&&g.value>=1&&g.value<=999&&Math.floor(g.value)===g.value)return g.value;
+  var m=String(g.raw||'').match(/^(\d{1,4})\.(\d{1,3})$/);
+  if(m){var f=parseFloat(m[1]+'.'+m[2]);if(f>0&&f<=999.999)return f;}
+  return null;
+}
 function numericGroups(words,W){
   var src=words.filter(function(w){return w.cx>W*.38&&(isNumericWord(w.text)||/^[,.]$/.test(String(w.text).trim()))}).sort(function(a,b){return a.left-b.left}),out=[];
   src.forEach(function(w){
@@ -1063,7 +1113,20 @@ function looksAuxiliaryText(s){
   if(!s)return false;
   return /(제\s*약|약\s*품|제\s*조|판\s*매|유\s*통|수\s*입|개\s*발|해\s*외\s*개\s*발|의\s*약\s*외\s*품|건강\s*기능|식\s*품|주\s*식\s*회\s*사|\(\s*주\s*\)|㈜|\(\s*유\s*\)|pharma|pharmaceutical|laborator|manufacturer|manufactured|distributed|distributor|imported|importer|developer|development|co\.?\s*,?\s*ltd|ltd\.?|corp\.?|inc\.?)/i.test(s);
 }
-function metaRowText(s){return /(상품\s*명|품\s*명|품목|단가|수량|금액|합계|총\s*액|총\s*계|판매\s*총\s*액|판매총액|받을\s*금액|결제\s*대상\s*금액|순매출액|부가세|과세|면세|공급가|결제|승인|카드|현금|거스름|사업자|대표자|전화|TEL|주소|일시|영수증|전표|receipt|subtotal|grand\s*total|total|tax|amount|quantity|qty|price|unit\s*price)/i.test(String(s||''));}
+/* Some receipts (esp. thermal-printed labels like "부 가 세", "합 계") print wide letter-spacing,
+   which OCR can emit as separate word tokens joined with a literal space. A hard-coded keyword like
+   "부가세" then fails to match "부 가 세". Build each keyword's regex with \s* between every
+   character so fragmented labels are still recognized as non-item metadata rows. */
+var META_ROW_KEYWORDS=['상품명','품명','품목','단가','수량','금액','합계','총액','총계','판매총액','받을금액',
+  '결제대상금액','순매출액','부가세','과세','면세','공급가','결제','승인','카드','현금','거스름',
+  '사업자','대표자','전화','주소','일시','영수증','전표'];
+var META_ROW_REGEXES=META_ROW_KEYWORDS.map(function(k){return new RegExp(k.split('').join('\\s*'));});
+var META_ROW_LATIN=/(TEL|receipt|subtotal|grand\s*total|total|tax|amount|quantity|qty|price|unit\s*price)/i;
+function metaRowText(s){
+  var v=String(s||'');if(!v)return false;
+  for(var i=0;i<META_ROW_REGEXES.length;i++){if(META_ROW_REGEXES[i].test(v))return true;}
+  return META_ROW_LATIN.test(v);
+}
 function detectHeaderColumns(vr){
   var W=vr.width,best=null;
   function virtualCenter(w,t,term){var i=t.indexOf(term);if(i<0||!t.length)return w.cx;return w.left+w.width*((i+term.length/2)/t.length);}
@@ -1156,8 +1219,8 @@ function rowArithmeticRescue(r,W,cols){
   /* Normal three-column arithmetic, independent of learned column centres. */
   var start=Math.max(0,groups.length-5);
   for(var i=start;i<groups.length;i++)for(var j=i+1;j<groups.length;j++)for(var k=j+1;k<groups.length;k++){
-    var u=groups[i],q=groups[j],a=groups[k];
-    if(q.value>=1&&q.value<=999)add(u.value,q.value,a.value,u,q,a,8,'one-line arithmetic');
+    var u=groups[i],q=groups[j],a=groups[k],qv=qtyCandidateValue(q);
+    if(qv!==null)add(u.value,qv,a.value,u,q,a,8,'one-line arithmetic');
   }
   /* OCR may emit 7,00025 as a single token. Split it and validate against the right-hand amount. */
   groups.forEach(function(g,gi){
@@ -1189,12 +1252,12 @@ function inferFields(groups,W,cols){
   if(!amountG){for(var i=groups.length-1;i>=0;i--){if(moneyToken(groups[i].raw)!==null&&groups[i].cx>W*.62){amountG=groups[i];break;}}}
   if(!amountG)return {unit:'',qty:'',amount:'',first:null};
   var before=groups.filter(function(g){return g.right<amountG.left+2});
-  if(cols&&cols.qty!=null)qtyG=nearestGroup(before,cols.qty,range,function(g){return g.value>=1&&g.value<=999&&Math.floor(g.value)===g.value});
-  if(!qtyG){for(var q=before.length-1;q>=0;q--){var qv=before[q].value;if(qv>=1&&qv<=99&&Math.floor(qv)===qv){qtyG=before[q];break;}}}
+  if(cols&&cols.qty!=null)qtyG=nearestGroup(before,cols.qty,range,function(g){return qtyCandidateValue(g)!==null});
+  if(!qtyG){for(var q=before.length-1;q>=0;q--){if(qtyCandidateValue(before[q])!==null){qtyG=before[q];break;}}}
   var beforeUnit=before.filter(function(g){return !qtyG||g!==qtyG});
   if(cols&&cols.unit!=null)unitG=nearestGroup(beforeUnit,cols.unit,range,function(g){return moneyToken(g.raw)!==null});
   if(!unitG){for(var u=beforeUnit.length-1;u>=0;u--){if(moneyToken(beforeUnit[u].raw)!==null){unitG=beforeUnit[u];break;}}}
-  var amount=amountG.value,qty=qtyG?qtyG.value:'',unit=unitG?unitG.value:'';
+  var amount=amountG.value,qty=qtyG?qtyCandidateValue(qtyG):'',unit=unitG?unitG.value:'';
   if(!qty&&unit&&amount>=unit){var iq=amount/unit;if(iq>=1&&iq<=99&&Math.abs(iq-Math.round(iq))<.001)qty=Math.round(iq);}
   if(qty&&!unit&&amount%qty===0&&amount/qty>=10)unit=amount/qty;
   if(unit&&!qty&&unit===amount)qty=1;
@@ -1214,7 +1277,7 @@ function inferFields(groups,W,cols){
 function rowGap(a,b){if(!a||!b)return 9999;var ah=medianNum(a.words.map(function(w){return w.height})),bh=medianNum(b.words.map(function(w){return w.height}));return Math.abs(b.cy-a.cy)/Math.max(8,(ah+bh)/2);}
 function parseItemizedTotal(text){
   var s=String(text||'');
-  if(!/(합\s*계|총\s*액|총\s*계|판매\s*총\s*액|받을\s*금액|결제\s*대상\s*금액|grand\s*total|total\s*amount|amount\s*due|balance\s*due)/i.test(s))return '';
+  if(!/(합\s*계|총\s*액|총\s*계|판매\s*총\s*액|받을\s*금액|결제\s*대상\s*금액|결제\s*금액|승인\s*금액|발행\s*금액|받은\s*금액|지불\s*금액|청구\s*금액|grand\s*total|total\s*amount|amount\s*due|balance\s*due)/i.test(s))return '';
   return parseAmount(s);
 }
 function looksCodeOnlyText(s){
@@ -1235,7 +1298,7 @@ function detectPatternColumns(vr,header){
     for(var i=gs.length-1;i>=0;i--){if(moneyToken(gs[i].raw)!==null&&gs[i].cx>W*.56){amount=gs[i];break;}}
     if(!amount)return;
     var before=gs.filter(function(g){return g.right<amount.left+2}),qty=null,unit=null;
-    for(var q=before.length-1;q>=0;q--){var qv=before[q].value;if(qv>=1&&qv<=99&&Math.floor(qv)===qv&&before[q].cx>W*.46){qty=before[q];break;}}
+    for(var q=before.length-1;q>=0;q--){if(qtyCandidateValue(before[q])!==null&&before[q].cx>W*.46){qty=before[q];break;}}
     var bu=before.filter(function(g){return !qty||g!==qty});
     for(var u=bu.length-1;u>=0;u--){if(moneyToken(bu[u].raw)!==null&&bu[u].cx>W*.34){unit=bu[u];break;}}
     if(amount){totals.push(amount.cx);support++;}
@@ -1453,7 +1516,7 @@ function simpleStoreFromRows(vr,text){
 }
 function simpleAmountFromRows(vr,text){
   var rows=vr.rows||[],W=vr.width||1,maxY=rows.length?rows[rows.length-1].cy:1,best={value:'',score:-999,evidence:'',reason:''},moneyRows=[],explicitFinal={value:'',score:-999,evidence:'',reason:''};
-  var finalKey=/(합\s*계(?:\s*금액)?|총\s*합\s*계|총\s*계|총\s*액|총\s*금액|결제\s*금액|승인\s*금액|받을\s*금액|청구\s*금액|grand\s*total|amount\s*due|total\s*amount|payment\s*amount|paid\s*amount|^\s*total\b)/i;
+  var finalKey=/(합\s*계(?:\s*금액)?|총\s*합\s*계|총\s*계|총\s*액|총\s*금액|결제\s*금액|승인\s*금액|받을\s*금액|청구\s*금액|발행\s*금액|받은\s*금액|지불\s*금액|grand\s*total|amount\s*due|total\s*amount|payment\s*amount|paid\s*amount|^\s*total\b)/i;
   var baseKey=/(거래\s*금액|물품\s*가액|공급\s*가액|공급가|판매\s*금액|매출\s*금액|subtotal|supply\s*amount|transaction\s*amount)/i;
   var taxKey=/(부가\s*세|세\s*액|부가가치세|vat|tax)/i;
   var reject=/(승인\s*번호|거래\s*번호|사업자|전화|tel|카드\s*번호|일련번호|매장번호|가맹점\s*번호|pos|영수증\s*번호|receipt\s*no|invoice\s*no|단말기\s*번호|전표\s*번호)/i;
@@ -2399,7 +2462,7 @@ function smNeedsRescue(best,rtype){
 function smLines(best){return String(best&&((best.visualText||best.text))||'').split(/\r?\n/).map(function(x){return x.replace(/\s+/g,' ').trim()}).filter(Boolean).slice(0,72)}
 function smLexicalLabel(text){
   var s=String(text||'');
-  if(/(?:총\s*합\s*계|총\s*계|총\s*액|결제\s*금액|승인\s*금액|받을\s*금액|청구\s*금액|grand\s*total|amount\s*due|total\s*amount)/i.test(s))return'total';
+  if(/(?:총\s*합\s*계|총\s*계|총\s*액|결제\s*금액|승인\s*금액|받을\s*금액|청구\s*금액|발행\s*금액|받은\s*금액|지불\s*금액|grand\s*total|amount\s*due|total\s*amount)/i.test(s))return'total';
   if(/(?:부가\s*세|부가가치세|세\s*액|\bvat\b|sales\s*tax|\btax\b)/i.test(s))return'tax';
   if(/(?:공급\s*가액|거래\s*금액|과세\s*물품|소\s*계|subtotal|supply\s*amount|net\s*amount)/i.test(s))return'subtotal';
   if(/(?:할인|쿠폰|에누리|행사|discount|coupon|saving|promotion)/i.test(s))return'discount';
@@ -2529,7 +2592,8 @@ function updateReceiptModeUI(){
 $('receiptType').addEventListener('change',updateReceiptModeUI);updateReceiptModeUI();
 $('ocrBtn').addEventListener('click',scanCurrent);$('autoCrop').addEventListener('click',function(){var b=this;if(b.disabled)return;b.disabled=true;requestAnimationFrame(function(){setTimeout(function(){try{autoDetectReceipt(true)}finally{b.disabled=false}},0)})});
 $('rotL').addEventListener('click',function(){rot90=(rot90-90)%360;crop={x:.04,y:.04,w:.92,h:.92};drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('rotR').addEventListener('click',function(){rot90=(rot90+90)%360;crop={x:.04,y:.04,w:.92,h:.92};drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});
-$('resetEdit').addEventListener('click',function(){resetControls();drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('deskew').addEventListener('input',function(){fineRot=+this.value;syncVals();schedulePreview()});$('brightness').addEventListener('input',syncVals);$('contrast').addEventListener('input',syncVals);
+$('resetEdit').addEventListener('click',function(){resetControls();drawPreview();setTimeout(function(){autoDetectReceipt(false)},30)});$('deskew').addEventListener('input',function(){fineRot=+this.value;syncVals();schedulePreview()});$('brightness').addEventListener('input',function(){syncVals();scheduleEnhancePreview()});$('contrast').addEventListener('input',function(){syncVals();scheduleEnhancePreview()});
+['perspectiveMode','shadowNormalize','autoEnhance','grayMode'].forEach(function(id){var el=$(id);if(el)el.addEventListener('change',scheduleEnhancePreview)});
 /* 넣는 방법 */
 $('drop').addEventListener('click',function(){$('fileInput').click()});$('browseBtn').addEventListener('click',function(){$('fileInput').click()});$('cameraBtn').addEventListener('click',function(){$('cameraInput').click()});$('drop').addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();$('fileInput').click()}});
 $('fileInput').addEventListener('change',function(e){if(e.target.files&&e.target.files.length)handleFiles(e.target.files);this.value=''});$('cameraInput').addEventListener('change',function(e){if(e.target.files&&e.target.files.length)handleFiles(e.target.files);this.value=''});
@@ -2680,17 +2744,6 @@ render();
 <a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
 </div></section>
 <!-- TOOLKIT:GUIDE_END -->
-<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
-<script>
-(function(){
-  var flagKey = "mnledu_visited_" + "receipt-to-excel";
-  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
-  var key = "mnledu-com-toolkit-v1-" + "receipt-to-excel";
-  fetch("https://countapi.mileshilliard.com/api/v1/hit/" + key).catch(function(){});
-})();
-</script>
-<!-- TOOLKIT:VIEWCOUNT_END -->
-
 <!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
 <style>
 .tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
@@ -2712,10 +2765,20 @@ render();
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.5 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.5</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">그림자·조명 편차 보정(shadowNormalize) 옵션 추가 — 적용 시 원본 조명 결과와 교차 확인해 더 나은 쪽을 채택. 한 줄짜리 간이 영수증(바코드·상세행 없는 경우)을 위한 산술 기반 행 복구 로직 추가. 합계 라벨이 명확할 때 공급가액·부가세로 잘못 대체되지 않도록 최종 금액 판단 로직 개선</span></li><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.6 &middot; 2026-08-31</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.6</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">슬라이더 조작 중 실시간 미리보기 추가(원근·그림자·명암 보정을 축소본에 즉시 반영). 소수점 수량 인식 개선(56.383L 같은 값이 정수로 뭉개지던 문제 수정). 자간이 벌어진 OCR 라벨 인식 개선(부 가 세 → 부가세로 인식)</span></li><li><span class="tk-version-num">v2.5</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">그림자·조명 편차 보정(shadowNormalize) 옵션 추가 — 적용 시 원본 조명 결과와 교차 확인해 더 나은 쪽을 채택. 한 줄짜리 간이 영수증(바코드·상세행 없는 경우)을 위한 산술 기반 행 복구 로직 추가. 합계 라벨이 명확할 때 공급가액·부가세로 잘못 대체되지 않도록 최종 금액 판단 로직 개선</span></li><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "receipt-to-excel";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  var key = "mnledu-com-toolkit-v1-" + "receipt-to-excel";
+  fetch("https://countapi.mileshilliard.com/api/v1/hit/" + key).catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
@@ -2799,6 +2862,10 @@ render();
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
+
+
+
+
 
 
 
