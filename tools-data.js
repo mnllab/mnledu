@@ -34,6 +34,26 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'mortgage-stress-tester',
+    title: '부동산 대출 스트레스 테스트기',
+    category: 'PRODUCTIVITY',
+    desc: '금리가 오르면 상환액과 DSR이 얼마나 변하는지 슬라이더로 즉시 시뮬레이션합니다. 원리금균등·원금균등 방식을 정확한 공식으로 계산합니다.',
+    url: 'https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html',
+    icon: 'trending-up',
+    badge: 'NEW',
+    tags: ['#대출', '#DSR', '#금리', '#시뮬레이션']
+  },
+  {
+    id: 'universal-table-data-hub',
+    title: '만능 표 데이터 허브',
+    category: 'PRODUCTIVITY',
+    desc: '메모장에 붙여넣은 표나 엑셀 파일을 서식까지 챙겨 HWPX·DOCX·XLSX로 바로 내보냅니다. 한글(HWP) 최적화 클립보드 복사도 지원합니다.',
+    url: 'https://mnledu.com/kr/productivity/universal-table-data-hub_kr.html',
+    icon: 'table',
+    badge: 'NEW',
+    tags: ['#표변환', '#엑셀', '#한글', '#문서작성']
+  },
+  {
     id: 'text-batch-factory',
     title: '스마트 텍스트 가공 공장',
     category: 'PRODUCTIVITY',
@@ -287,6 +307,16 @@ const TOOLS_DATA = [
   // ---------------------------------------------------------
   // 2. DATA & ANALYTICS (데이터 & 분석)
   // ---------------------------------------------------------
+  {
+    id: 'wealth-dashboard',
+    title: '파이어족 복리 & 물타기 계산기',
+    category: 'DATA & ANALYTICS',
+    desc: '복리 은퇴 시뮬레이터와 물타기 평단가 계산기를 한 화면에서. 숫자를 넣는 즉시 그래프와 결과가 갱신됩니다.',
+    url: 'https://mnledu.com/kr/data-analytics/wealth-dashboard_kr.html',
+    icon: 'flame',
+    badge: 'NEW',
+    tags: ['#파이어족', '#복리', '#물타기', '#투자']
+  },
   {
     id: 'cagrcal',
     title: 'CAGR 연도별 추정 계산기',

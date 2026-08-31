@@ -409,7 +409,7 @@ node inject-share.js lotto      # 하나만
 때와 같은 이유로 61개 도구 각각의 버전을 올리지 않았다. 이 섹션이
 곧 그 기록이다.
 
-## 표준 파이프라인 (2026-08-30 갱신)
+## 표준 파이프라인 (2026-08-31 갱신 — inject-viewcount.js 추가)
 
 새 도구를 추가하거나 여러 도구를 한꺼번에 고칠 때 마지막 순서:
 
@@ -420,13 +420,25 @@ node build-guides.js
 node fix-paths.js
 node inject-version.js      # 전체 — build-guides.js 가 순서를 흩뜨렸을 수 있어 항상 마지막 근처
 node inject-share.js        # 전체 — 위와 같은 이유
+node inject-viewcount.js    # 전체 — 새 도구는 이게 없으면 방문자 수가 영영 안 뜬다
 ```
 
+**⚠️ 새 도구를 추가할 때 inject-viewcount.js 를 빼먹지 말 것.** 다른
+다섯 스크립트와 달리 이건 빠뜨려도 에러가 안 나고 그냥 조용히 그
+도구만 방문자 수 집계가 안 된다 — 화면에 숫자가 안 뜨는 것도 아니고
+그냥 계속 로딩 실패로 처리되어 눈에 잘 안 띈다. 새 도구를 추가하는
+작업에서는 반드시 6개 스크립트를 전부 돌리고, 새로 추가한 도구
+파일 안에 `TOOLKIT:VIEWCOUNT_START` 마커가 실제로 들어갔는지
+직접 확인할 것.
+
 기존 도구 하나만 고쳐서 `bump-version.js` 를 쓸 때는 그 스크립트가
-해당 도구의 inject-version 만 자동으로 불러준다. inject-share.js 는
-새로 만들었으므로 아직 bump-version.js 에 연결하지 않았다 — 도구
-자체가 아니라 사이트 공통 기능이라 도구 하나 고칠 때마다 다시 심을
-필요가 없기 때문이다(이미 있으면 건드리지 않음).
+해당 도구의 inject-version 만 자동으로 불러준다. inject-share.js ·
+inject-viewcount.js 는 도구 자체가 아니라 사이트 공통 기능이라
+도구 하나 고칠 때마다 다시 심을 필요가 없어 bump-version.js 에
+연결하지 않았다(이미 있으면 건드리지 않는 멱등 스크립트이므로,
+확실치 않으면 그냥 한 번 더 돌려도 무해함). **다만 신규 도구
+추가일 때는 bump-version.js 만으로는 부족하니 위 6개를 전부
+수동으로 돌려야 한다.**
 
 ## kstartup-board 고정 방식 재조정 (2026-08-30, 오후 2차)
 
@@ -780,3 +792,113 @@ countapi.xyz 가 겪었던 것처럼 남의 서비스가 갑자기 죽어서 카
 방문자 수는 이어지지 않는다.** 전부 0부터 다시 세어진다. 데이터
 손실이라기보다 새 시스템으로 넘어가며 생기는 자연스러운 리셋 —
 사용자에게 미리 고지함.
+
+## 대량 작업 : pdf-to-markdown 등록, wealth-dashboard 신규 제작, 사이드바 링크 전수조사, 개발 참고 목록 (2026-08-31)
+
+### pdf-to-markdown
+
+영문 전용 도구(한국어판 없음)로 등록. build-seo.js 의 사이트맵
+생성 로직이 한국어 카탈로그를 기준으로 도는 구조라 EN-only 도구가
+통째로 빠지는 걸 발견 — buildSitemap() 에 "한국어판이 없는 영문
+전용 도구"를 자기 참조 hreflang(en + x-default=en)으로 별도 추가
+하는 보강 로직을 넣었다. 원본 파일의 canonical·hreflang 이 마이그
+레이션 이전 구주소를 가리키고 있어서 정정.
+
+### wealth-dashboard (신규 제작)
+
+사용자 스펙으로 처음부터 새로 만든 도구. 파이어족 복리 시뮬레이터
++ 물타기 평단가 계산기. DATA & ANALYTICS.
+
+영문판 제작 중 문자열 치환 순서 문제로 텍스트가 뒤섞이는 사고가
+있었음 — 원본에서 다시 시작해 **긴 문자열부터 치환**하는 방식으로
+해결(예: "추가 매수 단가"를 "매수 단가"보다 먼저 치환해야
+"추가 Purchase price" 같은 오염을 막을 수 있음). 영문판은 통화를
+원(₩)→달러($), 축약 단위를 만/억→K/M/B, 예시 숫자도 달러 기준
+현실적인 값으로 조정 — 단순 재라벨링이 아니라 실제로 쓸 수 있는
+현지화를 목표로 함.
+
+### 사이드바 "같은 분류 도구" 링크 전수조사
+
+\`audit-siblings.js\` 신규 제작. 모든 도구의 안내문 하단 링크 섹션을
+찾아 (1) 실존 파일인지 (2) 카탈로그 현재 주소와 일치하는지 (3) 자기
+자신을 링크하지 않는지 (4) 같은 카테고리가 맞는지 검사하고,
+\`--fix\` 옵션으로 자동 교정한다.
+
+125개 파일 전수 검사 결과 **birth-chart 하나만** 문제 있었음 —
+존재하지 않는 구주소, 다른 카테고리 도구가 섞임. \`--fix\` 로 교정.
+
+### ⚠️ birth-chart 에서 발견한 더 큰 문제
+
+sibling 링크를 고치던 중, birth-chart 에 **TOOLKIT:GUIDE_END 마커
+자체가 원래부터 없었던 것**을 발견. 그 여파로 이 도구 하나만
+공유 버튼·방문자 카운터·버전 배지 세 기능이 계속 빠져 있었다
+(inject-*.js 스크립트들이 삽입 위치를 못 찾아 조용히 건너뜀 —
+에러 없이 실패하는 방식이라 지금까지 아무도 눈치 못 챔).
+
+GUIDE_END 를 정확한 위치(안내문 실제 종료 지점)에 복원한 뒤 세
+스크립트를 다시 돌려 정상화. v1.2.
+
+이 사고를 계기로 전체 62개(125개 파일) 대상 마커 전수 검사를
+추가로 돌림 — SEO/GUIDE_START/GUIDE_END/SHARE/VIEWCOUNT/VERSION
+6종 전부. birth-chart 제외 전부 정상 확인.
+
+### 개발 참고 목록 신규 제작
+
+\`build-tool-checklist.js\` — tools-data.js 를 읽어
+\`NEW-TOOL-CHECKLIST.md\` 를 자동 생성한다. 카테고리별 전체 도구
+표(중복 방지용) + 새 도구 제작 시 권장 규격(파일 형식, 카테고리
+분류 기준, 안내문 구조, 온디바이스 AI 패턴, 자동으로 붙는 것 목록)
+을 담는다. 도구를 추가·삭제할 때마다 표준 파이프라인 끝에서
+한 번 더 돌려 최신 상태로 유지할 것.
+
+## 표준 파이프라인 (2026-08-31 갱신 — 3개 스크립트 추가)
+
+\`\`\`bash
+node build-seo.js
+node patch-tool-pages.js --no-backup
+node build-guides.js
+node fix-paths.js
+node inject-version.js          # 전체
+node inject-share.js            # 전체
+node inject-viewcount.js        # 전체
+node audit-siblings.js --fix    # 전체 — 사이드바 링크 정합성
+node build-tool-checklist.js    # 참고 목록 갱신
+\`\`\`
+
+**신규 도구 추가 시 반드시 전부 돌리고, 특히 새로 만든 안내문에
+TOOLKIT:GUIDE_START 뿐 아니라 GUIDE_END 도 실제로 있는지 직접
+확인할 것** — birth-chart 사고가 정확히 이 실수였다.
+
+## 신규 2종 등록 : mortgage-stress-tester, universal-table-data-hub (2026-08-31, 오후)
+
+**부동산 대출 스트레스 테스트기** — 금리 발작 슬라이더로 상승 시나리오의
+상환액·DSR을 즉시 계산. 원리금균등·원금균등 두 방식 지원.
+
+**만능 표 데이터 허브** — 메모장 붙여넣기·엑셀 업로드 양쪽을 받아
+HWPX·DOCX·XLSX·MD·CSV 로 내보냄. 한글(HWP) 최적화 옵션(글자처럼
+취급, 줄 간격 등) 포함.
+
+둘 다 PRODUCTIVITY. guides-b.js 에 항목 추가해 한국어는 자동
+생성, 영문은 직접 작성. v1.0 씩 등록.
+
+### 발견한 문제 두 가지
+
+1. **영문 파일의 \`<html lang="ko">\` 오기재** — 내용은 완전히
+   영어인데 lang 속성만 한국어로 되어 있었음(두 도구 모두). "en"으로
+   정정.
+2. **universal-table-data-hub 에 KO/EN 토글 버튼이 내장돼 있었음**
+   — 헤더에 `<a>KO</a>` / `<a>EN</a>` 버튼이 있고, 마이그레이션
+   이전 구주소(`/productivity/...html`, `/en/productivity/...html`)
+   를 그대로 가리키고 있었음. 새 구조(`kr/.../..._kr.html`,
+   `en/.../..._en.html`) 로 정정. mortgage-stress-tester 에는 이
+   버튼이 없고 정적 한글 부제만 있어 해당 없음.
+
+이걸로 봐서, 외부에서 만들어 오는 파일에 **자체적인 언어 전환
+UI(버튼이든 JS 로직이든)가 종종 섞여 들어온다** — vocal-rhythm-
+master-studio, 이번 universal-table-data-hub 두 번째 사례.
+새 파일을 받으면 이런 요소가 있는지 먼저 확인하고, 있으면 새
+URL 구조로 정정할 것.
+
+두 도구 모두 SEO 블록 안 canonical/hreflang 이 마이그레이션 이전
+구주소를 가리키고 있어 전부 새 구조로 재구성. 전수 검증(마커 6종,
+canonical/공유 URL 일치, 사이드바 링크, 스크립트 구문) 전부 통과.

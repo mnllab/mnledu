@@ -160,105 +160,7 @@ updateLockUI();renderThumbs();refresh();})();
 
 
 
-<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
 
-<style>
-.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
-  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
-.tk-guide *{box-sizing:border-box}
-.tk-guide-inner{max-width:720px;margin:0 auto}
-.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
-  margin:44px 0 0;word-break:keep-all}
-.tk-guide h2:first-of-type{margin-top:0}
-.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
-.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
-.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
-.tk-guide strong{font-weight:600;color:#1e293b}
-.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
-.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
-.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
-  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
-.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
-  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
-.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
-.tk-guide-more h2{margin-top:0}
-.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
-  display:grid;grid-template-columns:1fr;gap:8px}
-@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
-.tk-guide a{color:#2c6ba0;text-decoration:none}
-.tk-guide a:hover{text-decoration:underline}
-.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
-</style>
-<section class="tk-guide"><div class="tk-guide-inner">
-<h2>사진 여러 장을 같은 규격으로 맞추는 일</h2>
-<p>배너, 썸네일, 상세페이지처럼 정해진 픽셀 규격에 사진을 맞춰야 할 때가 있습니다. 한 장이면 포토샵을 열지만, 스무 장이면 그때마다 자르고 저장하는 게 일이 됩니다.</p>
-<p>이 도구는 한 장에서 정한 규격·맞춤 방식·앵커를 나머지 전체에 그대로 적용합니다. 결과는 ZIP 하나로 받습니다.</p>
-<h2>이럴 때 씁니다</h2><dl>
-<dt>썸네일 규격 맞추기</dt><dd>유튜브·블로그처럼 정해진 비율이 있는 곳에 올릴 이미지를 한 번에 맞출 때.</dd>
-<dt>상세페이지 이미지 통일</dt><dd>쇼핑몰 상품 사진을 같은 크기·여백으로 맞춰 나란히 보이게 할 때.</dd>
-<dt>광고 소재 여러 종 뽑기</dt><dd>같은 사진을 정사각형·가로형·세로형 등 채널별 규격으로 한 번에 내보낼 때.</dd>
-<dt>인물 사진 정리</dt><dd>앵커를 얼굴 위치에 맞춰 두면 여러 장을 잘라도 인물이 잘리지 않습니다.</dd>
-</dl>
-<h2>사용 방법</h2><ol>
-<li>이미지를 여러 장 올립니다.</li>
-<li>규격과 맞춤 방식, 필요하면 앵커를 정합니다.</li>
-<li>한 장으로 결과를 확인한 뒤 전체를 ZIP으로 내려받습니다.</li>
-</ol>
-<h2>옵션 설명</h2><dl>
-<dt>Cover · Contain · Stretch</dt><dd>Cover는 빈틈없이 채우고 넘치는 부분을 자릅니다. Contain은 자르지 않고 여백으로 채웁니다. Stretch는 비율을 무시하고 정확한 크기로 늘립니다.</dd>
-<dt>9분할 앵커</dt><dd>자르거나 남는 여백의 기준 위치입니다. 인물이 한쪽에 몰려 있으면 그쪽 앵커를 고르세요.</dd>
-<dt>비율 잠금</dt><dd>가로나 세로 하나를 바꾸면 다른 값이 비율에 맞춰 자동 계산됩니다.</dd>
-</dl>
-<h2>자주 묻는 질문</h2><dl>
-<dt>사진이 서버로 올라가나요</dt><dd>아닙니다. Canvas로 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.</dd>
-<dt>Crop에서 잘리는 부분을 미리 볼 수 있나요</dt><dd>네. 반투명하게 표시되는 영역이 최종 결과에서 제외되는 부분입니다.</dd>
-<dt>이미지가 많아도 되나요</dt><dd>한 장씩 순서대로 렌더링해 메모리 부담을 줄입니다. 다만 매우 큰 원본이 많으면 기기 성능에 따라 시간이 걸릴 수 있습니다.</dd>
-</dl>
-<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
-<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
-<li><a href="https://mnledu.com/kr/design-media/vocal-rhythm-master-studio_kr.html">보컬 &amp; 리듬 마스터 스튜디오</a></li>
-<li><a href="https://mnledu.com/kr/design-media/thumb-mockup_kr.html">썸네일·쇼츠 미리보기 시뮬레이터</a></li>
-<li><a href="https://mnledu.com/kr/design-media/uploader-toolkit_kr.html">업로드 스마트 템플릿</a></li>
-<li><a href="https://mnledu.com/kr/design-media/screendeco_kr.html">1초 캡처 뷰티파이어</a></li>
-<li><a href="https://mnledu.com/kr/design-media/mosaicmarker_kr.html">모자이크 &amp; 형광펜 툴</a></li>
-<li><a href="https://mnledu.com/kr/design-media/teleprompter_kr.html">스마트 오토 프롬프터</a></li>
-</ul></div>
-<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
-</div></section>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "사진이 서버로 올라가나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "아닙니다. Canvas로 브라우저 안에서만 처리되며 서버로 전송되지 않습니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Crop에서 잘리는 부분을 미리 볼 수 있나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "네. 반투명하게 표시되는 영역이 최종 결과에서 제외되는 부분입니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "이미지가 많아도 되나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "한 장씩 순서대로 렌더링해 메모리 부담을 줄입니다. 다만 매우 큰 원본이 많으면 기기 성능에 따라 시간이 걸릴 수 있습니다."
-      }
-    }
-  ]
-}
-</script>
-<!-- TOOLKIT:GUIDE_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -378,4 +280,106 @@ updateLockUI();renderThumbs();refresh();})();
 <ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">최초 등록</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>사진 여러 장을 같은 규격으로 맞추는 일</h2>
+<p>배너, 썸네일, 상세페이지처럼 정해진 픽셀 규격에 사진을 맞춰야 할 때가 있습니다. 한 장이면 포토샵을 열지만, 스무 장이면 그때마다 자르고 저장하는 게 일이 됩니다.</p>
+<p>이 도구는 한 장에서 정한 규격·맞춤 방식·앵커를 나머지 전체에 그대로 적용합니다. 결과는 ZIP 하나로 받습니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>썸네일 규격 맞추기</dt><dd>유튜브·블로그처럼 정해진 비율이 있는 곳에 올릴 이미지를 한 번에 맞출 때.</dd>
+<dt>상세페이지 이미지 통일</dt><dd>쇼핑몰 상품 사진을 같은 크기·여백으로 맞춰 나란히 보이게 할 때.</dd>
+<dt>광고 소재 여러 종 뽑기</dt><dd>같은 사진을 정사각형·가로형·세로형 등 채널별 규격으로 한 번에 내보낼 때.</dd>
+<dt>인물 사진 정리</dt><dd>앵커를 얼굴 위치에 맞춰 두면 여러 장을 잘라도 인물이 잘리지 않습니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>이미지를 여러 장 올립니다.</li>
+<li>규격과 맞춤 방식, 필요하면 앵커를 정합니다.</li>
+<li>한 장으로 결과를 확인한 뒤 전체를 ZIP으로 내려받습니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>Cover · Contain · Stretch</dt><dd>Cover는 빈틈없이 채우고 넘치는 부분을 자릅니다. Contain은 자르지 않고 여백으로 채웁니다. Stretch는 비율을 무시하고 정확한 크기로 늘립니다.</dd>
+<dt>9분할 앵커</dt><dd>자르거나 남는 여백의 기준 위치입니다. 인물이 한쪽에 몰려 있으면 그쪽 앵커를 고르세요.</dd>
+<dt>비율 잠금</dt><dd>가로나 세로 하나를 바꾸면 다른 값이 비율에 맞춰 자동 계산됩니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>사진이 서버로 올라가나요</dt><dd>아닙니다. Canvas로 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.</dd>
+<dt>Crop에서 잘리는 부분을 미리 볼 수 있나요</dt><dd>네. 반투명하게 표시되는 영역이 최종 결과에서 제외되는 부분입니다.</dd>
+<dt>이미지가 많아도 되나요</dt><dd>한 장씩 순서대로 렌더링해 메모리 부담을 줄입니다. 다만 매우 큰 원본이 많으면 기기 성능에 따라 시간이 걸릴 수 있습니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/design-media/vocal-rhythm-master-studio_kr.html">보컬 &amp; 리듬 마스터 스튜디오</a></li>
+<li><a href="https://mnledu.com/kr/design-media/thumb-mockup_kr.html">썸네일·쇼츠 미리보기 시뮬레이터</a></li>
+<li><a href="https://mnledu.com/kr/design-media/uploader-toolkit_kr.html">업로드 스마트 템플릿</a></li>
+<li><a href="https://mnledu.com/kr/design-media/screendeco_kr.html">1초 캡처 뷰티파이어</a></li>
+<li><a href="https://mnledu.com/kr/design-media/mosaicmarker_kr.html">모자이크 &amp; 형광펜 툴</a></li>
+<li><a href="https://mnledu.com/kr/design-media/teleprompter_kr.html">스마트 오토 프롬프터</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "사진이 서버로 올라가나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아닙니다. Canvas로 브라우저 안에서만 처리되며 서버로 전송되지 않습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Crop에서 잘리는 부분을 미리 볼 수 있나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네. 반투명하게 표시되는 영역이 최종 결과에서 제외되는 부분입니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "이미지가 많아도 되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "한 장씩 순서대로 렌더링해 메모리 부담을 줄입니다. 다만 매우 큰 원본이 많으면 기기 성능에 따라 시간이 걸릴 수 있습니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body></html>

@@ -8,6 +8,36 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'mortgage-stress-tester',
+    title: 'Mortgage Stress Tester',
+    category: 'PRODUCTIVITY',
+    desc: 'Simulates how your payment and DSR change as rates rise, using a slider. Calculates equal-payment and equal-principal schedules with exact financial formulas.',
+    url: 'https://mnledu.com/en/productivity/mortgage-stress-tester_en.html',
+    icon: 'trending-up',
+    badge: 'NEW',
+    tags: ['#mortgage', '#DSR', '#interestrate', '#simulation']
+  },
+  {
+    id: 'universal-table-data-hub',
+    title: 'Universal Table Data Hub',
+    category: 'PRODUCTIVITY',
+    desc: 'Turns a pasted table or an Excel file into HWPX, DOCX or XLSX, keeping the formatting. Includes clipboard copy optimized for Korean word processors.',
+    url: 'https://mnledu.com/en/productivity/universal-table-data-hub_en.html',
+    icon: 'table',
+    badge: 'NEW',
+    tags: ['#tableconversion', '#excel', '#hwp', '#documents']
+  },
+  {
+    id: 'pdf-to-markdown',
+    title: 'PDF to Markdown Converter',
+    category: 'PRODUCTIVITY',
+    desc: 'Converts a PDF to clean Markdown entirely in your browser, rebuilding tables and joining broken lines. An optional on-device AI model handles the messier cases.',
+    url: 'https://mnledu.com/en/productivity/pdf-to-markdown_en.html',
+    icon: 'file-text',
+    badge: 'NEW',
+    tags: ['#PDF', '#markdown', '#conversion', '#offline']
+  },
+  {
     id: 'text-batch-factory',
     title: 'Text Batch Factory',
     category: 'PRODUCTIVITY',
@@ -259,6 +289,16 @@ const TOOLS_DATA_EN = [
   },
 
   /* ═══════════════ DATA & ANALYTICS ═══════════════ */
+  {
+    id: 'wealth-dashboard',
+    title: 'FIRE & Cost Averaging Calculator',
+    category: 'DATA & ANALYTICS',
+    desc: 'A FIRE compound-interest simulator and a dollar-cost-averaging calculator on one screen. Results and the chart update as you type.',
+    url: 'https://mnledu.com/en/data-analytics/wealth-dashboard_en.html',
+    icon: 'flame',
+    badge: 'NEW',
+    tags: ['#FIRE', '#compoundinterest', '#DCA', '#investing']
+  },
   {
     id: 'cagrcal',
     title: 'CAGR Calculator',

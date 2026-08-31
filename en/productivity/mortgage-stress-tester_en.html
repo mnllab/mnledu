@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- TOOLKIT:SEO_START -->
+<title>Mortgage Stress Tester | Simulate DSR & Payment Risk as Rates Rise</title>
+<meta name="description" content="Enter your loan principal, interest rate, term, and take-home pay to get an exact equal-payment or equal-principal repayment calculation, then instantly simulate how risky your DSR and monthly payment become if rates rise. A browser-based tool — nothing is sent to a server.">
+<meta name="author" content="Janggil Kim">
+<link rel="canonical" href="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html">
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html">
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html">
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TOOLKIT">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html">
+<meta property="og:title" content="Mortgage Stress Tester | Simulate DSR & Payment Risk as Rates Rise">
+<meta property="og:description" content="Instantly simulate how risky your DSR and monthly payment become if interest rates rise — a browser-based mortgage calculator.">
+<meta property="og:image" content="https://mnledu.com/assets/og/mortgage-stress-tester.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mortgage Stress Tester | Simulate DSR & Payment Risk as Rates Rise">
+<meta name="twitter:description" content="Instantly simulate how risky your DSR and monthly payment become if interest rates rise — a browser-based mortgage calculator.">
+<meta name="twitter:image" content="https://mnledu.com/assets/og/mortgage-stress-tester.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Mortgage Stress Tester",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "url": "https://mnledu.com/en/productivity/mortgage-stress-tester_en.html",
+  "description": "A browser-based tool that calculates exact loan repayments and simulates DSR risk as interest rates rise.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Janggil Kim" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
+    { "@type": "ListItem", "position": 2, "name": "Productivity Tools", "item": "https://mnledu.com/en/productivity/" },
+    { "@type": "ListItem", "position": 3, "name": "Mortgage Stress Tester", "item": "https://mnledu.com/en/productivity/mortgage-stress-tester_en.html" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is the loan information I enter sent to a server?", "acceptedAnswer": { "@type": "Answer", "text": "No. All calculations happen entirely in your browser — no financial information such as principal or income is ever sent to an external server." } },
+    { "@type": "Question", "name": "How is DSR calculated here?", "acceptedAnswer": { "@type": "Answer", "text": "This tool shows DSR as the first month's payment divided by your take-home monthly income. A real financial institution's DSR calculation can be more complex, often combining multiple loans." } },
+    { "@type": "Question", "name": "What does the rate stress simulator show?", "acceptedAnswer": { "@type": "Answer", "text": "It instantly recalculates your payment and DSR if you add the slider's chosen increase (in percentage points) to your current rate — meant to help you check your repayment capacity ahead of a rate-hike cycle." } },
+    { "@type": "Question", "name": "What's the difference between equal-payment and equal-principal repayment?", "acceptedAnswer": { "@type": "Answer", "text": "With equal-payment (annuity), the amount you pay each month stays the same until maturity. With equal-principal, you repay the same principal amount every month while the interest shrinks along with the remaining balance, so the first payment is the largest and it decreases over time." } },
+    { "@type": "Question", "name": "Can this tool replace real financial advice?", "acceptedAnswer": { "@type": "Answer", "text": "No. This tool is for reference calculations only and is not financial advice. Always confirm actual loan terms, taxes, and eligibility for government-backed loans with a financial institution or professional." } }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Pretendard', 'sans-serif'] },
+        colors: {
+          base: '#0A0E14',
+          card: '#12171F',
+          line: '#212A37',
+          safe: '#22C55E',
+          warn: '#F5A524',
+          danger: '#F4374C',
+          stress: '#FB7185',
+        }
+      }
+    }
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+
+<style>
+  html, body { font-family: 'Pretendard', sans-serif; background:#0A0E14; }
+  .tabnum { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+  .tk-card { background:#12171F; border:1px solid #212A37; border-radius:16px; }
+  .tk-scroll::-webkit-scrollbar { width:8px; height:8px; }
+  .tk-scroll::-webkit-scrollbar-thumb { background:#2A3444; border-radius:8px; }
+  input[type="range"] { -webkit-appearance:none; appearance:none; height:6px; border-radius:999px; background:#232C3A; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:999px; background:#FB7185; box-shadow:0 0 0 4px rgba(251,113,133,.2); cursor:pointer; }
+  input[type="range"]::-moz-range-thumb { width:18px; height:18px; border-radius:999px; background:#FB7185; border:none; box-shadow:0 0 0 4px rgba(251,113,133,.2); cursor:pointer; }
+  .repay-toggle-btn.active-equalPayment { background:#6366F1; color:#fff; border-color:#6366F1; }
+  .repay-toggle-btn.active-equalPrincipal { background:#6366F1; color:#fff; border-color:#6366F1; }
+  .tk-guide h2 { font-size:1.05rem; font-weight:700; color:#E7ECF3; margin-top:1.75rem; margin-bottom:.5rem; }
+  .tk-guide p { color:#8891A3; line-height:1.75; margin-bottom:.5rem; font-size:.925rem; }
+  .tk-guide dt { font-weight:600; color:#E7ECF3; margin-top:.75rem; font-size:.925rem; }
+  .tk-guide dd { color:#8891A3; margin-top:.25rem; line-height:1.65; font-size:.9rem; }
+  .tk-guide-note { background:#12171F; border:1px solid #212A37; border-radius:12px; padding:1rem; color:#8891A3; font-size:.85rem; line-height:1.65; }
+  .tk-guide-more a { color:#818CF8; text-decoration:underline; text-underline-offset:2px; }
+  table.sched-table th, table.sched-table td { padding:6px 10px; text-align:right; white-space:nowrap; }
+  table.sched-table th:first-child, table.sched-table td:first-child { text-align:left; }
+  table.sched-table thead th { color:#8891A3; font-weight:600; font-size:.72rem; border-bottom:1px solid #212A37; position:sticky; top:0; background:#12171F; }
+  table.sched-table tbody td { color:#C7CEDA; font-size:.8rem; border-bottom:1px solid #1A212B; }
+</style>
+</head>
+<body class="min-h-screen text-slate-100">
+
+<header class="sticky top-0 z-30 bg-[#0A0E14]/90 backdrop-blur border-b border-line">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-9 h-9 rounded-xl bg-indigo-500 flex items-center justify-center text-white font-bold">T</div>
+      <div>
+        <p class="text-sm font-bold text-slate-100 leading-none">Mortgage Stress Tester</p>
+        <p class="text-[11px] text-slate-500 leading-none mt-1">부동산 대출 스트레스 테스트기</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-100">Mortgage Stress Tester</h1>
+    <p class="text-sm text-slate-400 mt-1">How much room does your budget have if rates rise? Find out right now.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Left panel -->
+    <div class="flex flex-col gap-6">
+
+      <!-- Basic loan info -->
+      <section class="tk-card p-5">
+        <h2 class="text-sm font-bold text-slate-200 flex items-center gap-1.5 mb-4">📝 Basic Loan Info</h2>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="col-span-2">
+            <label class="text-xs font-semibold text-slate-400 mb-1.5 block">Loan principal (KRW)</label>
+            <input id="principalInput" type="text" inputmode="numeric" value="300,000,000"
+              class="w-full rounded-lg bg-[#0A0E14] border border-line px-3 py-2.5 text-sm tabnum text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 mb-1.5 block">Annual interest rate (%)</label>
+            <input id="rateInput" type="number" step="0.01" min="0" max="30" value="4.00"
+              class="w-full rounded-lg bg-[#0A0E14] border border-line px-3 py-2.5 text-sm tabnum text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 mb-1.5 block">Loan term (years)</label>
+            <input id="yearsInput" type="number" step="1" min="1" max="50" value="30"
+              class="w-full rounded-lg bg-[#0A0E14] border border-line px-3 py-2.5 text-sm tabnum text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          </div>
+          <div class="col-span-2">
+            <label class="text-xs font-semibold text-slate-400 mb-1.5 block">Take-home monthly income (KRW)</label>
+            <input id="incomeInput" type="text" inputmode="numeric" value="5,000,000"
+              class="w-full rounded-lg bg-[#0A0E14] border border-line px-3 py-2.5 text-sm tabnum text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="text-xs font-semibold text-slate-400 mb-1.5 block">Repayment method</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button id="btnEqualPayment" data-type="equalPayment" class="repay-toggle-btn py-2.5 rounded-lg text-xs font-semibold border border-line text-slate-300">Equal Payment</button>
+            <button id="btnEqualPrincipal" data-type="equalPrincipal" class="repay-toggle-btn py-2.5 rounded-lg text-xs font-semibold border border-line text-slate-300">Equal Principal</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-line">
+          <div>
+            <p class="text-[11px] text-slate-500 mb-1" id="monthlyPaymentLabel">Monthly payment</p>
+            <p id="monthlyPaymentOut" class="text-base font-bold text-slate-100 tabnum">₩0</p>
+          </div>
+          <div>
+            <p class="text-[11px] text-slate-500 mb-1">Total interest</p>
+            <p id="totalInterestOut" class="text-base font-bold text-slate-100 tabnum">₩0</p>
+          </div>
+          <div>
+            <p class="text-[11px] text-slate-500 mb-1">Total repayment</p>
+            <p id="totalPaymentOut" class="text-base font-bold text-slate-100 tabnum">₩0</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rate stress simulator -->
+      <section class="tk-card p-5">
+        <h2 class="text-sm font-bold text-slate-200 flex items-center gap-1.5 mb-1">⚠️ Rate Stress Simulator</h2>
+        <p class="text-xs text-slate-500 mb-4">How much would your payment change if rates rise from here?</p>
+
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-semibold text-slate-400">Increase vs. current rate</label>
+          <span id="stressPctLabel" class="text-sm font-bold text-stress tabnum">+0.0pp</span>
+        </div>
+        <input id="stressSlider" type="range" min="0" max="5" step="0.1" value="0" class="w-full">
+        <div class="flex justify-between text-[10px] text-slate-600 mt-1 mb-4">
+          <span>+0.0pp</span><span>+2.5pp</span><span>+5.0pp</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="rounded-lg bg-[#0A0E14] border border-line p-3">
+            <p class="text-[11px] text-slate-500 mb-1">Rate after stress</p>
+            <p id="stressedRateOut" class="text-sm font-bold text-slate-200 tabnum">4.00%</p>
+          </div>
+          <div class="rounded-lg bg-[#0A0E14] border border-stress/40 p-3">
+            <p class="text-[11px] text-slate-500 mb-1" id="stressedPaymentLabel">Payment after stress</p>
+            <p id="stressedPaymentOut" class="text-sm font-bold text-stress tabnum">₩0</p>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 mt-3">
+          Up <span id="stressDeltaOut" class="font-bold text-stress tabnum">₩0</span> from today
+          (<span id="stressDeltaPctOut" class="font-bold text-stress tabnum">0%</span> ↑)
+        </p>
+      </section>
+    </div>
+
+    <!-- Right panel -->
+    <div class="flex flex-col gap-6">
+
+      <!-- DSR gauge -->
+      <section class="tk-card p-5">
+        <h2 class="text-sm font-bold text-slate-200 flex items-center gap-1.5 mb-1">🚨 DSR Risk Level</h2>
+        <p class="text-xs text-slate-500 mb-2">Estimated DSR including the rate stress simulator.</p>
+        <div id="dsrGauge" style="width:100%; height:240px;"></div>
+        <div id="dsrComment" class="mt-2 rounded-lg p-3 text-sm font-semibold text-center"></div>
+      </section>
+
+      <!-- Repayment schedule -->
+      <section class="tk-card p-5">
+        <h2 class="text-sm font-bold text-slate-200 flex items-center gap-1.5 mb-1">📊 Yearly Repayment Schedule</h2>
+        <p class="text-xs text-slate-500 mb-2">Principal balance and annual interest paid over the loan term. (at current rate)</p>
+        <div id="scheduleChart" style="width:100%; height:260px;"></div>
+
+        <div class="mt-3 max-h-[220px] overflow-auto tk-scroll rounded-lg border border-line">
+          <table class="sched-table w-full">
+            <thead>
+              <tr>
+                <th>Year</th><th>Annual Principal</th><th>Annual Interest</th><th>Year-End Balance</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Guide -->
+  <section class="tk-guide max-w-3xl mx-auto mt-16 mb-10">
+    <p class="text-sm text-slate-400">
+      The monthly payment your bank quoted you is only valid at today's rate — once rates move, that number no longer holds.
+      This tool exists to answer, right now: "if rates rise 1pp, 2pp, can my paycheck still cover it?"
+      It calculates equal-payment and equal-principal repayments with exact financial formulas, and a rate stress slider
+      instantly shows how a rate-hike scenario would change your DSR risk.
+    </p>
+
+    <h2>How is DSR calculated here</h2>
+    <p>
+      This tool's DSR is calculated as 'estimated monthly payment including the rate stress slider ÷ take-home monthly income × 100'.
+      With the slider at 0pp, you see DSR at your current rate; move the slider up and you see DSR for that rate-hike scenario in real time.
+      Since equal-principal repayment has its largest payment in the first month, we use that first-month figure as the basis —
+      the more conservative choice, so risk isn't understated. A real institution's DSR can be calculated more strictly, often combining
+      multiple loans, so treat this number as a reference.
+    </p>
+
+    <h2>Why the slider moves the DSR gauge too</h2>
+    <p>
+      A number saying "your payment goes up by this much" is hard to feel viscerally on its own.
+      So moving the slider immediately changes the gauge's color and risk comment as well — nudging it up in 0.1pp steps lets you see
+      exactly when your DSR crosses from safe (under 40%) into caution (40–50%) and danger (over 50%).
+    </p>
+
+    <h2>Why equal-payment and equal-principal calculate so differently</h2>
+    <p>
+      Equal-payment repayment uses an annuity-factor formula that adjusts the principal-to-interest ratio so the total you pay each
+      month stays constant. Equal-principal repayment divides the principal evenly across the loan term and repays that fixed amount
+      every month, while interest is charged only on whatever balance remains — so the first payment is heaviest and it gets lighter
+      toward the end. Both formulas should produce identical results for a one-month loan, and this tool was specifically verified
+      against that edge case.
+    </p>
+
+    <h2>Why the yearly schedule is shown as a table too</h2>
+    <p>
+      A chart shows the overall trend at a glance, but a specific number like "exactly how much balance is left at year 10" is clearer
+      in a table. That's why a table with yearly principal paid, interest paid, and remaining balance sits right below the
+      line-and-bar (balance/interest) chart.
+    </p>
+
+    <dl>
+      <dt>Is the loan information I enter sent to a server?</dt>
+      <dd>No. All calculations happen entirely in your browser — no financial information such as principal or income is ever sent to an external server.</dd>
+
+      <dt>How is DSR calculated here?</dt>
+      <dd>This tool shows DSR as the first month's payment divided by your take-home monthly income. A real financial institution's DSR calculation can be more complex, often combining multiple loans.</dd>
+
+      <dt>What does the rate stress simulator show?</dt>
+      <dd>It instantly recalculates your payment and DSR if you add the slider's chosen increase (in percentage points) to your current rate — meant to help you check your repayment capacity ahead of a rate-hike cycle.</dd>
+
+      <dt>What's the difference between equal-payment and equal-principal repayment?</dt>
+      <dd>With equal-payment (annuity), the amount you pay each month stays the same until maturity. With equal-principal, you repay the same principal amount every month while the interest shrinks along with the remaining balance, so the first payment is the largest and it decreases over time.</dd>
+
+      <dt>Can this tool replace real financial advice?</dt>
+      <dd>No. This tool is for reference calculations only and is not financial advice. Always confirm actual loan terms, taxes, and eligibility for government-backed loans with a financial institution or professional.</dd>
+    </dl>
+
+    <p class="tk-guide-note mt-4">
+      This tool runs 100% in your browser and never sends data to a server. The loan and income details you enter aren't stored anywhere,
+      and disappear as soon as you close the tab. That said, this is a reference calculator, not financial advice — always consult a
+      financial institution or professional before actually taking out a loan.
+    </p>
+
+    <div class="tk-guide-more mt-6">
+      <p class="text-xs font-semibold text-slate-500 mb-2">Tools that pair well with this one</p>
+      <ul class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-slate-400">
+        <li><a href="https://mnledu.com/en/productivity/">Jeonse Loan Calculator (coming soon)</a></li>
+        <li><a href="https://mnledu.com/en/productivity/">Prepayment Penalty Calculator (coming soon)</a></li>
+        <li><a href="https://mnledu.com/en/productivity/">Take-Home Salary Calculator (coming soon)</a></li>
+        <li><a href="https://mnledu.com/en/productivity/">Savings Goal Calculator (coming soon)</a></li>
+        <li><a href="https://mnledu.com/en/productivity/">Credit Loan Limit Calculator (coming soon)</a></li>
+        <li><a href="https://mnledu.com/en/productivity/">Compound Interest Calculator (coming soon)</a></li>
+      </ul>
+      <p class="mt-3"><a href="https://mnledu.com/en/" class="font-semibold text-slate-300">← Browse all TOOLKIT tools</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* global echarts */
+(function () {
+  'use strict';
+
+  // ===================== 1. 대출 계산 로직 =====================
+  function calcEqualPaymentMonthly(principal, annualRatePct, years) {
+    const n = Math.round(years * 12);
+    const r = annualRatePct / 100 / 12;
+    if (n <= 0) return 0;
+    if (r === 0) return principal / n;
+    return (principal * r) / (1 - Math.pow(1 + r, -n));
+  }
+
+  function buildEqualPaymentSchedule(principal, annualRatePct, years) {
+    const n = Math.round(years * 12);
+    const r = annualRatePct / 100 / 12;
+    const monthly = calcEqualPaymentMonthly(principal, annualRatePct, years);
+    const schedule = [];
+    let balance = principal;
+    for (let m = 1; m <= n; m++) {
+      const interest = balance * r;
+      let principalPaid = monthly - interest;
+      let payment = monthly;
+      if (m === n || principalPaid > balance) {
+        principalPaid = balance;
+        payment = principalPaid + interest;
+      }
+      balance = Math.max(0, balance - principalPaid);
+      schedule.push({ month: m, payment, interest, principalPaid, balance });
+    }
+    return schedule;
+  }
+
+  function buildEqualPrincipalSchedule(principal, annualRatePct, years) {
+    const n = Math.round(years * 12);
+    const r = annualRatePct / 100 / 12;
+    const principalPayment = n > 0 ? principal / n : 0;
+    const schedule = [];
+    let balance = principal;
+    for (let m = 1; m <= n; m++) {
+      const interest = balance * r;
+      const principalPaid = m === n ? balance : principalPayment;
+      const payment = principalPaid + interest;
+      balance = Math.max(0, balance - principalPaid);
+      schedule.push({ month: m, payment, interest, principalPaid, balance });
+    }
+    return schedule;
+  }
+
+  function buildSchedule(repaymentType, principal, annualRatePct, years) {
+    return repaymentType === 'equalPrincipal'
+      ? buildEqualPrincipalSchedule(principal, annualRatePct, years)
+      : buildEqualPaymentSchedule(principal, annualRatePct, years);
+  }
+
+  function calcLoanSummary(repaymentType, principal, annualRatePct, years) {
+    const schedule = buildSchedule(repaymentType, principal, annualRatePct, years);
+    const totalInterest = schedule.reduce((sum, r) => sum + r.interest, 0);
+    const totalPayment = schedule.reduce((sum, r) => sum + r.payment, 0);
+    const firstMonthPayment = schedule.length ? schedule[0].payment : 0;
+    const lastMonthPayment = schedule.length ? schedule[schedule.length - 1].payment : 0;
+    return { firstMonthPayment, lastMonthPayment, totalInterest, totalPayment, schedule };
+  }
+
+  function aggregateYearly(schedule) {
+    const yearly = [];
+    for (let i = 0; i < schedule.length; i++) {
+      const yearIdx = Math.floor(i / 12);
+      if (!yearly[yearIdx]) yearly[yearIdx] = { year: yearIdx + 1, principalPaid: 0, interestPaid: 0, endBalance: 0 };
+      yearly[yearIdx].principalPaid += schedule[i].principalPaid;
+      yearly[yearIdx].interestPaid += schedule[i].interest;
+      yearly[yearIdx].endBalance = schedule[i].balance;
+    }
+    return yearly;
+  }
+
+  function calcDSR(monthlyPayment, monthlyIncome) {
+    if (!monthlyIncome || monthlyIncome <= 0) return 0;
+    return (monthlyPayment / monthlyIncome) * 100;
+  }
+
+  function getDsrLevel(dsr) {
+    if (dsr < 40) return 'safe';
+    if (dsr <= 50) return 'warning';
+    return 'danger';
+  }
+
+  // ===================== 2. 상태 & DOM =====================
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    principal: 300000000,
+    annualRate: 4.00,
+    years: 30,
+    monthlyIncome: 5000000,
+    repaymentType: 'equalPayment',
+    stressPct: 0,
+  };
+
+  const principalInput = $('principalInput');
+  const rateInput = $('rateInput');
+  const yearsInput = $('yearsInput');
+  const incomeInput = $('incomeInput');
+  const stressSlider = $('stressSlider');
+
+  const LEVEL_COLOR = { safe: '#22C55E', warning: '#F5A524', danger: '#F4374C' };
+  const LEVEL_LABEL = { safe: '🟢 Safe', warning: '🟡 Caution', danger: '🔴 Danger' };
+  const LEVEL_COMMENT = {
+    safe: 'Your repayment burden relative to income is at a stable level.',
+    warning: 'Your repayment burden is somewhat high. Be cautious with any additional borrowing or spending plans.',
+    danger: '⚠️ Bankruptcy risk warning: your repayment burden relative to income is very high. Reviewing your loan terms is urgent.',
+  };
+
+  function formatWon(n) {
+    return '₩' + Math.round(n).toLocaleString('en-US');
+  }
+  function parseNumberInput(el) {
+    const n = Number(String(el.value).replace(/[^0-9.]/g, ''));
+    return isNaN(n) ? 0 : n;
+  }
+  function formatCommaInput(el) {
+    const raw = String(el.value).replace(/[^0-9]/g, '');
+    el.value = raw ? Number(raw).toLocaleString('en-US') : '';
+  }
+
+  // ===================== 3. ECharts instances (defensive init) =====================
+  // Even if the CDN fails to load, the rest of the app (buttons/inputs) must never break;
+  // try/catch 로 감싸고, 실패 시 차트 자리에 안내 문구 + 재시도 버튼을 표시한다.
+  // 또한 <head>의 1차 CDN(jsDelivr)이 실패한 경우를 대비해 다른 CDN을 순차적으로 재시도한다.
+  let dsrGaugeChart = null;
+  let scheduleChart = null;
+  let chartsAvailable = false;
+
+  const ECHARTS_FALLBACK_URLS = [
+    'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.1/echarts.min.js',
+    'https://unpkg.com/echarts@5.5.1/dist/echarts.min.js',
+  ];
+
+  function loadScriptOnce(src, timeoutMs) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      let settled = false;
+      const timer = setTimeout(() => {
+        if (!settled) { settled = true; reject(new Error('timeout loading ' + src)); }
+      }, timeoutMs || 4000);
+      s.src = src;
+      s.onload = () => { if (!settled) { settled = true; clearTimeout(timer); resolve(); } };
+      s.onerror = () => { if (!settled) { settled = true; clearTimeout(timer); reject(new Error('failed to load ' + src)); } };
+      document.head.appendChild(s);
+    });
+  }
+
+  function showChartFallback() {
+    [$('dsrGauge'), $('scheduleChart')].forEach((el) => {
+      if (!el) return;
+      el.innerHTML = '<div class="h-full flex flex-col items-center justify-center gap-2 text-xs text-slate-500 text-center px-4">' +
+        'Could not load the chart library.<br>Your results and table are still shown normally.' +
+        '<button type="button" class="chart-retry-btn mt-1 px-3 py-1.5 rounded-lg border border-line text-slate-300 hover:text-white hover:border-indigo-400">Retry</button>' +
+        '</div>';
+    });
+    document.querySelectorAll('.chart-retry-btn').forEach((btn) => {
+      btn.addEventListener('click', () => { tryInitChartsWithFallbacks(); });
+    });
+  }
+
+  function initCharts() {
+    try {
+      if (typeof echarts === 'undefined') throw new Error('Failed to load the echarts library.');
+      dsrGaugeChart = echarts.init($('dsrGauge'), null, { renderer: 'svg' });
+      scheduleChart = echarts.init($('scheduleChart'), null, { renderer: 'svg' });
+      chartsAvailable = true;
+      return true;
+    } catch (err) {
+      console.error('Chart initialization failed:', err);
+      chartsAvailable = false;
+      return false;
+    }
+  }
+
+  async function tryInitChartsWithFallbacks() {
+    if (initCharts()) { recalcAndRender(); return; }
+    for (const url of ECHARTS_FALLBACK_URLS) {
+      try {
+        await loadScriptOnce(url);
+        if (initCharts()) { recalcAndRender(); return; }
+      } catch (e) { /* 다음 후보 CDN 시도 */ }
+    }
+    showChartFallback();
+  }
+
+  function renderGauge(dsr, level) {
+    if (!chartsAvailable) return;
+    const color = LEVEL_COLOR[level];
+    dsrGaugeChart.setOption({
+      series: [{
+        type: 'gauge',
+        min: 0,
+        max: 100,
+        startAngle: 210,
+        endAngle: -30,
+        radius: '95%',
+        progress: { show: true, width: 16, itemStyle: { color } },
+        axisLine: {
+          lineStyle: {
+            width: 16,
+            color: [[0.4, '#22C55E'], [0.5, '#F5A524'], [1, '#F4374C']],
+          },
+        },
+        pointer: { itemStyle: { color: '#E7ECF3' }, length: '55%' },
+        axisTick: { distance: -20, length: 6, lineStyle: { color: '#0A0E14', width: 1 } },
+        splitLine: { distance: -22, length: 14, lineStyle: { color: '#0A0E14', width: 2 } },
+        axisLabel: { color: '#8891A3', distance: 28, fontSize: 10 },
+        detail: {
+          valueAnimation: true,
+          formatter: (v) => v.toFixed(1) + '%',
+          color,
+          fontSize: 28,
+          fontWeight: 700,
+          offsetCenter: [0, '70%'],
+        },
+        data: [{ value: Math.min(100, dsr) }],
+      }],
+    });
+  }
+
+  function renderScheduleChart(yearly) {
+    if (!chartsAvailable) return;
+    const years = yearly.map((y) => 'Yr ' + y.year);
+    const balances = yearly.map((y) => Math.round(y.endBalance));
+    const interests = yearly.map((y) => Math.round(y.interestPaid));
+    scheduleChart.setOption({
+      backgroundColor: 'transparent',
+      grid: { left: 60, right: 60, top: 30, bottom: 30 },
+      tooltip: { trigger: 'axis', valueFormatter: (v) => '₩' + Number(v).toLocaleString('en-US') },
+      legend: { data: ['Year-End Balance', 'Annual Interest'], textStyle: { color: '#8891A3' }, top: 0 },
+      xAxis: { type: 'category', data: years, axisLabel: { color: '#8891A3', fontSize: 10 }, axisLine: { lineStyle: { color: '#212A37' } } },
+      yAxis: [
+        { type: 'value', name: 'Balance', axisLabel: { color: '#8891A3', formatter: (v) => '₩' + (v / 1000000).toFixed(0) + 'M' }, splitLine: { lineStyle: { color: '#1A212B' } } },
+        { type: 'value', name: 'Interest', axisLabel: { color: '#8891A3', formatter: (v) => '₩' + (v / 1000).toFixed(0) + 'K' }, splitLine: { show: false } },
+      ],
+      series: [
+        { name: 'Year-End Balance', type: 'line', data: balances, smooth: true, itemStyle: { color: '#818CF8' }, lineStyle: { width: 3 }, yAxisIndex: 0, symbolSize: 5 },
+        { name: 'Annual Interest', type: 'bar', data: interests, itemStyle: { color: 'rgba(244,55,76,0.55)' }, yAxisIndex: 1, barMaxWidth: 24 },
+      ],
+    });
+  }
+
+  function renderTable(yearly) {
+    const rows = yearly.map((y) => `
+      <tr>
+        <td>Year ${y.year}</td>
+        <td class="tabnum">${formatWon(y.principalPaid)}</td>
+        <td class="tabnum">${formatWon(y.interestPaid)}</td>
+        <td class="tabnum">${formatWon(y.endBalance)}</td>
+      </tr>`).join('');
+    $('scheduleTableBody').innerHTML = rows;
+  }
+
+  // ===================== 4. 메인 재계산 함수 =====================
+  function recalcAndRender() {
+    const { principal, annualRate, years, monthlyIncome, repaymentType, stressPct } = state;
+
+    // 기준(현재 금리) 계산
+    const baseSummary = calcLoanSummary(repaymentType, principal, annualRate, years);
+    $('monthlyPaymentLabel').textContent = repaymentType === 'equalPrincipal' ? 'First month payment' : 'Monthly payment';
+    $('monthlyPaymentOut').textContent = formatWon(baseSummary.firstMonthPayment);
+    $('totalInterestOut').textContent = formatWon(baseSummary.totalInterest);
+    $('totalPaymentOut').textContent = formatWon(baseSummary.totalPayment);
+
+    // 스트레스(금리 상승) 시나리오 계산
+    const stressedRate = annualRate + stressPct;
+    const stressedSummary = calcLoanSummary(repaymentType, principal, stressedRate, years);
+    $('stressedRateOut').textContent = stressedRate.toFixed(2) + '%';
+    $('stressedPaymentLabel').textContent = repaymentType === 'equalPrincipal' ? 'First month payment after stress' : 'Payment after stress';
+    $('stressedPaymentOut').textContent = formatWon(stressedSummary.firstMonthPayment);
+
+    const delta = stressedSummary.firstMonthPayment - baseSummary.firstMonthPayment;
+    const deltaPct = baseSummary.firstMonthPayment > 0 ? (delta / baseSummary.firstMonthPayment) * 100 : 0;
+    $('stressDeltaOut').textContent = formatWon(delta);
+    $('stressDeltaPctOut').textContent = deltaPct.toFixed(1) + '%';
+
+    // DSR (스트레스 반영 값 기준)
+    const dsr = calcDSR(stressedSummary.firstMonthPayment, monthlyIncome);
+    const level = getDsrLevel(dsr);
+    renderGauge(dsr, level);
+
+    const commentBox = $('dsrComment');
+    commentBox.textContent = `${LEVEL_LABEL[level]} · DSR ${dsr.toFixed(1)}% — ${LEVEL_COMMENT[level]}`;
+    commentBox.style.color = LEVEL_COLOR[level];
+    commentBox.style.background = level === 'safe' ? 'rgba(34,197,94,0.1)' : level === 'warning' ? 'rgba(245,165,36,0.1)' : 'rgba(244,55,76,0.12)';
+    commentBox.style.border = `1px solid ${LEVEL_COLOR[level]}55`;
+
+    // 연도별 스케줄 (현재 금리 기준, 스트레스 미반영 - 장기 계획용)
+    const yearly = aggregateYearly(baseSummary.schedule);
+    renderScheduleChart(yearly);
+    renderTable(yearly);
+  }
+
+  // ===================== 5. 이벤트 바인딩 =====================
+  principalInput.addEventListener('input', () => { formatCommaInput(principalInput); state.principal = parseNumberInput(principalInput); recalcAndRender(); });
+  incomeInput.addEventListener('input', () => { formatCommaInput(incomeInput); state.monthlyIncome = parseNumberInput(incomeInput); recalcAndRender(); });
+  rateInput.addEventListener('input', () => { state.annualRate = Number(rateInput.value) || 0; recalcAndRender(); });
+  yearsInput.addEventListener('input', () => { state.years = Number(yearsInput.value) || 1; recalcAndRender(); });
+  stressSlider.addEventListener('input', () => {
+    state.stressPct = Number(stressSlider.value);
+    $('stressPctLabel').textContent = '+' + state.stressPct.toFixed(1) + 'pp';
+    recalcAndRender();
+  });
+
+  function refreshToggleButtons() {
+    ['equalPayment', 'equalPrincipal'].forEach((type) => {
+      const btn = type === 'equalPayment' ? $('btnEqualPayment') : $('btnEqualPrincipal');
+      btn.classList.toggle('active-' + type, state.repaymentType === type);
+    });
+  }
+  $('btnEqualPayment').addEventListener('click', () => { state.repaymentType = 'equalPayment'; refreshToggleButtons(); recalcAndRender(); });
+  $('btnEqualPrincipal').addEventListener('click', () => { state.repaymentType = 'equalPrincipal'; refreshToggleButtons(); recalcAndRender(); });
+
+  window.addEventListener('resize', () => { if (chartsAvailable) { dsrGaugeChart.resize(); scheduleChart.resize(); } });
+
+  // ===================== 6. 초기 렌더 =====================
+  // 차트 라이브러리 로딩에 문제가 있어도 계산기 자체(버튼/입력)는 항상 동작하도록
+  // 차트 초기화 실패를 이 시점에 한 번 더 격리한다. 1차 CDN이 실패하면 다른 CDN을 순차 재시도.
+  refreshToggleButtons();
+  recalcAndRender();
+  if (!initCharts()) {
+    tryInitChartsWithFallbacks();
+  } else {
+    recalcAndRender();
+  }
+
+  window.__MST_TEST__ = {
+    calcEqualPaymentMonthly, buildEqualPaymentSchedule, buildEqualPrincipalSchedule,
+    calcLoanSummary, aggregateYearly, calcDSR, getDsrLevel, state, recalcAndRender,
+    dsrGaugeChart, scheduleChart,
+  };
+})();
+</script>
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>What happens to your payment if rates rise</h2>
+<p>The monthly payment a loan officer quoted you is only valid at today's rate. If it rises by 1 or 2 points, that figure no longer holds — and it's easy to walk away without ever checking how much room you actually have.</p>
+<p>This tool calculates equal-payment and equal-principal schedules with exact financial formulas, then lets a rate-shock slider show the payment and DSR risk under a higher-rate scenario immediately.</p>
+<h2>When to use it</h2><dl>
+<dt>Checking before you commit</dt><dd>Seeing how much room you have if the rate you were quoted moves against you.</dd>
+<dt>Fixed vs variable comparison</dt><dd>Moving the slider through different rate rises to weigh the risk of each choice.</dd>
+<dt>Comparing repayment methods</dt><dd>Testing equal-payment against equal-principal with real numbers for your situation.</dd>
+<dt>Checking the balance years out</dt><dd>Seeing exactly how much principal remains at year 10 or year 15 in the table.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Enter the loan principal, annual rate, term and your take-home pay.</li>
+<li>Choose equal-payment or equal-principal repayment.</li>
+<li>Move the rate-shock slider to see the payment and DSR under that scenario.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Rate-shock slider</dt><dd>Set a rise in percentage points over your current rate and the payment and DSR for that scenario recalculate immediately.</dd>
+<dt>Repayment method</dt><dd>Equal-payment keeps the total the same every month. Equal-principal splits the principal evenly, so the first payment is heaviest and it eases over time.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>How is DSR calculated here</dt><dd>The projected monthly payment under the rate-shock slider, divided by your take-home pay. Equal-principal uses the first month's payment since it's the largest, the more conservative basis. A real lender's DSR can be more complex, combining other loans, so treat this as a reference.</dd>
+<dt>Is my loan information sent anywhere</dt><dd>No. Every calculation happens inside your browser, and no figures about your principal or income are sent externally.</dd>
+<dt>Why are equal-payment and equal-principal so different</dt><dd>Equal-payment adjusts the principal-to-interest ratio so the total is the same every month. Equal-principal splits the principal evenly across the term, with interest applied only to the remaining balance, so early payments are heaviest.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/universal-table-data-hub_en.html">Universal Table Data Hub</a></li>
+<li><a href="https://mnledu.com/en/productivity/pdf-to-markdown_en.html">PDF to Markdown Converter</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-batch-factory_en.html">Text Batch Factory</a></li>
+<li><a href="https://mnledu.com/en/productivity/data-slicer_en.html">Excel & CSV Data Slicer</a></li>
+<li><a href="https://mnledu.com/en/productivity/copy-desk_en.html">One-Click Copy Desk</a></li>
+<li><a href="https://mnledu.com/en/productivity/receipt-to-excel_en.html">Receipt to Expense Sheet</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools &rarr;</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is DSR calculated here",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The projected monthly payment under the rate-shock slider, divided by your take-home pay. Equal-principal uses the first month's payment since it's the largest, the more conservative basis. A real lender's DSR can be more complex, combining other loans, so treat this as a reference."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my loan information sent anywhere",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Every calculation happens inside your browser, and no figures about your principal or income are sent externally."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why are equal-payment and equal-principal so different",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Equal-payment adjusts the principal-to-interest ratio so the total is the same every month. Equal-principal splits the principal evenly across the term, with interest applied only to the remaining balance, so early payments are heaviest."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-31</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 금리 발작 슬라이더로 DSR·상환액 실시간 시뮬레이션</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "mortgage-stress-tester";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "mortgage-stress-tester").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/mortgage-stress-tester_en.html";
+  var TK_SHARE_TITLE = "Mortgage Stress Tester";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+</body>
+</html>

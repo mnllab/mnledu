@@ -961,106 +961,7 @@
 
 
 
-<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
 
-<style>
-.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
-  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
-.tk-guide *{box-sizing:border-box}
-.tk-guide-inner{max-width:720px;margin:0 auto}
-.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
-  margin:44px 0 0;word-break:keep-all}
-.tk-guide h2:first-of-type{margin-top:0}
-.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
-.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
-.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
-.tk-guide strong{font-weight:600;color:#1e293b}
-.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
-.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
-.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
-  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
-.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
-  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
-.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
-.tk-guide-more h2{margin-top:0}
-.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
-  display:grid;grid-template-columns:1fr;gap:8px}
-@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
-.tk-guide a{color:#2c6ba0;text-decoration:none}
-.tk-guide a:hover{text-decoration:underline}
-.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
-</style>
-<section class="tk-guide"><div class="tk-guide-inner">
-<h2>메모장은 있는데 왜 또 만들었나</h2>
-<p>윈도우 메모장은 서식이 없고, 워드는 열리는 데 시간이 걸립니다. 잠깐 문장을 다듬거나 글자 수를 확인하려는 것뿐인데 프로그램을 띄우고 파일을 만들어야 하는 게 번거롭습니다.</p>
-<p>이 도구는 그 중간을 노립니다. 브라우저 탭 하나만 열면 굵게·기울임 같은 기본 서식이 되고, 입력하는 동안 글자 수와 바이트가 실시간으로 계산됩니다. 한글 문서에서 자주 쓰는 특수기호도 클릭 한 번으로 넣을 수 있습니다.</p>
-<h2>이럴 때 씁니다</h2><dl>
-<dt>분량 제한이 있는 글 쓰기</dt><dd>지원사업 신청서의 "500자 이내", 자기소개서의 "공백 포함 1,000자" 같은 조건을 맞출 때. 입력하는 동안 <strong>공백 포함·공백 제외·바이트</strong>가 동시에 표시됩니다.</dd>
-<dt>문서 붙여넣기 전 정리</dt><dd>웹에서 복사한 글을 한글이나 워드에 바로 넣으면 원래 서식이 딸려옵니다. 여기 거쳐 가면 필요한 서식만 남길 수 있습니다.</dd>
-<dt>개조식 문서 작성</dt><dd>정부 제출 문서에서 쓰는 <strong>①②③ ○ □ ※ ─</strong> 같은 기호를 기호 패널에서 바로 넣습니다. 한글 자모로 변환해 찾는 과정이 없습니다.</dd>
-<dt>마크다운·HTML 확인</dt><dd>작성한 내용이 마크다운이나 HTML 소스로 어떻게 되는지 바로 볼 수 있습니다. 블로그나 문서 도구에 옮길 때 유용합니다.</dd>
-</dl>
-<h2>사용 방법</h2><ol>
-<li>가운데 입력 영역에 바로 작성합니다. 아래쪽 테두리를 끌어 높이를 조절할 수 있습니다.</li>
-<li>서식 버튼으로 굵게·기울임 등을 적용합니다.</li>
-<li>특수기호가 필요하면 기호 패널에서 클릭합니다.</li>
-<li>복사할 때 서식을 유지할지, 일반 텍스트로 가져갈지 고릅니다.</li>
-</ol>
-<h2>옵션 설명</h2><dl>
-<dt>분량 기준</dt><dd>공백 포함, 공백 제외, 바이트 중 무엇을 기준으로 볼지 정합니다. 정부 서식은 공백 포함이 많고, 일부 시스템은 바이트 제한을 씁니다.</dd>
-<dt>서식 유지</dt><dd>복사할 때 굵게·기울임을 그대로 가져갈지, 글자만 가져갈지 결정합니다. 한글(HWP)에 붙일 때는 서식 유지가 편하고, 코드나 입력 폼에는 일반 텍스트가 안전합니다.</dd>
-<dt>글꼴</dt><dd>맑은 고딕, 나눔고딕 등으로 바꿔 실제 문서에서 어떻게 보일지 미리 가늠할 수 있습니다.</dd>
-</dl>
-<h2>자주 묻는 질문</h2><dl>
-<dt>작성한 내용이 저장되나요</dt><dd>서버에는 저장되지 않습니다. 페이지를 닫으면 사라지므로, 남겨야 할 내용은 복사해서 다른 곳에 옮겨두세요.</dd>
-<dt>바이트는 왜 따로 세나요</dt><dd>한글 한 글자는 인코딩에 따라 2~3바이트를 차지합니다. 일부 관공서 입력 시스템은 글자 수가 아니라 바이트로 제한을 걸기 때문에 별도로 표시합니다.</dd>
-<dt>한글(HWP)에 붙여넣으면 서식이 유지되나요</dt><dd>서식 유지로 복사하면 굵게·기울임 정도는 대부분 따라갑니다. 다만 글꼴과 크기는 한글 문서의 스타일이 우선 적용되는 경우가 많습니다.</dd>
-</dl>
-<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
-<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
-<li><a href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html">스마트 텍스트 가공 공장</a></li>
-<li><a href="https://mnledu.com/kr/productivity/data-slicer_kr.html">엑셀·CSV 원클릭 분할 압축기</a></li>
-<li><a href="https://mnledu.com/kr/productivity/copy-desk_kr.html">원클릭 복붙 작업대</a></li>
-<li><a href="https://mnledu.com/kr/productivity/receipt-to-excel_kr.html">영수증 지출결의서 변환기</a></li>
-<li><a href="https://mnledu.com/kr/productivity/roster-maker_kr.html">공평무사 당직표 생성기</a></li>
-<li><a href="https://mnledu.com/kr/productivity/sheet2memo_kr.html">시트 포스트잇 대시보드</a></li>
-</ul></div>
-<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
-</div></section>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "작성한 내용이 저장되나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "서버에는 저장되지 않습니다. 페이지를 닫으면 사라지므로, 남겨야 할 내용은 복사해서 다른 곳에 옮겨두세요."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "바이트는 왜 따로 세나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "한글 한 글자는 인코딩에 따라 2~3바이트를 차지합니다. 일부 관공서 입력 시스템은 글자 수가 아니라 바이트로 제한을 걸기 때문에 별도로 표시합니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "한글(HWP)에 붙여넣으면 서식이 유지되나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "서식 유지로 복사하면 굵게·기울임 정도는 대부분 따라갑니다. 다만 글꼴과 크기는 한글 문서의 스타일이 우선 적용되는 경우가 많습니다."
-      }
-    }
-  ]
-}
-</script>
-<!-- TOOLKIT:GUIDE_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -1180,5 +1081,108 @@
 <ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>메모장은 있는데 왜 또 만들었나</h2>
+<p>윈도우 메모장은 서식이 없고, 워드는 열리는 데 시간이 걸립니다. 잠깐 문장을 다듬거나 글자 수를 확인하려는 것뿐인데 프로그램을 띄우고 파일을 만들어야 하는 게 번거롭습니다.</p>
+<p>이 도구는 그 중간을 노립니다. 브라우저 탭 하나만 열면 굵게·기울임 같은 기본 서식이 되고, 입력하는 동안 글자 수와 바이트가 실시간으로 계산됩니다. 한글 문서에서 자주 쓰는 특수기호도 클릭 한 번으로 넣을 수 있습니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>분량 제한이 있는 글 쓰기</dt><dd>지원사업 신청서의 "500자 이내", 자기소개서의 "공백 포함 1,000자" 같은 조건을 맞출 때. 입력하는 동안 <strong>공백 포함·공백 제외·바이트</strong>가 동시에 표시됩니다.</dd>
+<dt>문서 붙여넣기 전 정리</dt><dd>웹에서 복사한 글을 한글이나 워드에 바로 넣으면 원래 서식이 딸려옵니다. 여기 거쳐 가면 필요한 서식만 남길 수 있습니다.</dd>
+<dt>개조식 문서 작성</dt><dd>정부 제출 문서에서 쓰는 <strong>①②③ ○ □ ※ ─</strong> 같은 기호를 기호 패널에서 바로 넣습니다. 한글 자모로 변환해 찾는 과정이 없습니다.</dd>
+<dt>마크다운·HTML 확인</dt><dd>작성한 내용이 마크다운이나 HTML 소스로 어떻게 되는지 바로 볼 수 있습니다. 블로그나 문서 도구에 옮길 때 유용합니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>가운데 입력 영역에 바로 작성합니다. 아래쪽 테두리를 끌어 높이를 조절할 수 있습니다.</li>
+<li>서식 버튼으로 굵게·기울임 등을 적용합니다.</li>
+<li>특수기호가 필요하면 기호 패널에서 클릭합니다.</li>
+<li>복사할 때 서식을 유지할지, 일반 텍스트로 가져갈지 고릅니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>분량 기준</dt><dd>공백 포함, 공백 제외, 바이트 중 무엇을 기준으로 볼지 정합니다. 정부 서식은 공백 포함이 많고, 일부 시스템은 바이트 제한을 씁니다.</dd>
+<dt>서식 유지</dt><dd>복사할 때 굵게·기울임을 그대로 가져갈지, 글자만 가져갈지 결정합니다. 한글(HWP)에 붙일 때는 서식 유지가 편하고, 코드나 입력 폼에는 일반 텍스트가 안전합니다.</dd>
+<dt>글꼴</dt><dd>맑은 고딕, 나눔고딕 등으로 바꿔 실제 문서에서 어떻게 보일지 미리 가늠할 수 있습니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>작성한 내용이 저장되나요</dt><dd>서버에는 저장되지 않습니다. 페이지를 닫으면 사라지므로, 남겨야 할 내용은 복사해서 다른 곳에 옮겨두세요.</dd>
+<dt>바이트는 왜 따로 세나요</dt><dd>한글 한 글자는 인코딩에 따라 2~3바이트를 차지합니다. 일부 관공서 입력 시스템은 글자 수가 아니라 바이트로 제한을 걸기 때문에 별도로 표시합니다.</dd>
+<dt>한글(HWP)에 붙여넣으면 서식이 유지되나요</dt><dd>서식 유지로 복사하면 굵게·기울임 정도는 대부분 따라갑니다. 다만 글꼴과 크기는 한글 문서의 스타일이 우선 적용되는 경우가 많습니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html">부동산 대출 스트레스 테스트기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/universal-table-data-hub_kr.html">만능 표 데이터 허브</a></li>
+<li><a href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html">스마트 텍스트 가공 공장</a></li>
+<li><a href="https://mnledu.com/kr/productivity/data-slicer_kr.html">엑셀·CSV 원클릭 분할 압축기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/copy-desk_kr.html">원클릭 복붙 작업대</a></li>
+<li><a href="https://mnledu.com/kr/productivity/receipt-to-excel_kr.html">영수증 지출결의서 변환기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "작성한 내용이 저장되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "서버에는 저장되지 않습니다. 페이지를 닫으면 사라지므로, 남겨야 할 내용은 복사해서 다른 곳에 옮겨두세요."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "바이트는 왜 따로 세나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "한글 한 글자는 인코딩에 따라 2~3바이트를 차지합니다. 일부 관공서 입력 시스템은 글자 수가 아니라 바이트로 제한을 걸기 때문에 별도로 표시합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "한글(HWP)에 붙여넣으면 서식이 유지되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "서식 유지로 복사하면 굵게·기울임 정도는 대부분 따라갑니다. 다만 글꼴과 크기는 한글 문서의 스타일이 우선 적용되는 경우가 많습니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>

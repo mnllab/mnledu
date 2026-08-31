@@ -916,104 +916,7 @@
 
 
 
-<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
 
-<style>
-.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
-  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
-.tk-guide *{box-sizing:border-box}
-.tk-guide-inner{max-width:720px;margin:0 auto}
-.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
-  margin:44px 0 0;word-break:keep-all}
-.tk-guide h2:first-of-type{margin-top:0}
-.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
-.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
-.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
-.tk-guide strong{font-weight:600;color:#1e293b}
-.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
-.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
-.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
-  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
-.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
-  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
-.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
-.tk-guide-more h2{margin-top:0}
-.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
-  display:grid;grid-template-columns:1fr;gap:8px}
-@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
-.tk-guide a{color:#2c6ba0;text-decoration:none}
-.tk-guide a:hover{text-decoration:underline}
-.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
-</style>
-<section class="tk-guide"><div class="tk-guide-inner">
-<h2>마진 계산이 어긋나는 지점</h2>
-<p>원가 1만 원에 30% 마진을 붙이면 얼마일까요. 1만 3천 원이라고 답하기 쉽지만, 이건 원가 대비 30%입니다. 판매가 대비 30% 마진은 약 1만 4,300원입니다. 어느 쪽을 기준으로 삼느냐에 따라 결과가 달라집니다.</p>
-<p>여기에 부가세, 배송비, 카드 수수료, 광고비가 붙으면 실제로 손에 남는 돈은 또 달라집니다. 이 도구는 그 과정을 나눠서 보여줍니다.</p>
-<h2>이럴 때 씁니다</h2><dl>
-<dt>판매가 정하기</dt><dd>목표 마진율을 정해두고 등록할 판매가를 역산할 때. 부가세와 배송비를 반영한 값이 나옵니다.</dd>
-<dt>순수익 역산</dt><dd>입금된 금액에서 원가와 각종 비용을 빼고 실제로 남는 돈을 확인할 때.</dd>
-<dt>세금 분리</dt><dd>매출에서 부가세로 떼어둬야 할 금액을 미리 계산해 따로 관리할 때.</dd>
-<dt>할인 시뮬레이션</dt><dd>할인율을 적용했을 때 마진이 얼마나 줄어드는지 확인할 때.</dd>
-</dl>
-<h2>사용 방법</h2><ol>
-<li>사입 원가와 수량을 입력합니다.</li>
-<li>목표 마진율, 배송비, 광고비 등 조건을 넣습니다.</li>
-<li>과세 유형을 고릅니다.</li>
-<li>등록할 최종 판매가와 실제로 남는 금액이 계산됩니다.</li>
-</ol>
-<h2>옵션 설명</h2><dl>
-<dt>목표 마진율 (판매가 대비)</dt><dd>판매가를 기준으로 한 마진율입니다. 유통에서는 보통 이 기준을 씁니다.</dd>
-<dt>과세 유형</dt><dd>일반과세자, 간이과세자, 면세 중에 고릅니다. 부가세 계산 방식이 달라집니다.</dd>
-<dt>광고비 (매출 대비)</dt><dd>매출에서 광고비가 차지하는 비율을 넣으면 마진에 반영됩니다.</dd>
-<dt>세금 통장으로</dt><dd>매출 중 세금으로 떼어둬야 할 몫을 따로 표시합니다. 나중에 부가세 신고 때 당황하지 않으려면 미리 나눠두는 편이 낫습니다.</dd>
-</dl>
-<h2>자주 묻는 질문</h2><dl>
-<dt>원가 대비와 판매가 대비 중 어느 쪽을 써야 하나요</dt><dd>거래처나 플랫폼이 요구하는 기준을 따르시면 됩니다. 유통업에서는 판매가 대비가 일반적이고, 제조 원가 관리에서는 원가 대비를 쓰기도 합니다. 상대와 기준이 같은지 확인하는 것이 중요합니다.</dd>
-<dt>간이과세자는 뭐가 다른가요</dt><dd>부가세 계산 방식과 세율이 다릅니다. 과세 유형을 바꾸면 결과에 반영됩니다. 다만 실제 신고는 세무 전문가와 확인하시기 바랍니다.</dd>
-<dt>카드 수수료도 반영되나요</dt><dd>비용 항목에 넣어 계산하시면 됩니다. 결제 수단마다 수수료율이 다르니 실제 계약 조건을 확인해 입력하세요.</dd>
-</dl>
-<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
-<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
-<li><a href="https://mnledu.com/kr/data-analytics/cagrcal_kr.html">CAGR 연도별 추정 계산기</a></li>
-<li><a href="https://mnledu.com/kr/data-analytics/ocrextract_kr.html">OCR 텍스트 추출기</a></li>
-<li><a href="https://mnledu.com/kr/data-analytics/gov-fund-calc_kr.html">자부담금 최적화 계산기</a></li>
-</ul></div>
-<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
-</div></section>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "원가 대비와 판매가 대비 중 어느 쪽을 써야 하나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "거래처나 플랫폼이 요구하는 기준을 따르시면 됩니다. 유통업에서는 판매가 대비가 일반적이고, 제조 원가 관리에서는 원가 대비를 쓰기도 합니다. 상대와 기준이 같은지 확인하는 것이 중요합니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "간이과세자는 뭐가 다른가요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "부가세 계산 방식과 세율이 다릅니다. 과세 유형을 바꾸면 결과에 반영됩니다. 다만 실제 신고는 세무 전문가와 확인하시기 바랍니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "카드 수수료도 반영되나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "비용 항목에 넣어 계산하시면 됩니다. 결제 수단마다 수수료율이 다르니 실제 계약 조건을 확인해 입력하세요."
-      }
-    }
-  ]
-}
-</script>
-<!-- TOOLKIT:GUIDE_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -1133,5 +1036,107 @@
 <ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>마진 계산이 어긋나는 지점</h2>
+<p>원가 1만 원에 30% 마진을 붙이면 얼마일까요. 1만 3천 원이라고 답하기 쉽지만, 이건 원가 대비 30%입니다. 판매가 대비 30% 마진은 약 1만 4,300원입니다. 어느 쪽을 기준으로 삼느냐에 따라 결과가 달라집니다.</p>
+<p>여기에 부가세, 배송비, 카드 수수료, 광고비가 붙으면 실제로 손에 남는 돈은 또 달라집니다. 이 도구는 그 과정을 나눠서 보여줍니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>판매가 정하기</dt><dd>목표 마진율을 정해두고 등록할 판매가를 역산할 때. 부가세와 배송비를 반영한 값이 나옵니다.</dd>
+<dt>순수익 역산</dt><dd>입금된 금액에서 원가와 각종 비용을 빼고 실제로 남는 돈을 확인할 때.</dd>
+<dt>세금 분리</dt><dd>매출에서 부가세로 떼어둬야 할 금액을 미리 계산해 따로 관리할 때.</dd>
+<dt>할인 시뮬레이션</dt><dd>할인율을 적용했을 때 마진이 얼마나 줄어드는지 확인할 때.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li>사입 원가와 수량을 입력합니다.</li>
+<li>목표 마진율, 배송비, 광고비 등 조건을 넣습니다.</li>
+<li>과세 유형을 고릅니다.</li>
+<li>등록할 최종 판매가와 실제로 남는 금액이 계산됩니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>목표 마진율 (판매가 대비)</dt><dd>판매가를 기준으로 한 마진율입니다. 유통에서는 보통 이 기준을 씁니다.</dd>
+<dt>과세 유형</dt><dd>일반과세자, 간이과세자, 면세 중에 고릅니다. 부가세 계산 방식이 달라집니다.</dd>
+<dt>광고비 (매출 대비)</dt><dd>매출에서 광고비가 차지하는 비율을 넣으면 마진에 반영됩니다.</dd>
+<dt>세금 통장으로</dt><dd>매출 중 세금으로 떼어둬야 할 몫을 따로 표시합니다. 나중에 부가세 신고 때 당황하지 않으려면 미리 나눠두는 편이 낫습니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>원가 대비와 판매가 대비 중 어느 쪽을 써야 하나요</dt><dd>거래처나 플랫폼이 요구하는 기준을 따르시면 됩니다. 유통업에서는 판매가 대비가 일반적이고, 제조 원가 관리에서는 원가 대비를 쓰기도 합니다. 상대와 기준이 같은지 확인하는 것이 중요합니다.</dd>
+<dt>간이과세자는 뭐가 다른가요</dt><dd>부가세 계산 방식과 세율이 다릅니다. 과세 유형을 바꾸면 결과에 반영됩니다. 다만 실제 신고는 세무 전문가와 확인하시기 바랍니다.</dd>
+<dt>카드 수수료도 반영되나요</dt><dd>비용 항목에 넣어 계산하시면 됩니다. 결제 수단마다 수수료율이 다르니 실제 계약 조건을 확인해 입력하세요.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/data-analytics/wealth-dashboard_kr.html">파이어족 복리 &amp; 물타기 계산기</a></li>
+<li><a href="https://mnledu.com/kr/data-analytics/cagrcal_kr.html">CAGR 연도별 추정 계산기</a></li>
+<li><a href="https://mnledu.com/kr/data-analytics/ocrextract_kr.html">OCR 텍스트 추출기</a></li>
+<li><a href="https://mnledu.com/kr/data-analytics/gov-fund-calc_kr.html">자부담금 최적화 계산기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "원가 대비와 판매가 대비 중 어느 쪽을 써야 하나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "거래처나 플랫폼이 요구하는 기준을 따르시면 됩니다. 유통업에서는 판매가 대비가 일반적이고, 제조 원가 관리에서는 원가 대비를 쓰기도 합니다. 상대와 기준이 같은지 확인하는 것이 중요합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "간이과세자는 뭐가 다른가요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "부가세 계산 방식과 세율이 다릅니다. 과세 유형을 바꾸면 결과에 반영됩니다. 다만 실제 신고는 세무 전문가와 확인하시기 바랍니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "카드 수수료도 반영되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "비용 항목에 넣어 계산하시면 됩니다. 결제 수단마다 수수료율이 다르니 실제 계약 조건을 확인해 입력하세요."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>
