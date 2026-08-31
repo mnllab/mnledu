@@ -164,6 +164,8 @@ module.exports = [
       <ul>
         <li><strong>Favourites</strong> — the identifiers of tools you have starred</li>
         <li><strong>Recent settings in some tools</strong> — so a tool reopens the way you left it</li>
+        <li><strong>Visit flags</strong> — to count visitors per tool without inflating the number on
+          refresh or repeat visits, one flag per tool marks that this browser has already been counted.</li>
       </ul>
       <p>Clearing your browsing data and site data removes this as well.</p>
 
@@ -172,6 +174,14 @@ module.exports = [
         The site is served through GitHub Pages. As part of delivering a website, the hosting provider
         may record technical information such as IP address, browser type and request time. This is for
         service delivery and security, and is not collected or retained by the operator.
+      </p>
+      <p>
+        To show roughly how many visitors each tool has had, the first time you open a tool page in a
+        given browser it sends one anonymous signal to an external counting service. Repeat visits from
+        the same browser do not send it again, thanks to the visit flag above, so refreshing or reopening
+        a page does not inflate the number. The signal only carries a value identifying which tool it is,
+        and contains no information that could identify you. The tallied number is shown as a visitor
+        count next to each tool on the homepage.
       </p>
 
       <h2>4. Advertising and cookies</h2>
@@ -330,7 +340,12 @@ module.exports = [
       <h2>7. Handling of data</h2>
       <p>
         Because data entered is never sent to a server, the operator cannot retain or recover it.
-        Preserving your work is your responsibility. See the
+        Preserving your work is your responsibility.
+      </p>
+      <p>
+        An external visitor-counting service is used to show roughly how many people have viewed
+        each tool, and some tools optionally download an on-device AI model. Neither sends
+        information that could identify you to a server. See the
         <a href="/en/privacy.html">Privacy Policy</a> for details.
       </p>
 

@@ -123,6 +123,7 @@ const STR = [
   ['자주 묻는 질문', 'FAQ'],
   ['문의하기', 'Contact'],
   ['소개', 'About'],
+  ["></i>방문자 ' + formatViewCount(n) + '명';", "></i>' + formatViewCount(n) + ' visitors';"],
   ['전체 도구 목록', 'All tools']
 ];
 

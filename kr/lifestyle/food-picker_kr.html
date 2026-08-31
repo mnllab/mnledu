@@ -1148,6 +1148,17 @@
 <a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
 </div></section>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "food-picker";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  var key = "mnledu-com-toolkit-v1-" + "food-picker";
+  fetch("https://countapi.mileshilliard.com/api/v1/hit/" + key).catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;

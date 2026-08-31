@@ -1416,6 +1416,16 @@
 
           
 
+          
+
+          
+
+          
+
+          
+
+          
+
           <!-- TOOLKIT:LANG_START -->
           <a href="https://mnledu.com/en/" title="View in English" hreflang="en"
             class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-wider text-slate-600 hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
@@ -1766,7 +1776,9 @@
       </div>
 
       <div class="mt-6 pt-5 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p class="font-mono text-[11px] text-slate-400 tracking-wider">&copy; 2026 Janggil Kim. All rights reserved.</p>
+        <p class="font-mono text-[11px] text-slate-400 tracking-wider">&copy; 2026 Janggil Kim. All rights reserved.
+          <span id="site-viewcount" class="ml-2 inline-flex items-center gap-1 align-middle"></span>
+        </p>
         <div class="flex flex-col items-center gap-3 sm:flex-row">
           <p class="text-[11px] text-slate-400 font-medium">무단 복제 및 재배포를 금지합니다</p>
           <button id="home-btn-foot" type="button"
@@ -2208,7 +2220,10 @@
           '<div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-4">' + tagRow + '</div>' +
 
           '<div class="flex items-center justify-between gap-2 mt-5 pt-3.5 border-t border-slate-100 min-w-0">' +
-            '<span class="font-mono text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded tracking-wider uppercase truncate min-w-0">' + esc(tool.category) + '</span>' +
+            '<span class="flex items-center gap-2.5 min-w-0">' +
+              '<span class="font-mono text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded tracking-wider uppercase truncate">' + esc(tool.category) + '</span>' +
+              '<span class="tk-viewcount inline-flex items-center gap-1 font-mono text-[10.5px] text-slate-400 shrink-0" data-viewcount="' + esc(tool.id) + '"></span>' +
+            '</span>' +
             '<a href="' + esc(tool.url) + '" data-open="' + esc(tool.id) + '" ' +
                'target="_blank" rel="noopener noreferrer" ' +
                'aria-label="' + esc(tool.title) + ' 실행" ' +
@@ -2235,6 +2250,64 @@
       } else {
         el.tabFavBadge.classList.add('hidden');
       }
+    }
+
+    // 조회수 : 검색·필터와 무관하게 한 번만 전체를 불러와 캐시해 두고,
+    // 카드가 새로 그려질 때마다(필터가 바뀔 때도) 캐시에서 채워 넣는다.
+    var VIEWCOUNT_PREFIX = 'mnledu-com-toolkit-v1-';
+    var viewCountCache = {};
+    var viewCountLoaded = false;
+
+    function formatViewCount(n) {
+      if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, '') + '만';
+      if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + '천';
+      return String(n);
+    }
+
+    function paintViewCounts() {
+      var els = document.querySelectorAll('[data-viewcount]');
+      for (var i = 0; i < els.length; i++) {
+        var id = els[i].getAttribute('data-viewcount');
+        var n = viewCountCache[id];
+        if (typeof n === 'number') {
+          els[i].innerHTML = '<i data-lucide="eye" class="h-3 w-3"></i>' + formatViewCount(n);
+        }
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function loadViewCounts() {
+      if (viewCountLoaded) { paintViewCounts(); return; }
+      viewCountLoaded = true;
+      var jobs = DATA.map(function (t) {
+        return fetch('https://countapi.mileshilliard.com/api/v1/get/' + VIEWCOUNT_PREFIX + t.id)
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (data) { if (data && data.value != null) viewCountCache[t.id] = +data.value; })
+          .catch(function () {});
+      });
+      Promise.allSettled ? Promise.allSettled(jobs).then(paintViewCounts) : Promise.all(jobs).then(paintViewCounts, paintViewCounts);
+    }
+
+    // 홈페이지 자체 방문자 수 (한국어·영문 합산). "조회수"가 아니라
+    // "방문자 수" — 같은 브라우저에서 새로고침해도 다시 안 늘어난다.
+    // localStorage 에 이미 방문 표시가 있으면 카운트를 올리지 않고,
+    // 표시가 없을 때만 1 늘린 뒤 그 자리에서 최신 값을 읽어와 푸터에 그린다.
+    var SITE_VIEWCOUNT_KEY = VIEWCOUNT_PREFIX + 'site-home';
+    function paintSiteViewCount(n) {
+      var el = document.getElementById('site-viewcount');
+      if (!el || typeof n !== 'number') return;
+      el.innerHTML = '<i data-lucide="users" class="h-3 w-3"></i>방문자 ' + formatViewCount(n) + '명';
+      if (window.lucide) window.lucide.createIcons();
+    }
+    function loadSiteViewCount() {
+      var flagKey = 'mnledu_visited_home';
+      var alreadyVisited = false;
+      try { alreadyVisited = !!localStorage.getItem(flagKey); if (!alreadyVisited) localStorage.setItem(flagKey, '1'); } catch (e) {}
+      var endpoint = (alreadyVisited ? 'get' : 'hit') + '/' + SITE_VIEWCOUNT_KEY;
+      fetch('https://countapi.mileshilliard.com/api/v1/' + endpoint)
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) { if (data && data.value != null) paintSiteViewCount(+data.value); })
+        .catch(function () {});
     }
 
     function render() {
@@ -2264,6 +2337,7 @@
         ? 'Favorites'
         : (activeCategory === 'ALL' ? 'All Utilities' : activeCategory);
 
+      loadViewCounts();
       var isEmpty = visible.length === 0;
       el.empty.classList.toggle('hidden', !isEmpty);
       if (isEmpty) {
@@ -2417,6 +2491,7 @@
 
     /* Init */
     route();
+    loadSiteViewCount();
   })();
   </script>
 </body>
