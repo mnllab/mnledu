@@ -9,7 +9,7 @@ const TOOLS_DATA_EN = [
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
     id: 'document-mail-merge',
-    title: 'Document Mail Merge Generator',
+    title: 'Template Document Batch Generator',
     category: 'PRODUCTIVITY',
     desc: 'Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact.',
     url: 'https://mnledu.com/en/productivity/document-mail-merge_en.html',

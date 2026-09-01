@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document Mail Merge Generator | TOOLKIT</title>
+<title>Template Document Batch Generator | TOOLKIT</title>
 <!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
 <meta name="description" content="Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact. Runs in your browser with no install or sign up." />
 <meta name="author" content="Janggil Kim" />
@@ -17,15 +17,15 @@
 <meta property="og:site_name" content="TOOLKIT" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:url" content="https://mnledu.com/en/productivity/document-mail-merge_en.html" />
-<meta property="og:title" content="Document Mail Merge Generator | TOOLKIT" />
+<meta property="og:title" content="Template Document Batch Generator | TOOLKIT" />
 <meta property="og:description" content="Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact. Runs in your browser with no install or sign up." />
 <meta property="og:image" content="https://mnledu.com/og-image.png" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Document Mail Merge Generator | TOOLKIT" />
+<meta name="twitter:title" content="Template Document Batch Generator | TOOLKIT" />
 <meta name="twitter:description" content="Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact. Runs in your browser with no install or sign up." />
 <!-- TOOLKIT:SEO_END -->
-<meta name="description" content="A browser-based mail merge tool that auto-detects {{fields}} in text, Markdown, DOCX, and HWPX templates, accepts manual values or Excel/CSV headers, and batch-generates HWPX, DOCX, TXT, or MD files without uploading documents to a server.">
+<meta name="description" content="A browser-based template document generator that auto-detects {{fields}} in text, Markdown, DOCX, and HWPX templates, accepts manual values or Excel/CSV headers, and batch-generates HWPX, DOCX, TXT, or MD files without uploading documents to a server.">
 <meta name="author" content="Janggil Kim">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://mnledu.com/en/productivity/document-mail-merge_en.html">
@@ -35,20 +35,20 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TOOLKIT">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Document Mail Merge Generator · HWPX · DOCX · Excel | TOOLKIT">
+<meta property="og:title" content="Template Batch Document Generator · HWPX · DOCX · Excel | TOOLKIT">
 <meta property="og:description" content="Combine {{field}} templates with Excel or CSV data and batch-generate HWPX, DOCX, TXT, or MD documents entirely in your browser.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Document Mail Merge Generator | TOOLKIT">
+<meta name="twitter:title" content="Template Batch Document Generator | TOOLKIT">
 <meta name="twitter:description" content="Auto-detect {{fields}} in document templates and generate batches of documents from Excel or CSV data.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Document Mail Merge Generator",
+  "name": "Template Batch Document Generator",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "url": "https://mnledu.com/en/productivity/document-mail-merge_en.html",
-  "description": "A browser-based mail merge tool that detects {{fields}} in TXT, Markdown, DOCX, and HWPX templates and batch-generates HWPX, DOCX, TXT, or MD documents from Excel or CSV data.",
+  "description": "A browser-based template document generator that detects {{fields}} in TXT, Markdown, DOCX, and HWPX templates and batch-generates HWPX, DOCX, TXT, or MD documents from Excel or CSV data.",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": { "@type": "Person", "name": "Janggil Kim" }
 }
@@ -67,15 +67,26 @@ body{font-family:'Pretendard',ui-sans-serif,system-ui,sans-serif}.mono{font-fami
 </style>
 </head>
 <body class="bg-canvas text-ink-900 min-h-screen">
-<header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
-  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-    <a href="https://mnledu.com/en/" class="flex items-center gap-2 shrink-0"><span class="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-bold text-sm">TK</span><span class="font-semibold hidden sm:inline">TOOLKIT</span></a>
-    <div class="text-center flex-1 min-w-0"><h1 class="text-sm sm:text-base font-semibold truncate">Document Mail Merge Generator</h1><p class="text-[11px] sm:text-xs text-ink-500 hidden sm:block">Auto-detect {{fields}} · Batch from Excel/CSV · No server upload</p></div>
-    <a href="https://mnledu.com/en/productivity/" class="text-xs sm:text-sm text-ink-500 hover:text-accent shrink-0">All tools →</a>
-  </div>
-</header>
 
-<main class="max-w-[1440px] mx-auto px-4 sm:px-6 py-6">
+<main class="max-w-[1440px] mx-auto px-4 sm:px-6 py-5 sm:py-6">
+  <section class="mb-5 rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-white to-orange-50/70 shadow-soft overflow-hidden">
+    <div class="px-5 py-5 sm:px-7 sm:py-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-1 text-[11px] font-semibold text-accent-dark">DOCUMENT AUTOMATION</span>
+          <span class="text-[11px] text-ink-500">Runs directly in your browser</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink-900">Template Batch Document Generator</h1>
+        <p class="mt-2 text-sm sm:text-[15px] text-ink-500 leading-relaxed">Automatically detect <code class="mono text-xs rounded bg-white/80 border border-orange-100 px-1.5 py-0.5 text-accent-dark">{{fields}}</code> in your template and generate multiple documents from Excel or CSV data.</p>
+      </div>
+      <div class="flex flex-wrap lg:justify-end gap-2 shrink-0">
+        <span class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-ink-700">✓ Preserve DOCX/HWPX formatting</span>
+        <span class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-ink-700">✓ Excel/CSV batch output</span>
+        <span class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-ink-700">✓ No server upload</span>
+      </div>
+    </div>
+  </section>
+
   <div class="grid grid-cols-1 xl:grid-cols-[1.12fr_.88fr] gap-5">
     <section class="bg-card rounded-2xl shadow-soft border border-slate-200 p-4 flex flex-col min-h-[580px]">
       <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -117,21 +128,14 @@ body{font-family:'Pretendard',ui-sans-serif,system-ui,sans-serif}.mono{font-fami
         <div class="min-w-[110px]"><label class="text-[11px] text-ink-500 block mb-1">Line spacing <span id="lineHeightVal" class="text-accent">160%</span></label><input id="lineHeight" type="range" min="100" max="250" step="10" value="160" class="w-full accent-accent"></div>
         <div class="min-w-[110px]"><label class="text-[11px] text-ink-500 block mb-1">Paragraph spacing <span id="paraSpacingVal" class="text-accent">6pt</span></label><input id="paraSpacing" type="range" min="0" max="30" value="6" class="w-full accent-accent"></div>
         <div><label class="text-[11px] text-ink-500 block mb-1">Alignment</label><div id="alignGroup" class="flex rounded-lg border border-slate-200 overflow-hidden bg-white"><button data-align="left" class="fmt-btn active text-xs px-2.5 py-1.5">Left</button><button data-align="center" class="fmt-btn text-xs px-2.5 py-1.5">Center</button><button data-align="right" class="fmt-btn text-xs px-2.5 py-1.5">Right</button><button data-align="justify" class="fmt-btn text-xs px-2.5 py-1.5">Justify</button></div></div>
-        <div class="min-w-[180px] flex-1 xl:flex-none"><label class="text-[11px] text-ink-500 block mb-1">File name pattern</label><input id="fileNamePattern" type="text" value="MailMerge_{{Number}}" class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs focus:outline-none focus:ring-2 focus:ring-accent/30" title="Example: {{Name}}_Notice or MailMerge_{{Number}}"></div>
+        <div class="min-w-[180px] flex-1 xl:flex-none"><label class="text-[11px] text-ink-500 block mb-1">File name pattern</label><input id="fileNamePattern" type="text" value="TemplateDocs_{{Number}}" class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs focus:outline-none focus:ring-2 focus:ring-accent/30" title="Example: {{Name}}_Notice or TemplateDocs_{{Number}}"></div>
         <div class="ml-auto flex items-end gap-2"><div><label class="text-[11px] text-ink-500 block mb-1">Export format</label><select id="exportFormat" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs"><option value="hwpx">HWPX</option><option value="docx">DOCX</option><option value="txt">TXT</option><option value="md">MD</option></select></div><button id="exportBtn" type="button" disabled class="h-9 px-4 rounded-lg bg-accent text-white text-xs font-semibold hover:bg-accent-dark disabled:opacity-40 disabled:cursor-not-allowed">Export</button></div>
       </div>
     </div>
     <div class="bg-slate-100 p-5 sm:p-8 min-h-[520px] overflow-auto"><div id="previewPage" class="preview-page max-w-[794px] min-h-[900px] mx-auto bg-white border border-slate-200 shadow-sm px-10 sm:px-14 py-12 sm:py-16"></div></div>
   </section>
 
-  <section class="guide max-w-[900px] mx-auto mt-14 mb-12 px-1">
-    <h2>How to use</h2>
-    <ol class="list-decimal pl-5 space-y-1.5"><li>Mark each replaceable value as <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">{{Name}}</code>, <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">{{Company}}</code>, or <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">{{Date}}</code>. Reusing the same field counts as one field, and you can use up to 20 unique fields.</li><li>You can type a template directly or load a TXT, Markdown, DOCX, or HWPX file. DOCX and HWPX files are read inside the browser so their merge fields can be detected.</li><li>For a single document, enter values in the automatically generated field inputs. The preview updates immediately.</li><li>For batch output, choose an Excel/CSV file or drag it into the batch-data area. The first row is treated as field names, the second row is shown as the preview sample, and Export generates every row from row 2 onward into one ZIP file.</li><li>Excel/CSV column names must exactly match the template fields. For example, <code>{{Name}}</code> connects to a first-row column named <code>Name</code>.</li><li>You can also use fields in the file-name pattern. <code>{{Number}}</code> is a reserved field that automatically increments as 001, 002, 003, and so on.</li></ol>
-    <h2>Supported formats and formatting</h2><p>Output formats are HWPX, DOCX, TXT, and MD. For templates typed directly or converted to a different format, the selected font size, line spacing, paragraph spacing, and alignment are applied to newly generated HWPX/DOCX files. When a DOCX or HWPX template is exported to the same format, the original document formatting takes priority. TXT and MD preserve the text structure. In Excel/CSV batch mode, one document is generated for each data row and the results are bundled into a ZIP file.</p>
-    <h2>Preserving original DOCX/HWPX formatting</h2><p>When you load a DOCX or HWPX template, the preview shows plain text for content verification only. When you export back to the same format, the tool does not rebuild the document. Instead, it clones the original package and replaces only the text inside <code>{{fields}}</code>. This preserves the original fonts, font sizes, colors, paragraph formatting, tables, images, headers, footers, and other document objects. A DOCX template preserves its formatting when exported as DOCX, and an HWPX template preserves its formatting when exported as HWPX. Converting to a different format creates a new document using the common formatting options above.</p><p>If you directly edit the extracted template text after loading a DOCX/HWPX file, formatting-preservation mode is automatically disabled because the screen text may no longer match the original document structure. Entering values for existing <code>{{fields}}</code> or connecting Excel/CSV data does not disable preservation mode.</p>
-    <h2>Is my data sent to a server?</h2><p>No. Template reading, Excel/CSV parsing, field replacement, DOCX/HWPX generation, and ZIP packaging all happen inside the current browser tab. Closing or refreshing the page clears the working data.</p>
-    <div class="mt-7 rounded-xl bg-slate-50 border border-slate-200 p-4 text-xs text-ink-500 leading-relaxed">Note: The legacy Word binary format <b>.doc</b> is not supported. Save it as <b>.docx</b> in Word or Google Docs before loading it. Excel batch data uses the first worksheet.</div>
-  </section>
+  
 </main>
 <div id="toastRoot" class="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2"></div>
 
@@ -333,8 +337,8 @@ async function extractDocxBuffer(buffer){const zip=await JSZip.loadAsync(buffer)
 async function extractHwpxBuffer(buffer){const zip=await JSZip.loadAsync(buffer);const names=Object.keys(zip.files).filter(n=>/^Contents\/section\d+\.xml$/i.test(n)).sort((a,b)=>(parseInt(a.match(/section(\d+)/i)?.[1]||0)-parseInt(b.match(/section(\d+)/i)?.[1]||0)));if(!names.length)throw new Error('Could not find HWPX body sections.');const parts=[];for(const n of names){const d=xmlDoc(await zip.file(n).async('string'));parts.push(elemsByLocal(d,'p').map(paraText).filter(x=>x.length).join('\n\n'))}return parts.filter(Boolean).join('\n\n')}
 async function loadTemplateFile(file){try{const ext=(file.name.split('.').pop()||'').toLowerCase();let text;state.templatePackage=null;state.templateDirty=false;if(ext==='txt'||ext==='md'){text=await file.text()}else if(ext==='docx'||ext==='hwpx'){const buffer=await file.arrayBuffer();text=ext==='docx'?await extractDocxBuffer(buffer):await extractHwpxBuffer(buffer);state.templatePackage={ext:ext,name:file.name,buffer:buffer};exportFormat.value=ext}else throw new Error('Only TXT, MD, DOCX, and HWPX template files are supported.');state.suppressTemplateDirty=true;templateText.value=text;state.suppressTemplateDirty=false;refreshTemplate();updatePreserveStatus();toast('Template loaded: '+file.name)}catch(e){state.suppressTemplateDirty=false;console.error(e);toast('Error reading the template: '+(e.message||e),'error')} }
 
-function sanitizeFileName(s){return String(s||'').replace(/[\\/:*?"<>|]/g,'_').replace(/[\x00-\x1f]/g,'').trim().replace(/[. ]+$/,'').slice(0,140)||'MailMerge'}
-function makeFileBase(values,index){let pat=fileNamePattern.value.trim()||'MailMerge_{{Number}}';pat=pat.replace(/{{\s*(?:Number|번호)\s*}}/gi,String(index+1).padStart(3,'0'));pat=mergeTemplate(pat,values);pat=pat.replace(/{{\s*[^{}]+\s*}}/g,'');return sanitizeFileName(pat)}
+function sanitizeFileName(s){return String(s||'').replace(/[\\/:*?"<>|]/g,'_').replace(/[\x00-\x1f]/g,'').trim().replace(/[. ]+$/,'').slice(0,140)||'TemplateDocs'}
+function makeFileBase(values,index){let pat=fileNamePattern.value.trim()||'TemplateDocs_{{Number}}';pat=pat.replace(/{{\s*(?:Number|번호)\s*}}/gi,String(index+1).padStart(3,'0'));pat=mergeTemplate(pat,values);pat=pat.replace(/{{\s*[^{}]+\s*}}/g,'');return sanitizeFileName(pat)}
 function docxRuns(block){const D=docx;const lines=String(block).split('\n');const runs=[];lines.forEach((line,i)=>{if(i>0)runs.push(new D.TextRun({break:1}));runs.push(new D.TextRun({text:line,size:state.format.fontSize*2}))});return runs}
 async function buildDocxBlob(text){const D=docx;const alignMap={left:D.AlignmentType.LEFT,center:D.AlignmentType.CENTER,right:D.AlignmentType.RIGHT,justify:D.AlignmentType.JUSTIFIED};const paras=String(text||'').split(/\n\s*\n/).map(block=>new D.Paragraph({alignment:alignMap[state.format.align]||D.AlignmentType.LEFT,spacing:{line:Math.round(240*state.format.lineHeight/100),after:Math.round(state.format.paraSpacing*20)},children:docxRuns(block)}));const obj=new D.Document({sections:[{children:paras}]});return D.Packer.toBlob(obj)}
 
@@ -377,7 +381,7 @@ async function buildPreservedHwpxBlob(values,previewText){
  const bytes=await zip.generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:6}});return new Blob([bytes],{type:'application/hwp+zip'})
 }
 async function blobForFormat(text,fmt,values){if(canPreserveOriginal(fmt)){if(fmt==='docx')return buildPreservedDocxBlob(values);if(fmt==='hwpx')return buildPreservedHwpxBlob(values,text)}if(fmt==='txt')return new Blob([text],{type:'text/plain;charset=utf-8'});if(fmt==='md')return new Blob([text],{type:'text/markdown;charset=utf-8'});if(fmt==='docx')return buildDocxBlob(text);if(fmt==='hwpx')return window.buildHwpxTextBlob(text,state.format);throw new Error('Unsupported export format.')}
-async function exportDocuments(){if(exportBtn.disabled)return;const fmt=exportFormat.value;const old=exportBtn.textContent;exportBtn.disabled=true;try{if(state.dataRows.length){const zip=new JSZip();for(let i=0;i<state.dataRows.length;i++){const values=state.dataRows[i],text=mergeTemplate(templateText.value,values),base=makeFileBase(values,i);exportBtn.textContent='Generating '+(i+1)+' / '+state.dataRows.length;const blob=await blobForFormat(text,fmt,values);zip.file(base+'.'+fmt,await blob.arrayBuffer());if(i%5===4)await new Promise(r=>setTimeout(r,0))}exportBtn.textContent='Building ZIP…';const z=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});saveAs(z,'MailMerge_'+new Date().toISOString().slice(0,10)+'_'+fmt.toUpperCase()+'.zip');toast(state.dataRows.length+' documents generated as '+fmt.toUpperCase()+'.')}else{const values=currentValues(),text=mergeTemplate(templateText.value,values),base=makeFileBase(values,0),blob=await blobForFormat(text,fmt,values);saveAs(blob,base+'.'+fmt);toast(fmt.toUpperCase()+' document saved.')}}catch(e){console.error(e);toast('Error generating document: '+(e.message||e),'error')}finally{updateExportState()}}
+async function exportDocuments(){if(exportBtn.disabled)return;const fmt=exportFormat.value;const old=exportBtn.textContent;exportBtn.disabled=true;try{if(state.dataRows.length){const zip=new JSZip();for(let i=0;i<state.dataRows.length;i++){const values=state.dataRows[i],text=mergeTemplate(templateText.value,values),base=makeFileBase(values,i);exportBtn.textContent='Generating '+(i+1)+' / '+state.dataRows.length;const blob=await blobForFormat(text,fmt,values);zip.file(base+'.'+fmt,await blob.arrayBuffer());if(i%5===4)await new Promise(r=>setTimeout(r,0))}exportBtn.textContent='Building ZIP…';const z=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});saveAs(z,'TemplateDocs_'+new Date().toISOString().slice(0,10)+'_'+fmt.toUpperCase()+'.zip');toast(state.dataRows.length+' documents generated as '+fmt.toUpperCase()+'.')}else{const values=currentValues(),text=mergeTemplate(templateText.value,values),base=makeFileBase(values,0),blob=await blobForFormat(text,fmt,values);saveAs(blob,base+'.'+fmt);toast(fmt.toUpperCase()+' document saved.')}}catch(e){console.error(e);toast('Error generating document: '+(e.message||e),'error')}finally{updateExportState()}}
 
 let templateTimer;templateText.addEventListener('input',()=>{markTemplateEdited();clearTimeout(templateTimer);templateTimer=setTimeout(refreshTemplate,100)});
 $('addFieldBtn').addEventListener('click',()=>{const name=normalizeKey($('newFieldName').value);if(!name)return;if(detectFields(templateText.value).length>=MAX_FIELDS&&!state.fields.includes(name)){toast('You can use up to 20 fields.','warn');return}if(/[{}\n]/.test(name)){toast('Field names cannot contain braces or line breaks.','warn');return}const start=templateText.selectionStart,end=templateText.selectionEnd;const token='{{'+name+'}}';templateText.setRangeText(token,start,end,'end');markTemplateEdited();$('newFieldName').value='';templateText.focus();refreshTemplate()});
@@ -512,8 +516,8 @@ window.__MAILMERGE_TEST__={detectFields,mergeTemplate,normalizeKey,parseDelimite
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-01</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-09-01</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">디자인 개편 — 히어로 섹션·기능 배지 추가, 레이아웃 정리. 도구명을 '문서 메일머지 생성기'에서 '템플릿 문서 일괄 생성기'로 변경(기능 동일)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
@@ -573,7 +577,7 @@ Share
 <script>
 (function(){
   var TK_SHARE_URL = "https://mnledu.com/en/productivity/document-mail-merge_en.html";
-  var TK_SHARE_TITLE = "Document Mail Merge Generator";
+  var TK_SHARE_TITLE = "Template Document Batch Generator";
   var fab = document.getElementById("tkShareFab");
   var backdrop = document.getElementById("tkShareBackdrop");
   var input = document.getElementById("tkShareInput");

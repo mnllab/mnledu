@@ -991,3 +991,17 @@ HWPX·DOCX·TXT·MD 다중 포맷 + 서식 옵션(글자 크기·줄 간격·정
 
 66:66, 132개 파일 전체 마커 6종·canonical·공유URL·사이드바 링크
 재검사 전부 통과. 스크립트 구문 전부 정상.
+
+## document-mail-merge 디자인 개편 (2026-09-01)
+
+히어로 섹션(그라디언트 배경, "DOCUMENT AUTOMATION" 배지, 기능 요약
+배지 3개), 레이아웃 정리. 기능 자체는 변경 없음.
+
+도구명이 "문서 메일머지 생성기" → "**템플릿 문서 일괄 생성기**"로
+바뀜(영문도 Document Mail Merge Generator → Template Document
+Batch Generator) — catalog title 갱신.
+
+업로드 파일 자체에 `class="guide"`(우리 표준 `.tk-guide`와 다른
+이름)로 짧은 사용법 안내가 포함돼 있었으나, 배경 설명·활용 사례·
+FAQ 스키마를 갖춘 기존 guides-b.js 항목이 더 충실해서 인라인
+안내문은 제거하고 기존 정식 안내문을 다시 씌움. v1.0 → v1.1.

@@ -35,7 +35,7 @@ const TOOLS_DATA = [
   // ---------------------------------------------------------
   {
     id: 'document-mail-merge',
-    title: '문서 메일머지 생성기',
+    title: '템플릿 문서 일괄 생성기',
     category: 'PRODUCTIVITY',
     desc: '{{항목}}을 자동 감지해 엑셀·CSV로 대량 문서를 생성합니다. DOCX·HWPX는 원본 서식을 그대로 유지한 채 내보낼 수 있습니다.',
     url: 'https://mnledu.com/kr/productivity/document-mail-merge_kr.html',

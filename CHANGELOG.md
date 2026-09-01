@@ -5,7 +5,8 @@
 
 ## 2026-09-01
 
-- **문서 메일머지 생성기** (`document-mail-merge`) v1.0 — 최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기
+- **템플릿 문서 일괄 생성기** (`document-mail-merge`) v1.0 — 최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기
+- **템플릿 문서 일괄 생성기** (`document-mail-merge`) v1.1 — 디자인 개편 — 히어로 섹션·기능 배지 추가, 레이아웃 정리. 도구명을 '문서 메일머지 생성기'에서 '템플릿 문서 일괄 생성기'로 변경(기능 동일)
 
 ## 2026-08-31
 
