@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FIRE Compound Interest &amp; Dollar-Cost Averaging Calculator | TOOLKIT</title>
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="A FIRE compound-interest simulator and a dollar-cost-averaging calculator on one screen. Results and the chart update as you type. Runs in your browser with no install or sign up." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/data-analytics/wealth-dashboard_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/data-analytics/wealth-dashboard_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/data-analytics/wealth-dashboard_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/data-analytics/wealth-dashboard_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/data-analytics/wealth-dashboard_en.html" />
+<meta property="og:title" content="FIRE Compound Interest &amp; Dollar-Cost Averaging Calculator | TOOLKIT" />
+<meta property="og:description" content="A FIRE compound-interest simulator and a dollar-cost-averaging calculator on one screen. Results and the chart update as you type. Runs in your browser with no install or sign up." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FIRE Compound Interest &amp; Dollar-Cost Averaging Calculator | TOOLKIT" />
+<meta name="twitter:description" content="A FIRE compound-interest simulator and a dollar-cost-averaging calculator on one screen. Results and the chart update as you type. Runs in your browser with no install or sign up." />
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg:#0F172A; --panel:#1E293B; --panel-soft:#243146; --line:#2E3B52;
+    --ink:#F1F5F9; --ink-dim:#94A3B8; --ink-faint:#64748B;
+    --blue:#3B82F6; --blue-soft:#1D4E9B;
+    --green:#10B981; --green-soft:#064E3B;
+    --red:#EF4444; --red-soft:#5B1A1A;
+    --amber:#F59E0B;
+  }
+  *{box-sizing:border-box}
+  html,body{background:var(--bg); color:var(--ink)}
+  body{
+    font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .num{ font-variant-numeric:tabular-nums; font-feature-settings:'tnum' 1; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:20px; }
+  .panel-soft{ background:var(--panel-soft); border:1px solid var(--line); border-radius:16px; }
+
+  input[type="text"], input[type="number"]{
+    background:#111C2E; border:1px solid var(--line); color:var(--ink);
+    border-radius:12px; padding:12px 14px; width:100%;
+    font-size:15px; transition:border-color .15s ease, background .15s ease;
+  }
+  input[type="text"]:focus, input[type="number"]:focus{
+    outline:none; border-color:var(--blue); background:#0E1728;
+  }
+  input::placeholder{ color:var(--ink-faint); }
+
+  /* 세그먼트 탭 */
+  .seg-wrap{
+    position:relative; display:inline-flex; background:#111C2E;
+    border:1px solid var(--line); border-radius:999px; padding:4px; gap:2px;
+  }
+  .seg-btn{
+    position:relative; z-index:1; padding:9px 18px; border-radius:999px;
+    font-size:13.5px; font-weight:600; color:var(--ink-dim);
+    transition:color .25s ease; white-space:nowrap; cursor:pointer;
+  }
+  .seg-btn.active{ color:#fff; }
+  .seg-thumb{
+    position:absolute; top:4px; bottom:4px; left:4px;
+    border-radius:999px; background:var(--blue);
+    transition:transform .28s cubic-bezier(.65,0,.35,1), width .28s cubic-bezier(.65,0,.35,1);
+    z-index:0;
+  }
+  .seg-thumb.dca{ background:var(--amber); }
+
+  /* 탭 패널 페이드 */
+  .tabpanel{ display:none; }
+  .tabpanel.show{ display:block; animation:fadeUp .32s ease both; }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .field-label{ font-size:12.5px; color:var(--ink-dim); margin-bottom:6px; display:block; }
+  .suffix-wrap{ position:relative; }
+  .suffix-wrap input{ padding-right:44px; }
+  .suffix-mark{
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    font-size:13px; color:var(--ink-faint); pointer-events:none;
+  }
+
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:4px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+</style>
+</head>
+<body class="pb-16">
+
+  <!-- ============ 헤더 ============ -->
+  <header class="border-b border-[var(--line)] sticky top-0 z-30 backdrop-blur bg-[rgba(15,23,42,.85)]">
+    <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+      <div class="flex items-center gap-2.5">
+        <span class="text-xl leading-none">🔥</span>
+        <div>
+          <p class="font-bold text-[15px] leading-tight">Wealth Dashboard</p>
+          <p class="text-[11px] text-[var(--ink-faint)] leading-tight">Every calculation happens in this browser</p>
+        </div>
+      </div>
+
+      <div class="seg-wrap" id="tabSwitch">
+        <div class="seg-thumb" id="segThumb"></div>
+        <button type="button" class="seg-btn active" data-tab="fire" id="tabBtnFire">🔥&nbsp; FIRE Compound Simulator</button>
+        <button type="button" class="seg-btn" data-tab="dca" id="tabBtnDca">📉&nbsp; Cost Averaging Calculator</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-5 pt-8">
+
+    <!-- ============================================================ -->
+    <!-- TAB 1 : FIRE 복리 시뮬레이터                                    -->
+    <!-- ============================================================ -->
+    <section id="panel-fire" class="tabpanel show">
+
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 items-start">
+
+        <!-- 입력 패널 -->
+        <div class="panel p-6">
+          <h2 class="font-bold text-[16px] mb-1">Your investment inputs</h2>
+          <p class="text-[12.5px] text-[var(--ink-dim)] mb-5">Change any number and the results update instantly.</p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="field-label">Starting balance</label>
+              <div class="suffix-wrap">
+                <input type="text" inputmode="numeric" id="f_initial" value="10,000" class="num">
+                <span class="suffix-mark">USD</span>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Monthly contribution</label>
+              <div class="suffix-wrap">
+                <input type="text" inputmode="numeric" id="f_monthly" value="500" class="num">
+                <span class="suffix-mark">USD</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="field-label">Annual return</label>
+                <div class="suffix-wrap">
+                  <input type="text" inputmode="decimal" id="f_return" value="7" class="num">
+                  <span class="suffix-mark">%</span>
+                </div>
+              </div>
+              <div>
+                <label class="field-label">Inflation rate</label>
+                <div class="suffix-wrap">
+                  <input type="text" inputmode="decimal" id="f_inflation" value="3" class="num">
+                  <span class="suffix-mark">%</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Time horizon</label>
+              <div class="suffix-wrap">
+                <input type="text" inputmode="numeric" id="f_years" value="20" class="num">
+                <span class="suffix-mark">yrs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-5 border-t border-[var(--line)] text-[11.5px] text-[var(--ink-faint)] leading-relaxed">
+            Contributions are added at month-end and compounded monthly. Return and inflation are assumed constant for the whole period, which simplifies the real world.
+          </div>
+        </div>
+
+        <!-- 결과 -->
+        <div class="space-y-6 min-w-0">
+
+          <!-- 차트 -->
+          <div class="panel p-6">
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <h2 class="font-bold text-[16px]">Growth curve</h2>
+              <div class="flex items-center gap-4 text-[12px] text-[var(--ink-dim)]">
+                <span class="flex items-center gap-1.5"><i class="inline-block w-2.5 h-2.5 rounded-sm" style="background:var(--blue)"></i>Your contributions</span>
+                <span class="flex items-center gap-1.5"><i class="inline-block w-2.5 h-2.5 rounded-sm" style="background:var(--green)"></i>Compound growth</span>
+              </div>
+            </div>
+            <div class="relative" style="height:320px">
+              <canvas id="fireChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 요약 카드 : 실질 자산가치를 히어로로, 나머지는 보조 -->
+          <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-4">
+            <div class="panel p-6 flex flex-col justify-between" style="background:linear-gradient(155deg, var(--panel) 55%, var(--blue-soft) 180%)">
+              <p class="text-[13px] text-[var(--ink-dim)] mb-2">Today's purchasing power</p>
+              <p class="num font-extrabold tracking-tight leading-none" style="font-size:clamp(30px,4.2vw,42px)" id="r_real">₩0</p>
+              <p class="text-[12px] text-[var(--ink-faint)] mt-2">Nominal final balance <span class="num" id="r_nominal_inline">₩0</span> discounted for inflation — what that amount is actually worth in today's money.</p>
+            </div>
+            <div class="grid grid-cols-1 gap-4">
+              <div class="panel-soft p-5">
+                <p class="text-[12px] text-[var(--ink-dim)] mb-1.5">Total contributed</p>
+                <p class="num font-bold text-[20px]" id="r_principal">₩0</p>
+              </div>
+              <div class="panel-soft p-5">
+                <p class="text-[12px] text-[var(--ink-dim)] mb-1.5">Net gain from compounding</p>
+                <p class="num font-bold text-[20px]" style="color:var(--green)" id="r_profit">₩0</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 2 : 물타기 / 평단가 계산기                                   -->
+    <!-- ============================================================ -->
+    <section id="panel-dca" class="tabpanel">
+
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 items-start">
+
+        <!-- 입력 -->
+        <div class="space-y-5">
+          <div class="panel p-6">
+            <h2 class="font-bold text-[16px] mb-4">Current position</h2>
+            <div class="space-y-4">
+              <div>
+                <label class="field-label">Purchase price</label>
+                <div class="suffix-wrap">
+                  <input type="text" inputmode="decimal" id="d_price1" value="80" class="num">
+                  <span class="suffix-mark">USD</span>
+                </div>
+              </div>
+              <div>
+                <label class="field-label">Shares held</label>
+                <input type="text" inputmode="decimal" id="d_qty1" value="10" class="num">
+              </div>
+            </div>
+          </div>
+
+          <div class="panel p-6">
+            <h2 class="font-bold text-[16px] mb-1">Planned purchase</h2>
+            <p class="text-[12px] text-[var(--ink-dim)] mb-4">Enter how many more you'd buy at today's price.</p>
+            <div class="space-y-4">
+              <div>
+                <label class="field-label">Additional price</label>
+                <div class="suffix-wrap">
+                  <input type="text" inputmode="decimal" id="d_price2" value="55" class="num">
+                  <span class="suffix-mark">USD</span>
+                </div>
+              </div>
+              <div>
+                <label class="field-label">Additional shares</label>
+                <input type="text" inputmode="decimal" id="d_qty2" value="15" class="num">
+              </div>
+              <div>
+                <label class="field-label">Target return</label>
+                <div class="suffix-wrap">
+                  <input type="text" inputmode="decimal" id="d_target" value="10" class="num">
+                  <span class="suffix-mark">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 결과 -->
+        <div class="space-y-6 min-w-0">
+
+          <div class="panel p-6" style="background:linear-gradient(155deg, var(--panel) 55%, rgba(245,158,11,.16) 200%)">
+            <p class="text-[13px] text-[var(--ink-dim)] mb-2">New average cost</p>
+            <p class="num font-extrabold tracking-tight leading-none" style="font-size:clamp(32px,4.6vw,46px)" id="d_avgprice">₩0</p>
+            <p class="text-[12px] text-[var(--ink-faint)] mt-2" id="d_avgdiff">—</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="panel-soft p-5">
+              <p class="text-[12px] text-[var(--ink-dim)] mb-1.5">Total invested</p>
+              <p class="num font-bold text-[19px]" id="d_totalcost">₩0</p>
+            </div>
+            <div class="panel-soft p-5">
+              <p class="text-[12px] text-[var(--ink-dim)] mb-1.5">Total shares</p>
+              <p class="num font-bold text-[19px]" id="d_totalqty">0</p>
+            </div>
+          </div>
+
+          <div class="panel p-6">
+            <h2 class="font-bold text-[16px] mb-4">Target price simulator</h2>
+            <div class="overflow-x-auto -mx-1">
+              <table class="w-full text-[13.5px]" style="min-width:420px">
+                <thead>
+                  <tr class="text-left text-[12px] text-[var(--ink-dim)] border-b border-[var(--line)]">
+                    <th class="pb-2.5 font-medium">Milestone</th>
+                    <th class="pb-2.5 font-medium text-right">Rise needed</th>
+                    <th class="pb-2.5 font-medium text-right">Target price</th>
+                  </tr>
+                </thead>
+                <tbody id="d_table" class="align-top"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+<script>
+(function(){
+
+  /* ───────────────────── 공통 유틸 ───────────────────── */
+
+  function won(n){
+    if (!isFinite(n)) return '$0';
+    var sign = n < 0 ? '-' : '';
+    return sign + '$' + Math.round(Math.abs(n)).toLocaleString('en-US');
+  }
+  function plainNum(n, maxDp){
+    if (!isFinite(n)) return '0';
+    var f = Math.pow(10, maxDp || 0);
+    var r = Math.round(n * f) / f;
+    return r.toLocaleString('ko-KR', { maximumFractionDigits: maxDp || 0 });
+  }
+  function toNumber(str){
+    var v = parseFloat(String(str).replace(/,/g, '').replace(/[^\d.\-]/g, ''));
+    return isFinite(v) ? v : 0;
+  }
+
+  // 입력창에 쉼표 포맷을 실시간으로 적용한다. 소수점 입력 중(예: "1.")에는
+  // 그 상태를 건드리지 않고, 정수부에만 콤마를 넣는다. 커서는 뒤에서부터
+  // 남은 글자 수를 세어 재배치해 입력 중간에 커서가 튀지 않게 한다.
+  function attachThousands(input){
+    input.addEventListener('input', function(){
+      var raw = input.value;
+      var caretFromEnd = raw.length - input.selectionStart;
+      var cleaned = raw.replace(/[^\d.]/g, '');
+      // 소수점은 최대 1개만 허용
+      var firstDot = cleaned.indexOf('.');
+      if (firstDot !== -1){
+        cleaned = cleaned.slice(0, firstDot + 1) + cleaned.slice(firstDot + 1).replace(/\./g, '');
+      }
+      var parts = cleaned.split('.');
+      var intPart = parts[0].replace(/^0+(?=\d)/, '');
+      if (intPart === '') intPart = parts.length > 1 ? '0' : '';
+      var formattedInt = intPart === '' ? '' : Number(intPart).toLocaleString('en-US');
+      var next = parts.length > 1 ? formattedInt + '.' + parts[1] : formattedInt;
+      input.value = next;
+      var pos = Math.max(0, next.length - caretFromEnd);
+      input.setSelectionRange(pos, pos);
+      recalcAll();
+    });
+  }
+
+  /* ───────────────────── 탭 전환 ───────────────────── */
+
+  var tabBtnFire = document.getElementById('tabBtnFire');
+  var tabBtnDca  = document.getElementById('tabBtnDca');
+  var segThumb   = document.getElementById('segThumb');
+  var panelFire  = document.getElementById('panel-fire');
+  var panelDca   = document.getElementById('panel-dca');
+
+  function positionThumb(target){
+    var r = target.getBoundingClientRect();
+    var wrapR = target.parentElement.getBoundingClientRect();
+    segThumb.style.width = r.width + 'px';
+    segThumb.style.transform = 'translateX(' + (r.left - wrapR.left) + 'px)';
+    segThumb.classList.toggle('dca', target === tabBtnDca);
+  }
+
+  function switchTab(name){
+    var toFire = name === 'fire';
+    tabBtnFire.classList.toggle('active', toFire);
+    tabBtnDca.classList.toggle('active', !toFire);
+    positionThumb(toFire ? tabBtnFire : tabBtnDca);
+
+    panelFire.classList.remove('show');
+    panelDca.classList.remove('show');
+    // 리플로우를 강제해 다시 켤 때 애니메이션이 재생되게 한다
+    void (toFire ? panelFire : panelDca).offsetWidth;
+    (toFire ? panelFire : panelDca).classList.add('show');
+
+    if (toFire && fireChart) fireChart.resize();
+  }
+
+  tabBtnFire.addEventListener('click', function(){ switchTab('fire'); });
+  tabBtnDca.addEventListener('click', function(){ switchTab('dca'); });
+  window.addEventListener('resize', function(){
+    positionThumb(tabBtnFire.classList.contains('active') ? tabBtnFire : tabBtnDca);
+  });
+
+  /* ───────────────────── FIRE 복리 시뮬레이터 ───────────────────── */
+
+  var fEls = {
+    initial: document.getElementById('f_initial'),
+    monthly: document.getElementById('f_monthly'),
+    ret: document.getElementById('f_return'),
+    infl: document.getElementById('f_inflation'),
+    years: document.getElementById('f_years'),
+  };
+  [fEls.initial, fEls.monthly].forEach(attachThousands);
+  [fEls.ret, fEls.infl, fEls.years].forEach(function(el){
+    el.addEventListener('input', recalcAll);
+  });
+
+  var fireChart = null;
+
+  function computeFire(){
+    var initial = toNumber(fEls.initial.value);
+    var monthly = toNumber(fEls.monthly.value);
+    var annualReturn = toNumber(fEls.ret.value) / 100;
+    var inflation = toNumber(fEls.infl.value) / 100;
+    var years = Math.max(1, Math.min(80, Math.round(toNumber(fEls.years.value)) || 1));
+
+    var monthlyRate = annualReturn / 12;
+    var balance = initial;
+    var principal = initial;
+
+    var yearlyPrincipal = [principal];
+    var yearlyBalance = [balance];
+
+    for (var m = 1; m <= years * 12; m++){
+      balance = balance * (1 + monthlyRate) + monthly;
+      principal += monthly;
+      if (m % 12 === 0){
+        yearlyPrincipal.push(principal);
+        yearlyBalance.push(balance);
+      }
+    }
+
+    var nominalFinal = balance;
+    var totalPrincipal = principal;
+    var netProfit = nominalFinal - totalPrincipal;
+    var realFinal = nominalFinal / Math.pow(1 + inflation, years);
+
+    return {
+      years: years,
+      yearlyPrincipal: yearlyPrincipal,
+      yearlyBalance: yearlyBalance,
+      nominalFinal: nominalFinal,
+      totalPrincipal: totalPrincipal,
+      netProfit: netProfit,
+      realFinal: realFinal,
+    };
+  }
+
+  function renderFire(){
+    var r = computeFire();
+
+    document.getElementById('r_real').textContent = won(r.realFinal);
+    document.getElementById('r_nominal_inline').textContent = won(r.nominalFinal);
+    document.getElementById('r_principal').textContent = won(r.totalPrincipal);
+    document.getElementById('r_profit').textContent = won(r.netProfit);
+
+    var labels = r.yearlyPrincipal.map(function(_, i){ return 'Yr ' + i; });
+    var principalSeries = r.yearlyPrincipal;
+    var interestSeries = r.yearlyBalance.map(function(b, i){ return Math.max(0, b - r.yearlyPrincipal[i]); });
+
+    if (!fireChart){
+      var ctx = document.getElementById('fireChart').getContext('2d');
+      fireChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Your contributions', data: principalSeries, backgroundColor: '#3B82F6', stack: 's', borderRadius: 3, maxBarThickness: 28 },
+            { label: 'Compound growth', data: interestSeries, backgroundColor: '#10B981', stack: 's', borderRadius: 3, maxBarThickness: 28 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { stacked: true, grid: { display: false }, ticks: { color: '#64748B', maxTicksLimit: 10, font: { size: 11 } } },
+            y: {
+              stacked: true, grid: { color: '#1E293B' },
+              ticks: {
+                color: '#64748B', font: { size: 11 },
+                callback: function(v){
+                  if (v >= 1000000000) return '$' + (v/1000000000).toFixed(1).replace(/\.0$/,'') + 'B';
+                  if (v >= 1000000) return '$' + (v/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+                  if (v >= 1000) return '$' + (v/1000).toFixed(0) + 'K';
+                  return v;
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0F172A', borderColor: '#2E3B52', borderWidth: 1,
+              titleColor: '#F1F5F9', bodyColor: '#CBD5E1', padding: 10,
+              callbacks: { label: function(c){ return c.dataset.label + ' ' + won(c.parsed.y); } }
+            }
+          }
+        }
+      });
+    } else {
+      fireChart.data.labels = labels;
+      fireChart.data.datasets[0].data = principalSeries;
+      fireChart.data.datasets[1].data = interestSeries;
+      fireChart.update('none');
+    }
+  }
+
+  /* ───────────────────── 물타기 / 평단가 계산기 ───────────────────── */
+
+  var dEls = {
+    price1: document.getElementById('d_price1'),
+    qty1: document.getElementById('d_qty1'),
+    price2: document.getElementById('d_price2'),
+    qty2: document.getElementById('d_qty2'),
+    target: document.getElementById('d_target'),
+  };
+  [dEls.price1, dEls.price2].forEach(attachThousands);
+  [dEls.qty1, dEls.qty2, dEls.target].forEach(function(el){
+    el.addEventListener('input', recalcAll);
+  });
+
+  function renderDca(){
+    var p1 = toNumber(dEls.price1.value), q1 = toNumber(dEls.qty1.value);
+    var p2 = toNumber(dEls.price2.value), q2 = toNumber(dEls.qty2.value);
+    var targetPct = toNumber(dEls.target.value);
+
+    var totalQty = q1 + q2;
+    var totalCost = p1 * q1 + p2 * q2;
+    var avgPrice = totalQty > 0 ? totalCost / totalQty : 0;
+
+    document.getElementById('d_avgprice').textContent = won(avgPrice);
+    document.getElementById('d_totalcost').textContent = won(totalCost);
+    document.getElementById('d_totalqty').textContent = plainNum(totalQty, 4);
+
+    var diffEl = document.getElementById('d_avgdiff');
+    if (p1 > 0 && avgPrice > 0){
+      var diffPct = (avgPrice - p1) / p1 * 100;
+      if (Math.abs(diffPct) < 0.01){
+        diffEl.textContent = 'Same as your original purchase price.';
+      } else if (diffPct < 0){
+        diffEl.textContent = plainNum(Math.abs(diffPct), 1) + '% below your original purchase price.';
+      } else {
+        diffEl.textContent = plainNum(diffPct, 1) + '% above your original purchase price.';
+      }
+    } else {
+      diffEl.textContent = '—';
+    }
+
+    // 목표 시뮬레이터 : 현재가(=추가 매수가, 오늘 시세로 간주)를 기준으로
+    // 평단가까지, 그리고 Target return까지 필요한 상승률을 계산한다.
+    var current = p2 > 0 ? p2 : p1;
+    var rows = [];
+
+    if (avgPrice > 0 && current > 0){
+      var toBreakeven = (avgPrice - current) / current * 100;
+      rows.push({
+        label: 'Break-even (0%)',
+        rise: toBreakeven,
+        target: avgPrice,
+      });
+
+      var half = targetPct / 2;
+      if (targetPct > 0){
+        rows.push({
+          label: 'Halfway to target (' + plainNum(half, 1) + '%)',
+          rise: (avgPrice * (1 + half / 100) - current) / current * 100,
+          target: avgPrice * (1 + half / 100),
+        });
+      }
+
+      rows.push({
+        label: 'Target return (' + plainNum(targetPct, 1) + '%)',
+        rise: (avgPrice * (1 + targetPct / 100) - current) / current * 100,
+        target: avgPrice * (1 + targetPct / 100),
+      });
+    }
+
+    var tbody = document.getElementById('d_table');
+    tbody.innerHTML = rows.map(function(row){
+      var riseColor = row.rise <= 0 ? 'var(--green)' : 'var(--ink)';
+      var riseSign = row.rise > 0 ? '+' : '';
+      return '<tr class="border-b border-[var(--line)] last:border-0">' +
+        '<td class="py-2.5 pr-2 text-[var(--ink-dim)]">' + row.label + '</td>' +
+        '<td class="py-2.5 text-right num font-semibold" style="color:' + riseColor + '">' + riseSign + plainNum(row.rise, 1) + '%</td>' +
+        '<td class="py-2.5 pl-4 text-right num font-semibold">' + won(row.target) + '</td>' +
+        '</tr>';
+    }).join('') || '<tr><td colspan="3" class="py-4 text-center text-[var(--ink-faint)]">Enter a price and quantity.</td></tr>';
+  }
+
+  /* ───────────────────── 초기화 ───────────────────── */
+
+  function recalcAll(){
+    renderFire();
+    renderDca();
+  }
+
+  recalcAll();
+  positionThumb(tabBtnFire);
+
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Segoe UI',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;margin:44px 0 0}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Two calculations people get wrong by eyeballing them</h2>
+<p>"What will this be worth in 20 years" doesn't come from multiplying a monthly amount by time. Compounding accelerates as it goes, which is hard to track by hand. Averaging down has the same problem in reverse — lowering your average price feels like progress, but it's easy to skip the step of working out how far the price still needs to rise to break even.</p>
+<p>This tool shows both calculations on one screen. Type a number and the chart and results update immediately, with no button to press.</p>
+<h2>When to use it</h2><dl>
+<dt>Planning for retirement</dt><dd>Seeing what your current contribution becomes in N years, and what that is actually worth once inflation is factored in.</dd>
+<dt>Tuning your contribution</dt><dd>Adjusting the monthly amount to see how much sooner a target could be reached.</dd>
+<dt>Deciding whether to average down</dt><dd>Checking what your average price becomes before committing to an additional purchase, and how far it still has to rise to break even.</dd>
+<dt>Setting a sell target</dt><dd>Seeing the exact price needed for a given return, laid out as a table.</dd>
+</dl>
+<h2>How to use it</h2><ol>
+<li>Choose FIRE Compound Simulator or Cost Averaging Calculator at the top.</li>
+<li>Type numbers into the fields on the left. Thousands separators are added automatically.</li>
+<li>The chart and results on the right update as you type.</li>
+</ol>
+<h2>Settings</h2><dl>
+<dt>Annual return and inflation rate</dt><dd>Assumed constant for the whole period, which simplifies real markets that move year to year. Treat the result as a reference point, not a forecast.</dd>
+<dt>Target return</dt><dd>In the averaging calculator, enter the return you want and the matching sell price appears in the table.</dd>
+</dl>
+<h2>Frequently asked questions</h2><dl>
+<dt>Could the real result differ from this</dt><dd>Yes. Return and inflation are simplified to constant values for the whole period, while real markets fluctuate year to year. Treat this as a reference and talk to a professional before acting on it.</dd>
+<dt>Is anything I enter sent anywhere</dt><dd>No. Everything is calculated inside this browser and nothing is sent to a server.</dd>
+<dt>What price does the averaging calculator use as the baseline</dt><dd>The rise needed for break-even and for your target return is calculated from the additional purchase price, treated as today's market price.</dd>
+</dl>
+<p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/data-analytics/cagrcal_en.html">CAGR Calculator</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/ocrextract_en.html">Image to Text (OCR)</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/gov-fund-calc_en.html">Korean Grant Cost Share Calculator</a></li>
+<li><a href="https://mnledu.com/en/data-analytics/percent-calc_en.html">Margin & VAT Calculator</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/en/">See all tools &rarr;</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Could the real result differ from this",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Return and inflation are simplified to constant values for the whole period, while real markets fluctuate year to year. Treat this as a reference and talk to a professional before acting on it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is anything I enter sent anywhere",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything is calculated inside this browser and nothing is sent to a server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What price does the averaging calculator use as the baseline",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The rise needed for break-even and for your target return is calculated from the additional purchase price, treated as today's market price."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-31</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (DATA &amp; ANALYTICS) — FIRE 복리 시뮬레이터 + 물타기 평단가 계산기</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "wealth-dashboard";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "wealth-dashboard").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/data-analytics/wealth-dashboard_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/data-analytics/wealth-dashboard_en.html";
+  var TK_SHARE_TITLE = "FIRE & Cost Averaging Calculator";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+</body>
+</html>
