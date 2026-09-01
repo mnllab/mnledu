@@ -1,0 +1,125 @@
+module.exports = {
+  id: 'russian-roulette',
+
+  patches: [
+    ["const DEFAULT_NAMES = ['철수', '영희', '민수', '지훈', '수민', '하늘'];",
+     "const DEFAULT_NAMES = ['Alex', 'Sam', 'Jordan', 'Riley', 'Casey', 'Morgan'];"],
+    ["let names = [], lucky = [], penalty = '오늘 발표', pn = 4;",
+     "let names = [], lucky = [], penalty = 'today\\'s presentation', pn = 4;"],
+    ['<input class="fld" id="penalty" value="오늘 발표" autocomplete="off" placeholder="예) 오늘 발표, 커피 사기, 회식 총무">',
+     '<input class="fld" id="penalty" value="today\'s presentation" autocomplete="off" placeholder="e.g. the presentation, buying coffee, organising dinner">'],
+    ['<meta name="apple-mobile-web-app-title" content="룰렛">',
+     '<meta name="apple-mobile-web-app-title" content="Picker">'],
+    ["await navigator.share({ files: [file], title: '러시안 룰렛 결과' });",
+     "await navigator.share({ files: [file], title: 'Picker result' });"],
+    ["return '💀 러시안 룰렛 희생자: ' + names[idx] + ' (#' + lucky[idx] + ')' +",
+     "return '💀 Picked: ' + names[idx] + ' (#' + lucky[idx] + ')' +"]
+  ],
+
+  strings: [
+    ['한 명씩 직접 누릅니다 · 확률이 점점 올라갑니다', 'Each person presses in turn · the odds climb as you go'],
+    ['실린더가 미친 듯 돌다 한 명에게 멈춥니다', 'The cylinder spins wildly and stops on one person'],
+    ['참가자와 행운의 번호 (2~6명)', 'Participants and lucky numbers (2 to 6)'],
+    ['무엇을 걸까요 (벌칙 · 역할)', 'What is at stake (a task or a role)'],
+    ['버튼을 누르면 실린더가 돌기 시작합니다', 'Press the button and the cylinder starts turning'],
+    ['참가자를 입력하고 시작하세요', 'Add participants and begin'],
+    ['참가자를 2명 이상 입력해 주세요', 'Enter at least two participants'],
+    ['턴제 · 한 명씩 직접 방아쇠를 당깁니다', 'Turn based · each person pulls in turn'],
+    ['스피드 · 한 번에 희생자를 가립니다', 'Speed · one spin decides it'],
+    ['이미지 생성 중 문제가 발생했습니다', 'Something went wrong while making the image'],
+    ['이미지 기능을 불러오지 못했습니다', 'The image feature could not be loaded'],
+    ['이미지 생성에 실패했습니다', 'The image could not be created'],
+    ['이미지가 저장되었습니다!', 'Image saved'],
+    ['공유 시트를 열었습니다', 'Share sheet opened'],
+    ['여섯 개의 탄창, 단 한 발의 실탄', 'Six chambers, one of them marked'],
+    ['행운의 번호를 새로 뽑았습니다', 'New lucky numbers drawn'],
+    ['실탄을 새로 장전했습니다', 'Reloaded'],
+    ['참가자는 6명까지입니다', 'Up to six participants'],
+    ['참가자는 2명 이상이어야 합니다', 'At least two participants'],
+    ['원클릭 스피드 난사', 'One-click speed spin'],
+    ['턴제 직접 방아쇠', 'Turn based'],
+    ['방아쇠 당기기', 'Pull'],
+    ['실린더 돌리기', 'Spin the cylinder'],
+    ['재미로 보는 결과입니다', 'Just for fun'],
+    ['📸 이미지 저장', '📸 Save image'],
+    ['참가자와 모드', 'Participants and mode'],
+    ['장전하고 시작', 'Load and start'],
+    ['다시 장전', 'Reload'],
+    ['효과음과 진동', 'Sound and vibration'],
+    ['텍스트 복사', 'Copy as text'],
+    ['결과가 없습니다', 'No result yet'],
+    ['만드는 중…', 'Creating…'],
+    ['행운의 번호', 'Lucky number'],
+    ['− 인원', '− Fewer'],
+    ['+ 인원', '+ More'],
+    ['🎲 번호', '🎲 Numbers'],
+    ['피격되었습니다', 'That is the one'],
+    ['빈칸', 'empty'],
+    ['벌칙', 'the task'],
+    ['준비', 'Ready'],
+    ['설정', 'Settings'],
+    ['모드', 'Mode'],
+    ['닫기', 'Close'],
+    ['복사가 막혔습니다', 'Copy was blocked'],
+    ['복사되었습니다!', 'Copied'],
+    ["'번호 ' + lucky.join('·') + ' · ' + stamp + ' · 시드 '",
+     "'numbers ' + lucky.join('·') + ' · ' + stamp + ' · seed '"],
+    ['<p class="meta">확률 1/', '<p class="meta">Against a 1 in '],
+    ["' 을 뚫고 장렬히 전사<br>'", "' chance<br>'"],
+    ["'%) · 번호 ' + lucky.join('·')", "'%) · numbers ' + lucky.join('·')"],
+    ['피격!', 'Picked'],
+    ["names.length + '명 대기 중'", "names.length + ' waiting'"],
+    ["(turn + 1) + '번째 차례 · 남은 탄창 ' + remain + '개'", "'Turn ' + (turn + 1) + ' · ' + remain + ' chambers left'"],
+    ["'실린더가 돌아갑니다…'", "'The cylinder is spinning…'"],
+    ["'찰칵 — ' + names[cur] + ' 무사 통과'", "'Click — ' + names[cur] + ' is safe'"],
+    ["'피격! <span style=\"color:var(--blood)\">' + esc(penalty) + '</span> 당첨'",
+     "'Picked for <span style=\"color:var(--blood)\">' + esc(penalty) + '</span>'"],
+    ["'걸린 것 : ' + penalty", "'At stake: ' + penalty"],
+    ["'\\n걸린 것 : ' + penalty", "'\\nAt stake: ' + penalty"],
+    ["'1/' + total + ' 확률을 뚫고 ' + step + '번째 차례에서 전사<br>당시 명중 확률 '",
+     "'A 1 in ' + total + ' chance, landing on turn ' + step + '<br>odds at that point '"],
+    ["'1/' + total + ' 확률 · 단 한 번의 회전으로 결정'",
+     "'A 1 in ' + total + ' chance · decided in a single spin'"],
+    ["'<br>행운의 번호 #' + lucky[idx]", "'<br>Lucky number #' + lucky[idx]"],
+    ["'\\n확률 1/' + total + '을 뚫고 장렬히 전사'", "'\\nAgainst a 1 in ' + total + ' chance'"],
+    ["' · ' + (idx + 1) + '번째 차례에서 격발'", "' · on turn ' + (idx + 1)"],
+    ["' · 원클릭 결정'", "' · decided in one click'"],
+    ["'\\n참가 : '", "'\\nPlayers: '"],
+    ["'확률 1/' + names.length + ' 을 뚫고 장렬히 전사<br>'", "'Against a 1 in ' + names.length + ' chance<br>'"],
+    ["(idx + 1) + '번째 차례에서 격발 · 당시 명중 확률 '", "'turn ' + (idx + 1) + ' · odds at that point '"],
+    ["'원클릭 스피드 · 단 한 번의 회전'", "'one-click spin'"],
+    ["'<br>행운의 번호 #' + lucky[idx] + '</p>'", "'<br>Lucky number #' + lucky[idx] + '</p>'"],
+    ["names.length + '명 · 각자 당첨 확률 1/' + names.length", "names.length + ' players · 1 in ' + names.length + ' each'"],
+    ["') · 번호 ' + lucky.join('·')", "') · numbers ' + lucky.join('·')"]
+  ],
+
+  guide: {
+    intro: {
+      h: 'Picking one person, with a bit of tension',
+      p: [
+        'Choosing who does something at random gives you the answer and nothing else. Marking one of six chambers and going round in turn changes that: each pass raises the odds for whoever is next, and the sequence becomes the entertainment.',
+        'Enter the participants and what is at stake. The result is random, and it is meant to be taken lightly.'
+      ]
+    },
+    uses: [
+      { t: 'Assigning a task', d: 'Who presents, who buys the coffee, who organises dinner.' },
+      { t: 'Running a group', d: 'A short bit of theatre that goes round the table.' },
+      { t: 'Deciding quickly', d: 'The one-click speed mode returns an answer immediately.' }
+    ],
+    steps: [
+      'Set the number of participants and their names.',
+      'Write what is at stake.',
+      'Choose a mode and press <strong>Load and start</strong>.',
+      'Go round in turn until it lands.'
+    ],
+    options: [
+      { t: 'Turn based', d: 'Each person presses in turn. The remaining odds rise with every pass, which is where the tension comes from.' },
+      { t: 'One-click speed spin', d: 'Decides it in one go, for when you just want the answer.' },
+      { t: 'Save image', d: 'Exports the result as a picture for sharing.' }
+    ],
+    faq: [
+      { q: 'Is it fair', a: 'Yes, the outcome is random. Going earlier or later does not help or hurt you.' },
+      { q: 'How many people can play', a: 'Between two and six.' }
+    ]
+  }
+};

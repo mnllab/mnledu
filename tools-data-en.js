@@ -8,6 +8,16 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'document-mail-merge',
+    title: 'Template Document Batch Generator',
+    category: 'PRODUCTIVITY',
+    desc: 'Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact.',
+    url: 'https://mnledu.com/en/productivity/document-mail-merge_en.html',
+    icon: 'file-stack',
+    badge: 'NEW',
+    tags: ['#mailmerge', '#bulkgeneration', '#DOCX', '#HWPX']
+  },
+  {
     id: 'mortgage-stress-tester',
     title: 'Mortgage Stress Tester',
     category: 'PRODUCTIVITY',
@@ -28,14 +38,14 @@ const TOOLS_DATA_EN = [
     tags: ['#tableconversion', '#excel', '#hwp', '#documents']
   },
   {
-    id: 'pdf-to-markdown',
-    title: 'PDF to Markdown Converter',
+    id: 'pdf-to-text',
+    title: 'PDF Document Converter',
     category: 'PRODUCTIVITY',
-    desc: 'Converts a PDF to clean Markdown entirely in your browser, rebuilding tables and joining broken lines. An optional on-device AI model handles the messier cases.',
-    url: 'https://mnledu.com/en/productivity/pdf-to-markdown_en.html',
+    desc: 'Converts a PDF to HWPX, DOCX, TXT or Markdown entirely in your browser. Rebuilds tables, joins broken lines, and lets you set font size, line spacing and more.',
+    url: 'https://mnledu.com/en/productivity/pdf-to-text_en.html',
     icon: 'file-text',
     badge: 'NEW',
-    tags: ['#PDF', '#markdown', '#conversion', '#offline']
+    tags: ['#PDF', '#documentconversion', '#HWPX', '#DOCX']
   },
   {
     id: 'text-batch-factory',

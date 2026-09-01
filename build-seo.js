@@ -125,6 +125,24 @@ function buildSitemap(tools, toolsEn) {
     }
   });
 
+  // 한국어판이 없는 영문 전용 도구 (예: pdf-to-markdown) — 위 루프는
+  // 한국어 카탈로그를 기준으로 돌아서 이런 도구는 그냥 빠져 버린다.
+  // 자기 자신만 가리키는 hreflang(en + x-default=en, ko 없음)으로 별도 추가.
+  const koIds = {};
+  tools.forEach(t => { koIds[t.id] = true; });
+  toolsEn.forEach(t => {
+    if (koIds[t.id]) return; // 이미 위에서 처리됨
+    const enUrl = absolute(t.url);
+    toolEntries.push('  <url>\n' +
+      '    <loc>' + xmlEscape(enUrl) + '</loc>\n' +
+      '    <xhtml:link rel="alternate" hreflang="en" href="' + xmlEscape(enUrl) + '"/>\n' +
+      '    <xhtml:link rel="alternate" hreflang="x-default" href="' + xmlEscape(enUrl) + '"/>\n' +
+      '    <lastmod>' + today + '</lastmod>\n' +
+      '    <changefreq>monthly</changefreq>\n' +
+      '    <priority>0.8</priority>\n' +
+      '  </url>');
+  });
+
   const xml =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
