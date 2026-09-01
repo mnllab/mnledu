@@ -34,26 +34,6 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
-    id: 'document-mail-merge',
-    title: '템플릿 문서 일괄 생성기',
-    category: 'PRODUCTIVITY',
-    desc: '{{항목}}을 자동 감지해 엑셀·CSV로 대량 문서를 생성합니다. DOCX·HWPX는 원본 서식을 그대로 유지한 채 내보낼 수 있습니다.',
-    url: 'https://mnledu.com/kr/productivity/document-mail-merge_kr.html',
-    icon: 'file-stack',
-    badge: 'NEW',
-    tags: ['#메일머지', '#일괄생성', '#DOCX', '#HWPX']
-  },
-  {
-    id: 'pdf-to-text',
-    title: 'PDF 문서 변환기',
-    category: 'PRODUCTIVITY',
-    desc: 'PDF를 브라우저 안에서 HWPX·DOCX·TXT·Markdown으로 변환합니다. 표를 재구성하고 끊어진 줄을 이어 붙이며, 글자 크기·줄 간격 등 서식도 지정할 수 있습니다.',
-    url: 'https://mnledu.com/kr/productivity/pdf-to-text_kr.html',
-    icon: 'file-text',
-    badge: 'NEW',
-    tags: ['#PDF', '#문서변환', '#HWPX', '#DOCX']
-  },
-  {
     id: 'mortgage-stress-tester',
     title: '부동산 대출 스트레스 테스트기',
     category: 'PRODUCTIVITY',
