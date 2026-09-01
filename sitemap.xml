@@ -62,6 +62,24 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://mnledu.com/kr/productivity/pdf-to-markdown_kr.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/pdf-to-markdown_kr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-to-markdown_en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/pdf-to-markdown_kr.html"/>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mnledu.com/en/productivity/pdf-to-markdown_en.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/pdf-to-markdown_kr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-to-markdown_en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/pdf-to-markdown_kr.html"/>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html"/>
@@ -1209,14 +1227,6 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/presentation-timer_kr.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/presentation-timer_en.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/presentation-timer_kr.html"/>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mnledu.com/en/productivity/pdf-to-markdown_en.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-to-markdown_en.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mnledu.com/en/productivity/pdf-to-markdown_en.html"/>
     <lastmod>2026-08-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

@@ -34,6 +34,16 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'pdf-to-markdown',
+    title: 'PDF to Markdown 변환기',
+    category: 'PRODUCTIVITY',
+    desc: 'PDF를 브라우저 안에서 깔끔한 Markdown으로 변환합니다. 표를 재구성하고 끊어진 줄을 이어 붙이며, 온디바이스 AI로 더 정밀하게 다듬을 수 있습니다.',
+    url: 'https://mnledu.com/kr/productivity/pdf-to-markdown_kr.html',
+    icon: 'file-text',
+    badge: 'NEW',
+    tags: ['#PDF', '#마크다운', '#변환', '#오프라인']
+  },
+  {
     id: 'mortgage-stress-tester',
     title: '부동산 대출 스트레스 테스트기',
     category: 'PRODUCTIVITY',
