@@ -3,866 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Mail Merge Generator | TOOLKIT</title>
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact. Runs in your browser with no install or sign up." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/document-mail-merge_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/document-mail-merge_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/document-mail-merge_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/document-mail-merge_kr.html" />
 
-<!-- TOOLKIT:SEO_START -->
-<title>Universal Table Data Hub | Turn Notes & Excel into Word, HWPX, XLSX Instantly</title>
-<meta name="description" content="A browser-based table converter that auto-detects tables from pasted text or Excel files and instantly exports to Word (DOCX), HWPX (Hangul), XLSX, MD, or CSV. Runs 100% locally — nothing is sent to a server.">
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/document-mail-merge_en.html" />
+<meta property="og:title" content="Document Mail Merge Generator | TOOLKIT" />
+<meta property="og:description" content="Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact. Runs in your browser with no install or sign up." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Document Mail Merge Generator | TOOLKIT" />
+<meta name="twitter:description" content="Auto-detects {{fields}} and bulk-generates documents from Excel or CSV. DOCX and HWPX exports can keep the original formatting intact. Runs in your browser with no install or sign up." />
+<!-- TOOLKIT:SEO_END -->
+<meta name="description" content="A browser-based mail merge tool that auto-detects {{fields}} in text, Markdown, DOCX, and HWPX templates, accepts manual values or Excel/CSV headers, and batch-generates HWPX, DOCX, TXT, or MD files without uploading documents to a server.">
 <meta name="author" content="Janggil Kim">
-<link rel="canonical" href="https://mnledu.com/en/productivity/universal-table-data-hub_en.html">
-<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/universal-table-data-hub_kr.html">
-<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/universal-table-data-hub_en.html">
-<link rel="alternate" hreflang="x-default" href="https://mnledu.com/en/productivity/universal-table-data-hub_en.html">
-
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://mnledu.com/en/productivity/document-mail-merge_en.html">
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/document-mail-merge_kr.html">
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/document-mail-merge_en.html">
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/en/productivity/document-mail-merge_en.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TOOLKIT">
 <meta property="og:locale" content="en_US">
-<meta property="og:url" content="https://mnledu.com/en/productivity/universal-table-data-hub_en.html">
-<meta property="og:title" content="Universal Table Data Hub | Turn Notes & Excel into Word, HWPX, XLSX Instantly">
-<meta property="og:description" content="A browser-based table converter that auto-detects tables from pasted text or Excel files and exports to Word, HWPX, XLSX, MD, or CSV.">
-<meta property="og:image" content="https://mnledu.com/assets/og/universal-table-data-hub.png">
-
+<meta property="og:title" content="Document Mail Merge Generator · HWPX · DOCX · Excel | TOOLKIT">
+<meta property="og:description" content="Combine {{field}} templates with Excel or CSV data and batch-generate HWPX, DOCX, TXT, or MD documents entirely in your browser.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Universal Table Data Hub | Turn Notes & Excel into Word, HWPX, XLSX Instantly">
-<meta name="twitter:description" content="A browser-based table converter that auto-detects tables from pasted text or Excel files and exports to Word, HWPX, XLSX, MD, or CSV.">
-<meta name="twitter:image" content="https://mnledu.com/assets/og/universal-table-data-hub.png">
-
+<meta name="twitter:title" content="Document Mail Merge Generator | TOOLKIT">
+<meta name="twitter:description" content="Auto-detect {{fields}} in document templates and generate batches of documents from Excel or CSV data.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Universal Table Data Hub",
+  "name": "Document Mail Merge Generator",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
-  "url": "https://mnledu.com/en/productivity/universal-table-data-hub_en.html",
-  "description": "A browser-based table converter that auto-detects tables from pasted text or Excel files and exports to Word, HWPX, XLSX, MD, or CSV.",
+  "url": "https://mnledu.com/en/productivity/document-mail-merge_en.html",
+  "description": "A browser-based mail merge tool that detects {{fields}} in TXT, Markdown, DOCX, and HWPX templates and batch-generates HWPX, DOCX, TXT, or MD documents from Excel or CSV data.",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": { "@type": "Person", "name": "Janggil Kim" }
 }
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "TOOLKIT", "item": "https://mnledu.com/en/" },
-    { "@type": "ListItem", "position": 2, "name": "Productivity Tools", "item": "https://mnledu.com/en/productivity/" },
-    { "@type": "ListItem", "position": 3, "name": "Universal Table Data Hub", "item": "https://mnledu.com/en/productivity/universal-table-data-hub_en.html" }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Is the table data I paste in sent to a server?", "acceptedAnswer": { "@type": "Answer", "text": "No. All parsing and file generation happens entirely in your browser — no data is ever sent to an external server." } },
-    { "@type": "Question", "name": "If I upload an Excel file, is the original file stored on a server?", "acceptedAnswer": { "@type": "Answer", "text": "No. The SheetJS library reads the file only in your browser's memory, and the data disappears when you close the tab." } },
-    { "@type": "Question", "name": "Do I have to choose the table delimiter myself?", "acceptedAnswer": { "@type": "Answer", "text": "No. Tabs (TSV), commas (CSV), and Markdown table syntax are all detected automatically. If detection is ambiguous, you can still set the delimiter manually at the top." } },
-    { "@type": "Question", "name": "Will a file exported as HWPX actually open in real Hangul (Hancom Office)?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — it's generated following the HWPX OWPML standard and designed to open in Hancom Office 2020 or later. Very complex formatting (nested tables, special objects, etc.) isn't supported, though." } },
-    { "@type": "Question", "name": "What does the 'Inline with text' option do?", "acceptedAnswer": { "@type": "Answer", "text": "In Hangul (HWP), it decides whether a table flows inline with the surrounding text or floats as a freely-positioned object. Turning it on is recommended so the table doesn't drift while you keep editing the document." } },
-    { "@type": "Question", "name": "How many rows and columns can it handle?", "acceptedAnswer": { "@type": "Answer", "text": "We've confirmed real-time processing up to several thousand rows within typical browser memory limits. For very large datasets, only part of the data is shown in the live preview." } }
-  ]
-}
-</script>
-<!-- TOOLKIT:SEO_END -->
-
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { sans: ['Pretendard', 'sans-serif'] },
-        colors: {
-          brand: { DEFAULT: '#0284C7', dark: '#0369A1', light: '#E0F2FE' },
-        }
-      }
-    }
-  }
-</script>
-
-<!-- 라이브러리: 판 고정 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
-
+<script>
+tailwind.config={theme:{extend:{colors:{canvas:'#F8FAFC',card:'#FFFFFF',accent:{DEFAULT:'#F97316',dark:'#EA580C',light:'#FFEDD5'},ink:{900:'#0F172A',700:'#334155',500:'#64748B',300:'#CBD5E1'}},fontFamily:{sans:['Pretendard','ui-sans-serif','system-ui','sans-serif']},boxShadow:{soft:'0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.06)'}}}};
+</script>
 <style>
-  html, body { font-family: 'Pretendard', sans-serif; background:#F1F5F9; }
-  .tk-card { background:#FFFFFF; border-radius:16px; box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.06); }
-  .tk-scroll::-webkit-scrollbar { width:8px; height:8px; }
-  .tk-scroll::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:8px; }
-  #dropzone.drag-over { border-color:#0284C7; background:#E0F2FE; }
-  .tk-toast { transition: transform .25s ease, opacity .25s ease; }
-  .tk-guide h2 { font-size:1.125rem; font-weight:700; color:#0F172A; margin-top:1.75rem; margin-bottom:.5rem; }
-  .tk-guide p { color:#475569; line-height:1.7; margin-bottom:.5rem; }
-  .tk-guide dt { font-weight:600; color:#0F172A; margin-top:.75rem; }
-  .tk-guide dd { color:#475569; margin-top:.25rem; line-height:1.6; }
-  .tk-guide-note { background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:1rem; color:#64748B; font-size:.875rem; line-height:1.6; }
-  .tk-guide-more a { color:#0284C7; text-decoration:underline; text-underline-offset:2px; }
-  #previewTableWrap table td, #previewTableWrap table th { border:1px solid #CBD5E1; padding:6px 10px; }
-  #previewTableWrap table { border-collapse:collapse; }
-  .tk-sub-btn { padding:.5rem 0; border-radius:.5rem; border:1px solid #E2E8F0; background:#fff; color:#334155; font-size:.75rem; font-weight:600; }
-  .tk-sub-btn:hover:not(:disabled) { background:#F8FAFC; }
-  .tk-sub-btn:disabled { opacity:.4; cursor:not-allowed; }
+body{font-family:'Pretendard',ui-sans-serif,system-ui,sans-serif}.mono{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}.drop.dragover{border-color:#F97316;background:#FFF7ED}.fmt-btn.active{background:#F97316;color:#fff}.tk-toast{animation:toastIn .16s ease-out}@keyframes toastIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#E2E8F0;border-radius:999px}.preview-page{white-space:normal}.field-chip{max-width:180px}.guide h2{font-size:1.05rem;font-weight:700;color:#0F172A;margin-top:1.8rem;margin-bottom:.45rem}.guide p,.guide li,.guide dd{color:#475569;line-height:1.75}.guide dt{font-weight:650;color:#0F172A;margin-top:.8rem}
 </style>
 </head>
-<body class="min-h-screen text-slate-800">
-
-<header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200">
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-xl bg-brand flex items-center justify-center text-white font-bold">T</div>
-      <div>
-        <p class="text-sm font-bold text-slate-900 leading-none">Universal Table Data Hub</p>
-        <p class="text-[11px] text-slate-400 leading-none mt-1">만능 표 데이터 허브</p>
-      </div>
-    </div>
-    <a href="https://mnledu.com/kr/productivity/universal-table-data-hub_kr.html" class="text-xs font-medium text-slate-500 hover:text-brand border border-slate-200 rounded-full px-3 py-1.5">KO</a>
+<body class="bg-canvas text-ink-900 min-h-screen">
+<header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+    <a href="https://mnledu.com/en/" class="flex items-center gap-2 shrink-0"><span class="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-bold text-sm">TK</span><span class="font-semibold hidden sm:inline">TOOLKIT</span></a>
+    <div class="text-center flex-1 min-w-0"><h1 class="text-sm sm:text-base font-semibold truncate">Document Mail Merge Generator</h1><p class="text-[11px] sm:text-xs text-ink-500 hidden sm:block">Auto-detect {{fields}} · Batch from Excel/CSV · No server upload</p></div>
+    <a href="https://mnledu.com/en/productivity/" class="text-xs sm:text-sm text-ink-500 hover:text-accent shrink-0">All tools →</a>
   </div>
 </header>
 
-<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
-
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-slate-900">Universal Table Data Hub</h1>
-    <p class="text-sm text-slate-500 mt-1">Paste from Notepad or drop in an Excel file — format it once, then export straight to Word.</p>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px_1fr] gap-5">
-
-    <!-- Left: input -->
-    <section class="tk-card p-4 flex flex-col gap-3 min-h-[560px]">
-      <h2 class="text-sm font-bold text-slate-700 flex items-center gap-1.5">📝 Data Input</h2>
-
-      <div id="dropzone" class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center transition-colors cursor-pointer">
-        <p class="text-sm text-slate-500">📊 Drop an Excel file (.xlsx, .csv) here, or</p>
-        <button id="fileSelectBtn" type="button" class="mt-2 text-xs font-semibold text-brand underline underline-offset-2">Choose a file</button>
-        <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden">
+<main class="max-w-[1440px] mx-auto px-4 sm:px-6 py-6">
+  <div class="grid grid-cols-1 xl:grid-cols-[1.12fr_.88fr] gap-5">
+    <section class="bg-card rounded-2xl shadow-soft border border-slate-200 p-4 flex flex-col min-h-[580px]">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div><h2 class="text-sm font-semibold">1. Document Template</h2><p class="text-[11px] text-ink-500 mt-1">Type directly or load a TXT, MD, DOCX, or HWPX file</p></div>
+        <label class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">📄 Choose template file<input id="templateFile" type="file" accept=".txt,.md,.docx,.hwpx" class="hidden"></label>
       </div>
-
-      <textarea id="memoInput" spellcheck="false"
-        class="flex-1 min-h-[360px] w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-brand/40 focus:bg-white tk-scroll"
-        placeholder="Paste a table copied from Excel (TSV), CSV, or Markdown (| Name | Age |) here.
-
-Example:
-Name	Age	Dept
-Alex	28	Sales
-Jamie	34	Engineering"></textarea>
-
-      <div class="flex items-center justify-between text-xs text-slate-400 gap-2">
-        <span id="parseStatus">Waiting for input</span>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <label class="flex items-center gap-1">
-            <span>Rows</span>
-            <input id="rowCountInput" type="number" min="0" max="20000" class="w-14 rounded border border-slate-200 px-1.5 py-0.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand/50" disabled>
-          </label>
-          <label class="flex items-center gap-1">
-            <span>Cols</span>
-            <input id="colCountInput" type="number" min="0" max="200" class="w-14 rounded border border-slate-200 px-1.5 py-0.5 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand/50" disabled>
-          </label>
-        </div>
+      <div id="templateDrop" class="drop border-2 border-dashed border-slate-200 rounded-xl p-3 mb-3 text-xs text-ink-500 text-center">Drop a TXT, MD, DOCX, or HWPX file here</div>
+      <div id="preserveStatus" class="hidden mb-3 text-[11px] rounded-lg border px-3 py-2 leading-relaxed"></div>
+      <textarea id="templateText" spellcheck="false" class="mono flex-1 min-h-[360px] w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-accent/30 focus:bg-white" placeholder="Example)\n\nDear {{Name}},\n\nHello. This is {{Contact}} from {{Company}}.\nHere is the information scheduled for {{Date}}.\n\nThank you."></textarea>
+      <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="text-ink-500"><span id="templateStatus">Enter or load a template</span></div>
+        <div class="flex items-center gap-2"><input id="newFieldName" type="text" maxlength="40" class="w-32 rounded-lg border border-slate-200 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-accent/30" placeholder="Field name"><button id="addFieldBtn" type="button" class="rounded-lg border border-slate-200 px-3 py-1.5 hover:bg-slate-50">+ Add field</button></div>
       </div>
     </section>
 
-    <!-- Center: formatting panel -->
-    <section class="tk-card p-4 flex flex-col gap-5">
-      <h2 class="text-sm font-bold text-slate-700 flex items-center gap-1.5">🛠️ Formatting Panel <span class="text-[10px] font-normal text-slate-400">(Word & HWP optimized)</span></h2>
-
-      <div>
-        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Paragraph alignment</label>
-        <div class="grid grid-cols-3 gap-1.5" id="alignGroup">
-          <button data-align="left" class="fmt-align-btn py-2 rounded-lg text-xs font-medium border">Left</button>
-          <button data-align="center" class="fmt-align-btn py-2 rounded-lg text-xs font-medium border">Center</button>
-          <button data-align="right" class="fmt-align-btn py-2 rounded-lg text-xs font-medium border">Right</button>
+    <section class="bg-card rounded-2xl shadow-soft border border-slate-200 p-4 min-h-[580px] flex flex-col">
+      <div class="flex items-center justify-between gap-2 mb-3"><div><h2 class="text-sm font-semibold">2. Fields and Data</h2><p class="text-[11px] text-ink-500 mt-1">You can use up to 20 unique fields</p></div><span id="fieldCount" class="text-xs font-semibold text-accent bg-orange-50 px-2.5 py-1 rounded-full">0 / 20</span></div>
+      <div id="fieldChips" class="flex flex-wrap gap-1.5 min-h-[34px] mb-3"></div>
+      <div class="border-t border-slate-100 pt-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2"><h3 class="text-xs font-semibold text-ink-700">Data input</h3><button id="clearDataBtn" type="button" class="hidden text-[11px] text-red-500 hover:underline">Clear Excel/CSV data</button></div>
+        <div id="manualFields" class="space-y-2 max-h-[260px] overflow-auto pr-1"></div>
+        <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div class="flex flex-wrap gap-2 items-center justify-between"><div><p class="text-xs font-semibold text-ink-700">Excel / CSV Batch Data</p><p class="text-[11px] text-ink-500 mt-0.5">First row = field names, second row = preview sample, all remaining rows = batch output</p></div><label class="text-xs px-3 py-1.5 bg-white rounded-lg border border-slate-200 hover:bg-slate-100 cursor-pointer">📊 Choose file<input id="dataFile" type="file" accept=".xlsx,.xls,.csv" class="hidden"></label></div>
+          <div id="dataDrop" class="drop mt-2 border-2 border-dashed border-slate-200 rounded-lg px-3 py-3 text-[11px] text-ink-500 text-center bg-white">Drop an Excel or CSV file here</div>
+          <textarea id="dataPaste" class="mono mt-2 w-full h-20 resize-none rounded-lg border border-slate-200 bg-white p-2 text-xs focus:outline-none focus:ring-2 focus:ring-accent/30" placeholder="Or paste a copied Excel table or CSV content here"></textarea>
+          <div class="mt-2 flex items-center justify-between gap-2"><span id="dataStatus" class="text-[11px] text-ink-500">No batch data · Manual input mode</span><button id="applyPasteBtn" type="button" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700">Use pasted table</button></div>
+          <div id="sampleWrap" class="hidden mt-3 overflow-auto rounded-lg border border-slate-200 bg-white"></div>
+          <div id="mappingNotice" class="hidden mt-2 text-[11px] rounded-lg px-3 py-2"></div>
         </div>
-      </div>
-
-      <div>
-        <label for="fontSize" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
-          <span>Font size</span><span id="fontSizeVal" class="text-brand">10pt</span>
-        </label>
-        <input id="fontSize" type="range" min="6" max="72" value="10" class="w-full accent-brand">
-      </div>
-
-      <div>
-        <label for="lineHeight" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
-          <span>Line spacing</span><span id="lineHeightVal" class="text-brand">160%</span>
-        </label>
-        <input id="lineHeight" type="range" min="80" max="300" step="5" value="160" class="w-full accent-brand">
-      </div>
-
-      <div>
-        <label for="tableWidth" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
-          <span>Table width</span><span id="tableWidthVal" class="text-brand">160mm</span>
-        </label>
-        <input id="tableWidth" type="range" min="40" max="210" value="160" class="w-full accent-brand">
-      </div>
-
-      <label class="flex items-center gap-2 cursor-pointer select-none">
-        <input id="treatAsChar" type="checkbox" checked class="w-4 h-4 accent-brand rounded">
-        <span class="text-xs font-medium text-slate-700">Inline with text (HWP)</span>
-      </label>
-
-      <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
-        <label class="flex items-center gap-2 cursor-pointer select-none">
-          <input id="equalColWidth" type="checkbox" checked class="w-4 h-4 accent-brand rounded">
-          <span class="text-xs font-medium text-slate-700">Equal column widths</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer select-none">
-          <input id="equalRowHeight" type="checkbox" checked class="w-4 h-4 accent-brand rounded">
-          <span class="text-xs font-medium text-slate-700">Equal row heights</span>
-        </label>
-        <p class="text-[11px] text-slate-400 leading-relaxed">Turn off to auto-size columns/rows based on content length.</p>
-      </div>
-
-      <div class="pt-3 border-t border-slate-100">
-        <label class="flex items-center gap-2 cursor-pointer select-none">
-          <input id="hasHeaderRow" type="checkbox" checked class="w-4 h-4 accent-brand rounded">
-          <span class="text-xs font-medium text-slate-700">Use first row as header</span>
-        </label>
-      </div>
-
-      <button id="clearBtn" type="button" class="mt-auto text-xs font-semibold text-slate-400 hover:text-red-500 self-start">🗑 Clear all</button>
-    </section>
-
-    <!-- Right: preview & export -->
-    <section class="tk-card p-4 flex flex-col gap-3">
-      <h2 class="text-sm font-bold text-slate-700 flex items-center gap-1.5">👁️ Live Preview</h2>
-
-      <div id="previewTableWrap" class="flex-1 min-h-[320px] overflow-auto rounded-xl border border-slate-200 bg-white p-3 tk-scroll">
-        <div id="emptyState" class="h-full flex flex-col items-center justify-center text-center py-16 text-slate-400">
-          <p class="text-3xl mb-2">🗂️</p>
-          <p class="text-sm font-medium">No table data yet</p>
-          <p class="text-xs mt-1">Paste text on the left or upload an Excel file to get started.</p>
-        </div>
-      </div>
-
-      <div class="pt-2 border-t border-slate-100 flex flex-col gap-2">
-        <button id="exportDocxBtn" type="button"
-          class="w-full py-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-bold shadow-sm shadow-sky-200 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
-          🔵 Download Word (.docx)
-        </button>
-        <div class="grid grid-cols-4 gap-1.5">
-          <button id="exportHwpxBtn" class="tk-sub-btn" disabled>HWPX</button>
-          <button id="exportXlsxBtn" class="tk-sub-btn" disabled>XLSX</button>
-          <button id="exportMdBtn" class="tk-sub-btn" disabled>MD</button>
-          <button id="exportCsvBtn" class="tk-sub-btn" disabled>CSV</button>
-        </div>
-        <button id="copyClipboardBtn" type="button" disabled
-          class="w-full py-2.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5">
-          📋 Copy formatted table (paste into Word/HWP)
-        </button>
       </div>
     </section>
   </div>
 
-  <!-- Guide -->
-  <section class="tk-guide max-w-3xl mx-auto mt-16 mb-10">
-    <p class="text-sm text-slate-500">
-      We've all been there: copy a table from Excel, paste it into a Word or Hangul document, and the formatting falls apart —
-      or the reverse, retyping a table cell by cell to get it back into Excel.
-      Sometimes matching the table's format takes longer than writing the report itself.
-      Universal Table Data Hub auto-detects tables from text you paste in or an Excel file you drop in, lets you apply the formatting you want,
-      and exports it straight to Word, HWPX, XLSX, or whatever format you need.
-    </p>
-
-    <h2>Why support both pasting and file upload</h2>
-    <p>
-      When you need to move a table quickly mid-meeting, copying a cell range and pasting it as text is far faster than opening Excel.
-      But if you already have a tidy Excel file, uploading it as-is is easier. Both input paths convert into the same
-      2D array structure, so formatting and export work identically no matter which way you bring the data in.
-    </p>
-
-    <h2>How the delimiter gets detected automatically</h2>
-    <p>
-      If the pasted text has both a <code>| Name | Age |</code> pattern and a <code>|---|---|</code> separator line, it's treated as a Markdown table.
-      If it contains tab characters, it's treated as TSV copied from Excel; if only commas, as CSV. The priority is Markdown &gt; TSV &gt; CSV
-      because commas often show up inside Markdown table syntax too — checking for commas first would break those tables.
-      Text with no delimiter at all is treated as a single-column table, one row per line, so no data gets dropped.
-    </p>
-
-    <h2>Why 'inline with text' and table width are separate options</h2>
-    <p>
-      In Hangul (HWP), a table placed as a floating object tends to drift out of position and overlap content as paragraphs grow.
-      That's why 'Inline with text' defaults to on, keeping the table anchored to the surrounding text flow — and why table width is
-      set directly in millimeters, making it easy to match the usable width on an A4 page after margins (around 160mm).
-    </p>
-
-    <h2>How the export formats were chosen</h2>
-    <p>
-      DOCX is for dropping straight into Word or sharing via Google Docs, HWPX is for Hangul documents, XLSX is for further spreadsheet work,
-      and MD/CSV are for developer docs or data migration. 'Copy formatted table' skips the file entirely for a quick Ctrl+V —
-      it copies an HTML table with inline CSS to the clipboard so cell borders and alignment survive the paste.
-    </p>
-
-    <dl>
-      <dt>Is the table data I paste in sent to a server?</dt>
-      <dd>No. All parsing and file generation happens entirely in your browser — no data is ever sent to an external server.</dd>
-
-      <dt>If I upload an Excel file, is the original file stored on a server?</dt>
-      <dd>No. The SheetJS library reads the file only in your browser's memory, and the data disappears when you close the tab.</dd>
-
-      <dt>Do I have to choose the table delimiter myself?</dt>
-      <dd>No. Tabs (TSV), commas (CSV), and Markdown table syntax are all detected automatically. If detection is ambiguous, you can still set the delimiter manually at the top.</dd>
-
-      <dt>Will a file exported as HWPX actually open in real Hangul (Hancom Office)?</dt>
-      <dd>Yes — it's generated following the HWPX OWPML standard and designed to open in Hancom Office 2020 or later. Very complex formatting (nested tables, special objects, etc.) isn't supported, though.</dd>
-
-      <dt>What does the 'Inline with text' option do?</dt>
-      <dd>In Hangul (HWP), it decides whether a table flows inline with the surrounding text or floats as a freely-positioned object. Turning it on is recommended so the table doesn't drift while you keep editing the document.</dd>
-
-      <dt>How many rows and columns can it handle?</dt>
-      <dd>We've confirmed real-time processing up to several thousand rows within typical browser memory limits. For very large datasets, only part of the data is shown in the live preview.</dd>
-    </dl>
-
-    <p class="tk-guide-note mt-4">
-      This tool runs 100% in your browser and never sends data to a server. Table data you enter and Excel files you upload aren't stored anywhere,
-      and disappear as soon as you close the tab. You can use it on sensitive internal data without worrying about it leaking externally.
-    </p>
-
-    <div class="tk-guide-more mt-6">
-      <p class="text-xs font-semibold text-slate-500 mb-2">Tools that pair well with this one</p>
-      <ul class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-        <li><a href="https://mnledu.com/en/productivity/">Excel Table Formatter (coming soon)</a></li>
-        <li><a href="https://mnledu.com/en/productivity/">CSV ↔ JSON Converter (coming soon)</a></li>
-        <li><a href="https://mnledu.com/en/productivity/">Markdown Table Generator (coming soon)</a></li>
-        <li><a href="https://mnledu.com/en/productivity/">Document Merger (coming soon)</a></li>
-        <li><a href="https://mnledu.com/en/productivity/">Report Formatting Automator (coming soon)</a></li>
-        <li><a href="https://mnledu.com/en/productivity/">Large Excel File Splitter (coming soon)</a></li>
-      </ul>
-      <p class="mt-3"><a href="https://mnledu.com/en/" class="font-semibold">← Browse all TOOLKIT tools</a></p>
+  <section class="mt-5 bg-card rounded-2xl shadow-soft border border-slate-200 overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-200 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><h2 class="text-sm font-semibold">3. Preview and Export</h2><span id="previewBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-ink-500">Manual sample</span></div><span id="mergedCount" class="text-[11px] text-ink-500"></span></div>
+      <div class="flex flex-wrap items-end gap-3 rounded-xl bg-slate-50 border border-slate-200 p-3">
+        <div class="min-w-[110px]"><label class="text-[11px] text-ink-500 block mb-1">Font size <span id="fontSizeVal" class="text-accent">10pt</span></label><input id="fontSize" type="range" min="7" max="24" value="10" class="w-full accent-accent"></div>
+        <div class="min-w-[110px]"><label class="text-[11px] text-ink-500 block mb-1">Line spacing <span id="lineHeightVal" class="text-accent">160%</span></label><input id="lineHeight" type="range" min="100" max="250" step="10" value="160" class="w-full accent-accent"></div>
+        <div class="min-w-[110px]"><label class="text-[11px] text-ink-500 block mb-1">Paragraph spacing <span id="paraSpacingVal" class="text-accent">6pt</span></label><input id="paraSpacing" type="range" min="0" max="30" value="6" class="w-full accent-accent"></div>
+        <div><label class="text-[11px] text-ink-500 block mb-1">Alignment</label><div id="alignGroup" class="flex rounded-lg border border-slate-200 overflow-hidden bg-white"><button data-align="left" class="fmt-btn active text-xs px-2.5 py-1.5">Left</button><button data-align="center" class="fmt-btn text-xs px-2.5 py-1.5">Center</button><button data-align="right" class="fmt-btn text-xs px-2.5 py-1.5">Right</button><button data-align="justify" class="fmt-btn text-xs px-2.5 py-1.5">Justify</button></div></div>
+        <div class="min-w-[180px] flex-1 xl:flex-none"><label class="text-[11px] text-ink-500 block mb-1">File name pattern</label><input id="fileNamePattern" type="text" value="MailMerge_{{Number}}" class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs focus:outline-none focus:ring-2 focus:ring-accent/30" title="Example: {{Name}}_Notice or MailMerge_{{Number}}"></div>
+        <div class="ml-auto flex items-end gap-2"><div><label class="text-[11px] text-ink-500 block mb-1">Export format</label><select id="exportFormat" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs"><option value="hwpx">HWPX</option><option value="docx">DOCX</option><option value="txt">TXT</option><option value="md">MD</option></select></div><button id="exportBtn" type="button" disabled class="h-9 px-4 rounded-lg bg-accent text-white text-xs font-semibold hover:bg-accent-dark disabled:opacity-40 disabled:cursor-not-allowed">Export</button></div>
+      </div>
     </div>
+    <div class="bg-slate-100 p-5 sm:p-8 min-h-[520px] overflow-auto"><div id="previewPage" class="preview-page max-w-[794px] min-h-[900px] mx-auto bg-white border border-slate-200 shadow-sm px-10 sm:px-14 py-12 sm:py-16"></div></div>
+  </section>
+
+  <section class="guide max-w-[900px] mx-auto mt-14 mb-12 px-1">
+    <h2>How to use</h2>
+    <ol class="list-decimal pl-5 space-y-1.5"><li>Mark each replaceable value as <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">{{Name}}</code>, <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">{{Company}}</code>, or <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">{{Date}}</code>. Reusing the same field counts as one field, and you can use up to 20 unique fields.</li><li>You can type a template directly or load a TXT, Markdown, DOCX, or HWPX file. DOCX and HWPX files are read inside the browser so their merge fields can be detected.</li><li>For a single document, enter values in the automatically generated field inputs. The preview updates immediately.</li><li>For batch output, choose an Excel/CSV file or drag it into the batch-data area. The first row is treated as field names, the second row is shown as the preview sample, and Export generates every row from row 2 onward into one ZIP file.</li><li>Excel/CSV column names must exactly match the template fields. For example, <code>{{Name}}</code> connects to a first-row column named <code>Name</code>.</li><li>You can also use fields in the file-name pattern. <code>{{Number}}</code> is a reserved field that automatically increments as 001, 002, 003, and so on.</li></ol>
+    <h2>Supported formats and formatting</h2><p>Output formats are HWPX, DOCX, TXT, and MD. For templates typed directly or converted to a different format, the selected font size, line spacing, paragraph spacing, and alignment are applied to newly generated HWPX/DOCX files. When a DOCX or HWPX template is exported to the same format, the original document formatting takes priority. TXT and MD preserve the text structure. In Excel/CSV batch mode, one document is generated for each data row and the results are bundled into a ZIP file.</p>
+    <h2>Preserving original DOCX/HWPX formatting</h2><p>When you load a DOCX or HWPX template, the preview shows plain text for content verification only. When you export back to the same format, the tool does not rebuild the document. Instead, it clones the original package and replaces only the text inside <code>{{fields}}</code>. This preserves the original fonts, font sizes, colors, paragraph formatting, tables, images, headers, footers, and other document objects. A DOCX template preserves its formatting when exported as DOCX, and an HWPX template preserves its formatting when exported as HWPX. Converting to a different format creates a new document using the common formatting options above.</p><p>If you directly edit the extracted template text after loading a DOCX/HWPX file, formatting-preservation mode is automatically disabled because the screen text may no longer match the original document structure. Entering values for existing <code>{{fields}}</code> or connecting Excel/CSV data does not disable preservation mode.</p>
+    <h2>Is my data sent to a server?</h2><p>No. Template reading, Excel/CSV parsing, field replacement, DOCX/HWPX generation, and ZIP packaging all happen inside the current browser tab. Closing or refreshing the page clears the working data.</p>
+    <div class="mt-7 rounded-xl bg-slate-50 border border-slate-200 p-4 text-xs text-ink-500 leading-relaxed">Note: The legacy Word binary format <b>.doc</b> is not supported. Save it as <b>.docx</b> in Word or Google Docs before loading it. Excel batch data uses the first worksheet.</div>
   </section>
 </main>
-
-<div id="toastRoot" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center"></div>
-
-<script>
-/* global XLSX, JSZip, saveAs, docx */
-(function () {
-  'use strict';
-
-  // ===================== 1. Parsing logic =====================
-  function stripMdRow(line) {
-    let t = line.trim();
-    if (t.startsWith('|')) t = t.slice(1);
-    if (t.endsWith('|')) t = t.slice(0, -1);
-    return t;
-  }
-  function isMdSeparatorRow(line) {
-    const t = stripMdRow(line).trim();
-    if (!t) return false;
-    const cells = t.split('|').map(c => c.trim());
-    return cells.length > 0 && cells.every(c => /^:?-{1,}:?$/.test(c));
-  }
-  function splitMdCells(rowText) {
-    const PLACEHOLDER = '\u0000';
-    const protectedText = rowText.replace(/\\\|/g, PLACEHOLDER);
-    return protectedText.split('|').map(c => c.trim().split(PLACEHOLDER).join('|'));
-  }
-  function parseMarkdownTable(text) {
-    const lines = text.split(/\r\n|\r|\n/).filter(l => l.trim() !== '');
-    const rows = [];
-    for (const line of lines) {
-      if (isMdSeparatorRow(line)) continue;
-      rows.push(splitMdCells(stripMdRow(line)));
-    }
-    return rows;
-  }
-  function parseDelimited(text, delimiter) {
-    const rows = [];
-    let row = [];
-    let field = '';
-    let inQuotes = false;
-    const s = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    for (let i = 0; i < s.length; i++) {
-      const c = s[i];
-      if (inQuotes) {
-        if (c === '"') {
-          if (s[i + 1] === '"') { field += '"'; i++; }
-          else inQuotes = false;
-        } else field += c;
-      } else {
-        if (c === '"') inQuotes = true;
-        else if (c === delimiter) { row.push(field); field = ''; }
-        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
-        else field += c;
-      }
-    }
-    if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
-    return rows.filter(r => !(r.length === 1 && r[0].trim() === ''));
-  }
-  function detectAndParse(text) {
-    if (!text || !text.trim()) return { data: [], type: 'empty' };
-    const lines = text.split(/\r\n|\r|\n/).filter(l => l.trim() !== '');
-    const mdLikeLines = lines.filter(l => l.trim().startsWith('|'));
-    const hasSeparatorRow = lines.some(isMdSeparatorRow);
-    if (mdLikeLines.length >= 1 && hasSeparatorRow) return { data: parseMarkdownTable(text), type: 'markdown' };
-    if (text.includes('\t')) return { data: parseDelimited(text, '\t'), type: 'tsv' };
-    if (text.includes(',')) return { data: parseDelimited(text, ','), type: 'csv' };
-    return { data: lines.map(l => [l]), type: 'plain' };
-  }
-  function normalizeRows(rows) {
-    const maxLen = rows.reduce((m, r) => Math.max(m, r.length), 0);
-    return rows.map(r => {
-      const copy = r.slice();
-      while (copy.length < maxLen) copy.push('');
-      return copy;
-    });
-  }
-  function toCSV(rows) {
-    return rows.map(r => r.map(cell => {
-      const v = String(cell ?? '');
-      if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
-      return v;
-    }).join(',')).join('\n');
-  }
-  function toMarkdown(rows) {
-    if (!rows.length) return '';
-    const esc = v => String(v ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
-    const header = rows[0];
-    const body = rows.slice(1);
-    const lines = [];
-    lines.push('| ' + header.map(esc).join(' | ') + ' |');
-    lines.push('| ' + header.map(() => '---').join(' | ') + ' |');
-    for (const r of body) lines.push('| ' + r.map(esc).join(' | ') + ' |');
-    return lines.join('\n');
-  }
-  function toTSV(rows) { return rows.map(r => r.join('\t')).join('\n'); }
-
-  // 열 너비 비율(%) 계산 - 균등 배분 또는 내용 길이 비례 배분. 미리보기/DOCX/클립보드 내보내기가 공유한다.
-  function computeColWidthRatios() {
-    const cols = state.data[0] ? state.data[0].length : 0;
-    if (cols === 0) return [];
-    if (state.equalColWidth) return new Array(cols).fill(1 / cols);
-    const maxLens = new Array(cols).fill(1);
-    state.data.forEach(row => {
-      row.forEach((cell, ci) => {
-        const len = String(cell ?? '').length || 1;
-        if (len > maxLens[ci]) maxLens[ci] = len;
-      });
-    });
-    const totalLen = maxLens.reduce((a, b) => a + b, 0);
-    const minRatio = 0.06;
-    let ratios = maxLens.map(len => Math.max(minRatio, len / totalLen));
-    const sum = ratios.reduce((a, b) => a + b, 0);
-    return ratios.map(r => r / sum); // 정규화하여 합이 1이 되도록
-  }
-
-  // ===================== 2. 상태 =====================
-  const state = {
-    data: [],
-    align: 'left',
-    fontSize: 10,
-    lineHeight: 160,
-    widthMm: 160,
-    treatAsChar: true,
-    hasHeader: true,
-    equalColWidth: true,
-    equalRowHeight: true,
-  };
-
-  // ===================== 3. DOM =====================
-  const $ = (id) => document.getElementById(id);
-  const memoInput = $('memoInput');
-  const dropzone = $('dropzone');
-  const fileInput = $('fileInput');
-  const fileSelectBtn = $('fileSelectBtn');
-  const parseStatus = $('parseStatus');
-  const rowCountInput = $('rowCountInput');
-  const colCountInput = $('colCountInput');
-  const previewWrap = $('previewTableWrap');
-  const emptyState = $('emptyState');
-  const clearBtn = $('clearBtn');
-
-  const exportBtns = {
-    hwpx: $('exportHwpxBtn'), docx: $('exportDocxBtn'), xlsx: $('exportXlsxBtn'),
-    md: $('exportMdBtn'), csv: $('exportCsvBtn'), clip: $('copyClipboardBtn'),
-  };
-
-  function showToast(msg, tone) {
-    const root = $('toastRoot');
-    const el = document.createElement('div');
-    const bg = tone === 'error' ? 'bg-red-500' : (tone === 'warn' ? 'bg-amber-500' : 'bg-slate-800');
-    el.className = 'tk-toast ' + bg + ' text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg opacity-0 translate-y-2';
-    el.textContent = msg;
-    root.appendChild(el);
-    requestAnimationFrame(() => { el.classList.remove('opacity-0', 'translate-y-2'); });
-    setTimeout(() => {
-      el.classList.add('opacity-0', 'translate-y-2');
-      setTimeout(() => el.remove(), 300);
-    }, 2600);
-  }
-
-  function setExportEnabled(enabled) {
-    Object.values(exportBtns).forEach(b => { b.disabled = !enabled; });
-  }
-
-  // 대용량 데이터 내보내기 시 버튼 잠금 + 안내(연속 클릭으로 인한 중복 생성/브라우저 버벅임 방지)
-  async function withBusyExport(btn, busyLabel, fn) {
-    if (btn.disabled) return;
-    const original = btn.innerHTML;
-    const isHeavy = state.data.length > 2000;
-    btn.disabled = true;
-    if (isHeavy) { btn.textContent = busyLabel; showToast('Processing a large dataset...'); }
-    try {
-      await fn();
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = original;
-    }
-  }
-
-  function updateData(rows, sourceLabel, opts) {
-    const skipMemoSync = opts && opts.skipMemoSync;
-    state.data = normalizeRows(rows);
-    if (!state.data.length) {
-      emptyState.style.display = 'flex';
-      rowCountInput.value = '';
-      colCountInput.value = '';
-      rowCountInput.disabled = true;
-      colCountInput.disabled = true;
-      setExportEnabled(false);
-      const existingTable = previewWrap.querySelector('table');
-      if (existingTable) existingTable.remove();
-      const existingNotice = previewWrap.querySelector('#previewCapNotice');
-      if (existingNotice) existingNotice.remove();
-      return;
-    }
-    emptyState.style.display = 'none';
-    rowCountInput.value = state.data.length;
-    colCountInput.value = state.data[0].length;
-    rowCountInput.disabled = false;
-    colCountInput.disabled = false;
-    setExportEnabled(true);
-    renderPreview();
-    if (sourceLabel) parseStatus.textContent = sourceLabel;
-    if (!skipMemoSync) { /* 메모장은 원본 입력 형태를 유지하고, 행/열 수동 조절 시에만 별도로 동기화함 */ }
-  }
-
-  // 행/열 개수를 사용자가 직접 조절 -> state.data 를 늘리거나 줄이고, 메모장에도 반영
-  function resizeRows(newRowCount) {
-    if (!state.data.length) return;
-    const colCount = state.data[0].length;
-    const n = Math.max(0, Math.min(20000, Math.floor(newRowCount) || 0));
-    let next = state.data.slice(0, n);
-    while (next.length < n) next.push(new Array(colCount).fill(''));
-    state.data = next;
-    memoInput.value = toTSV(state.data);
-    updateData(state.data, 'Row count adjusted manually', { skipMemoSync: true });
-  }
-  function resizeCols(newColCount) {
-    if (!state.data.length) return;
-    const n = Math.max(0, Math.min(200, Math.floor(newColCount) || 0));
-    const next = state.data.map(row => {
-      const copy = row.slice(0, n);
-      while (copy.length < n) copy.push('');
-      return copy;
-    });
-    state.data = next;
-    memoInput.value = toTSV(state.data);
-    updateData(state.data, 'Column count adjusted manually', { skipMemoSync: true });
-  }
-  rowCountInput.addEventListener('change', () => resizeRows(Number(rowCountInput.value)));
-  colCountInput.addEventListener('change', () => resizeCols(Number(colCountInput.value)));
-
-  const MAX_PREVIEW_ROWS = 500; // 미리보기 렌더링 상한 (내보내기는 항상 전체 데이터 사용)
-
-  function renderPreview() {
-    const existingTable = previewWrap.querySelector('table');
-    if (existingTable) existingTable.remove();
-    const existingNotice = previewWrap.querySelector('#previewCapNotice');
-    if (existingNotice) existingNotice.remove();
-    if (!state.data.length) return;
-
-    const totalRows = state.data.length;
-    const isCapped = totalRows > MAX_PREVIEW_ROWS;
-    const rowsToRender = isCapped ? state.data.slice(0, MAX_PREVIEW_ROWS) : state.data;
-
-    if (isCapped) {
-      const notice = document.createElement('div');
-      notice.id = 'previewCapNotice';
-      notice.className = 'mb-2 text-[11px] text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2';
-      notice.textContent = `Showing the first ${MAX_PREVIEW_ROWS.toLocaleString()} of ${totalRows.toLocaleString()} rows in the preview. Exported files include all the data.`;
-      previewWrap.insertBefore(notice, previewWrap.firstChild);
-    }
-
-    const table = document.createElement('table');
-    table.style.width = '100%';
-    table.style.tableLayout = 'fixed';
-    table.style.fontSize = state.fontSize + 'pt';
-    table.style.lineHeight = (state.lineHeight / 100).toString();
-    table.style.textAlign = state.align;
-
-    const colRatios = computeColWidthRatios();
-    if (colRatios.length) {
-      const colgroup = document.createElement('colgroup');
-      colRatios.forEach(r => {
-        const col = document.createElement('col');
-        col.style.width = (r * 100).toFixed(2) + '%';
-        colgroup.appendChild(col);
-      });
-      table.appendChild(colgroup);
-    }
-
-    rowsToRender.forEach((row, ri) => {
-      const tr = document.createElement('tr');
-      if (!state.equalRowHeight) {
-        const maxLen = row.reduce((m, c) => Math.max(m, String(c ?? '').length), 0);
-        tr.style.height = (28 + Math.floor(maxLen / 20) * 20) + 'px';
-      }
-      row.forEach((cell) => {
-        const useTh = state.hasHeader && ri === 0;
-        const cellEl = document.createElement(useTh ? 'th' : 'td');
-        cellEl.textContent = cell;
-        cellEl.style.wordBreak = 'break-word';
-        if (useTh) { cellEl.style.background = '#F1F5F9'; cellEl.style.fontWeight = '700'; }
-        tr.appendChild(cellEl);
-      });
-      table.appendChild(tr);
-    });
-    previewWrap.appendChild(table);
-  }
-
-  // ===================== 4. 입력: 메모장 =====================
-  let parseTimer = null;
-  memoInput.addEventListener('input', () => {
-    clearTimeout(parseTimer);
-    parseTimer = setTimeout(() => {
-      const text = memoInput.value;
-      if (!text.trim()) { updateData([], 'Waiting for input'); return; }
-      const { data, type } = detectAndParse(text);
-      const labelMap = { markdown: 'Detected as a Markdown table', tsv: 'Detected as tab-separated (TSV)', csv: 'Detected as comma-separated (CSV)', plain: 'Detected as a single column', empty: 'Waiting for input' };
-      updateData(data, labelMap[type] || '');
-    }, 150);
-  });
-
-  clearBtn.addEventListener('click', () => {
-    memoInput.value = '';
-    updateData([], 'Waiting for input');
-    showToast('Cleared everything');
-  });
-
-  // ===================== 5. 입력: 엑셀 드래그앤드롭/파일선택 =====================
-  function handleWorkbookFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const wb = XLSX.read(e.target.result, { type: 'array' });
-        const firstSheetName = wb.SheetNames[0];
-        const sheet = wb.Sheets[firstSheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: '' });
-        const cleanRows = rows.map(r => r.map(c => (c == null ? '' : String(c))));
-        if (!cleanRows.length) { showToast('No data found in the Excel sheet', 'warn'); return; }
-        memoInput.value = toTSV(cleanRows);
-        updateData(cleanRows, `Loaded Excel file "${file.name}" (sheet: ${firstSheetName})`);
-        showToast('Excel file loaded');
-      } catch (err) {
-        console.error(err);
-        showToast('An error occurred while reading the Excel file', 'error');
-      }
-    };
-    reader.onerror = () => showToast('Could not read the file', 'error');
-    reader.readAsArrayBuffer(file);
-  }
-
-  fileSelectBtn.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', () => {
-    if (fileInput.files && fileInput.files[0]) handleWorkbookFile(fileInput.files[0]);
-    fileInput.value = '';
-  });
-
-  ['dragenter', 'dragover'].forEach(evt => {
-    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
-  });
-  ['dragleave', 'drop'].forEach(evt => {
-    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag-over'); });
-  });
-  dropzone.addEventListener('drop', (e) => {
-    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-    if (!file) return;
-    const okExt = /\.(xlsx|xls|csv)$/i.test(file.name);
-    if (!okExt) { showToast('Only .xlsx, .xls, .csv files are supported', 'warn'); return; }
-    handleWorkbookFile(file);
-  });
-
-  // ===================== 6. 서식 제어판 =====================
-  const alignGroup = $('alignGroup');
-  function refreshAlignButtons() {
-    alignGroup.querySelectorAll('.fmt-align-btn').forEach(btn => {
-      const active = btn.dataset.align === state.align;
-      btn.className = 'fmt-align-btn py-2 rounded-lg text-xs font-medium border ' +
-        (active ? 'bg-brand text-white border-brand' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50');
-    });
-  }
-  alignGroup.addEventListener('click', (e) => {
-    const btn = e.target.closest('.fmt-align-btn');
-    if (!btn) return;
-    state.align = btn.dataset.align;
-    refreshAlignButtons();
-    renderPreview();
-  });
-  refreshAlignButtons();
-
-  $('fontSize').addEventListener('input', (e) => {
-    state.fontSize = Number(e.target.value);
-    $('fontSizeVal').textContent = state.fontSize + 'pt';
-    renderPreview();
-  });
-  $('lineHeight').addEventListener('input', (e) => {
-    state.lineHeight = Number(e.target.value);
-    $('lineHeightVal').textContent = state.lineHeight + '%';
-    renderPreview();
-  });
-  $('tableWidth').addEventListener('input', (e) => {
-    state.widthMm = Number(e.target.value);
-    $('tableWidthVal').textContent = state.widthMm + 'mm';
-  });
-  $('treatAsChar').addEventListener('change', (e) => { state.treatAsChar = e.target.checked; });
-  $('equalColWidth').addEventListener('change', (e) => { state.equalColWidth = e.target.checked; renderPreview(); });
-  $('equalRowHeight').addEventListener('change', (e) => { state.equalRowHeight = e.target.checked; renderPreview(); });
-  $('hasHeaderRow').addEventListener('change', (e) => {
-    state.hasHeader = e.target.checked;
-    renderPreview();
-  });
-
-  // ===================== 7. 내보내기: 공통 유틸 =====================
-  function safeFileBase() {
-    return 'table-data-' + new Date().toISOString().slice(0, 10);
-  }
-  function downloadBlob(blob, filename) {
-    if (window.saveAs) saveAs(blob, filename);
-    else {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = filename; a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-    }
-  }
-
-  // ---- CSV ----
-  exportBtns.csv.addEventListener('click', () => {
-    const csv = '\uFEFF' + toCSV(state.data); // BOM: 엑셀 한글 깨짐 방지
-    downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), safeFileBase() + '.csv');
-    showToast('CSV file saved');
-  });
-
-  // ---- MD ----
-  exportBtns.md.addEventListener('click', () => {
-    const md = toMarkdown(state.data);
-    downloadBlob(new Blob([md], { type: 'text/markdown;charset=utf-8' }), safeFileBase() + '.md');
-    showToast('Markdown file saved');
-  });
-
-  // ---- XLSX ----
-  exportBtns.xlsx.addEventListener('click', () => withBusyExport(exportBtns.xlsx, 'Generating…', async () => {
-    try {
-      const ws = XLSX.utils.aoa_to_sheet(state.data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      XLSX.writeFile(wb, safeFileBase() + '.xlsx');
-      showToast('Excel file saved');
-    } catch (err) {
-      console.error(err);
-      showToast('An error occurred while creating the Excel file', 'error');
-    }
-  }));
-
-  // ---- DOCX ----
-  exportBtns.docx.addEventListener('click', () => withBusyExport(exportBtns.docx, '🔵 Generating…', async () => {
-    try {
-      const { Document, Packer, Table, TableRow, TableCell, Paragraph, TextRun, AlignmentType, WidthType } = docx;
-      const alignMap = { left: AlignmentType.LEFT, center: AlignmentType.CENTER, right: AlignmentType.RIGHT };
-      const tableWidthDxa = Math.round(state.widthMm * 56.7);
-      const colRatios = computeColWidthRatios();
-      const rows = state.data.map((row, ri) => new TableRow({
-        height: state.equalRowHeight ? undefined : {
-          value: Math.round((240 + Math.floor(row.reduce((m, c) => Math.max(m, String(c ?? '').length), 0) / 20) * 200)),
-          rule: 'atLeast',
-        },
-        children: row.map((cellText, ci) => new TableCell({
-          width: { size: Math.round(tableWidthDxa * (colRatios[ci] || (1 / row.length))), type: WidthType.DXA },
-          children: [new Paragraph({
-            alignment: alignMap[state.align] || AlignmentType.LEFT,
-            children: [new TextRun({ text: String(cellText), bold: state.hasHeader && ri === 0, size: state.fontSize * 2 })],
-          })],
-        })),
-      }));
-      const table = new Table({ rows, width: { size: tableWidthDxa, type: WidthType.DXA } });
-      const doc = new Document({ sections: [{ children: [table] }] });
-      const blob = await Packer.toBlob(doc);
-      downloadBlob(blob, safeFileBase() + '.docx');
-      showToast('Word file saved');
-    } catch (err) {
-      console.error(err);
-      showToast('An error occurred while creating the Word file', 'error');
-    }
-  }));
-
-  // ---- 클립보드 복사 (한글 최적화 HTML) ----
-  exportBtns.clip.addEventListener('click', async () => {
-    try {
-      const html = buildInlineStyledHTMLTable();
-      const plain = toTSV(state.data);
-      if (navigator.clipboard && window.ClipboardItem) {
-        const item = new ClipboardItem({
-          'text/html': new Blob([html], { type: 'text/html' }),
-          'text/plain': new Blob([plain], { type: 'text/plain' }),
-        });
-        await navigator.clipboard.write([item]);
-      } else {
-        await navigator.clipboard.writeText(plain);
-      }
-      showToast('Copied to clipboard. Press Ctrl+V in Word or Hangul');
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to copy to clipboard', 'error');
-    }
-  });
-
-  function buildInlineStyledHTMLTable() {
-    const cols = state.data[0] ? state.data[0].length : 0;
-    const colRatios = computeColWidthRatios();
-    let html = `<table style="border-collapse:collapse;table-layout:fixed;width:${state.widthMm}mm;font-size:${state.fontSize}pt;line-height:${state.lineHeight}%;text-align:${state.align};">`;
-    if (colRatios.length) {
-      html += '<colgroup>' + colRatios.map(r => `<col style="width:${(r * 100).toFixed(2)}%;">`).join('') + '</colgroup>';
-    }
-    state.data.forEach((row, ri) => {
-      const heightAttr = state.equalRowHeight ? '' : ` height="${28 + Math.floor(row.reduce((m, c) => Math.max(m, String(c ?? '').length), 0) / 20) * 20}"`;
-      html += `<tr${heightAttr}>`;
-      row.forEach((cell) => {
-        const tag = (state.hasHeader && ri === 0) ? 'th' : 'td';
-        const extra = tag === 'th' ? 'background:#F1F5F9;font-weight:700;' : '';
-        html += `<${tag} style="border:1px solid #94A3B8;padding:4px 8px;word-break:break-word;${extra}">${escapeHtml(cell)}</${tag}>`;
-      });
-      html += '</tr>';
-    });
-    html += '</table>';
-    return html;
-  }
-  function escapeHtml(s) {
-    return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  // ---- HWPX ----
-  exportBtns.hwpx.addEventListener('click', () => withBusyExport(exportBtns.hwpx, 'Generating…', async () => {
-    try {
-      const blob = await buildHwpxBlob(state);
-      downloadBlob(blob, safeFileBase() + '.hwpx');
-      showToast('HWPX file saved');
-    } catch (err) {
-      console.error(err);
-      showToast('An error occurred while creating the HWPX file', 'error');
-    }
-  }));
-
-  // 초기 화면
-  updateData([], '입력 대기 중');
-  window.__TDH_TEST__ = { detectAndParse, normalizeRows, toCSV, toMarkdown, toTSV, state, buildInlineStyledHTMLTable };
-})();
-</script>
+<div id="toastRoot" class="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2"></div>
 
 <script>
 const HWPX_TPL_MIMETYPE = `application/hwp+zip`;
@@ -882,7 +153,7 @@ const HWPX_TPL_SECTION0BASE = `<?xml version="1.0" encoding="UTF-8" standalone="
    python-hwpx(airmang/python-hwpx) 오라클 검증 22종 통과 확인됨. */
 /* global JSZip */
 
-const HWPX_HWPUNIT_PER_MM = 7200 / 25.4; // 1mm = 약 283.4646 HWPUNIT (7200 HWPUNIT = 1inch)
+var HWPX_HWPUNIT_PER_MM = 7200 / 25.4; // 1mm = 약 283.4646 HWPUNIT (7200 HWPUNIT = 1inch)
 function hwpxMmToUnit(mm) { return Math.round(mm * HWPX_HWPUNIT_PER_MM); }
 
 function hwpxXmlEscape(s) {
@@ -896,12 +167,14 @@ const HWPX_NEW_BORDERFILL_ID = 500;
 const HWPX_NEW_PARAPR_ID = 500;
 
 function hwpxBumpItemCnt(xml, tagName, delta) {
+  if (typeof xml !== 'string') throw new Error('HWPX template error: ' + tagName + ' XML was not initialized.');
   const re = new RegExp(`(<hh:${tagName}[^>]*itemCnt=")(\\d+)(")`);
   return xml.replace(re, (m, p1, num, p3) => p1 + (parseInt(num, 10) + delta) + p3);
 }
 
 function hwpxBuildHeaderXml(state) {
   let xml = HWPX_TPL_HEADER;
+  if (typeof xml !== 'string' || !xml.includes('<hh:head')) throw new Error('Could not load the HWPX header template.');
 
   const newCharPr = `<hh:charPr id="${HWPX_NEW_CHARPR_ID}" height="${Math.round(state.fontSize * 100)}" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr>`;
   xml = xml.replace('</hh:charProperties>', newCharPr + '</hh:charProperties>');
@@ -913,10 +186,10 @@ function hwpxBuildHeaderXml(state) {
   xml = xml.replace('</hh:borderFills>', newBorderFill + '</hh:borderFills>');
   xml = hwpxBumpItemCnt(xml, 'borderFills', 1);
 
-  const alignMap = { left: 'LEFT', center: 'CENTER', right: 'RIGHT' };
+  const alignMap = { left: 'LEFT', center: 'CENTER', right: 'RIGHT', justify: 'JUSTIFY' };
   const alignHoriz = alignMap[state.align] || 'LEFT';
   const lineSpacingVal = Math.max(10, Math.round(state.lineHeight));
-  const newParaPr = `<hh:paraPr id="${HWPX_NEW_PARAPR_ID}" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="${alignHoriz}" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="${lineSpacingVal}" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="${lineSpacingVal}" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr>`;
+  const newParaPr = `<hh:paraPr id="${HWPX_NEW_PARAPR_ID}" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="${alignHoriz}" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="${Math.round((state.paraSpacing || 0) * 100)}" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="${lineSpacingVal}" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="${Math.round((state.paraSpacing || 0) * 100)}" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="${lineSpacingVal}" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr>`;
   xml = xml.replace('</hh:paraProperties>', newParaPr + '</hh:paraProperties>');
   xml = hwpxBumpItemCnt(xml, 'paraProperties', 1);
 
@@ -925,94 +198,201 @@ function hwpxBuildHeaderXml(state) {
 
 function hwpxBuildContentHpf() {
   let xml = HWPX_TPL_CONTENTHPF;
+  if (typeof xml !== 'string' || !xml.includes('<opf:package')) throw new Error('Could not load the HWPX content.hpf template.');
   if (!xml.includes('id="version"')) {
     xml = xml.replace('<opf:item id="header"', '<opf:item id="version" href="version.xml" media-type="application/xml"/><opf:item id="header"');
   }
   return xml;
 }
 
-function hwpxComputeColWidths(state, tableWidthUnit) {
-  const cols = state.data[0] ? state.data[0].length : 0;
-  if (cols === 0) return [];
-  if (state.equalColWidth) {
-    const w = Math.floor(tableWidthUnit / cols);
-    const widths = new Array(cols).fill(w);
-    widths[cols - 1] = tableWidthUnit - w * (cols - 1);
-    return widths;
+
+function hwpxBuildSectionXmlForText(text, fmt) {
+  var blocks=String(text||'').split(/\n\s*\n/);
+  var paraXml='';
+  blocks.forEach(function(block, idx){
+    var lines=block.split('\n');
+    var content=hwpxXmlEscape(lines.join(' '));
+    // linesegarray는 한글의 레이아웃 엔진이 문서를 열 때 계산하도록 생략한다.
+    // 각 문단에 vertpos=0인 lineseg를 강제로 넣으면 모든 문단이 같은 위치에 겹쳐 표시된다.
+    paraXml += '<hp:p id="'+(700000000+idx)+'" paraPrIDRef="'+HWPX_NEW_PARAPR_ID+'" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="'+HWPX_NEW_CHARPR_ID+'"><hp:t>'+content+'</hp:t></hp:run></hp:p>';
+  });
+  var base = HWPX_TPL_SECTION0BASE;
+  if (typeof base !== 'string' || !base.includes('</hs:sec>')) throw new Error('Could not load the HWPX section template.');
+  return base.replace('</hs:sec>', paraXml+'</hs:sec>');
+}
+async function ensureJSZip() {
+  if (window.JSZip) return window.JSZip;
+  await new Promise(function(resolve, reject) {
+    var sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    sc.onload=resolve; sc.onerror=function(){reject(new Error('Could not load the JSZip library.'));}; document.head.appendChild(sc);
+  });
+  if (!window.JSZip) throw new Error('JSZip initialization failed.');
+  return window.JSZip;
+}
+async function buildHwpxTextBlob(text, fmt) {
+  if (typeof HWPX_TPL_MIMETYPE !== 'string' || typeof HWPX_TPL_VERSION !== 'string' || typeof HWPX_TPL_CONTAINER !== 'string' || typeof HWPX_TPL_MANIFEST !== 'string' || typeof HWPX_TPL_CONTENTHPF !== 'string' || typeof HWPX_TPL_HEADER !== 'string' || typeof HWPX_TPL_SECTION0BASE !== 'string' || typeof HWPX_TPL_SETTINGS !== 'string') {
+    throw new Error('Failed to initialize the internal HWPX template. Refresh the page and try again.');
   }
-  const maxLens = new Array(cols).fill(1);
-  state.data.forEach(row => {
-    row.forEach((cell, ci) => {
-      const len = String(cell ?? '').length || 1;
-      if (len > maxLens[ci]) maxLens[ci] = len;
-    });
-  });
-  const totalLen = maxLens.reduce((a, b) => a + b, 0);
-  const minWidth = Math.floor(tableWidthUnit * 0.06);
-  const widths = maxLens.map(len => Math.max(minWidth, Math.floor((len / totalLen) * tableWidthUnit)));
-  const sum = widths.reduce((a, b) => a + b, 0);
-  widths[widths.length - 1] += (tableWidthUnit - sum);
-  return widths;
+  var Zip = await ensureJSZip();
+  var state={fontSize:fmt.fontSize,lineHeight:fmt.lineHeight,align:fmt.align,paraSpacing:fmt.paraSpacing};
+  var zip=new Zip();
+  zip.file('mimetype',HWPX_TPL_MIMETYPE,{compression:'STORE'});
+  zip.file('version.xml',HWPX_TPL_VERSION);
+  zip.folder('META-INF').file('container.xml',HWPX_TPL_CONTAINER);
+  zip.folder('META-INF').file('manifest.xml',HWPX_TPL_MANIFEST);
+  zip.folder('Contents').file('content.hpf',hwpxBuildContentHpf());
+  zip.folder('Contents').file('header.xml',hwpxBuildHeaderXml(state));
+  zip.folder('Contents').file('section0.xml',hwpxBuildSectionXmlForText(text,fmt));
+  zip.file('settings.xml',HWPX_TPL_SETTINGS);
+  zip.folder('Preview').file('PrvText.txt',String(text||'').slice(0,1000));
+  var bytes = await zip.generateAsync({type:'uint8array', compression:'DEFLATE', compressionOptions:{level:6}});
+  return new Blob([bytes], {type:'application/hwp+zip'});
 }
+window.buildHwpxTextBlob = buildHwpxTextBlob;
 
-function hwpxComputeRowHeights(state) {
-  const rows = state.data.length;
-  const baseHeight = hwpxMmToUnit(Math.max(6, state.fontSize * 0.5));
-  if (state.equalRowHeight) return new Array(rows).fill(baseHeight);
-  return state.data.map(row => {
-    const maxLen = row.reduce((m, c) => Math.max(m, String(c ?? '').length), 0);
-    const extraLines = Math.floor(maxLen / 20);
-    return baseHeight + extraLines * Math.round(baseHeight * 0.7);
-  });
-}
 
-function hwpxBuildSectionXml(state) {
-  const cols = state.data[0] ? state.data[0].length : 0;
-  const rows = state.data.length;
-  if (rows === 0 || cols === 0) return HWPX_TPL_SECTION0BASE;
-
-  const alignMap = { left: 'LEFT', center: 'CENTER', right: 'RIGHT' };
-  const horzAlign = alignMap[state.align] || 'LEFT';
-  const tableWidthUnit = hwpxMmToUnit(state.widthMm);
-  const colWidths = hwpxComputeColWidths(state, tableWidthUnit);
-  const rowHeights = hwpxComputeRowHeights(state);
-  const totalHeight = rowHeights.reduce((a, b) => a + b, 0);
-  const treatAsChar = state.treatAsChar ? '1' : '0';
-  const cellMarginAttr = 'left="510" right="510" top="141" bottom="141"';
-
-  let rowsXml = '';
-  state.data.forEach((row, ri) => {
-    let cellsXml = '';
-    row.forEach((cellText, ci) => {
-      const isHeader = state.hasHeader && ri === 0;
-      cellsXml += `<hp:tc name="" header="${isHeader ? 1 : 0}" hasMargin="0" protect="0" editable="0" dirty="0" borderFillIDRef="${HWPX_NEW_BORDERFILL_ID}"><hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="CENTER" linkListIDRef="0" linkListNextIDRef="0" textWidth="0" textHeight="0" hasTextRef="0" hasNumRef="0"><hp:p id="0" paraPrIDRef="${HWPX_NEW_PARAPR_ID}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="${HWPX_NEW_CHARPR_ID}"><hp:t>${hwpxXmlEscape(cellText)}</hp:t></hp:run><hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="${Math.round(state.fontSize * 100)}" textheight="${Math.round(state.fontSize * 100)}" baseline="850" spacing="${Math.round(state.lineHeight * 6)}" horzpos="0" horzsize="${colWidths[ci]}" flags="393216"/></hp:linesegarray></hp:p></hp:subList><hp:cellAddr colAddr="${ci}" rowAddr="${ri}"/><hp:cellSpan colSpan="1" rowSpan="1"/><hp:cellSz width="${colWidths[ci]}" height="${rowHeights[ri]}"/><hp:cellMargin ${cellMarginAttr}/></hp:tc>`;
-    });
-    rowsXml += `<hp:tr>${cellsXml}</hp:tr>`;
-  });
-
-  const tableId = 1000000000 + Math.floor(Math.random() * 900000000);
-  const tblXml = `<hp:p id="0" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="0"><hp:tbl id="${tableId}" zOrder="0" numberingType="TABLE" textWrap="TOP_AND_BOTTOM" textFlow="BOTH_SIDES" lock="0" dropcapstyle="None" pageBreak="CELL" repeatHeader="1" rowCnt="${rows}" colCnt="${cols}" cellSpacing="0" borderFillIDRef="${HWPX_NEW_BORDERFILL_ID}" noAdjust="0"><hp:sz width="${tableWidthUnit}" widthRelTo="ABSOLUTE" height="${totalHeight}" heightRelTo="ABSOLUTE" protect="0"/><hp:pos treatAsChar="${treatAsChar}" affectLSpacing="0" flowWithText="1" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="PARA" horzRelTo="COLUMN" vertAlign="TOP" horzAlign="${horzAlign}" vertOffset="0" horzOffset="0"/><hp:outMargin left="0" right="0" top="0" bottom="283"/><hp:inMargin left="510" right="510" top="141" bottom="141"/>${rowsXml}</hp:tbl><hp:t/></hp:run><hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="1000" textheight="1000" baseline="850" spacing="600" horzpos="0" horzsize="42520" flags="393216"/></hp:linesegarray></hp:p>`;
-
-  return HWPX_TPL_SECTION0BASE.replace('</hs:sec>', tblXml + '</hs:sec>');
-}
-
-async function buildHwpxBlob(state) {
-  const zip = new JSZip();
-  zip.file('mimetype', HWPX_TPL_MIMETYPE, { compression: 'STORE' });
-  zip.file('version.xml', HWPX_TPL_VERSION);
-  zip.folder('META-INF').file('container.xml', HWPX_TPL_CONTAINER);
-  zip.folder('META-INF').file('manifest.xml', HWPX_TPL_MANIFEST);
-  zip.folder('Contents').file('content.hpf', hwpxBuildContentHpf());
-  zip.folder('Contents').file('header.xml', hwpxBuildHeaderXml(state));
-  zip.folder('Contents').file('section0.xml', hwpxBuildSectionXml(state));
-  zip.file('settings.xml', HWPX_TPL_SETTINGS);
-  const previewText = state.data.slice(0, 20).map(r => r.join('\t')).join('\n').slice(0, 500);
-  zip.folder('Preview').file('PrvText.txt', previewText);
-  return zip.generateAsync({ type: 'blob', mimeType: 'application/hwp+zip' });
-}
 
 </script>
+<script>
+/* global JSZip, XLSX, saveAs, docx */
+(function(){
+'use strict';
+const MAX_FIELDS=20;
+const state={fields:[],manual:{},dataHeaders:[],dataRows:[],dataSource:'',format:{fontSize:10,lineHeight:160,paraSpacing:6,align:'left'},fatalFieldOverflow:false,templatePackage:null,templateDirty:false,suppressTemplateDirty:false};
+const $=id=>document.getElementById(id);
+const templateText=$('templateText'), templateFile=$('templateFile'), templateDrop=$('templateDrop'), preserveStatus=$('preserveStatus');
+const fieldChips=$('fieldChips'), fieldCount=$('fieldCount'), manualFields=$('manualFields');
+const dataFile=$('dataFile'), dataDrop=$('dataDrop'), dataPaste=$('dataPaste'), dataStatus=$('dataStatus'), sampleWrap=$('sampleWrap'), mappingNotice=$('mappingNotice'), clearDataBtn=$('clearDataBtn');
+const previewPage=$('previewPage'), previewBadge=$('previewBadge'), mergedCount=$('mergedCount'), exportBtn=$('exportBtn'), exportFormat=$('exportFormat'), fileNamePattern=$('fileNamePattern');
 
+function toast(msg,tone){const el=document.createElement('div');el.className='tk-toast max-w-[520px] rounded-xl px-4 py-3 text-sm shadow-lg '+(tone==='error'?'bg-red-600 text-white':tone==='warn'?'bg-amber-500 text-white':'bg-slate-900 text-white');el.textContent=msg;$('toastRoot').appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(5px)';el.style.transition='.25s';setTimeout(()=>el.remove(),260)},3000)}
+function escapeHtml(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function normalizeKey(s){return String(s??'').trim().replace(/^{{\s*/,'').replace(/\s*}}$/,'').trim()}
+function detectFields(text){const re=/{{\s*([^{}\n]{1,80}?)\s*}}/g;const out=[];const seen=new Set();let m;while((m=re.exec(String(text||'')))){const k=normalizeKey(m[1]);if(k&&!seen.has(k)){seen.add(k);out.push(k)}}return out}
+function mergeTemplate(text,values){return String(text||'').replace(/{{\s*([^{}\n]{1,80}?)\s*}}/g,(m,k)=>{const key=normalizeKey(k);return Object.prototype.hasOwnProperty.call(values,key)?String(values[key]??''):m})}
+function currentValues(){if(state.dataRows.length)return state.dataRows[0];const o={};state.fields.forEach(k=>o[k]=state.manual[k]??'');return o}
+function isMappingValid(){if(!state.dataRows.length)return true;const set=new Set(state.dataHeaders.map(normalizeKey));return state.fields.every(k=>set.has(k))}
+
+function canPreserveOriginal(fmt){return !!(state.templatePackage&&!state.templateDirty&&state.templatePackage.ext===fmt)}
+function updatePreserveStatus(){
+ if(!state.templatePackage){preserveStatus.classList.add('hidden');return}
+ preserveStatus.classList.remove('hidden');
+ const ext=state.templatePackage.ext.toUpperCase();
+ if(state.templateDirty){
+  preserveStatus.className='mb-3 text-[11px] rounded-lg border px-3 py-2 leading-relaxed bg-amber-50 border-amber-200 text-amber-700';
+  preserveStatus.textContent='Original '+ext+' template text was edited directly, so formatting-preservation mode has been disabled. Reload the original file to restore it.';
+ }else if(exportFormat.value===state.templatePackage.ext){
+  preserveStatus.className='mb-3 text-[11px] rounded-lg border px-3 py-2 leading-relaxed bg-emerald-50 border-emerald-200 text-emerald-700';
+  preserveStatus.textContent='Original '+ext+' formatting preservation is active · Export keeps the original fonts, sizes, colors, paragraphs, tables, images, headers, footers, and document structure, replacing only {{field}} values. The preview is for content verification only.';
+ }else{
+  preserveStatus.className='mb-3 text-[11px] rounded-lg border px-3 py-2 leading-relaxed bg-sky-50 border-sky-200 text-sky-700';
+  preserveStatus.textContent='Original '+ext+' template loaded. Its formatting is preserved only when exporting as '+ext+'; other formats are rebuilt using the common formatting options above.';
+ }
+}
+function markTemplateEdited(){if(state.suppressTemplateDirty||!state.templatePackage)return;if(!state.templateDirty){state.templateDirty=true;updatePreserveStatus()}}
+
+function renderFields(){
+ fieldCount.textContent=state.fields.length+' / '+MAX_FIELDS;
+ fieldChips.innerHTML='';
+ state.fields.forEach(k=>{const chip=document.createElement('span');chip.className='field-chip truncate inline-flex items-center rounded-full bg-orange-50 text-accent-dark border border-orange-100 px-2.5 py-1 text-xs mono';chip.textContent='{{'+k+'}}';chip.title='Deleting this token from the template also removes the field';fieldChips.appendChild(chip)});
+ if(!state.fields.length){fieldChips.innerHTML='<span class="text-xs text-ink-500">No {{fields}} detected yet</span>'}
+ manualFields.innerHTML='';
+ if(state.dataRows.length){manualFields.innerHTML='<div class="text-xs text-ink-500 rounded-lg border border-slate-200 bg-slate-50 p-3">Excel/CSV batch data is active, so the manual inputs are temporarily hidden. Clear the batch data to return to manual input mode.</div>';return}
+ if(!state.fields.length){manualFields.innerHTML='<div class="text-xs text-ink-500 rounded-lg border border-slate-200 bg-slate-50 p-3">Add fields such as {{Name}} to the template and input boxes will appear here automatically.</div>';return}
+ state.fields.forEach(k=>{const lab=document.createElement('label');lab.className='grid grid-cols-[minmax(90px,150px)_1fr] gap-2 items-center';const name=document.createElement('span');name.className='text-xs mono text-ink-700 truncate';name.textContent='{{'+k+'}}';const inp=document.createElement('input');inp.type='text';inp.className='w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30';inp.value=state.manual[k]??'';inp.placeholder=k+' value';inp.addEventListener('input',()=>{state.manual[k]=inp.value;renderPreview()});lab.append(name,inp);manualFields.appendChild(lab)})
+}
+function refreshTemplate(){
+ const fields=detectFields(templateText.value);state.fatalFieldOverflow=fields.length>MAX_FIELDS;state.fields=fields.slice(0,MAX_FIELDS);
+ $('templateStatus').textContent=templateText.value.trim()?(state.fatalFieldOverflow?'More than 20 unique fields were detected. Reduce the template to 20 or fewer.':state.fields.length+' fields detected · '+templateText.value.length.toLocaleString()+' chars'):'Enter or load a template';
+ $('templateStatus').className=state.fatalFieldOverflow?'text-red-600 font-medium':'';
+ renderFields();renderDataMapping();renderPreview();updateExportState();
+}
+function updateExportState(){const hasTemplate=templateText.value.trim().length>0;const valid=!state.fatalFieldOverflow&&isMappingValid();exportBtn.disabled=!(hasTemplate&&valid);if(state.dataRows.length)exportBtn.textContent='Export all '+state.dataRows.length.toLocaleString()+' as ZIP';else exportBtn.textContent='Export document'}
+
+function renderDataMapping(){
+ if(!state.dataRows.length){dataStatus.textContent='No batch data · Manual input mode';sampleWrap.classList.add('hidden');mappingNotice.classList.add('hidden');clearDataBtn.classList.add('hidden');previewBadge.textContent='Manual sample';return}
+ clearDataBtn.classList.remove('hidden');previewBadge.textContent='Second-row sample';
+ dataStatus.textContent=(state.dataSource?state.dataSource+' · ':'')+state.dataHeaders.length+' columns · '+state.dataRows.length.toLocaleString()+' data rows · showing row 2 as the sample';
+ sampleWrap.classList.remove('hidden');const sample=state.dataRows[0]||{};let h='<table class="w-full text-[11px] border-collapse"><thead><tr class="bg-slate-50">';state.dataHeaders.forEach(x=>h+='<th class="border-b border-r border-slate-200 px-2 py-1.5 text-left whitespace-nowrap">'+escapeHtml(x)+'</th>');h+='</tr></thead><tbody><tr>';state.dataHeaders.forEach(x=>h+='<td class="border-r border-slate-100 px-2 py-1.5 whitespace-nowrap">'+escapeHtml(sample[normalizeKey(x)]??'')+'</td>');h+='</tr></tbody></table>';sampleWrap.innerHTML=h;
+ const headerSet=new Set(state.dataHeaders.map(normalizeKey));const missing=state.fields.filter(k=>!headerSet.has(k));mappingNotice.classList.remove('hidden');if(missing.length){mappingNotice.className='mt-2 text-[11px] rounded-lg px-3 py-2 bg-red-50 border border-red-200 text-red-700';mappingNotice.textContent='Unmatched fields: '+missing.map(k=>'{{'+k+'}}').join(', ')+' · Match these names to the first row of the Excel/CSV file.'}else{mappingNotice.className='mt-2 text-[11px] rounded-lg px-3 py-2 bg-emerald-50 border border-emerald-200 text-emerald-700';mappingNotice.textContent='All template fields are matched to the first row of the Excel/CSV data.'}
+}
+function renderPreview(){
+ const merged=mergeTemplate(templateText.value,currentValues());previewPage.innerHTML='';previewPage.style.fontSize=state.format.fontSize+'pt';previewPage.style.lineHeight=String(state.format.lineHeight/100);previewPage.style.textAlign=state.format.align;
+ const blocks=String(merged||'').split(/\n\s*\n/);if(!merged.trim()){previewPage.innerHTML='<div class="h-[600px] flex items-center justify-center text-sm text-slate-400">Enter a template and field values to see the merged result here</div>';mergedCount.textContent='';return}
+ blocks.forEach(block=>{const p=document.createElement('div');p.textContent=block;p.style.whiteSpace='pre-wrap';p.style.marginBottom=state.format.paraSpacing+'pt';previewPage.appendChild(p)});mergedCount.textContent=merged.length.toLocaleString()+' chars';
+}
+
+function parseDelimited(text,delimiter){const rows=[];let row=[],field='',inQuotes=false;const s=String(text||'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');for(let i=0;i<s.length;i++){const c=s[i];if(inQuotes){if(c==='"'){if(s[i+1]==='"'){field+='"';i++}else inQuotes=false}else field+=c}else{if(c==='"')inQuotes=true;else if(c===delimiter){row.push(field);field=''}else if(c==='\n'){row.push(field);rows.push(row);row=[];field=''}else field+=c}}if(field.length||row.length){row.push(field);rows.push(row)}return rows.filter(r=>!(r.length===1&&!String(r[0]).trim()))}
+function applyRows(rows,label){if(!rows||rows.length<2){toast('A header row and at least one data row are required.','error');return}const headers=(rows[0]||[]).map(v=>String(v??'').trim());if(!headers.some(Boolean)){toast('No field names were found in the first row.','error');return}const normHeaders=headers.map(normalizeKey);const data=rows.slice(1).filter(r=>r.some(v=>String(v??'').trim()!=='')).map(r=>{const o={};normHeaders.forEach((k,i)=>{if(k&&!Object.prototype.hasOwnProperty.call(o,k))o[k]=String(r[i]??'')});return o});if(!data.length){toast('No data rows were found after the header row.','error');return}state.dataHeaders=headers;state.dataRows=data;state.dataSource=label||'Batch data';renderFields();renderDataMapping();renderPreview();updateExportState();toast('The first row was recognized as field names. The second row is shown as the preview sample.')}
+async function loadDataFile(file){try{const ext=(file.name.split('.').pop()||'').toLowerCase();if(!['xlsx','xls','csv'].includes(ext))throw new Error('Only XLSX, XLS, and CSV files are supported.');let rows;if(ext==='csv'){const text=await file.text();rows=parseDelimited(text,text.includes('\t')?'\t':',')}else{const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});const sheet=wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''})}applyRows(rows,file.name)}catch(e){console.error(e);toast('Error reading the Excel/CSV file: '+(e.message||e),'error')}}
+
+function xmlDoc(xml){const d=new DOMParser().parseFromString(xml,'application/xml');if(d.getElementsByTagName('parsererror').length)throw new Error('Could not parse the document XML.');return d}
+function elemsByLocal(root,name){return Array.from(root.getElementsByTagName('*')).filter(el=>el.localName===name)}
+function paraText(p){let out='';const walker=document.createTreeWalker(p,NodeFilter.SHOW_ELEMENT);let n=walker.currentNode;while(n){if(n.localName==='t'){Array.from(n.childNodes).forEach(c=>{if(c.nodeType===Node.TEXT_NODE)out+=c.nodeValue||''})}else if(n.localName==='tab')out+='\t';else if(n.localName==='br'||n.localName==='lineBreak')out+='\n';n=walker.nextNode()}return out}
+async function extractDocxBuffer(buffer){const zip=await JSZip.loadAsync(buffer);const f=zip.file('word/document.xml');if(!f)throw new Error('Could not find the DOCX document body.');const d=xmlDoc(await f.async('string'));return elemsByLocal(d,'p').map(paraText).filter(x=>x.length).join('\n\n')}
+async function extractHwpxBuffer(buffer){const zip=await JSZip.loadAsync(buffer);const names=Object.keys(zip.files).filter(n=>/^Contents\/section\d+\.xml$/i.test(n)).sort((a,b)=>(parseInt(a.match(/section(\d+)/i)?.[1]||0)-parseInt(b.match(/section(\d+)/i)?.[1]||0)));if(!names.length)throw new Error('Could not find HWPX body sections.');const parts=[];for(const n of names){const d=xmlDoc(await zip.file(n).async('string'));parts.push(elemsByLocal(d,'p').map(paraText).filter(x=>x.length).join('\n\n'))}return parts.filter(Boolean).join('\n\n')}
+async function loadTemplateFile(file){try{const ext=(file.name.split('.').pop()||'').toLowerCase();let text;state.templatePackage=null;state.templateDirty=false;if(ext==='txt'||ext==='md'){text=await file.text()}else if(ext==='docx'||ext==='hwpx'){const buffer=await file.arrayBuffer();text=ext==='docx'?await extractDocxBuffer(buffer):await extractHwpxBuffer(buffer);state.templatePackage={ext:ext,name:file.name,buffer:buffer};exportFormat.value=ext}else throw new Error('Only TXT, MD, DOCX, and HWPX template files are supported.');state.suppressTemplateDirty=true;templateText.value=text;state.suppressTemplateDirty=false;refreshTemplate();updatePreserveStatus();toast('Template loaded: '+file.name)}catch(e){state.suppressTemplateDirty=false;console.error(e);toast('Error reading the template: '+(e.message||e),'error')} }
+
+function sanitizeFileName(s){return String(s||'').replace(/[\\/:*?"<>|]/g,'_').replace(/[\x00-\x1f]/g,'').trim().replace(/[. ]+$/,'').slice(0,140)||'MailMerge'}
+function makeFileBase(values,index){let pat=fileNamePattern.value.trim()||'MailMerge_{{Number}}';pat=pat.replace(/{{\s*(?:Number|번호)\s*}}/gi,String(index+1).padStart(3,'0'));pat=mergeTemplate(pat,values);pat=pat.replace(/{{\s*[^{}]+\s*}}/g,'');return sanitizeFileName(pat)}
+function docxRuns(block){const D=docx;const lines=String(block).split('\n');const runs=[];lines.forEach((line,i)=>{if(i>0)runs.push(new D.TextRun({break:1}));runs.push(new D.TextRun({text:line,size:state.format.fontSize*2}))});return runs}
+async function buildDocxBlob(text){const D=docx;const alignMap={left:D.AlignmentType.LEFT,center:D.AlignmentType.CENTER,right:D.AlignmentType.RIGHT,justify:D.AlignmentType.JUSTIFIED};const paras=String(text||'').split(/\n\s*\n/).map(block=>new D.Paragraph({alignment:alignMap[state.format.align]||D.AlignmentType.LEFT,spacing:{line:Math.round(240*state.format.lineHeight/100),after:Math.round(state.format.paraSpacing*20)},children:docxRuns(block)}));const obj=new D.Document({sections:[{children:paras}]});return D.Packer.toBlob(obj)}
+
+function collectMergeTextNodes(root){
+ const parts=[];let full='';
+ const tElems=elemsByLocal(root,'t');
+ tElems.forEach(t=>{
+  Array.from(t.childNodes).forEach(n=>{
+   if(n.nodeType===Node.TEXT_NODE){const text=n.nodeValue||'';parts.push({node:n,start:full.length,end:full.length+text.length});full+=text}
+   else if(n.nodeType===Node.ELEMENT_NODE){const ln=n.localName||'';if(ln==='lineBreak'||ln==='br'||ln==='tab')full+='\u0000'}
+  });
+ });
+ return {parts,full};
+}
+function replaceFieldsInTextElements(root,values){
+ const collected=collectMergeTextNodes(root),parts=collected.parts,full=collected.full;if(!parts.length)return 0;
+ const matches=[];const re=/{{\s*([^{}\n\u0000]{1,80}?)\s*}}/g;let m;while((m=re.exec(full))){const key=normalizeKey(m[1]);if(Object.prototype.hasOwnProperty.call(values,key))matches.push({start:m.index,end:m.index+m[0].length,value:String(values[key]??'')})}
+ if(!matches.length)return 0;
+ for(let mi=matches.length-1;mi>=0;mi--){const x=matches[mi];let first=-1,last=-1;for(let i=0;i<parts.length;i++){if(parts[i].end>x.start&&parts[i].start<x.end){if(first<0)first=i;last=i}}if(first<0)continue;
+  if(first===last){const part=parts[first],cur=part.node.nodeValue||'',a=x.start-part.start,b=x.end-part.start;part.node.nodeValue=cur.slice(0,a)+x.value+cur.slice(b)}else{
+   const fp=parts[first],lp=parts[last],fcur=fp.node.nodeValue||'',lcur=lp.node.nodeValue||'',a=x.start-fp.start,b=x.end-lp.start;fp.node.nodeValue=fcur.slice(0,a)+x.value;for(let i=first+1;i<last;i++)parts[i].node.nodeValue='';lp.node.nodeValue=lcur.slice(b)
+  }
+ }
+ return matches.length;
+}
+function removeHwpxLineLayout(p){
+ elemsByLocal(p,'linesegarray').forEach(el=>{if(el.parentNode)el.parentNode.removeChild(el)});
+}
+function mergeXmlPreservingStructure(xml,values,opts){const d=xmlDoc(xml);let count=0;opts=opts||{};const paras=elemsByLocal(d,'p');if(paras.length){paras.forEach(p=>{const c=replaceFieldsInTextElements(p,values);count+=c;if(c&&opts.stripHwpxLayout)removeHwpxLineLayout(p)})}else{count+=replaceFieldsInTextElements(d.documentElement,values)}return {xml:new XMLSerializer().serializeToString(d),count:count}}
+async function buildPreservedDocxBlob(values){
+ const zip=await JSZip.loadAsync(state.templatePackage.buffer.slice(0));const names=Object.keys(zip.files).filter(n=>/^word\/.*\.xml$/i.test(n)&&!zip.files[n].dir);
+ for(const name of names){const f=zip.file(name);if(!f)continue;const xml=await f.async('string');if(xml.indexOf('{{')<0)continue;const merged=mergeXmlPreservingStructure(xml,values);if(merged.count)zip.file(name,merged.xml)}
+ return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE',compressionOptions:{level:6}})
+}
+async function buildPreservedHwpxBlob(values,previewText){
+ const zip=await JSZip.loadAsync(state.templatePackage.buffer.slice(0));const names=Object.keys(zip.files).filter(n=>/\.xml$/i.test(n)&&!zip.files[n].dir);
+ for(const name of names){const f=zip.file(name);if(!f)continue;const xml=await f.async('string');if(xml.indexOf('{{')<0)continue;try{const merged=mergeXmlPreservingStructure(xml,values,{stripHwpxLayout:/^Contents\/section\d+\.xml$/i.test(name)});if(merged.count)zip.file(name,merged.xml)}catch(e){if(/^Contents\/section/i.test(name))throw e}}
+ const mt=zip.file('mimetype');if(mt){const mtText=await mt.async('string');zip.file('mimetype',mtText,{compression:'STORE'})}
+ if(zip.file('Preview/PrvText.txt'))zip.file('Preview/PrvText.txt',String(previewText||'').slice(0,4000));
+ const bytes=await zip.generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:6}});return new Blob([bytes],{type:'application/hwp+zip'})
+}
+async function blobForFormat(text,fmt,values){if(canPreserveOriginal(fmt)){if(fmt==='docx')return buildPreservedDocxBlob(values);if(fmt==='hwpx')return buildPreservedHwpxBlob(values,text)}if(fmt==='txt')return new Blob([text],{type:'text/plain;charset=utf-8'});if(fmt==='md')return new Blob([text],{type:'text/markdown;charset=utf-8'});if(fmt==='docx')return buildDocxBlob(text);if(fmt==='hwpx')return window.buildHwpxTextBlob(text,state.format);throw new Error('Unsupported export format.')}
+async function exportDocuments(){if(exportBtn.disabled)return;const fmt=exportFormat.value;const old=exportBtn.textContent;exportBtn.disabled=true;try{if(state.dataRows.length){const zip=new JSZip();for(let i=0;i<state.dataRows.length;i++){const values=state.dataRows[i],text=mergeTemplate(templateText.value,values),base=makeFileBase(values,i);exportBtn.textContent='Generating '+(i+1)+' / '+state.dataRows.length;const blob=await blobForFormat(text,fmt,values);zip.file(base+'.'+fmt,await blob.arrayBuffer());if(i%5===4)await new Promise(r=>setTimeout(r,0))}exportBtn.textContent='Building ZIP…';const z=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});saveAs(z,'MailMerge_'+new Date().toISOString().slice(0,10)+'_'+fmt.toUpperCase()+'.zip');toast(state.dataRows.length+' documents generated as '+fmt.toUpperCase()+'.')}else{const values=currentValues(),text=mergeTemplate(templateText.value,values),base=makeFileBase(values,0),blob=await blobForFormat(text,fmt,values);saveAs(blob,base+'.'+fmt);toast(fmt.toUpperCase()+' document saved.')}}catch(e){console.error(e);toast('Error generating document: '+(e.message||e),'error')}finally{updateExportState()}}
+
+let templateTimer;templateText.addEventListener('input',()=>{markTemplateEdited();clearTimeout(templateTimer);templateTimer=setTimeout(refreshTemplate,100)});
+$('addFieldBtn').addEventListener('click',()=>{const name=normalizeKey($('newFieldName').value);if(!name)return;if(detectFields(templateText.value).length>=MAX_FIELDS&&!state.fields.includes(name)){toast('You can use up to 20 fields.','warn');return}if(/[{}\n]/.test(name)){toast('Field names cannot contain braces or line breaks.','warn');return}const start=templateText.selectionStart,end=templateText.selectionEnd;const token='{{'+name+'}}';templateText.setRangeText(token,start,end,'end');markTemplateEdited();$('newFieldName').value='';templateText.focus();refreshTemplate()});
+$('newFieldName').addEventListener('keydown',e=>{if(e.key==='Enter'){$('addFieldBtn').click();e.preventDefault()}});
+templateFile.addEventListener('change',()=>{if(templateFile.files?.[0])loadTemplateFile(templateFile.files[0]);templateFile.value=''});
+['dragover','dragenter'].forEach(ev=>templateDrop.addEventListener(ev,e=>{e.preventDefault();templateDrop.classList.add('dragover')}));['dragleave','drop'].forEach(ev=>templateDrop.addEventListener(ev,e=>{e.preventDefault();templateDrop.classList.remove('dragover')}));templateDrop.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(f)loadTemplateFile(f)});
+dataFile.addEventListener('change',()=>{if(dataFile.files?.[0])loadDataFile(dataFile.files[0]);dataFile.value=''});
+['dragover','dragenter'].forEach(ev=>dataDrop.addEventListener(ev,e=>{e.preventDefault();dataDrop.classList.add('dragover')}));['dragleave','drop'].forEach(ev=>dataDrop.addEventListener(ev,e=>{e.preventDefault();dataDrop.classList.remove('dragover')}));dataDrop.addEventListener('drop',e=>{const f=e.dataTransfer?.files?.[0];if(f)loadDataFile(f)});
+$('applyPasteBtn').addEventListener('click',()=>{const t=dataPaste.value;if(!t.trim()){toast('There is no pasted table data.','warn');return}applyRows(parseDelimited(t,t.includes('\t')?'\t':','),'Pasted table')});
+clearDataBtn.addEventListener('click',()=>{state.dataHeaders=[];state.dataRows=[];state.dataSource='';dataPaste.value='';renderFields();renderDataMapping();renderPreview();updateExportState();toast('Batch data cleared.')});
+$('fontSize').addEventListener('input',e=>{state.format.fontSize=Number(e.target.value);$('fontSizeVal').textContent=state.format.fontSize+'pt';renderPreview()});$('lineHeight').addEventListener('input',e=>{state.format.lineHeight=Number(e.target.value);$('lineHeightVal').textContent=state.format.lineHeight+'%';renderPreview()});$('paraSpacing').addEventListener('input',e=>{state.format.paraSpacing=Number(e.target.value);$('paraSpacingVal').textContent=state.format.paraSpacing+'pt';renderPreview()});$('alignGroup').addEventListener('click',e=>{const b=e.target.closest('[data-align]');if(!b)return;state.format.align=b.dataset.align;document.querySelectorAll('#alignGroup .fmt-btn').forEach(x=>x.classList.toggle('active',x===b));renderPreview()});exportFormat.addEventListener('change',updatePreserveStatus);exportBtn.addEventListener('click',exportDocuments);
+refreshTemplate();
+window.__MAILMERGE_TEST__={detectFields,mergeTemplate,normalizeKey,parseDelimited,state};
+})();
+</script>
 
 <!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
 
@@ -1043,32 +423,39 @@ async function buildHwpxBlob(state) {
 .tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
 </style>
 <section class="tk-guide"><div class="tk-guide-inner">
-<h2>The formatting that breaks between Excel and Word</h2>
-<p>Paste a table copied from Excel into a word processor and the formatting falls apart. Go the other way and you end up retyping cell by cell. Getting a table to look right can take longer than writing the report around it.</p>
-<p>This tool recognises a table from pasted text or an uploaded Excel file, lets you apply the formatting you want, and exports straight to Word, HWPX or XLSX.</p>
+<h2>A hundred copies of the same letter, only the name different</h2>
+<p>Invitations, notices, contracts — sometimes you need many copies of the same document where only the name, date or amount changes. Copy-pasting each one by hand is exactly how a detail slips through.</p>
+<p>This tool finds {{name}}, {{date}} and similar fields in a document automatically, then generates one document per row of an Excel or CSV file and zips them up — keeping the original formatting for DOCX and HWPX.</p>
 <h2>When to use it</h2><dl>
-<dt>Fixing a table in a hurry</dt><dd>Copying a cell range as text mid-meeting without needing to open Excel at all.</dd>
-<dt>Excel file to a document</dt><dd>Dropping in an already-prepared spreadsheet and exporting it to Word or HWPX.</dd>
-<dt>Formatting for Korean word processors</dt><dd>Applying options like treat-as-text, line spacing and full width that Korean HWP documents specifically need.</dd>
-<dt>Using one table in several formats</dt><dd>Switching the same table between HWPX, DOCX, XLSX, Markdown and CSV as the situation calls for.</dd>
+<dt>Sending invitations at scale</dt><dd>Turning one guest list spreadsheet into dozens of invitations, each with the right name, in one pass.</dd>
+<dt>Bulk contracts and confirmations</dt><dd>Producing contracts that differ only by client name or amount, keeping the original document's formatting.</dd>
+<dt>Preserving DOCX/HWPX formatting</dt><dd>Keeping a template's fonts, tables and headers exactly as they are while only the content changes.</dd>
+<dt>Exporting to whichever format you need</dt><dd>Using the same template to produce HWPX, DOCX, TXT or Markdown.</dd>
 </dl>
 <h2>How to use it</h2><ol>
-<li>Paste a table from a text editor, or drop in an Excel file (.xlsx, .csv).</li>
-<li>Set alignment, font size, line spacing and width in the panel on the left.</li>
-<li>Check the live preview on the right, then export in the format you need.</li>
+<li>Type a template directly, or load a TXT, MD, DOCX or HWPX file.</li>
+<li>Mark the fields that should change, like {{name}} or {{date}} (up to 20 unique fields).</li>
+<li>For one document, fill the fields directly. For many, load an Excel or CSV file and export.</li>
 </ol>
 <h2>Settings</h2><dl>
-<dt>Treat as text (Korean HWP)</dt><dd>Keeps the table flowing with the surrounding text in Korean word processors, especially useful for HWPX exports.</dd>
-<dt>Even column width / row height</dt><dd>Turn it off to distribute width and height in proportion to each cell's content instead.</dd>
-<dt>Use first row as header</dt><dd>Treats the first row as a header and styles it differently.</dd>
+<dt>Keep original DOCX/HWPX formatting</dt><dd>Exporting a DOCX template to DOCX (or HWPX to HWPX) keeps the original fonts, tables, images and headers intact. Editing the template text directly turns this off automatically.</dd>
+<dt>Auto-incrementing {{number}}</dt><dd>A reserved field that fills in automatically as 001, 002, 003 and so on.</dd>
+<dt>Filename pattern</dt><dd>Fields like {{name}} can also be used in the output filename, so files in the resulting ZIP are easy to tell apart.</dd>
 </dl>
 <h2>Frequently asked questions</h2><dl>
-<dt>Why support both pasting and file upload</dt><dd>Pasting a copied cell range is faster when you need to move a table quickly. Uploading is more convenient when you already have a finished file. Both convert to the same table structure, so the result is identical either way.</dd>
-<dt>Is my table data sent to a server</dt><dd>No. Both pasted text and uploaded files are processed entirely inside your browser and never sent externally.</dd>
-<dt>Will an HWPX export open correctly in Korean word processors</dt><dd>Yes, the formatting is built to open cleanly there. If alignment looks off, adjust the settings panel and export again.</dd>
+<dt>Is my data sent to a server</dt><dd>No. Reading the template, parsing Excel/CSV, substituting fields, building the documents and zipping them all happens inside your browser.</dd>
+<dt>Do Excel column names need to match the template fields exactly</dt><dd>Yes. A template field like {{name}} needs to match a column named exactly "name" in the first row of your spreadsheet to connect correctly.</dd>
+<dt>If I export a DOCX file as HWPX, is the formatting preserved</dt><dd>No. Original-formatting preservation only applies when exporting to the same format (DOCX→DOCX, HWPX→HWPX). Converting to a different format generates a fresh document using the common formatting settings on screen.</dd>
 </dl>
 <p class="tk-guide-note">This tool runs entirely inside your browser. Nothing you enter is sent to a server or stored anywhere, and closing the page discards the working data.</p>
-<div class="tk-guide-more"><h2>Other tools in this category</h2><ul><li><a href="https://mnledu.com/en/productivity/document-mail-merge_en.html">Document Mail Merge Generator</a></li><li><a href="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html">Mortgage Stress Tester</a></li><li><a href="https://mnledu.com/en/productivity/pdf-to-text_en.html">PDF Document Converter</a></li><li><a href="https://mnledu.com/en/productivity/text-batch-factory_en.html">Text Batch Factory</a></li><li><a href="https://mnledu.com/en/productivity/data-slicer_en.html">Excel &amp; CSV Data Slicer</a></li><li><a href="https://mnledu.com/en/productivity/copy-desk_en.html">One-Click Copy Desk</a></li></ul></div>
+<div class="tk-guide-more"><h2>Other tools in this category</h2><ul>
+<li><a href="https://mnledu.com/en/productivity/mortgage-stress-tester_en.html">Mortgage Stress Tester</a></li>
+<li><a href="https://mnledu.com/en/productivity/universal-table-data-hub_en.html">Universal Table Data Hub</a></li>
+<li><a href="https://mnledu.com/en/productivity/pdf-to-text_en.html">PDF Document Converter</a></li>
+<li><a href="https://mnledu.com/en/productivity/text-batch-factory_en.html">Text Batch Factory</a></li>
+<li><a href="https://mnledu.com/en/productivity/data-slicer_en.html">Excel & CSV Data Slicer</a></li>
+<li><a href="https://mnledu.com/en/productivity/copy-desk_en.html">One-Click Copy Desk</a></li>
+</ul></div>
 <a class="tk-guide-home" href="https://mnledu.com/en/">See all tools &rarr;</a>
 </div></section>
 <script type="application/ld+json">
@@ -1078,26 +465,26 @@ async function buildHwpxBlob(state) {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Why support both pasting and file upload",
+      "name": "Is my data sent to a server",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Pasting a copied cell range is faster when you need to move a table quickly. Uploading is more convenient when you already have a finished file. Both convert to the same table structure, so the result is identical either way."
+        "text": "No. Reading the template, parsing Excel/CSV, substituting fields, building the documents and zipping them all happens inside your browser."
       }
     },
     {
       "@type": "Question",
-      "name": "Is my table data sent to a server",
+      "name": "Do Excel column names need to match the template fields exactly",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Both pasted text and uploaded files are processed entirely inside your browser and never sent externally."
+        "text": "Yes. A template field like {{name}} needs to match a column named exactly \"name\" in the first row of your spreadsheet to connect correctly."
       }
     },
     {
       "@type": "Question",
-      "name": "Will an HWPX export open correctly in Korean word processors",
+      "name": "If I export a DOCX file as HWPX, is the formatting preserved",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, the formatting is built to open cleanly there. If alignment looks off, adjust the settings panel and export again."
+        "text": "No. Original-formatting preservation only applies when exporting to the same format (DOCX\u2192DOCX, HWPX\u2192HWPX). Converting to a different format generates a fresh document using the common formatting settings on screen."
       }
     }
   ]
@@ -1125,16 +512,16 @@ async function buildHwpxBlob(state) {
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-31</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-01</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
-  var flagKey = "mnledu_visited_" + "universal-table-data-hub";
+  var flagKey = "mnledu_visited_" + "document-mail-merge";
   try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
-  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "universal-table-data-hub").catch(function(){});
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "document-mail-merge").catch(function(){});
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
@@ -1177,7 +564,7 @@ Share
 <div class="tk-share-card">
 <p class="tk-share-title">Share this tool</p>
 <div class="tk-share-row">
-<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/universal-table-data-hub_en.html" onclick="this.select()" />
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/document-mail-merge_en.html" onclick="this.select()" />
 <button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
 </div>
 <button type="button" class="tk-share-close" id="tkShareClose">Close</button>
@@ -1185,8 +572,8 @@ Share
 </div>
 <script>
 (function(){
-  var TK_SHARE_URL = "https://mnledu.com/en/productivity/universal-table-data-hub_en.html";
-  var TK_SHARE_TITLE = "Universal Table Data Hub";
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/document-mail-merge_en.html";
+  var TK_SHARE_TITLE = "Document Mail Merge Generator";
   var fab = document.getElementById("tkShareFab");
   var backdrop = document.getElementById("tkShareBackdrop");
   var input = document.getElementById("tkShareInput");

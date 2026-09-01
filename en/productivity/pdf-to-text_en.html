@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Document Converter | TOOLKIT</title>
+<!-- TOOLKIT:SEO_START · patch-tool-pages.js 가 관리합니다. 직접 고치지 마세요 -->
+<meta name="description" content="Converts a PDF to HWPX, DOCX, TXT or Markdown entirely in your browser. Rebuilds tables, joins broken lines, and lets you set font size, line spacing and more." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/pdf-to-text_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/pdf-to-text_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/pdf-to-text_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/pdf-to-text_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/pdf-to-text_en.html" />
+<meta property="og:title" content="PDF Document Converter | TOOLKIT" />
+<meta property="og:description" content="Converts a PDF to HWPX, DOCX, TXT or Markdown entirely in your browser. Rebuilds tables, joins broken lines, and lets you set font size, line spacing and more." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="PDF Document Converter | TOOLKIT" />
+<meta name="twitter:description" content="Converts a PDF to HWPX, DOCX, TXT or Markdown entirely in your browser. Rebuilds tables, joins broken lines, and lets you set font size, line spacing and more." />
+<!-- TOOLKIT:SEO_END -->
+
+
+
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          canvas: '#F8FAFC',
+          card: '#FFFFFF',
+          accent: { DEFAULT: '#F97316', dark: '#EA580C', light: '#FFEDD5' },
+          ai: { DEFAULT: '#8B5CF6', dark: '#7C3AED', light: '#F3EBFF' },
+          ink: { 900: '#0F172A', 700: '#334155', 500: '#64748B', 300: '#CBD5E1' }
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        },
+        boxShadow: {
+          soft: '0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.06)'
+        }
+      }
+    }
+  };
+</script>
+
+<style>
+  body { font-family: 'Pretendard', ui-sans-serif, system-ui, sans-serif; }
+  .mono-editor {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  .drop-zone.dragover { border-color: #F97316; background-color: #FFF7ED; }
+  .toggle-ai:checked ~ .toggle-ai-track { background-color: #8B5CF6; }
+  .toggle-ai:checked ~ .toggle-ai-track .toggle-ai-dot { transform: translateX(1.25rem); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .toast-enter { animation: toast-in .18s ease-out; }
+  .ai-glow { box-shadow: 0 0 0 3px rgba(139,92,246,0.15), 0 8px 24px rgba(139,92,246,0.18); }
+  .doc-preview { font-family: Pretendard, "Malgun Gothic", sans-serif; white-space: pre-wrap; word-break: break-word; }
+  .fmt-btn.active { background:#F97316; color:#fff; border-color:#F97316; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body class="bg-canvas text-ink-900 min-h-screen flex flex-col">
+
+<!-- ================= 상단 바 ================= -->
+<header class="border-b border-slate-200 bg-card/80 backdrop-blur sticky top-0 z-30">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+    <a href="https://mnledu.com/en/" class="flex items-center gap-2 shrink-0">
+      <span class="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-bold text-sm">TK</span>
+      <span class="font-semibold text-ink-900 hidden sm:inline">TOOLKIT</span>
+    </a>
+    <div class="text-center flex-1 min-w-0">
+      <h1 class="text-sm sm:text-base font-semibold text-ink-900 truncate">PDF Document Converter</h1>
+      <p class="text-[11px] sm:text-xs text-ink-500 hidden sm:block">No server upload — converts entirely in your browser</p>
+    </div>
+    <a href="https://mnledu.com/en/productivity/" class="text-xs sm:text-sm text-ink-500 hover:text-accent shrink-0">All tools →</a>
+  </div>
+</header>
+
+<!-- ================= 메인 앱 ================= -->
+<main class="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+  <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-5">
+
+    <!-- ----------- 좌측 패널 ----------- -->
+    <aside class="space-y-4">
+
+      <!-- 업로드 존 -->
+      <section class="bg-card rounded-2xl shadow-soft border border-slate-200 p-4">
+        <h2 class="text-sm font-semibold text-ink-900 mb-3 flex items-center gap-1.5">📁 Upload PDF</h2>
+        <label id="dropZone" for="fileInput" class="drop-zone block cursor-pointer rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-orange-50/50 transition-colors px-4 py-8 text-center">
+          <input type="file" id="fileInput" accept="application/pdf" class="hidden">
+          <div id="dropZoneIdle">
+            <div class="text-3xl mb-2">📄</div>
+            <p class="text-sm text-ink-700 font-medium">Click or drop a PDF file here</p>
+            <p class="text-xs text-ink-500 mt-1">Files are never sent to a server</p>
+          </div>
+          <div id="dropZoneFile" class="hidden text-left">
+            <p class="text-sm font-medium text-ink-900 truncate" id="fileNameLabel"></p>
+            <p class="text-xs text-ink-500 mt-0.5" id="fileMetaLabel"></p>
+          </div>
+        </label>
+        <div id="parseProgressWrap" class="hidden mt-3">
+          <div class="flex items-center justify-between text-xs text-ink-500 mb-1">
+            <span id="parseProgressLabel">Analyzing pages…</span>
+            <span id="parseProgressPct">0%</span>
+          </div>
+          <div class="h-1.5 rounded-full bg-slate-200 overflow-hidden">
+            <div id="parseProgressBar" class="h-full bg-accent transition-all duration-150" style="width:0%"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 일반 정제 옵션 -->
+      <section class="bg-card rounded-2xl shadow-soft border border-slate-200 p-4">
+        <h2 class="text-sm font-semibold text-ink-900 mb-3 flex items-center gap-1.5">🛠️ General Cleanup Options</h2>
+        <div class="space-y-3 text-sm">
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="optTables" checked class="mt-0.5 accent-accent w-4 h-4">
+            <span><span class="text-ink-900">Auto-detect tables</span><br><span class="text-xs text-ink-500">Rebuilds tables as Markdown by analyzing column spacing</span></span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="optCaptions" checked class="mt-0.5 accent-accent w-4 h-4">
+            <span><span class="text-ink-900">Preserve figure/table captions</span><br><span class="text-xs text-ink-500">Keeps captions like "Figure 1." as placeholders</span></span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="optJoinLines" checked class="mt-0.5 accent-accent w-4 h-4">
+            <span><span class="text-ink-900">Join broken line breaks</span><br><span class="text-xs text-ink-500">Reconnects sentences that were cut mid-way</span></span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="optHeaderFooter" checked class="mt-0.5 accent-accent w-4 h-4">
+            <span><span class="text-ink-900">Remove repeated headers/footers</span><br><span class="text-xs text-ink-500">Strips text and page numbers that repeat on every page</span></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- AI 딥클리닝 -->
+      <section class="bg-card rounded-2xl shadow-soft border border-slate-200 p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-sm font-semibold text-ink-900 flex items-center gap-1.5">🧠 On-Device AI Deep Cleaning</h2>
+          <label class="relative inline-flex items-center cursor-pointer select-none">
+            <input type="checkbox" id="aiToggle" class="toggle-ai sr-only peer">
+            <div class="toggle-ai-track w-10 h-6 bg-slate-300 rounded-full transition-colors relative">
+              <div class="toggle-ai-dot absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"></div>
+            </div>
+          </label>
+        </div>
+        <p class="text-xs text-ink-500 leading-relaxed">
+          기본 변환은 서버 전송 없이 브라우저 안에서 처리됩니다. AI 정밀 정리를 켜면 경량 모델을 처음 한 번 내려받아 브라우저 캐시에 저장하고 이후 로컬에서 실행합니다.
+        </p>
+        <div id="aiStatusBox" class="hidden mt-3 rounded-lg bg-ai-light/60 border border-ai/20 p-3">
+          <div class="flex items-center justify-between text-xs text-ai-dark mb-1">
+            <span id="aiStatusLabel">모델 상태 확인 중…</span>
+            <span id="aiStatusPct"></span>
+          </div>
+          <div class="h-1.5 rounded-full bg-white overflow-hidden">
+            <div id="aiProgressBar" class="h-full bg-ai transition-all duration-150" style="width:0%"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="text-[11px] text-ink-500 leading-relaxed px-1">
+        Everything happens inside this browser tab. Closing or refreshing the page clears the uploaded file and converted result; nothing is stored on a server.
+      </div>
+    </aside>
+
+    <!-- ----------- 우측 에디터 ----------- -->
+    <section class="bg-card rounded-2xl shadow-soft border border-slate-200 flex flex-col min-h-[560px]">
+      <div class="px-4 py-3 border-b border-slate-200 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <h2 class="text-sm font-semibold text-ink-900 flex items-center gap-1.5 shrink-0">📝 Converted Result</h2>
+            <span id="statusBadge" class="hidden text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-ink-500 shrink-0">Waiting</span>
+            <span id="charCount" class="text-[11px] text-ink-500 hidden sm:inline shrink-0"></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex rounded-lg border border-slate-200 overflow-hidden">
+              <button id="viewEditBtn" type="button" class="text-xs px-2.5 py-1.5 bg-slate-100 text-ink-900">Edit</button>
+              <button id="viewPreviewBtn" type="button" class="text-xs px-2.5 py-1.5 text-ink-500">Preview</button>
+            </div>
+            <button id="btnCopy" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-ink-700 hover:bg-slate-50 disabled:opacity-40" disabled>📋 Copy</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-end gap-3 rounded-xl bg-slate-50 border border-slate-200 p-3">
+          <div class="min-w-[110px] flex-1 sm:flex-none">
+            <label class="text-[11px] font-medium text-ink-500 block mb-1">Font size <span id="docFontSizeVal" class="text-accent">10pt</span></label>
+            <input id="docFontSize" type="range" min="7" max="24" step="1" value="10" class="w-full accent-accent">
+          </div>
+          <div class="min-w-[110px] flex-1 sm:flex-none">
+            <label class="text-[11px] font-medium text-ink-500 block mb-1">Line spacing <span id="docLineHeightVal" class="text-accent">160%</span></label>
+            <input id="docLineHeight" type="range" min="100" max="250" step="10" value="160" class="w-full accent-accent">
+          </div>
+          <div class="min-w-[110px] flex-1 sm:flex-none">
+            <label class="text-[11px] font-medium text-ink-500 block mb-1">Paragraph spacing <span id="docParaSpacingVal" class="text-accent">6pt</span></label>
+            <input id="docParaSpacing" type="range" min="0" max="30" step="1" value="6" class="w-full accent-accent">
+          </div>
+          <div>
+            <label class="text-[11px] font-medium text-ink-500 block mb-1">Paragraph alignment</label>
+            <div id="docAlignGroup" class="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
+              <button type="button" data-align="left" class="fmt-btn active text-xs px-2.5 py-1.5">Left</button>
+              <button type="button" data-align="center" class="fmt-btn text-xs px-2.5 py-1.5">Center</button>
+              <button type="button" data-align="right" class="fmt-btn text-xs px-2.5 py-1.5">Right</button>
+              <button type="button" data-align="justify" class="fmt-btn text-xs px-2.5 py-1.5">Justify</button>
+            </div>
+          </div>
+          <div class="ml-auto flex items-end gap-2">
+            <div>
+              <label for="exportFormat" class="text-[11px] font-medium text-ink-500 block mb-1">Export format</label>
+              <select id="exportFormat" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs text-ink-700 focus:outline-none focus:ring-2 focus:ring-accent/30">
+                <option value="hwpx">HWPX</option><option value="docx">DOCX</option><option value="txt">TXT</option><option value="md">MD</option>
+              </select>
+            </div>
+            <button id="exportBtn" type="button" class="h-9 px-4 rounded-lg bg-accent text-white text-xs font-semibold hover:bg-accent-dark disabled:opacity-40 disabled:cursor-not-allowed" disabled>Export</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative flex-1">
+        <div id="emptyState" class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-ink-500">
+          <div class="text-4xl mb-3">🗂️</div>
+          <p class="text-sm">Left에 PDF 파일을 올리면<br>변환된 Markdown이 여기에 나타납니다.</p>
+        </div>
+        <textarea id="editor" spellcheck="false" class="mono-editor hidden w-full h-full min-h-[500px] resize-none p-4 text-sm leading-relaxed text-ink-900 focus:outline-none rounded-b-2xl" placeholder=""></textarea>
+        <div id="docPreview" class="doc-preview hidden w-full h-full min-h-[500px] overflow-auto p-8 sm:p-10 bg-slate-50 text-ink-900 rounded-b-2xl">
+          <div id="docPreviewPage" class="max-w-[794px] min-h-[900px] mx-auto bg-white border border-slate-200 shadow-sm px-12 py-14"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= 하단 가이드 섹션 ================= -->
+  
+<script>
+const HWPX_TPL_MIMETYPE = `application/hwp+zip`;
+const HWPX_TPL_VERSION = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><hv:HCFVersion xmlns:hv="http://www.hancom.co.kr/hwpml/2011/version" tagetApplication="WORDPROCESSOR" major="5" minor="0" micro="5" buildNumber="0" xmlVersion="1.4" application="hwpxlib" appVersion="unknown"/>`;
+const HWPX_TPL_CONTAINER = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><ocf:container xmlns:ocf="urn:oasis:names:tc:opendocument:xmlns:container" xmlns:hpf="http://www.hancom.co.kr/schema/2011/hpf"><ocf:rootfiles><ocf:rootfile full-path="Contents/content.hpf" media-type="application/hwpml-package+xml"/></ocf:rootfiles></ocf:container>`;
+const HWPX_TPL_MANIFEST = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><odf:manifest xmlns:odf="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0"/>`;
+const HWPX_TPL_CONTENTHPF = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><opf:package xmlns:ha="http://www.hancom.co.kr/hwpml/2011/app" xmlns:hp="http://www.hancom.co.kr/hwpml/2011/paragraph" xmlns:hp10="http://www.hancom.co.kr/hwpml/2016/paragraph" xmlns:hs="http://www.hancom.co.kr/hwpml/2011/section" xmlns:hc="http://www.hancom.co.kr/hwpml/2011/core" xmlns:hh="http://www.hancom.co.kr/hwpml/2011/head" xmlns:hhs="http://www.hancom.co.kr/hwpml/2011/history" xmlns:hm="http://www.hancom.co.kr/hwpml/2011/master-page" xmlns:hpf="http://www.hancom.co.kr/schema/2011/hpf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf/" xmlns:ooxmlchart="http://www.hancom.co.kr/hwpml/2016/ooxmlchart" xmlns:hwpunitchar="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" version="" unique-identifier="" id=""><opf:metadata><opf:title/><opf:language>ko</opf:language><opf:meta name="creator" content="text"/><opf:meta name="subject" content="text"/><opf:meta name="description" content="text"/><opf:meta name="lastsaveby" content="text"/><opf:meta name="CreatedDate" content="text">2026-08-31T09:06:42Z</opf:meta><opf:meta name="ModifiedDate" content="text">2026-08-31T09:06:42Z</opf:meta><opf:meta name="date" content="text">2026년 7월 31일 월요일 오후 6:06:42</opf:meta><opf:meta name="keyword" content="text"/></opf:metadata><opf:manifest><opf:item id="header" href="Contents/header.xml" media-type="application/xml"/><opf:item id="section0" href="Contents/section0.xml" media-type="application/xml"/><opf:item id="settings" href="settings.xml" media-type="application/xml"/></opf:manifest><opf:spine><opf:itemref idref="header"/><opf:itemref idref="section0"/></opf:spine></opf:package>`;
+const HWPX_TPL_SETTINGS = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><ha:HWPApplicationSetting xmlns:ha="http://www.hancom.co.kr/hwpml/2011/app" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0"><ha:CaretPosition listIDRef="0" paraIDRef="0" pos="16"/></ha:HWPApplicationSetting>`;
+const HWPX_TPL_HEADER = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><hh:head xmlns:ha="http://www.hancom.co.kr/hwpml/2011/app" xmlns:hp="http://www.hancom.co.kr/hwpml/2011/paragraph" xmlns:hp10="http://www.hancom.co.kr/hwpml/2016/paragraph" xmlns:hs="http://www.hancom.co.kr/hwpml/2011/section" xmlns:hc="http://www.hancom.co.kr/hwpml/2011/core" xmlns:hh="http://www.hancom.co.kr/hwpml/2011/head" xmlns:hhs="http://www.hancom.co.kr/hwpml/2011/history" xmlns:hm="http://www.hancom.co.kr/hwpml/2011/master-page" xmlns:hpf="http://www.hancom.co.kr/schema/2011/hpf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf/" xmlns:ooxmlchart="http://www.hancom.co.kr/hwpml/2016/ooxmlchart" xmlns:hwpunitchar="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" version="1.4" secCnt="1"><hh:beginNum page="1" footnote="1" endnote="1" pic="1" tbl="1" equation="1"/><hh:refList><hh:fontfaces itemCnt="7"><hh:fontface lang="HANGUL" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface><hh:fontface lang="LATIN" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface><hh:fontface lang="HANJA" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface><hh:fontface lang="JAPANESE" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface><hh:fontface lang="OTHER" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface><hh:fontface lang="SYMBOL" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface><hh:fontface lang="USER" fontCnt="2"><hh:font id="0" face="함초롬돋움" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font><hh:font id="1" face="함초롬바탕" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="8" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font></hh:fontface></hh:fontfaces><hh:borderFills itemCnt="2"><hh:borderFill id="1" threeD="0" shadow="0" centerLine="NONE" breakCellSeparateLine="0"><hh:slash type="NONE" Crooked="0" isCounter="0"/><hh:backSlash type="NONE" Crooked="0" isCounter="0"/><hh:leftBorder type="NONE" width="0.1 mm" color="#000000"/><hh:rightBorder type="NONE" width="0.1 mm" color="#000000"/><hh:topBorder type="NONE" width="0.1 mm" color="#000000"/><hh:bottomBorder type="NONE" width="0.1 mm" color="#000000"/><hh:diagonal type="SOLID" width="0.1 mm" color="#000000"/></hh:borderFill><hh:borderFill id="2" threeD="0" shadow="0" centerLine="NONE" breakCellSeparateLine="0"><hh:slash type="NONE" Crooked="0" isCounter="0"/><hh:backSlash type="NONE" Crooked="0" isCounter="0"/><hh:leftBorder type="NONE" width="0.1 mm" color="#000000"/><hh:rightBorder type="NONE" width="0.1 mm" color="#000000"/><hh:topBorder type="NONE" width="0.1 mm" color="#000000"/><hh:bottomBorder type="NONE" width="0.1 mm" color="#000000"/><hh:diagonal type="SOLID" width="0.1 mm" color="#000000"/><hc:fillBrush><hc:winBrush faceColor="none" hatchColor="#FF000000" alpha="0"/></hc:fillBrush></hh:borderFill></hh:borderFills><hh:charProperties itemCnt="7"><hh:charPr id="0" height="1000" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="1" latin="1" hanja="1" japanese="1" other="1" symbol="1" user="1"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr><hh:charPr id="1" height="1000" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr><hh:charPr id="2" height="900" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr><hh:charPr id="3" height="900" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="1" latin="1" hanja="1" japanese="1" other="1" symbol="1" user="1"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr><hh:charPr id="4" height="900" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="-5" latin="-5" hanja="-5" japanese="-5" other="-5" symbol="-5" user="-5"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr><hh:charPr id="5" height="1600" textColor="#2E74B5" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr><hh:charPr id="6" height="1100" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr></hh:charProperties><hh:tabProperties itemCnt="2"><hh:tabPr id="0" autoTabLeft="0" autoTabRight="0"/><hh:tabPr id="1" autoTabLeft="1" autoTabRight="0"/></hh:tabProperties><hh:numberings itemCnt="1"><hh:numbering id="1" start="0"><hh:paraHead start="1" level="1" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="DIGIT" charPrIDRef="4294967295" checkable="0">^1.</hh:paraHead><hh:paraHead start="1" level="2" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="HANGUL_SYLLABLE" charPrIDRef="4294967295" checkable="0">^2.</hh:paraHead><hh:paraHead start="1" level="3" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="DIGIT" charPrIDRef="4294967295" checkable="0">^3)</hh:paraHead><hh:paraHead start="1" level="4" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="HANGUL_SYLLABLE" charPrIDRef="4294967295" checkable="0">^4)</hh:paraHead><hh:paraHead start="1" level="5" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="DIGIT" charPrIDRef="4294967295" checkable="0">(^5)</hh:paraHead><hh:paraHead start="1" level="6" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="HANGUL_SYLLABLE" charPrIDRef="4294967295" checkable="0">(^6)</hh:paraHead><hh:paraHead start="1" level="7" align="LEFT" useInstWidth="1" autoIndent="1" widthAdjust="0" textOffsetType="PERCENT" textOffset="50" numFormat="CIRCLED_DIGIT" charPrIDRef="4294967295" checkable="1">^7</hh:paraHead></hh:numbering></hh:numberings><hh:paraProperties itemCnt="16"><hh:paraPr id="0" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="LEFT" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="130" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="130" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="1" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="-1310" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="130" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="-2620" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="130" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="2" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="150" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="150" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="3" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="4" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="6"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="7000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="14000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="5" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="5"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="6000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="12000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="6" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="4"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="5000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="10000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="7" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="3"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="4000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="8000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="8" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="2"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="3000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="6000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="9" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="1"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="2000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="4000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="10" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="OUTLINE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="1000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="2000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="11" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="JUSTIFY" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="KEEP_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="1500" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="3000" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="0" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="12" tabPrIDRef="1" condense="20" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="LEFT" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="1" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="1200" unit="HWPUNIT"/><hc:next value="300" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="2400" unit="HWPUNIT"/><hc:next value="600" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="1" eAsianNum="1"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="13" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="LEFT" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="1" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="700" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="1400" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="1" eAsianNum="1"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="14" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="LEFT" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="1" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="1100" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="700" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="2200" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="1400" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="1" eAsianNum="1"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr><hh:paraPr id="15" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="LEFT" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="1" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="2200" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="700" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="4400" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="1400" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="160" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="1" eAsianNum="1"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr></hh:paraProperties><hh:styles itemCnt="18"><hh:style id="0" type="PARA" name="바탕글" engName="Normal" paraPrIDRef="3" charPrIDRef="0" nextStyleIDRef="0" langID="1042" lockForm="0"/><hh:style id="1" type="PARA" name="본문" engName="Body" paraPrIDRef="11" charPrIDRef="0" nextStyleIDRef="1" langID="1042" lockForm="0"/><hh:style id="2" type="PARA" name="개요 1" engName="Outline 1" paraPrIDRef="10" charPrIDRef="0" nextStyleIDRef="2" langID="1042" lockForm="0"/><hh:style id="3" type="PARA" name="개요 2" engName="Outline 2" paraPrIDRef="9" charPrIDRef="0" nextStyleIDRef="3" langID="1042" lockForm="0"/><hh:style id="4" type="PARA" name="개요 3" engName="Outline 3" paraPrIDRef="8" charPrIDRef="0" nextStyleIDRef="4" langID="1042" lockForm="0"/><hh:style id="5" type="PARA" name="개요 4" engName="Outline 4" paraPrIDRef="7" charPrIDRef="0" nextStyleIDRef="5" langID="1042" lockForm="0"/><hh:style id="6" type="PARA" name="개요 5" engName="Outline 5" paraPrIDRef="6" charPrIDRef="0" nextStyleIDRef="6" langID="1042" lockForm="0"/><hh:style id="7" type="PARA" name="개요 6" engName="Outline 6" paraPrIDRef="5" charPrIDRef="0" nextStyleIDRef="7" langID="1042" lockForm="0"/><hh:style id="8" type="PARA" name="개요 7" engName="Outline 7" paraPrIDRef="4" charPrIDRef="0" nextStyleIDRef="8" langID="1042" lockForm="0"/><hh:style id="9" type="CHAR" name="쪽 번호" engName="Page Number" paraPrIDRef="6750318" charPrIDRef="1" nextStyleIDRef="0" langID="1042" lockForm="0"/><hh:style id="10" type="PARA" name="머리말" engName="Header" paraPrIDRef="2" charPrIDRef="2" nextStyleIDRef="10" langID="1042" lockForm="0"/><hh:style id="11" type="PARA" name="각주" engName="Footnote" paraPrIDRef="1" charPrIDRef="3" nextStyleIDRef="11" langID="1042" lockForm="0"/><hh:style id="12" type="PARA" name="미주" engName="Endnote" paraPrIDRef="1" charPrIDRef="3" nextStyleIDRef="12" langID="1042" lockForm="0"/><hh:style id="13" type="PARA" name="메모" engName="Memo" paraPrIDRef="0" charPrIDRef="4" nextStyleIDRef="13" langID="1042" lockForm="0"/><hh:style id="14" type="PARA" name="차례 제목" engName="TOC Heading" paraPrIDRef="12" charPrIDRef="5" nextStyleIDRef="14" langID="1042" lockForm="0"/><hh:style id="15" type="PARA" name="차례 1" engName="TOC 1" paraPrIDRef="13" charPrIDRef="6" nextStyleIDRef="15" langID="1042" lockForm="0"/><hh:style id="16" type="PARA" name="차례 2" engName="TOC 2" paraPrIDRef="14" charPrIDRef="6" nextStyleIDRef="16" langID="1042" lockForm="0"/><hh:style id="17" type="PARA" name="차례 3" engName="TOC 3" paraPrIDRef="15" charPrIDRef="6" nextStyleIDRef="17" langID="1042" lockForm="0"/></hh:styles></hh:refList><hh:compatibleDocument targetProgram="HWP201X"><hh:layoutCompatibility/></hh:compatibleDocument><hh:docOption><hh:linkinfo path="" pageInherit="0" footnoteInherit="0"/></hh:docOption><hh:trackchageConfig flags="56"/></hh:head>`;
+const HWPX_TPL_SECTION0BASE = `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?><hs:sec xmlns:ha="http://www.hancom.co.kr/hwpml/2011/app" xmlns:hp="http://www.hancom.co.kr/hwpml/2011/paragraph" xmlns:hp10="http://www.hancom.co.kr/hwpml/2016/paragraph" xmlns:hs="http://www.hancom.co.kr/hwpml/2011/section" xmlns:hc="http://www.hancom.co.kr/hwpml/2011/core" xmlns:hh="http://www.hancom.co.kr/hwpml/2011/head" xmlns:hhs="http://www.hancom.co.kr/hwpml/2011/history" xmlns:hm="http://www.hancom.co.kr/hwpml/2011/master-page" xmlns:hpf="http://www.hancom.co.kr/schema/2011/hpf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf/" xmlns:ooxmlchart="http://www.hancom.co.kr/hwpml/2016/ooxmlchart" xmlns:hwpunitchar="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0"><hp:p id="2764991984" paraPrIDRef="3" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="0"><hp:secPr id="" textDirection="HORIZONTAL" spaceColumns="1134" tabStop="8000" tabStopVal="4000" tabStopUnit="HWPUNIT" outlineShapeIDRef="1" memoShapeIDRef="0" textVerticalWidthHead="0" masterPageCnt="0"><hp:grid lineGrid="0" charGrid="0" wonggojiFormat="0"/><hp:startNum pageStartsOn="BOTH" page="0" pic="0" tbl="0" equation="0"/><hp:visibility hideFirstHeader="0" hideFirstFooter="0" hideFirstMasterPage="0" border="SHOW_ALL" fill="SHOW_ALL" hideFirstPageNum="0" hideFirstEmptyLine="0" showLineNumber="0"/><hp:lineNumberShape restartType="0" countBy="0" distance="0" startNumber="0"/><hp:pagePr landscape="WIDELY" width="59528" height="84188" gutterType="LEFT_ONLY"><hp:margin header="4252" footer="4252" gutter="0" left="8504" right="8504" top="5668" bottom="4252"/></hp:pagePr><hp:footNotePr><hp:autoNumFormat type="DIGIT" userChar="" prefixChar="" suffixChar=")" supscript="0"/><hp:noteLine length="-1" type="SOLID" width="0.12 mm" color="#000000"/><hp:noteSpacing betweenNotes="283" belowLine="567" aboveLine="850"/><hp:numbering type="CONTINUOUS" newNum="1"/><hp:placement place="EACH_COLUMN" beneathText="0"/></hp:footNotePr><hp:endNotePr><hp:autoNumFormat type="DIGIT" userChar="" prefixChar="" suffixChar=")" supscript="0"/><hp:noteLine length="14692344" type="SOLID" width="0.12 mm" color="#000000"/><hp:noteSpacing betweenNotes="0" belowLine="567" aboveLine="850"/><hp:numbering type="CONTINUOUS" newNum="1"/><hp:placement place="END_OF_DOCUMENT" beneathText="0"/></hp:endNotePr><hp:pageBorderFill type="BOTH" borderFillIDRef="1" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill><hp:pageBorderFill type="EVEN" borderFillIDRef="1" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill><hp:pageBorderFill type="ODD" borderFillIDRef="1" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill></hp:secPr><hp:ctrl><hp:colPr id="" type="NEWSPAPER" layout="LEFT" colCount="1" sameSz="1" sameGap="0"/></hp:ctrl><hp:t/></hp:run><hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="1000" textheight="1000" baseline="850" spacing="600" horzpos="0" horzsize="42520" flags="393216"/></hp:linesegarray></hp:p></hs:sec>`;
+
+/* ===================== HWPX 생성기 (실제 한컴 OWPML 템플릿 기반) =====================
+   neolord0/hwpxlib 의 blank.hwpx(한컴 정품 생성 파일)를 기준 템플릿으로 삼아
+   header.xml 에는 서식(글자크기/정렬/줄간격/테두리) 정의를 "추가"만 하고,
+   section0.xml 에는 표 문단을 추가로 삽입하는 방식으로 생성한다.
+   -> 기존 유효한 구조를 건드리지 않으므로 스키마 위반 위험이 최소화된다.
+   python-hwpx(airmang/python-hwpx) 오라클 검증 22종 통과 확인됨. */
+/* global JSZip */
+
+var HWPX_HWPUNIT_PER_MM = 7200 / 25.4; // 1mm = 약 283.4646 HWPUNIT (7200 HWPUNIT = 1inch)
+function hwpxMmToUnit(mm) { return Math.round(mm * HWPX_HWPUNIT_PER_MM); }
+
+function hwpxXmlEscape(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+const HWPX_NEW_CHARPR_ID = 500;
+const HWPX_NEW_BORDERFILL_ID = 500;
+const HWPX_NEW_PARAPR_ID = 500;
+
+function hwpxBumpItemCnt(xml, tagName, delta) {
+  if (typeof xml !== 'string') throw new Error('HWPX 템플릿 오류: ' + tagName + ' XML이 초기화되지 않았습니다.');
+  const re = new RegExp(`(<hh:${tagName}[^>]*itemCnt=")(\\d+)(")`);
+  return xml.replace(re, (m, p1, num, p3) => p1 + (parseInt(num, 10) + delta) + p3);
+}
+
+function hwpxBuildHeaderXml(state) {
+  let xml = HWPX_TPL_HEADER;
+  if (typeof xml !== 'string' || !xml.includes('<hh:head')) throw new Error('HWPX header 템플릿을 불러오지 못했습니다.');
+
+  const newCharPr = `<hh:charPr id="${HWPX_NEW_CHARPR_ID}" height="${Math.round(state.fontSize * 100)}" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr>`;
+  xml = xml.replace('</hh:charProperties>', newCharPr + '</hh:charProperties>');
+  xml = hwpxBumpItemCnt(xml, 'charProperties', 1);
+
+  const borderWidth = '0.12 mm';
+  const borderColor = '#94A3B8';
+  const newBorderFill = `<hh:borderFill id="${HWPX_NEW_BORDERFILL_ID}" threeD="0" shadow="0" centerLine="NONE" breakCellSeparateLine="0"><hh:slash type="NONE" Crooked="0" isCounter="0"/><hh:backSlash type="NONE" Crooked="0" isCounter="0"/><hh:leftBorder type="SOLID" width="${borderWidth}" color="${borderColor}"/><hh:rightBorder type="SOLID" width="${borderWidth}" color="${borderColor}"/><hh:topBorder type="SOLID" width="${borderWidth}" color="${borderColor}"/><hh:bottomBorder type="SOLID" width="${borderWidth}" color="${borderColor}"/><hh:diagonal type="NONE" width="${borderWidth}" color="${borderColor}"/></hh:borderFill>`;
+  xml = xml.replace('</hh:borderFills>', newBorderFill + '</hh:borderFills>');
+  xml = hwpxBumpItemCnt(xml, 'borderFills', 1);
+
+  const alignMap = { left: 'LEFT', center: 'CENTER', right: 'RIGHT', justify: 'JUSTIFY' };
+  const alignHoriz = alignMap[state.align] || 'LEFT';
+  const lineSpacingVal = Math.max(10, Math.round(state.lineHeight));
+  const newParaPr = `<hh:paraPr id="${HWPX_NEW_PARAPR_ID}" tabPrIDRef="0" condense="0" fontLineHeight="0" snapToGrid="1" suppressLineNumbers="0" checked="0"><hh:align horizontal="${alignHoriz}" vertical="BASELINE"/><hh:heading type="NONE" idRef="0" level="0"/><hh:breakSetting breakLatinWord="KEEP_WORD" breakNonLatinWord="BREAK_WORD" widowOrphan="0" keepWithNext="0" keepLines="0" pageBreakBefore="0" lineWrap="BREAK"/><hp:switch><hp:case hp:required-namespace="http://www.hancom.co.kr/hwpml/2016/HwpUnitChar"><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="${Math.round((state.paraSpacing || 0) * 100)}" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="${lineSpacingVal}" unit="HWPUNIT"/></hp:case><hp:default><hh:margin><hc:intent value="0" unit="HWPUNIT"/><hc:left value="0" unit="HWPUNIT"/><hc:right value="0" unit="HWPUNIT"/><hc:prev value="0" unit="HWPUNIT"/><hc:next value="${Math.round((state.paraSpacing || 0) * 100)}" unit="HWPUNIT"/></hh:margin><hh:lineSpacing type="PERCENT" value="${lineSpacingVal}" unit="HWPUNIT"/></hp:default></hp:switch><hh:autoSpacing eAsianEng="0" eAsianNum="0"/><hh:border borderFillIDRef="2" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/></hh:paraPr>`;
+  xml = xml.replace('</hh:paraProperties>', newParaPr + '</hh:paraProperties>');
+  xml = hwpxBumpItemCnt(xml, 'paraProperties', 1);
+
+  return xml;
+}
+
+function hwpxBuildContentHpf() {
+  let xml = HWPX_TPL_CONTENTHPF;
+  if (typeof xml !== 'string' || !xml.includes('<opf:package')) throw new Error('HWPX content.hpf 템플릿을 불러오지 못했습니다.');
+  if (!xml.includes('id="version"')) {
+    xml = xml.replace('<opf:item id="header"', '<opf:item id="version" href="version.xml" media-type="application/xml"/><opf:item id="header"');
+  }
+  return xml;
+}
+
+
+function hwpxBuildSectionXmlForText(text, fmt) {
+  var blocks=String(text||'').split(/\n\s*\n/);
+  var paraXml='';
+  blocks.forEach(function(block, idx){
+    var lines=block.split('\n');
+    var content=hwpxXmlEscape(lines.join(' '));
+    // linesegarray는 한글의 레이아웃 엔진이 문서를 열 때 계산하도록 생략한다.
+    // 각 문단에 vertpos=0인 lineseg를 강제로 넣으면 모든 문단이 같은 위치에 겹쳐 표시된다.
+    paraXml += '<hp:p id="'+(700000000+idx)+'" paraPrIDRef="'+HWPX_NEW_PARAPR_ID+'" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="'+HWPX_NEW_CHARPR_ID+'"><hp:t>'+content+'</hp:t></hp:run></hp:p>';
+  });
+  var base = HWPX_TPL_SECTION0BASE;
+  if (typeof base !== 'string' || !base.includes('</hs:sec>')) throw new Error('HWPX section 템플릿을 불러오지 못했습니다.');
+  return base.replace('</hs:sec>', paraXml+'</hs:sec>');
+}
+async function ensureJSZip() {
+  if (window.JSZip) return window.JSZip;
+  await new Promise(function(resolve, reject) {
+    var sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    sc.onload=resolve; sc.onerror=function(){reject(new Error('Could not load the JSZip library.'));}; document.head.appendChild(sc);
+  });
+  if (!window.JSZip) throw new Error('JSZip initialization failed.');
+  return window.JSZip;
+}
+async function buildHwpxTextBlob(text, fmt) {
+  if (typeof HWPX_TPL_MIMETYPE !== 'string' || typeof HWPX_TPL_VERSION !== 'string' || typeof HWPX_TPL_CONTAINER !== 'string' || typeof HWPX_TPL_MANIFEST !== 'string' || typeof HWPX_TPL_CONTENTHPF !== 'string' || typeof HWPX_TPL_HEADER !== 'string' || typeof HWPX_TPL_SECTION0BASE !== 'string' || typeof HWPX_TPL_SETTINGS !== 'string') {
+    throw new Error('HWPX template initialization failed. Refresh the page and try again.');
+  }
+  var Zip = await ensureJSZip();
+  var state={fontSize:fmt.fontSize,lineHeight:fmt.lineHeight,align:fmt.align,paraSpacing:fmt.paraSpacing};
+  var zip=new Zip();
+  zip.file('mimetype',HWPX_TPL_MIMETYPE,{compression:'STORE'});
+  zip.file('version.xml',HWPX_TPL_VERSION);
+  zip.folder('META-INF').file('container.xml',HWPX_TPL_CONTAINER);
+  zip.folder('META-INF').file('manifest.xml',HWPX_TPL_MANIFEST);
+  zip.folder('Contents').file('content.hpf',hwpxBuildContentHpf());
+  zip.folder('Contents').file('header.xml',hwpxBuildHeaderXml(state));
+  zip.folder('Contents').file('section0.xml',hwpxBuildSectionXmlForText(text,fmt));
+  zip.file('settings.xml',HWPX_TPL_SETTINGS);
+  zip.folder('Preview').file('PrvText.txt',String(text||'').slice(0,1000));
+  var bytes = await zip.generateAsync({type:'uint8array', compression:'DEFLATE', compressionOptions:{level:6}});
+  return new Blob([bytes], {type:'application/hwp+zip'});
+}
+window.buildHwpxTextBlob = buildHwpxTextBlob;
+
+
+</script>
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+<section class="tk-guide max-w-[860px] mx-auto mt-16 mb-10 px-1 text-ink-700 leading-relaxed">
+    <p class="text-[15px]">
+      You need to turn a confidential contract or internal report into Markdown, but uploading it to an
+      online converter feels like a data-leak risk, and retyping it by hand keeps mangling the tables and
+      captions. This converter was built for exactly that gap. Your file never leaves the browser, and
+      awkward mid-sentence line breaks and headers that repeat on every page get cleaned up automatically.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-2">Why there's no server upload</h2>
+    <p>
+      PDF.js is a library that parses PDFs inside the browser, so once a file is read into memory with
+      <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">FileReader</code> and its text coordinates are
+      pulled out, the conversion is done — there's simply no point where a server needs to get involved.
+      For a tool that handles documents that should never leave the building, like contracts or HR files,
+      not building a transmission path in the first place is the surest form of security.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-2">How tables are detected — a coordinate-spacing heuristic</h2>
+    <p>
+      Every piece of text inside a PDF carries its own x/y coordinates. When the gap to the next piece on
+      the same y-value (line) is more than 3.2x the average character width, that gap is treated as a
+      column boundary. Calling any single wide gap a table would produce too many false positives, though,
+      so a run is only promoted to a table — and rebuilt as Markdown table syntax — once
+      <b>two or more consecutive lines</b> repeat the same column count within a tolerance of ±1. A single
+      column, or a completely different column layout on the next line, is treated as an ordinary paragraph
+      instead.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-2">How broken line breaks are picked out</h2>
+    <p>
+      PDFs force a line break to fit the page width, so any line that doesn't end in a sentence-ending mark
+      like a period, question mark, or closing bracket gets joined with the next line. The exception is when
+      the next line starts a new list item (<code class="text-xs bg-slate-100 px-1 py-0.5 rounded">- </code>,
+      <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">1. </code>) or is a caption or table row — those
+      are left alone. Otherwise a list would collapse into one line, or the sentences around a table would
+      bleed into the table itself.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-2">How repeated headers and footers get removed</h2>
+    <p>
+      A short line (80 characters or fewer) that appears word-for-word on <b>60% or more</b> of all pages is
+      treated as a recurring header — a company name, document title, "Confidential" stamp, and so on — and
+      removed automatically. Page-number patterns (<code class="text-xs bg-slate-100 px-1 py-0.5 rounded">3</code>,
+      <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">Page 3 of 10</code>, etc.) are filtered out
+      separately. Documents shorter than 3 pages skip this logic entirely, since there isn't enough of a
+      sample to judge repetition — otherwise a 2-page document could have a coincidentally-shared sentence
+      mistaken for a header and deleted.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-2">Why on-device AI sticks to a 30–80MB model</h2>
+    <p>
+      Loading a generative LLM over 1GB into the browser will freeze or crash the tab on a lower-end laptop.
+      So this tool uses a lightweight model tuned for text correction and formatting that comes in around
+      80MB when quantized: <span class="font-mono text-xs">Xenova/flan-t5-small</span>. Even that would
+      freeze the screen if it ran on the main thread, so model loading and text generation both happen
+      inside a Web Worker, split into paragraph-sized pieces sent one at a time while a progress bar tracks
+      the work. Tables and caption placeholders are excluded from the AI pass entirely, so the model can't
+      damage the Markdown syntax itself.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-2">How figure and table captions are preserved</h2>
+    <p>
+      When a line starting with a figure number — "Figure 1.", "Table 2.", "Fig. 3:" — is detected, the
+      actual image isn't extracted; instead it's replaced with a placeholder like
+      <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">[🖼️ Image omitted: Figure 1. System architecture]</code>.
+      That way, the fact that an image existed — and what it was about — still comes through just from
+      reading the Markdown.
+    </p>
+
+    <h2 class="text-lg font-semibold text-ink-900 mt-8 mb-3">Frequently asked questions</h2>
+    <dl class="space-y-4">
+      <div>
+        <dt class="font-medium text-ink-900">Can I export to something other than Markdown?</dt>
+        <dd class="text-sm mt-1">Yes. On the results panel you can pick HWPX, DOCX, TXT or MD, along with font size, line spacing, paragraph spacing and alignment, so the export is ready to use as a finished document.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink-900">Does my uploaded PDF get sent to an external server?</dt>
+        <dd class="text-sm mt-1">No. Everything from upload to conversion happens entirely inside your browser. No network request is made even at the moment you select a file, and refreshing the page clears any data that was held in memory.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink-900">What changes when I turn on on-device AI Deep Cleaning?</dt>
+        <dd class="text-sm mt-1">A lightweight local AI model reviews the text that PDF.js already extracted and smooths out awkward line breaks and table formatting. The default mode works fine on its own — AI mode is an optional extra pass for when you want the result polished a bit further.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink-900">Does the AI model get downloaded again every time?</dt>
+        <dd class="text-sm mt-1">No. It's downloaded once on first use and stored in your browser cache, so it loads instantly from then on without downloading again. If you clear your browser storage, it will need to be downloaded once more.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink-900">Are tables in the PDF converted accurately?</dt>
+        <dd class="text-sm mt-1">Tables are detected with a coordinate-based heuristic that analyzes the spacing between columns and rebuilds them as Markdown tables. Tables with heavy cell merging or ones drawn as background images may not be recognized perfectly, so it's worth reviewing the result in the editor afterward.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink-900">Does this support scanned (image-only) PDFs?</dt>
+        <dd class="text-sm mt-1">Scanned PDFs made only of images are outside this tool's scope. It works by reading the text layer that already exists inside a PDF, so a scan with no selectable text will produce an empty result.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink-900">What if a table comes out misaligned in the result?</dt>
+        <dd class="text-sm mt-1">Turn off the 'Auto-detect tables' option on the left to receive tables as plain text and clean them up by hand instead. If that still doesn't fix it, you can edit the Markdown directly in the editor on the right.</dd>
+      </div>
+    </dl>
+
+    <p class="tk-guide-note text-xs text-ink-500 bg-slate-50 border border-slate-200 rounded-xl p-4 mt-8 leading-relaxed">
+      This tool never sends your PDF to a server. All text extraction and conversion happens only inside
+      your browser, and refreshing or closing the page clears both the uploaded content and the converted
+      result (there's no way to recover them unless you saved a copy yourself). Turning on the on-device AI
+      mode downloads a model file of roughly 80MB to your browser cache once, which requires an internet
+      connection.
+    </p>
+
+    <div class="tk-guide-more mt-8">
+      <h3 class="text-sm font-semibold text-ink-900 mb-2">Productivity tools that pair well with this one</h3>
+      <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
+        <li><a href="https://mnledu.com/en/productivity/" class="text-accent hover:underline">Excel Splitter</a></li>
+        <li><a href="https://mnledu.com/en/productivity/" class="text-accent hover:underline">PDF Merge/Split</a></li>
+        <li><a href="https://mnledu.com/en/productivity/" class="text-accent hover:underline">Batch Image Converter</a></li>
+        <li><a href="https://mnledu.com/en/productivity/" class="text-accent hover:underline">Text Deduplicator</a></li>
+        <li><a href="https://mnledu.com/en/productivity/" class="text-accent hover:underline">JSON ↔ CSV Converter</a></li>
+        <li><a href="https://mnledu.com/en/productivity/" class="text-accent hover:underline">Meeting Notes Organizer</a></li>
+      </ul>
+      <p class="mt-3"><a href="https://mnledu.com/en/" class="text-sm text-ink-500 hover:text-accent">← See all TOOLKIT tools</a></p>
+    </div>
+  </section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.0 &middot; 2026-08-31</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">pdf-to-markdown 에서 pdf-to-text 로 개명 — Markdown 단일 출력에서 HWPX·DOCX·TXT·MD 다중 포맷 내보내기로 기능 확장. 글자 크기·줄 간격·문단 간격·정렬 서식 옵션 추가</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">한국어판 신규 추가 — 그동안 영문 전용이었던 도구에 한국어판 제작. 안내문(표 감지 알고리즘, AI 정밀정리 등 상세 설명 포함)을 온전히 번역해 이식. 영문판의 가짜 사이드바 링크(실제 존재하지 않는 도구명)도 정정</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY, 영문 전용 — 한국어판 없음)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "pdf-to-text";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "pdf-to-text").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/pdf-to-text_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/pdf-to-text_en.html";
+  var TK_SHARE_TITLE = "PDF Document Converter";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+
+
+
+
+
+
+</main>
+
+<footer class="border-t border-slate-200 py-6 text-center text-xs text-ink-500">
+  © TOOLKIT · mnledu.com
+</footer>
+
+<!-- 토스트 컨테이너 -->
+<div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 items-end"></div>
+
+<!-- ================= 외부 라이브러리 (판 고정) ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+
+<!-- ================= 핵심 변환 로직 (core-logic) ================= -->
+<script>
+(function (root) {
+  'use strict';
+
+  var CAPTION_REGEX = /^(그림|표|사진|도표|Fig(?:ure)?\.?|Table|Chart|Photo)\s*[0-9A-Za-z가-힣]*[.\-:)]?\s*\S.*/;
+
+  function isCaptionLine(line) {
+    if (!line) return false;
+    var t = String(line).trim();
+    if (t.length < 3 || t.length > 140) return false;
+    return CAPTION_REGEX.test(t);
+  }
+
+  function isPageNumberLine(line) {
+    var t = String(line || '').trim();
+    if (!t) return false;
+    if (/^\d{1,4}$/.test(t)) return true;
+    if (/^[-–—]\s*\d{1,4}\s*[-–—]$/.test(t)) return true;
+    if (/^page\s+\d+(\s*(of|\/)\s*\d+)?$/i.test(t)) return true;
+    if (/^\d+\s*\/\s*\d+$/.test(t)) return true;
+    if (/^(페이지|p\.)\s*\d+(\s*(\/|중|of)\s*\d+)?\s*(쪽)?\s*$/i.test(t)) return true;
+    return false;
+  }
+
+  function computeRepeatedLines(pagesTextLines, opts) {
+    opts = opts || {};
+    var threshold = opts.threshold != null ? opts.threshold : 0.6;
+    var minPages = opts.minPages != null ? opts.minPages : 3;
+    var repeated = new Set();
+    if (!pagesTextLines || pagesTextLines.length < minPages) return repeated;
+    var freq = new Map();
+    pagesTextLines.forEach(function (page) {
+      var uniq = new Set(
+        page.map(function (l) { return String(l).trim(); }).filter(function (l) { return l && l.length <= 80; })
+      );
+      uniq.forEach(function (l) { freq.set(l, (freq.get(l) || 0) + 1); });
+    });
+    freq.forEach(function (count, line) {
+      if (count / pagesTextLines.length >= threshold) repeated.add(line);
+    });
+    return repeated;
+  }
+
+  function isHardBreakLine(line) {
+    var t = String(line || '').trim();
+    if (!t) return true;
+    if (isCaptionLine(t)) return true;
+    if (isPageNumberLine(t)) return true;
+    if (/^#{1,6}\s/.test(t)) return true;
+    if (/^\|.*\|$/.test(t)) return true;
+    return false;
+  }
+
+  function shouldJoinWithNext(currentLine, nextLine) {
+    if (currentLine == null || nextLine == null) return false;
+    var cur = String(currentLine).trim();
+    var nxt = String(nextLine).trim();
+    if (!cur || !nxt) return false;
+    if (isHardBreakLine(cur) || isHardBreakLine(nxt)) return false;
+    if (/^\s*([-*•‣▪●○◦]|\d+[.)])\s+/.test(nxt)) return false;
+    var terminators = /[.!?:;)\"'\u3002\uff01\uff1f\u201d\u2019\uff09\u3011\u300b\u300f\u2019\]。！？]$/;
+    if (terminators.test(cur)) return false;
+    return true;
+  }
+
+  function joinBrokenLines(lines) {
+    var out = [];
+    var i = 0;
+    while (i < lines.length) {
+      var cur = String(lines[i]).trim();
+      while (i < lines.length - 1 && shouldJoinWithNext(cur, lines[i + 1])) {
+        var next = String(lines[i + 1]).trim();
+        if (/[A-Za-z]-$/.test(cur) && /^[a-z]/.test(next)) {
+          cur = cur.slice(0, -1) + next;
+        } else {
+          cur = cur + ' ' + next;
+        }
+        i++;
+      }
+      out.push(cur);
+      i++;
+    }
+    return out;
+  }
+
+  function groupItemsIntoLines(items, yTolerance) {
+    yTolerance = yTolerance == null ? 3 : yTolerance;
+    var lines = [];
+    items.forEach(function (item) {
+      var line = null;
+      for (var i = 0; i < lines.length; i++) {
+        if (Math.abs(lines[i].y - item.y) <= yTolerance) { line = lines[i]; break; }
+      }
+      if (!line) { line = { y: item.y, items: [] }; lines.push(line); }
+      line.items.push(item);
+    });
+    lines.forEach(function (l) { l.items.sort(function (a, b) { return a.x - b.x; }); });
+    lines.sort(function (a, b) { return b.y - a.y; });
+    return lines;
+  }
+
+  function segmentLineIntoCells(lineItems, gapThreshold) {
+    var cells = [];
+    var current = null;
+    for (var i = 0; i < lineItems.length; i++) {
+      var it = lineItems[i];
+      var w = it.width || 0;
+      if (!current) {
+        current = { text: it.str, startX: it.x, endX: it.x + w };
+      } else {
+        var gap = it.x - current.endX;
+        var avgCharWidth = w / Math.max(1, String(it.str || '').length);
+        var threshold = gapThreshold != null ? gapThreshold : Math.max(10, avgCharWidth * 3.2);
+        if (gap > threshold) {
+          cells.push(current);
+          current = { text: it.str, startX: it.x, endX: it.x + w };
+        } else {
+          current.text += it.str;
+          current.endX = it.x + w;
+        }
+      }
+    }
+    if (current) cells.push(current);
+    return cells.map(function (c) { return { text: c.text.trim(), startX: c.startX }; }).filter(function (c) { return c.text.length > 0; });
+  }
+
+  function detectTableBlocks(lines) {
+    var withCells = lines.map(function (l) { return { y: l.y, items: l.items, cells: segmentLineIntoCells(l.items) }; });
+    var blocks = [];
+    var i = 0;
+    while (i < withCells.length) {
+      var runStart = i;
+      var j = i;
+      while (j < withCells.length && withCells[j].cells.length >= 2) j++;
+      var runLength = j - runStart;
+      if (runLength >= 2) {
+        var counts = withCells.slice(runStart, j).map(function (l) { return l.cells.length; });
+        var freqMap = {};
+        counts.forEach(function (c) { freqMap[c] = (freqMap[c] || 0) + 1; });
+        var mode = counts[0];
+        Object.keys(freqMap).forEach(function (k) { if (freqMap[k] > (freqMap[mode] || 0)) mode = Number(k); });
+        var consistent = counts.every(function (c) { return Math.abs(c - mode) <= 1; });
+        if (consistent) {
+          blocks.push({ type: 'table', lines: withCells.slice(runStart, j) });
+          i = j;
+          continue;
+        }
+      }
+      blocks.push({ type: 'text', lines: [withCells[i]] });
+      i++;
+    }
+    return blocks;
+  }
+
+  function escapeMdCell(s) { return String(s).replace(/\|/g, '\\|').replace(/\n/g, ' '); }
+
+  function renderTableBlock(block) {
+    var rows = block.lines.map(function (l) { return l.cells.map(function (c) { return c.text; }); });
+    var colCount = 0;
+    rows.forEach(function (r) { colCount = Math.max(colCount, r.length); });
+    var normRows = rows.map(function (r) { var rr = r.slice(0, colCount); while (rr.length < colCount) rr.push(''); return rr; });
+    var header = normRows[0];
+    var body = normRows.slice(1);
+    var md = '| ' + header.map(escapeMdCell).join(' | ') + ' |\n';
+    md += '| ' + header.map(function () { return '---'; }).join(' | ') + ' |';
+    body.forEach(function (r) { md += '\n| ' + r.map(escapeMdCell).join(' | ') + ' |'; });
+    return md;
+  }
+
+  function renderTextLine(line) { return line.cells.map(function (c) { return c.text; }).join(' '); }
+
+  function convertPageItemsToSegments(items, opts) {
+    opts = opts || {};
+    if (!items || items.length === 0) return [];
+    var lines = groupItemsIntoLines(items);
+    if (opts.tables === false) {
+      // 표 인식을 끈 경우: 모든 줄을 일반 텍스트로 처리
+      return lines
+        .map(function (l) { return renderTextLine({ cells: segmentLineIntoCells(l.items, 1e9) }); })
+        .filter(function (t) { return t.trim().length > 0; })
+        .map(function (t) { return { type: 'text', line: t }; });
+    }
+    var blocks = detectTableBlocks(lines);
+    var segments = [];
+    blocks.forEach(function (b) {
+      if (b.type === 'table') {
+        segments.push({ type: 'table', markdown: renderTableBlock(b) });
+      } else {
+        var text = renderTextLine(b.lines[0]);
+        if (text.trim().length > 0) segments.push({ type: 'text', line: text });
+      }
+    });
+    return segments;
+  }
+
+  function assembleDocument(pagesSegments, opts) {
+    opts = Object.assign({ removeHeaderFooter: true, joinBrokenLines: true, markCaptions: true, pageBreak: '\n\n---\n\n' }, opts || {});
+    var pagesTextLines = pagesSegments.map(function (segs) {
+      return segs.filter(function (s) { return s.type === 'text'; }).map(function (s) { return s.line; });
+    });
+    var repeated = opts.removeHeaderFooter ? computeRepeatedLines(pagesTextLines) : new Set();
+    var stats = { removedHeaderFooterLines: 0, removedPageNumberLines: 0, captionsFound: 0, tablesFound: 0, pageCount: pagesSegments.length };
+
+    var outputPages = pagesSegments.map(function (segs) {
+      var kept = segs.filter(function (s) {
+        if (s.type !== 'text') return true;
+        var t = s.line.trim();
+        if (!t) return true;
+        if (opts.removeHeaderFooter && repeated.has(t)) { stats.removedHeaderFooterLines++; return false; }
+        if (opts.removeHeaderFooter && isPageNumberLine(t)) { stats.removedPageNumberLines++; return false; }
+        return true;
+      });
+      var finalLines = [];
+      var run = [];
+      function flushRun() {
+        if (run.length === 0) return;
+        var joined = opts.joinBrokenLines ? joinBrokenLines(run) : run;
+        joined.forEach(function (l) {
+          var lt = l.trim();
+          if (!lt) return;
+          if (opts.markCaptions && isCaptionLine(lt)) {
+            stats.captionsFound++;
+            finalLines.push('[🖼️ Image omitted: ' + lt + ']');
+          } else {
+            finalLines.push(lt);
+          }
+        });
+        run = [];
+      }
+      kept.forEach(function (s) {
+        if (s.type === 'text') { run.push(s.line); }
+        else { flushRun(); stats.tablesFound++; finalLines.push(s.markdown); }
+      });
+      flushRun();
+      return finalLines;
+    });
+
+    var markdown = outputPages.map(function (lines) { return lines.join('\n\n'); }).filter(function (p) { return p.trim().length > 0; }).join(opts.pageBreak);
+    return { markdown: markdown, stats: stats };
+  }
+
+  function chunkText(text, maxChunkChars) {
+    maxChunkChars = maxChunkChars || 800;
+    if (!text) return [];
+    var paragraphs = String(text).split(/\n{2,}/);
+    var chunks = [];
+    var buf = '';
+    paragraphs.forEach(function (p) {
+      if (buf && (buf + '\n\n' + p).length > maxChunkChars) { chunks.push(buf); buf = p; }
+      else { buf = buf ? buf + '\n\n' + p : p; }
+      while (buf.length > maxChunkChars * 1.5) { chunks.push(buf.slice(0, maxChunkChars)); buf = buf.slice(maxChunkChars); }
+    });
+    if (buf) chunks.push(buf);
+    return chunks;
+  }
+
+  function partitionMarkdownForAI(markdown) {
+    if (!markdown) return [];
+    var blocks = String(markdown).split(/\n{2,}/);
+    return blocks.map(function (b) {
+      var t = b.trim();
+      var eligible = t.length > 0 && t.indexOf('|') !== 0 && t.indexOf('[🖼️') !== 0 && t.indexOf('#') !== 0 && t !== '---';
+      return { text: b, aiEligible: eligible };
+    });
+  }
+
+  function reassembleBlocks(blocks) { return blocks.map(function (b) { return b.text; }).join('\n\n'); }
+
+  root.TK = {
+    isCaptionLine: isCaptionLine,
+    isPageNumberLine: isPageNumberLine,
+    computeRepeatedLines: computeRepeatedLines,
+    shouldJoinWithNext: shouldJoinWithNext,
+    joinBrokenLines: joinBrokenLines,
+    groupItemsIntoLines: groupItemsIntoLines,
+    segmentLineIntoCells: segmentLineIntoCells,
+    detectTableBlocks: detectTableBlocks,
+    renderTableBlock: renderTableBlock,
+    convertPageItemsToSegments: convertPageItemsToSegments,
+    assembleDocument: assembleDocument,
+    chunkText: chunkText,
+    partitionMarkdownForAI: partitionMarkdownForAI,
+    reassembleBlocks: reassembleBlocks
+  };
+})(window);
+</script>
+
+<!-- ================= 앱 글루 코드 (DOM / PDF.js / Worker) ================= -->
+<script>
+(function () {
+  'use strict';
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  var MAX_FILE_MB = 60;
+  var AI_MODEL_ID = 'Xenova/flan-t5-small';
+  var TRANSFORMERS_CDN = 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+
+  // ---- DOM refs ----
+  var fileInput = document.getElementById('fileInput');
+  var dropZone = document.getElementById('dropZone');
+  var dropZoneIdle = document.getElementById('dropZoneIdle');
+  var dropZoneFile = document.getElementById('dropZoneFile');
+  var fileNameLabel = document.getElementById('fileNameLabel');
+  var fileMetaLabel = document.getElementById('fileMetaLabel');
+  var parseProgressWrap = document.getElementById('parseProgressWrap');
+  var parseProgressBar = document.getElementById('parseProgressBar');
+  var parseProgressPct = document.getElementById('parseProgressPct');
+  var parseProgressLabel = document.getElementById('parseProgressLabel');
+
+  var optTables = document.getElementById('optTables');
+  var optCaptions = document.getElementById('optCaptions');
+  var optJoinLines = document.getElementById('optJoinLines');
+  var optHeaderFooter = document.getElementById('optHeaderFooter');
+
+  var aiToggle = document.getElementById('aiToggle');
+  var aiStatusBox = document.getElementById('aiStatusBox');
+  var aiStatusLabel = document.getElementById('aiStatusLabel');
+  var aiStatusPct = document.getElementById('aiStatusPct');
+  var aiProgressBar = document.getElementById('aiProgressBar');
+
+  var emptyState = document.getElementById('emptyState');
+  var editor = document.getElementById('editor');
+  var statusBadge = document.getElementById('statusBadge');
+  var charCount = document.getElementById('charCount');
+  var btnCopy = document.getElementById('btnCopy');
+  var exportFormat = document.getElementById('exportFormat');
+  var exportBtn = document.getElementById('exportBtn');
+  var docPreview = document.getElementById('docPreview');
+  var docPreviewPage = document.getElementById('docPreviewPage');
+  var viewEditBtn = document.getElementById('viewEditBtn');
+  var viewPreviewBtn = document.getElementById('viewPreviewBtn');
+  var docFormat = { fontSize: 10, lineHeight: 160, paraSpacing: 6, align: 'left' };
+  var toastContainer = document.getElementById('toastContainer');
+
+  var currentFileBaseName = 'converted';
+  var aiWorker = null;
+  var aiReady = false;
+  var aiLoading = false;
+
+  // ---- 토스트 ----
+  function toast(message, kind) {
+    var el = document.createElement('div');
+    var colors = {
+      success: 'bg-ink-900 text-white',
+      error: 'bg-red-600 text-white',
+      info: 'bg-white text-ink-900 border border-slate-200'
+    };
+    el.className = 'toast-enter px-4 py-2.5 rounded-lg shadow-soft text-sm ' + (colors[kind] || colors.info);
+    el.textContent = message;
+    toastContainer.appendChild(el);
+    setTimeout(function () {
+      el.style.transition = 'opacity .25s, transform .25s';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(6px)';
+      setTimeout(function () { el.remove(); }, 260);
+    }, 2600);
+  }
+
+  function setStatus(text, tone) {
+    statusBadge.classList.remove('hidden');
+    statusBadge.textContent = text;
+    var toneClass = {
+      idle: 'bg-slate-100 text-ink-500',
+      busy: 'bg-orange-100 text-accent-dark',
+      ai: 'bg-ai-light text-ai-dark',
+      done: 'bg-emerald-100 text-emerald-700',
+      error: 'bg-red-100 text-red-700'
+    };
+    statusBadge.className = 'text-[11px] px-2 py-0.5 rounded-full shrink-0 ' + (toneClass[tone] || toneClass.idle);
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function showEditor(markdown) {
+    emptyState.classList.add('hidden');
+    editor.classList.remove('hidden');
+    editor.value = markdown;
+    charCount.classList.remove('hidden');
+    charCount.textContent = markdown.length.toLocaleString() + ' chars';
+    btnCopy.disabled = false;
+    var hasText = markdown.trim().length > 0;
+    exportBtn.disabled = !hasText;
+    renderDocumentPreview();
+  }
+
+  // ---- 파일 업로드 ----
+  ['dragover', 'dragenter'].forEach(function (evt) {
+    dropZone.addEventListener(evt, function (e) { e.preventDefault(); dropZone.classList.add('dragover'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    dropZone.addEventListener(evt, function (e) { e.preventDefault(); dropZone.classList.remove('dragover'); });
+  });
+  dropZone.addEventListener('drop', function (e) {
+    var f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+  });
+
+  function handleFile(file) {
+    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
+      toast('Only PDF files can be uploaded.', 'error');
+      return;
+    }
+    if (file.size > MAX_FILE_MB * 1024 * 1024) {
+      toast('This file is too large (only up to ' + MAX_FILE_MB + 'MB is supported).', 'error');
+      return;
+    }
+    currentFileBaseName = file.name.replace(/\.pdf$/i, '');
+    dropZoneIdle.classList.add('hidden');
+    dropZoneFile.classList.remove('hidden');
+    fileNameLabel.textContent = file.name;
+    fileMetaLabel.textContent = formatBytes(file.size);
+    convertFile(file);
+  }
+
+  function readFileAsArrayBuffer(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(reader.error); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  async function convertFile(file) {
+    try {
+      setStatus('분석 중', 'busy');
+      parseProgressWrap.classList.remove('hidden');
+      parseProgressBar.style.width = '0%';
+      btnCopy.disabled = true;
+      exportBtn.disabled = true;
+
+      var buffer = await readFileAsArrayBuffer(file);
+      var loadingTask = pdfjsLib.getDocument({ data: buffer });
+      var pdf = await loadingTask.promise;
+      var numPages = pdf.numPages;
+
+      var pagesSegments = [];
+      for (var p = 1; p <= numPages; p++) {
+        var page = await pdf.getPage(p);
+        var textContent = await page.getTextContent();
+        var items = textContent.items.map(function (it) {
+          return { str: it.str, x: it.transform[4], y: it.transform[5], width: it.width };
+        });
+        pagesSegments.push(TK.convertPageItemsToSegments(items, { tables: optTables.checked }));
+
+        var pct = Math.round((p / numPages) * 100);
+        parseProgressBar.style.width = pct + '%';
+        parseProgressPct.textContent = pct + '%';
+        parseProgressLabel.textContent = 'Analyzing pages… (' + p + '/' + numPages + ')';
+        // Yield to rendering after every page so large PDFs don't freeze the screen
+        await new Promise(function (r) { requestAnimationFrame(r); });
+      }
+
+      var result = TK.assembleDocument(pagesSegments, {
+        removeHeaderFooter: optHeaderFooter.checked,
+        joinBrokenLines: optJoinLines.checked,
+        markCaptions: optCaptions.checked
+      });
+
+      parseProgressWrap.classList.add('hidden');
+
+      if (!result.markdown.trim()) {
+        setStatus('텍스트 없음', 'error');
+        showEditor('');
+        toast('텍스트를 찾지 못했습니다. 이미지로만 된 스캔 PDF일 수 있습니다.', 'error');
+        return;
+      }
+
+      showEditor(result.markdown);
+      setStatus('변환 완료', 'done');
+      toast(
+        'Conversion complete · ' + result.stats.tablesFound + ' table(s) · ' + result.stats.captionsFound +
+          ' caption(s) · ' + result.stats.removedHeaderFooterLines + ' repeated header line(s) removed',
+        'success'
+      );
+
+      if (aiToggle.checked) {
+        await runAiCleaning(result.markdown);
+      }
+    } catch (err) {
+      console.error(err);
+      parseProgressWrap.classList.add('hidden');
+      setStatus('오류', 'error');
+      toast('Something went wrong while reading the PDF: ' + (err && err.message ? err.message : 'unknown error'), 'error');
+    }
+  }
+
+  // ---- Clipboard / save ----
+  btnCopy.addEventListener('click', async function () {
+    try {
+      await navigator.clipboard.writeText(editor.value);
+      toast('클립보드에 복사했습니다.', 'success');
+    } catch (e) {
+      editor.select();
+      document.execCommand('copy');
+      toast('클립보드에 복사했습니다.', 'success');
+    }
+  });
+
+  function renderDocumentPreview() {
+    if (!docPreviewPage) return;
+    docPreviewPage.textContent = editor.value || '';
+    docPreviewPage.style.fontSize = docFormat.fontSize + 'pt';
+    docPreviewPage.style.lineHeight = String(docFormat.lineHeight / 100);
+    docPreviewPage.style.textAlign = docFormat.align;
+    var blocks = docPreviewPage.textContent.split(/\n\s*\n/);
+    docPreviewPage.innerHTML = '';
+    blocks.forEach(function (block) {
+      var p = document.createElement('div');
+      p.textContent = block;
+      p.style.whiteSpace = 'pre-wrap';
+      p.style.marginBottom = docFormat.paraSpacing + 'pt';
+      docPreviewPage.appendChild(p);
+    });
+  }
+
+  function setPreviewMode(preview) {
+    if (preview) {
+      editor.classList.add('hidden'); docPreview.classList.remove('hidden');
+      viewPreviewBtn.className = 'text-xs px-2.5 py-1.5 bg-slate-100 text-ink-900';
+      viewEditBtn.className = 'text-xs px-2.5 py-1.5 text-ink-500';
+      renderDocumentPreview();
+    } else {
+      docPreview.classList.add('hidden'); editor.classList.remove('hidden');
+      viewEditBtn.className = 'text-xs px-2.5 py-1.5 bg-slate-100 text-ink-900';
+      viewPreviewBtn.className = 'text-xs px-2.5 py-1.5 text-ink-500';
+    }
+  }
+  viewEditBtn.addEventListener('click', function(){ setPreviewMode(false); });
+  viewPreviewBtn.addEventListener('click', function(){ setPreviewMode(true); });
+
+  document.getElementById('docFontSize').addEventListener('input', function(e){ docFormat.fontSize=Number(e.target.value); document.getElementById('docFontSizeVal').textContent=docFormat.fontSize+'pt'; renderDocumentPreview(); });
+  document.getElementById('docLineHeight').addEventListener('input', function(e){ docFormat.lineHeight=Number(e.target.value); document.getElementById('docLineHeightVal').textContent=docFormat.lineHeight+'%'; renderDocumentPreview(); });
+  document.getElementById('docParaSpacing').addEventListener('input', function(e){ docFormat.paraSpacing=Number(e.target.value); document.getElementById('docParaSpacingVal').textContent=docFormat.paraSpacing+'pt'; renderDocumentPreview(); });
+  document.getElementById('docAlignGroup').addEventListener('click', function(e){
+    var b=e.target.closest('[data-align]'); if(!b) return; docFormat.align=b.dataset.align;
+    document.querySelectorAll('#docAlignGroup .fmt-btn').forEach(function(x){x.classList.toggle('active',x===b);}); renderDocumentPreview();
+  });
+
+  function downloadTextFile(ext, mime) {
+    var blob = new Blob([editor.value], { type: mime + ';charset=utf-8' });
+    saveAs(blob, currentFileBaseName + '.' + ext);
+  }
+  async function exportCurrentDocument() {
+    if (!editor.value.trim()) return;
+    var format = exportFormat.value;
+    exportBtn.disabled = true;
+    var oldLabel = exportBtn.textContent;
+    exportBtn.textContent = '생성 중…';
+    try {
+      if (format === 'md') { downloadTextFile('md','text/markdown'); }
+      else if (format === 'txt') { downloadTextFile('txt','text/plain'); }
+      else if (format === 'hwpx') {
+        var blob = await window.buildHwpxTextBlob(editor.value, docFormat);
+        saveAs(blob, currentFileBaseName + '.hwpx');
+      } else if (format === 'docx') {
+        var D=docx; var alignMap={left:D.AlignmentType.LEFT,center:D.AlignmentType.CENTER,right:D.AlignmentType.RIGHT,justify:D.AlignmentType.JUSTIFIED};
+        var paras=editor.value.split(/\n\s*\n/).map(function(block){
+          return new D.Paragraph({ alignment: alignMap[docFormat.align] || D.AlignmentType.LEFT,
+            spacing: { line: Math.round(240 * docFormat.lineHeight / 100), after: Math.round(docFormat.paraSpacing * 20) },
+            children:[new D.TextRun({text:block, size:docFormat.fontSize*2})] });
+        });
+        var documentObj=new D.Document({sections:[{children:paras}]});
+        var docBlob=await D.Packer.toBlob(documentObj); saveAs(docBlob,currentFileBaseName+'.docx');
+      }
+      toast(format.toUpperCase() + ' 파일로 저장했습니다.','success');
+    } catch(err) {
+      console.error(err);
+      toast(format.toUpperCase() + ' 파일 생성 중 오류: ' + (err && err.message ? err.message : '알 수 없는 오류'), 'error');
+    } finally {
+      exportBtn.textContent = oldLabel;
+      exportBtn.disabled = !editor.value.trim();
+    }
+  }
+  exportBtn.addEventListener('click', exportCurrentDocument);
+
+  editor.addEventListener('input', function () {
+    charCount.textContent = editor.value.length.toLocaleString() + ' chars';
+    var hasText=editor.value.trim().length>0;
+    exportBtn.disabled=!hasText;
+    renderDocumentPreview();
+  });
+
+  // ---- On-device AI (Web Worker, built from a Blob to keep this a single file) ----
+  var AI_WORKER_SOURCE = [
+    "import { pipeline, env } from '" + TRANSFORMERS_CDN + "';",
+    "env.allowLocalModels = false;",
+    "let generator = null;",
+    "self.onmessage = async (e) => {",
+    "  const { type, payload } = e.data;",
+    "  if (type === 'load') {",
+    "    try {",
+    "      generator = await pipeline('text2text-generation', '" + AI_MODEL_ID + "', {",
+    "        quantized: true,",
+    "        progress_callback: (p) => self.postMessage({ type: 'progress', payload: p })",
+    "      });",
+    "      self.postMessage({ type: 'ready' });",
+    "    } catch (err) {",
+    "      self.postMessage({ type: 'error', payload: String((err && err.message) || err) });",
+    "    }",
+    "  } else if (type === 'process') {",
+    "    try {",
+    "      const { blocks, requestId } = payload;",
+    "      const results = [];",
+    "      for (let i = 0; i < blocks.length; i++) {",
+    "        const prompt = 'fix line breaks and formatting, keep meaning unchanged: ' + blocks[i];",
+    "        const out = await generator(prompt, { max_new_tokens: 220 });",
+    "        const text = Array.isArray(out) ? out[0].generated_text : out.generated_text;",
+    "        results.push(text || blocks[i]);",
+    "        self.postMessage({ type: 'chunkProgress', payload: { requestId, index: i, total: blocks.length } });",
+    "      }",
+    "      self.postMessage({ type: 'result', payload: { requestId, results } });",
+    "    } catch (err) {",
+    "      self.postMessage({ type: 'error', payload: String((err && err.message) || err) });",
+    "    }",
+    "  }",
+    "};"
+  ].join('\n');
+
+  function ensureAiWorker() {
+    if (aiWorker) return aiWorker;
+    var blob = new Blob([AI_WORKER_SOURCE], { type: 'text/javascript' });
+    var url = URL.createObjectURL(blob);
+    aiWorker = new Worker(url, { type: 'module' });
+    return aiWorker;
+  }
+
+  function loadAiModel() {
+    return new Promise(function (resolve, reject) {
+      var worker = ensureAiWorker();
+      aiStatusBox.classList.remove('hidden');
+      aiStatusLabel.textContent = 'Downloading model… (first time only, ~80MB)';
+      aiStatusPct.textContent = '';
+      aiProgressBar.style.width = '5%';
+
+      function onMessage(e) {
+        var msg = e.data || {};
+        if (msg.type === 'progress') {
+          var p = msg.payload || {};
+          if (typeof p.progress === 'number') {
+            var pct = Math.min(100, Math.round(p.progress));
+            aiProgressBar.style.width = pct + '%';
+            aiStatusPct.textContent = pct + '%';
+          }
+          if (p.file) aiStatusLabel.textContent = 'Downloading: ' + p.file;
+        } else if (msg.type === 'ready') {
+          worker.removeEventListener('message', onMessage);
+          aiReady = true;
+          aiStatusLabel.textContent = 'Model ready (cached locally)';
+          aiProgressBar.style.width = '100%';
+          aiStatusPct.textContent = '';
+          resolve();
+        } else if (msg.type === 'error') {
+          worker.removeEventListener('message', onMessage);
+          reject(new Error(msg.payload));
+        }
+      }
+      worker.addEventListener('message', onMessage);
+      worker.postMessage({ type: 'load' });
+    });
+  }
+
+  var aiRequestSeq = 0;
+  function processWithAi(blocks) {
+    return new Promise(function (resolve, reject) {
+      var worker = ensureAiWorker();
+      var requestId = ++aiRequestSeq;
+
+      function onMessage(e) {
+        var msg = e.data || {};
+        if (msg.type === 'chunkProgress' && msg.payload.requestId === requestId) {
+          var pct = Math.round(((msg.payload.index + 1) / msg.payload.total) * 100);
+          aiProgressBar.style.width = pct + '%';
+          aiStatusPct.textContent = pct + '%';
+          aiStatusLabel.textContent = 'Refining paragraphs… (' + (msg.payload.index + 1) + '/' + msg.payload.total + ')';
+        } else if (msg.type === 'result' && msg.payload.requestId === requestId) {
+          worker.removeEventListener('message', onMessage);
+          resolve(msg.payload.results);
+        } else if (msg.type === 'error') {
+          worker.removeEventListener('message', onMessage);
+          reject(new Error(msg.payload));
+        }
+      }
+      worker.addEventListener('message', onMessage);
+      worker.postMessage({ type: 'process', payload: { blocks: blocks, requestId: requestId } });
+    });
+  }
+
+  async function runAiCleaning(markdown) {
+    try {
+      setStatus('AI cleaning', 'ai');
+      aiStatusBox.classList.remove('hidden');
+      if (!aiReady && !aiLoading) {
+        aiLoading = true;
+        await loadAiModel();
+        aiLoading = false;
+      }
+      var partitioned = TK.partitionMarkdownForAI(markdown);
+      var eligibleIdx = [];
+      var eligibleBlocks = [];
+      partitioned.forEach(function (b, idx) {
+        if (b.aiEligible) { eligibleIdx.push(idx); eligibleBlocks.push(b.text); }
+      });
+      if (eligibleBlocks.length === 0) {
+        setStatus('변환 완료', 'done');
+        return;
+      }
+      aiStatusLabel.textContent = 'Refining paragraphs with AI…';
+      var results = await processWithAi(eligibleBlocks);
+      results.forEach(function (text, i) { partitioned[eligibleIdx[i]].text = text; });
+      var refined = TK.reassembleBlocks(partitioned);
+      showEditor(refined);
+      setStatus('AI cleaning complete', 'done');
+      toast('On-device AI cleanup is complete.', 'success');
+    } catch (err) {
+      console.error(err);
+      setStatus('Conversion complete (AI failed)', 'error');
+      toast('Something went wrong during AI cleanup, showing the base conversion instead: ' + (err && err.message ? err.message : ''), 'error');
+    }
+  }
+
+  aiToggle.addEventListener('change', function () {
+    if (aiToggle.checked) {
+      aiStatusBox.classList.remove('hidden');
+      if (!aiReady && !aiLoading) {
+        aiLoading = true;
+        loadAiModel().then(function () { aiLoading = false; }).catch(function (err) {
+          aiLoading = false;
+          toast('Failed to load the AI model: ' + err.message, 'error');
+          aiToggle.checked = false;
+        });
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
