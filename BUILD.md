@@ -949,3 +949,45 @@ Splitter, JSON ↔ CSV Converter 등)이 전부 `/en/productivity/`
 hreflang 을 양방향으로 연결(전에는 EN-only 특수 처리였던 게 이제
 일반 도구처럼 정상 페어링됨). sitemap 도 자동으로 정상 반영.
 v1.0 → v1.1. 전체 130개 파일 재검증 통과.
+
+## document-mail-merge 신규 + pdf-to-markdown → pdf-to-text 개명 (2026-09-01)
+
+**문서 메일머지 생성기** — {{항목}} 자동 감지, Excel/CSV 일괄 생성,
+DOCX·HWPX 원본 서식 유지 내보내기. PRODUCTIVITY, v1.0.
+
+**pdf-to-markdown → pdf-to-text 개명** — Markdown 단일 출력에서
+HWPX·DOCX·TXT·MD 다중 포맷 + 서식 옵션(글자 크기·줄 간격·정렬)으로
+기능이 대폭 확장돼 이름 자체를 바꿈. id·파일명·URL·catalog 전부
+변경. 버전 이력은 새 키로 이관하고 개명 사실을 이력에 남김
+(v1.1 → v2.0). 옛 파일(kr/en 의 pdf-to-markdown_*.html)은 저장소에서
+삭제 — GitHub 에서도 사용자가 직접 지워야 함.
+
+### ⚠️⚠️ audit-siblings.js 자체의 심각한 버그를 발견 — 48개 파일 169건이 계속 숨어 있었음
+
+개명 작업 검증 중 `mortgage-stress-tester`, `universal-table-data-hub`
+영문판에 옛 pdf-to-markdown 링크가 남아있는 걸 발견했는데,
+`node audit-siblings.js` 로는 안 잡혔다. 원인을 파헤쳐 보니
+**audit-siblings.js 의 사이드바 종료 지점 탐지 로직 자체가
+틀려 있었다** — `tk-guide-more` div 가 `</div></div>` (이중 닫힘)로
+끝난다고 가정했는데, 실제로는 `</div>` 하나로만 끝나는 형식도
+섞여 있어서, 그런 파일은 전부 "섹션 없음"으로 조용히 건너뛰고
+있었다. 즉 지난 회차에 "0건 정상"이라고 보고했던 결과 자체가
+**상당수 파일을 아예 검사하지 않고 통과시킨 거짓 양성**이었다.
+
+`<div class="tk-guide-more">` 부터 실제로 div 열림/닫힘 개수를
+세어 정확한 종료 지점을 찾는 방식으로 로직을 교체한 뒤 재검사하니,
+**48개 파일에서 169건**이 쏟아져 나왔다 — 존재하지 않는 옛 파일
+(date-calc.html, calculator.html, unit-converter.html, vocab-quiz.html
+등 애초에 없었거나 훨씬 이전에 정리된 도구), `/en/creative/` 같은
+없는 카테고리, 다른 카테고리 도구가 섞인 것 등. `--fix` 로 48개
+전부 자동 교정, 재검사 0건 확인.
+
+**이 발견이 중요한 이유** : 사용자가 여러 턴 전에 "함께쓰기 좋은
+도구 링크가 다 꼬였다"고 지적했을 때, 당시 감사 결과는 문제가
+거의 없다고 나왔었다(그때도 이 버그 때문에 대부분 검사가 스킵됨).
+실제 문제 규모는 그보다 훨씬 컸고, 이번에 완전히 드러나서 고쳐졌다.
+
+### 검증
+
+66:66, 132개 파일 전체 마커 6종·canonical·공유URL·사이드바 링크
+재검사 전부 통과. 스크립트 구문 전부 정상.

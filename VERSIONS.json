@@ -561,22 +561,6 @@
       }
     ]
   },
-  "pdf-to-markdown": {
-    "version": "1.1",
-    "addedDate": "2026-08-31",
-    "history": [
-      {
-        "version": "1.0",
-        "date": "2026-08-31",
-        "note": "최초 등록 (PRODUCTIVITY, 영문 전용 — 한국어판 없음)"
-      },
-      {
-        "version": "1.1",
-        "date": "2026-08-31",
-        "note": "한국어판 신규 추가 — 그동안 영문 전용이었던 도구에 한국어판 제작. 안내문(표 감지 알고리즘, AI 정밀정리 등 상세 설명 포함)을 온전히 번역해 이식. 영문판의 가짜 사이드바 링크(실제 존재하지 않는 도구명)도 정정"
-      }
-    ]
-  },
   "wealth-dashboard": {
     "version": "1.0",
     "addedDate": "2026-08-31",
@@ -607,6 +591,38 @@
         "version": "1.0",
         "date": "2026-08-31",
         "note": "최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함"
+      }
+    ]
+  },
+  "pdf-to-text": {
+    "version": "2.0",
+    "addedDate": "2026-08-31",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-08-31",
+        "note": "최초 등록 (PRODUCTIVITY, 영문 전용 — 한국어판 없음)"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-08-31",
+        "note": "한국어판 신규 추가 — 그동안 영문 전용이었던 도구에 한국어판 제작. 안내문(표 감지 알고리즘, AI 정밀정리 등 상세 설명 포함)을 온전히 번역해 이식. 영문판의 가짜 사이드바 링크(실제 존재하지 않는 도구명)도 정정"
+      },
+      {
+        "version": "2.0",
+        "date": "2026-08-31",
+        "note": "pdf-to-markdown 에서 pdf-to-text 로 개명 — Markdown 단일 출력에서 HWPX·DOCX·TXT·MD 다중 포맷 내보내기로 기능 확장. 글자 크기·줄 간격·문단 간격·정렬 서식 옵션 추가"
+      }
+    ]
+  },
+  "document-mail-merge": {
+    "version": "1.0",
+    "addedDate": "2026-09-01",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-09-01",
+        "note": "최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기"
       }
     ]
   }

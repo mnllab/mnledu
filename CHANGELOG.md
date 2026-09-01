@@ -3,16 +3,21 @@
 이 파일은 자동 생성됩니다. 손으로 고치지 말고 `node bump-version.js` 로 기록을 남기세요.
 원본은 `VERSIONS.json` 입니다.
 
+## 2026-09-01
+
+- **문서 메일머지 생성기** (`document-mail-merge`) v1.0 — 최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기
+
 ## 2026-08-31
 
 - **탄생 천궁도 분석** (`birth-chart`) v1.1 — 안내문 하단 같은 분류 도구 링크 교정 — 존재하지 않는 구주소, 다른 카테고리(PRODUCTIVITY) 도구가 섞여 있던 문제 수정. LIFESTYLE 도구 6개로 정정
 - **탄생 천궁도 분석** (`birth-chart`) v1.2 — TOOLKIT:GUIDE_END 마커가 원래부터 없었던 것을 발견 — 그 여파로 공유 버튼·방문자 카운터·버전 배지 세 기능이 이 도구에만 계속 빠져 있었음. 마커 복원 후 세 기능 전부 정상 반영
 - **영수증 지출결의서 변환기** (`receipt-to-excel`) v2.6 — 슬라이더 조작 중 실시간 미리보기 추가(원근·그림자·명암 보정을 축소본에 즉시 반영). 소수점 수량 인식 개선(56.383L 같은 값이 정수로 뭉개지던 문제 수정). 자간이 벌어진 OCR 라벨 인식 개선(부 가 세 → 부가세로 인식)
-- **PDF to Markdown 변환기** (`pdf-to-markdown`) v1.0 — 최초 등록 (PRODUCTIVITY, 영문 전용 — 한국어판 없음)
-- **PDF to Markdown 변환기** (`pdf-to-markdown`) v1.1 — 한국어판 신규 추가 — 그동안 영문 전용이었던 도구에 한국어판 제작. 안내문(표 감지 알고리즘, AI 정밀정리 등 상세 설명 포함)을 온전히 번역해 이식. 영문판의 가짜 사이드바 링크(실제 존재하지 않는 도구명)도 정정
 - **파이어족 복리 & 물타기 계산기** (`wealth-dashboard`) v1.0 — 최초 등록 (DATA & ANALYTICS) — FIRE 복리 시뮬레이터 + 물타기 평단가 계산기
 - **부동산 대출 스트레스 테스트기** (`mortgage-stress-tester`) v1.0 — 최초 등록 (PRODUCTIVITY) — 금리 발작 슬라이더로 DSR·상환액 실시간 시뮬레이션
 - **만능 표 데이터 허브** (`universal-table-data-hub`) v1.0 — 최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함
+- **PDF 문서 변환기** (`pdf-to-text`) v1.0 — 최초 등록 (PRODUCTIVITY, 영문 전용 — 한국어판 없음)
+- **PDF 문서 변환기** (`pdf-to-text`) v1.1 — 한국어판 신규 추가 — 그동안 영문 전용이었던 도구에 한국어판 제작. 안내문(표 감지 알고리즘, AI 정밀정리 등 상세 설명 포함)을 온전히 번역해 이식. 영문판의 가짜 사이드바 링크(실제 존재하지 않는 도구명)도 정정
+- **PDF 문서 변환기** (`pdf-to-text`) v2.0 — pdf-to-markdown 에서 pdf-to-text 로 개명 — Markdown 단일 출력에서 HWPX·DOCX·TXT·MD 다중 포맷 내보내기로 기능 확장. 글자 크기·줄 간격·문단 간격·정렬 서식 옵션 추가
 
 ## 2026-08-30
 
