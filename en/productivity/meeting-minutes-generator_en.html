@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Minutes Generator · Minutes Template · Word Export | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · managed by patch-tool-pages.js (EN pages are not auto-regenerated — keep in sync by hand) -->
+<meta name="description" content="Enter the date, location, and attendees, or upload a CSV, and get an A4 meeting-minutes document automatically. Organized into progress, key agenda, and action items, with printing and DOCX/CSV export." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/productivity/meeting-minutes-generator_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/productivity/meeting-minutes-generator_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/productivity/meeting-minutes-generator_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/productivity/meeting-minutes-generator_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/productivity/meeting-minutes-generator_en.html" />
+<meta property="og:title" content="Meeting Minutes Generator · Minutes Template · Word Export | TOOLKIT" />
+<meta property="og:description" content="Enter the date, location, and attendees, or upload a CSV, and get an A4 meeting-minutes document automatically. Organized into progress, key agenda, and action items, with printing and DOCX/CSV export." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Meeting Minutes Generator · Minutes Template · Word Export | TOOLKIT" />
+<meta name="twitter:description" content="Enter the date, location, and attendees, or upload a CSV, and get an A4 meeting-minutes document automatically. Organized into progress, key agenda, and action items, with printing and DOCX/CSV export." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Meeting Minutes Generator",
+  "description": "Enter the date, location, and attendees, or upload a CSV, and get an A4 meeting-minutes document automatically. Organized into progress, key agenda, and action items, with printing and DOCX/CSV export.",
+  "url": "https://mnledu.com/en/productivity/meeting-minutes-generator_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PRODUCTIVITY",
+      "item": "https://mnledu.com/#en"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Meeting Minutes Generator",
+      "item": "https://mnledu.com/en/productivity/meeting-minutes-generator_en.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.js"></script>
+<style>
+  :root{
+    --ink:#1E2A32;
+    --ink-soft:#4B5A62;
+    --paper:#F5F3EE;
+    --rail:#EDEBE4;
+    --line:#D8D3C7;
+    --accent:#3A6B63;
+    --accent-soft:#E4EDEB;
+    --amber:#C97F3A;
+    --white:#FFFFFF;
+    --danger:#B0453A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:var(--rail);
+    color:var(--ink);
+  }
+  button{font-family:inherit;cursor:pointer;}
+  input,textarea{font-family:inherit;}
+  ::selection{background:var(--accent-soft);}
+  a{color:var(--accent);}
+
+  .app{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    height:100vh;
+  }
+
+  /* ---------- LEFT RAIL ---------- */
+  .rail{
+    background:var(--white);
+    border-right:1px solid var(--line);
+    overflow-y:auto;
+    padding:22px 20px 40px;
+  }
+  .rail h1{
+    font-size:17px;
+    font-weight:700;
+    margin:0 0 2px;
+    letter-spacing:-0.01em;
+  }
+  .rail .sub{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin:0 0 18px;
+  }
+
+  .mode-toggle{
+    display:flex;
+    background:var(--rail);
+    border-radius:8px;
+    padding:3px;
+    margin-bottom:18px;
+  }
+  .mode-toggle button{
+    flex:1;
+    border:none;
+    background:transparent;
+    padding:8px 6px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    border-radius:6px;
+  }
+  .mode-toggle button.active{
+    background:var(--ink);
+    color:#fff;
+  }
+
+  .csv-box{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:16px;
+    background:var(--paper);
+  }
+  .csv-box p{margin:0 0 10px;font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
+  .btn-line{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:7px;
+    padding:8px 10px;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--ink);
+    width:100%;
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .btn-line:hover{border-color:var(--accent);color:var(--accent);}
+  #csvFileInput{display:none;}
+  .dropzone{
+    border:2px dashed var(--line);
+    border-radius:10px;
+    background:#fff;
+    padding:20px 10px;
+    text-align:center;
+    transition:border-color .15s, background .15s;
+  }
+  .dropzone:hover{border-color:var(--accent);}
+  .dropzone.dragover{border-color:var(--accent);background:var(--accent-soft);}
+  .dropzone-icon{font-size:20px;color:var(--ink-soft);margin-bottom:6px;}
+  .dropzone-text{font-size:12.5px;color:var(--ink-soft);line-height:1.6;}
+  .dropzone-text .link{color:var(--accent);font-weight:700;}
+
+  .pager{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 10px;
+    margin-bottom:18px;
+    font-size:13px;
+  }
+  .pager button{
+    border:none;background:var(--ink);color:#fff;
+    width:26px;height:26px;border-radius:6px;font-size:14px;
+  }
+  .pager button:disabled{background:#B8BCC0;cursor:not-allowed;}
+  .pager .count{font-weight:600;}
+
+  fieldset{
+    border:none;padding:0;margin:0 0 20px;
+  }
+  legend{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--accent);
+    letter-spacing:.02em;
+    margin-bottom:8px;
+    padding:0;
+  }
+  .field{margin-bottom:12px;}
+  .field label{
+    display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:4px;
+  }
+  .field-row{display:flex;gap:8px;}
+  .field-row .field{flex:1;}
+  .field input[type=text], .field input[type=datetime-local], .field textarea{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:8px 9px;
+    font-size:13px;
+    color:var(--ink);
+    background:#fff;
+    resize:vertical;
+  }
+  .field input[type=text]:focus, .field input[type=datetime-local]:focus, .field textarea:focus{
+    outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);
+  }
+  .field textarea{min-height:70px;line-height:1.5;}
+  .field textarea.tall{min-height:170px;}
+  .field .hint{font-size:11px;color:#8B8377;margin-top:3px;}
+  .now-btn{
+    border:1px solid var(--line);background:#fff;border-radius:6px;
+    padding:0 9px;font-size:11.5px;font-weight:600;color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .now-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .dt-field{display:flex;gap:6px;}
+  .dt-field input{flex:1;}
+
+  .actions{
+    position:sticky;bottom:-40px;background:var(--white);
+    padding-top:12px;border-top:1px solid var(--line);
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  }
+  .actions button{
+    border:none;border-radius:8px;padding:11px 8px;font-size:12.5px;font-weight:700;
+  }
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-primary:hover{background:#0F171C;}
+  .btn-secondary{background:var(--accent-soft);color:var(--accent);}
+  .btn-secondary:hover{background:#D3E2DF;}
+  .btn-wide{grid-column:1 / -1;}
+  .btn-print{background:var(--amber);color:#fff;}
+  .btn-print:hover{background:#B06E2F;}
+
+  /* ---------- RIGHT PREVIEW ---------- */
+  .stage{
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:36px 24px 60px;
+  }
+  .stage-toolbar{
+    width:210mm;max-width:100%;
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:14px;
+  }
+  .stage-toolbar .label{font-size:12.5px;color:var(--ink-soft);font-weight:600;}
+
+  .a4-page{
+    width:210mm;
+    min-height:297mm;
+    background:#fff;
+    box-shadow:0 4px 24px rgba(30,42,50,0.14), 0 1px 2px rgba(30,42,50,0.08);
+    padding:20mm 18mm;
+    font-family:'Pretendard', sans-serif;
+    color:var(--ink);
+  }
+  .doc-title{
+    text-align:center;font-size:24px;font-weight:700;letter-spacing:.04em;margin:0 0 10px;
+  }
+  .doc-tags{
+    display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:18px;min-height:8px;
+  }
+  .tag-chip{
+    background:var(--accent-soft);color:var(--accent);
+    font-family:'Pretendard',sans-serif;
+    font-size:11.5px;font-weight:700;
+    padding:3px 10px;border-radius:20px;
+  }
+  table.info-table{
+    width:100%;border-collapse:collapse;margin-bottom:22px;
+    font-family:'Pretendard',sans-serif;font-size:12.5px;
+  }
+  table.info-table th{
+    background:#F2F0EA;
+    width:19%;
+    text-align:left;
+    font-weight:700;
+    color:var(--ink-soft);
+    padding:8px 10px;
+    border:1px solid var(--line);
+  }
+  table.info-table td{
+    padding:8px 10px;border:1px solid var(--line);
+  }
+  .doc-section{margin-bottom:14px;}
+  .doc-section h2{
+    font-size:14.5px;font-weight:700;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:5px;margin:0 0 8px;
+  }
+  .doc-list{font-size:13px;line-height:1.45;}
+  .doc-list .main-item{margin:0 0 1px;}
+  .doc-list .sub-item{margin:0 0 1px 1em;color:var(--ink-soft);}
+  .doc-list .circle-item{margin:6px 0 2px;font-weight:700;color:var(--ink);}
+  .doc-list .circle-item:first-child{margin-top:0;}
+  .doc-list a{color:var(--accent);text-decoration:underline;word-break:break-all;}
+  .doc-section.action-section h2{border-bottom-color:var(--amber);}
+  .doc-empty{color:#B4AE9F;font-size:12.5px;}
+  .doc-footer{
+    margin-top:34px;padding-top:12px;border-top:1px solid var(--line);
+    display:flex;justify-content:flex-end;
+    font-family:'Pretendard',sans-serif;font-size:12px;color:var(--ink-soft);
+  }
+  .doc-footer .writer-box{text-align:right;line-height:1.6;}
+  .doc-footer .writer-box b{color:var(--ink);}
+
+  @media print{
+    body{background:#fff;overflow:visible;height:auto;}
+    .app{display:block;height:auto;}
+    .rail, .stage-toolbar, .pager{display:none !important;}
+    .stage{padding:0;overflow:visible;display:block;}
+    .tk-guide, .tk-version, .tk-share-fab, .tk-share-backdrop{display:none !important;}
+    .a4-page{
+      box-shadow:none;margin:0;width:auto;min-height:auto;
+      padding:0; /* page margin handled uniformly via @page (applies the same on every page) */
+    }
+    .doc-title, .doc-tags, table.info-table, .doc-footer{
+      break-inside:avoid; page-break-inside:avoid;
+    }
+    .doc-section h2{ break-after:avoid; page-break-after:avoid; }
+    .doc-list .main-item, .doc-list .sub-item, .doc-list .circle-item, .doc-empty{
+      break-inside:avoid; page-break-inside:avoid;
+    }
+    table.info-table tr{ break-inside:avoid; page-break-inside:avoid; }
+    @page{ size:A4; margin:20mm 18mm; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ LEFT CONTROL RAIL ============ -->
+  <div class="rail">
+    <h1>Meeting Minutes Generator</h1>
+    <p class="sub">Fill in the form or upload a CSV to generate meeting minutes</p>
+
+    <div class="mode-toggle">
+      <button id="tabManual" class="active">Manual Entry</button>
+      <button id="tabCsv">CSV Upload</button>
+    </div>
+
+    <div id="csvPanel" class="csv-box" style="display:none;">
+      <p>Follow the template to load multiple records at once. With multiple rows, you can page through them one at a time.</p>
+      <button class="btn-line" id="downloadTemplateBtn">Download CSV Template</button>
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-icon">⇪</div>
+        <div class="dropzone-text">Drag and drop a CSV file here<br><span class="link">or click to choose a file</span></div>
+      </div>
+      <input type="file" id="csvFileInput" accept=".csv">
+      <div class="hint" id="csvStatus"></div>
+    </div>
+
+    <div class="pager" id="pagerBar" style="display:none;">
+      <button id="prevPageBtn">‹</button>
+      <span class="count"><span id="pageNum">1</span> / <span id="pageTotal">1</span></span>
+      <button id="nextPageBtn">›</button>
+    </div>
+
+    <form id="recordForm">
+      <fieldset>
+        <legend>Meeting Overview</legend>
+        <div class="field">
+          <label for="f_datetime">Date &amp; Time</label>
+          <div class="dt-field">
+            <input type="datetime-local" id="f_datetime">
+            <button type="button" class="now-btn" id="nowBtn">Now</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="f_place">Location</label><input type="text" id="f_place" placeholder="Main Bldg, 3F Conference Room"></div>
+          <div class="field"><label for="f_team">Project/Team Name</label><input type="text" id="f_team" placeholder="Robotics Institute"></div>
+        </div>
+        <div class="field"><label for="f_attendees">Attendees</label><input type="text" id="f_attendees" placeholder="Jane Doe, John Smith (comma-separated)"></div>
+        <div class="field"><label for="f_topic">Topic</label><input type="text" id="f_topic" placeholder="September progress review"></div>
+        <div class="field">
+          <label for="f_tags">Hashtags</label>
+          <input type="text" id="f_tags" placeholder="#partnership #startup #septreview">
+          <div class="hint">Separate multiple tags with spaces (# will be added automatically)</div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Author Information</legend>
+        <div class="field-row">
+          <div class="field"><label for="f_writer">Author</label><input type="text" id="f_writer" placeholder="Jane Doe"></div>
+          <div class="field"><label for="f_writerTitle">Title/Position</label><input type="text" id="f_writerTitle" placeholder="Research Professor"></div>
+        </div>
+        <div class="field"><label for="f_writerOrg">Author's Organization</label><input type="text" id="f_writerOrg" placeholder="Robotics Institute"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Content</legend>
+        <div class="field">
+          <label for="f_report">Progress <span class="hint">(one item per line · start a line with - for a sub-item)</span></label>
+          <textarea id="f_report" class="tall" placeholder="Q1 performance report&#10;-Key metrics on track&#10;Budget execution status"></textarea>
+        </div>
+        <div class="field">
+          <label for="f_discuss">Key Agenda <span class="hint">(one item per line · start a line with - for a sub-item)</span></label>
+          <textarea id="f_discuss" class="tall" placeholder="Discuss need to adjust schedule&#10;-Review 2-week delay option"></textarea>
+        </div>
+        <div class="field">
+          <label for="f_action">Action Items <span class="hint">(one item per line · start a line with - for a sub-item)</span></label>
+          <textarea id="f_action" class="tall" placeholder="Jane Doe: draft report by 9/12&#10;-Keep to one A4 page"></textarea>
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="actions">
+      <button class="btn-secondary btn-wide" id="saveCsvBtn">Save as CSV</button>
+      <button class="btn-secondary" id="saveDocxBtn">Save DOCX (current)</button>
+      <button class="btn-secondary" id="saveDocxAllBtn">Save All as DOCX</button>
+      <button class="btn-print btn-wide" id="printBtn">Print</button>
+    </div>
+  </div>
+
+  <!-- ============ RIGHT PREVIEW STAGE ============ -->
+  <div class="stage">
+    <div class="stage-toolbar">
+      <span class="label">Preview · A4</span>
+      <span class="label" id="stageStatus">New Meeting Minutes</span>
+    </div>
+    <div class="a4-page" id="previewPage"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const CSV_HEADERS = ["Date/Time","Location","Project/Team","Attendees","Topic","Hashtags","Author","Author Organization","Author Title","Progress","Key Agenda","Action Items"];
+
+  function blankRecord(){
+    return { datetime:"", place:"", team:"", attendees:"", topic:"", tags:"",
+             writer:"", writerOrg:"", writerTitle:"", report:"", discuss:"", action:"" };
+  }
+
+  let records = [blankRecord()];
+  let currentIndex = 0;
+  let mode = "manual"; // "manual" | "csv"
+
+  const $ = (id) => document.getElementById(id);
+
+  const fieldMap = {
+    f_datetime:"datetime", f_place:"place", f_team:"team", f_attendees:"attendees",
+    f_topic:"topic", f_tags:"tags", f_writer:"writer", f_writerOrg:"writerOrg",
+    f_writerTitle:"writerTitle", f_report:"report", f_discuss:"discuss", f_action:"action"
+  };
+
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function nowLocalValue(){
+    const d = new Date();
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function formatDisplayDateTime(v){
+    return v ? v.replace("T"," ") : "";
+  }
+  function toDatetimeLocalValue(text){
+    const t = (text||"").trim();
+    if(!t) return "";
+    // convert a "2026-09-07 14:00" style value into datetime-local input format
+    const m = t.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})/);
+    return m ? `${m[1]}T${m[2]}` : "";
+  }
+  function timestampForFile(){
+    const d = new Date();
+    return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+  }
+  function sanitizeFilename(s){
+    return (s||"Minutes").replace(/[\\/:*?"<>|]/g,"_").trim().slice(0,60) || "Minutes";
+  }
+  function linesToArray(text){
+    return (text||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  }
+  const CIRCLE_NUM_REGEX = /^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]/;
+  function parseItems(text){
+    return linesToArray(text).map(line => {
+      if(CIRCLE_NUM_REGEX.test(line)){
+        return { type:"circle", text: line };
+      }
+      if(line.startsWith("-")){
+        return { type:"sub", text: line.replace(/^-\s*/, "") };
+      }
+      return { type:"main", text: line };
+    });
+  }
+  const URL_REGEX = /(https?:\/\/[^\s]+)/g;
+  function splitTextForLinks(text){
+    const parts = [];
+    let lastIndex = 0, m;
+    URL_REGEX.lastIndex = 0;
+    while((m = URL_REGEX.exec(text))){
+      if(m.index > lastIndex) parts.push({ url:false, text:text.slice(lastIndex, m.index) });
+      parts.push({ url:true, text:m[0] });
+      lastIndex = m.index + m[0].length;
+    }
+    if(lastIndex < text.length) parts.push({ url:false, text:text.slice(lastIndex) });
+    return parts;
+  }
+  function tagsToArray(text){
+    return (text||"").split(/\s+/).map(s=>s.trim()).filter(Boolean)
+      .map(t => t.startsWith("#") ? t : "#"+t);
+  }
+
+  // ---------- Form <-> record binding ----------
+  function loadRecordIntoForm(rec){
+    Object.keys(fieldMap).forEach(id => { $(id).value = rec[fieldMap[id]] || ""; });
+  }
+  function readFormIntoRecord(){
+    const rec = records[currentIndex];
+    Object.keys(fieldMap).forEach(id => { rec[fieldMap[id]] = $(id).value; });
+  }
+
+  function renderPreview(){
+    const rec = records[currentIndex];
+    const tags = tagsToArray(rec.tags);
+    const tagsHtml = tags.length
+      ? tags.map(t=>`<span class="tag-chip">${escapeHtml(t)}</span>`).join("")
+      : "";
+
+    const renderLineHtml = (text) => splitTextForLinks(text).map(p => p.url
+      ? `<a href="${escapeHtml(p.text)}" target="_blank" rel="noopener">${escapeHtml(p.text)}</a>`
+      : escapeHtml(p.text)
+    ).join("");
+
+    const sectionHtml = (title, rawText, cls) => {
+      const items = parseItems(rawText);
+      const body = items.length
+        ? `<div class="doc-list">${items.map(it => {
+            if(it.type === "circle"){
+              return `<div class="circle-item">${renderLineHtml(it.text)}</div>`;
+            }
+            const itemCls = it.type === "sub" ? "sub-item" : "main-item";
+            return `<div class="${itemCls}">ㅇ ${renderLineHtml(it.text)}</div>`;
+          }).join("")}</div>`
+        : `<p class="doc-empty">No content</p>`;
+      return `<div class="doc-section ${cls||""}"><h2>${title}</h2>${body}</div>`;
+    };
+
+    $("previewPage").innerHTML = `
+      <div class="doc-title">${escapeHtml(rec.team ? rec.team+" Meeting Minutes" : "MEETING MINUTES")}</div>
+      <div class="doc-tags">${tagsHtml}</div>
+      <table class="info-table">
+        <tr><th>Date/Time</th><td>${escapeHtml(formatDisplayDateTime(rec.datetime))}</td><th>Location</th><td>${escapeHtml(rec.place)}</td></tr>
+        <tr><th>Project/Team</th><td>${escapeHtml(rec.team)}</td><th>Attendees</th><td>${escapeHtml(rec.attendees)}</td></tr>
+        <tr><th>Topic</th><td colspan="3">${escapeHtml(rec.topic)}</td></tr>
+      </table>
+      ${sectionHtml("1. Progress", rec.report, "")}
+      ${sectionHtml("2. Key Agenda", rec.discuss, "")}
+      ${sectionHtml("3. Action Items", rec.action, "action-section")}
+      <div class="doc-footer">
+        <div class="writer-box">
+          Author&nbsp; <b>${escapeHtml(rec.writer)}</b>
+          ${rec.writerTitle ? " / "+escapeHtml(rec.writerTitle) : ""}
+          ${rec.writerOrg ? "<br>"+escapeHtml(rec.writerOrg) : ""}
+        </div>
+      </div>
+    `;
+    updatePagerUI();
+  }
+
+  function escapeHtml(s){
+    return String(s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  function updatePagerUI(){
+    const multi = records.length > 1;
+    $("pagerBar").style.display = multi ? "flex" : "none";
+    $("pageNum").textContent = currentIndex+1;
+    $("pageTotal").textContent = records.length;
+    $("prevPageBtn").disabled = currentIndex===0;
+    $("nextPageBtn").disabled = currentIndex===records.length-1;
+    $("stageStatus").textContent = multi
+      ? `${currentIndex+1} of ${records.length}`
+      : (records[currentIndex].team ? records[currentIndex].team : "New Meeting Minutes");
+  }
+
+  document.getElementById("recordForm").addEventListener("input", () => {
+    readFormIntoRecord();
+    renderPreview();
+  });
+
+  // ---------- Mode tabs ----------
+  $("tabManual").addEventListener("click", () => {
+    mode = "manual";
+    $("tabManual").classList.add("active");
+    $("tabCsv").classList.remove("active");
+    $("csvPanel").style.display = "none";
+  });
+  $("tabCsv").addEventListener("click", () => {
+    mode = "csv";
+    $("tabCsv").classList.add("active");
+    $("tabManual").classList.remove("active");
+    $("csvPanel").style.display = "block";
+  });
+
+  // ---------- Pager ----------
+  $("prevPageBtn").addEventListener("click", () => {
+    if(currentIndex>0){ currentIndex--; loadRecordIntoForm(records[currentIndex]); renderPreview(); }
+  });
+  $("nextPageBtn").addEventListener("click", () => {
+    if(currentIndex<records.length-1){ currentIndex++; loadRecordIntoForm(records[currentIndex]); renderPreview(); }
+  });
+
+  // ---------- "Now" button ----------
+  $("nowBtn").addEventListener("click", () => {
+    $("f_datetime").value = nowLocalValue();
+    readFormIntoRecord();
+    renderPreview();
+  });
+
+  // ---------- CSV template download ----------
+  $("downloadTemplateBtn").addEventListener("click", () => {
+    const example = ["2026-09-07 14:00","Main Bldg, 3F Conference Room","Robotics Institute","Jane Doe, John Smith","September progress review",
+      "#partnership #startup #septreview","Jane Doe","Robotics Institute","Research Professor",
+      "Q1 performance report\n-Key metrics on track\nBudget execution status","Discuss need to adjust schedule\n-Review 2-week delay option","Jane Doe: draft report by 9/12\n-Keep to one A4 page"];
+    const csv = Papa.unparse({ fields: CSV_HEADERS, data: [example] });
+    downloadBlob(new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8"}), "meeting-minutes-template.csv");
+  });
+
+  // ---------- CSV upload (click + drag-and-drop) ----------
+  function parseCsvFile(file){
+    if(!file) return;
+    if(!/\.csv$/i.test(file.name)){
+      $("csvStatus").textContent = "Only CSV files are supported.";
+      return;
+    }
+    Papa.parse(file, {
+      header:true, skipEmptyLines:true,
+      complete: (res) => {
+        const rows = res.data.filter(r => Object.values(r).some(v=>String(v||"").trim()));
+        if(!rows.length){ $("csvStatus").textContent = "No readable data found."; return; }
+        records = rows.map(r => ({
+          datetime:toDatetimeLocalValue(r["Date/Time"]), place:r["Location"]||"", team:r["Project/Team"]||"",
+          attendees:r["Attendees"]||"", topic:r["Topic"]||"", tags:r["Hashtags"]||"",
+          writer:r["Author"]||"", writerOrg:r["Author Organization"]||"", writerTitle:r["Author Title"]||"",
+          report:r["Progress"]||"", discuss:r["Key Agenda"]||"", action:r["Action Items"]||""
+        }));
+        currentIndex = 0;
+        $("csvStatus").textContent = `${records.length} record(s) loaded.`;
+        loadRecordIntoForm(records[currentIndex]);
+        renderPreview();
+      },
+      error: () => { $("csvStatus").textContent = "An error occurred while reading the CSV."; }
+    });
+  }
+
+  const dropzone = $("dropzone");
+  dropzone.addEventListener("click", () => $("csvFileInput").click());
+  $("csvFileInput").addEventListener("change", (e) => parseCsvFile(e.target.files[0]));
+  ["dragenter","dragover"].forEach(evt => dropzone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation(); dropzone.classList.add("dragover");
+  }));
+  ["dragleave","drop"].forEach(evt => dropzone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation(); dropzone.classList.remove("dragover");
+  }));
+  dropzone.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    parseCsvFile(file);
+  });
+
+  // ---------- CSV export ----------
+  $("saveCsvBtn").addEventListener("click", () => {
+    readFormIntoRecord();
+    const data = records.map(r => [
+      formatDisplayDateTime(r.datetime),r.place,r.team,r.attendees,r.topic,r.tags,r.writer,r.writerOrg,r.writerTitle,
+      r.report,r.discuss,r.action
+    ]);
+    const csv = Papa.unparse({ fields: CSV_HEADERS, data });
+    downloadBlob(new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8"}), `meeting-minutes_${timestampForFile()}.csv`);
+  });
+
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  }
+
+  // ---------- Print ----------
+  $("printBtn").addEventListener("click", () => { readFormIntoRecord(); renderPreview(); window.print(); });
+
+  // ---------- DOCX generation ----------
+  function buildDocxDocument(rec){
+    const { Document, Paragraph, TextRun, Table, TableRow, TableCell, HeadingLevel,
+            AlignmentType, WidthType, BorderStyle, ExternalHyperlink } = docx;
+
+    const border = { style: BorderStyle.SINGLE, size: 2, color: "D8D3C7" };
+    const cellBorders = { top:border,bottom:border,left:border,right:border };
+
+    function labelCell(text, width){
+      return new TableCell({
+        width:{size:width, type:WidthType.PERCENTAGE},
+        shading:{ fill:"F2F0EA" },
+        borders:cellBorders,
+        children:[new Paragraph({ children:[new TextRun({text, bold:true, size:20})] })]
+      });
+    }
+    function valueCell(text, width, colSpan){
+      return new TableCell({
+        width:{size:width, type:WidthType.PERCENTAGE},
+        columnSpan: colSpan||1,
+        borders:cellBorders,
+        children:[new Paragraph({ children:[new TextRun({text:text||"", size:20})] })]
+      });
+    }
+
+    const infoTable = new Table({
+      width:{size:100, type:WidthType.PERCENTAGE},
+      rows:[
+        new TableRow({ children:[ labelCell("Date/Time",15), valueCell(formatDisplayDateTime(rec.datetime),35),
+                                   labelCell("Location",15), valueCell(rec.place,35) ] }),
+        new TableRow({ children:[ labelCell("Project/Team",15), valueCell(rec.team,35),
+                                   labelCell("Attendees",15), valueCell(rec.attendees,35) ] }),
+        new TableRow({ children:[ labelCell("Topic",15), valueCell(rec.topic,85,3) ] })
+      ]
+    });
+
+    function sectionParagraphs(title, rawText){
+      const items = parseItems(rawText);
+      const out = [ new Paragraph({
+        heading: HeadingLevel.HEADING_2,
+        spacing:{ before:280, after:120 },
+        border:{ bottom:{ style:BorderStyle.SINGLE, size:6, color:"1E2A32", space:4 } },
+        children:[ new TextRun({ text:title, bold:true, size:24 }) ]
+      })];
+      if(!items.length){
+        out.push(new Paragraph({ children:[new TextRun({text:"No content", italics:true, color:"999999", size:20})] }));
+      } else {
+        items.forEach(it=>{
+          const isCircle = it.type === "circle";
+          const prefix = isCircle ? "" : "ㅇ ";
+          const runs = [];
+          if(prefix) runs.push(new TextRun({ text:prefix, size:22 }));
+          splitTextForLinks(it.text).forEach(p=>{
+            if(p.url){
+              runs.push(new ExternalHyperlink({
+                link: p.text,
+                children:[ new TextRun({ text:p.text, style:"Hyperlink", size:22, bold:isCircle }) ]
+              }));
+            } else {
+              runs.push(new TextRun({ text:p.text, size:22, bold:isCircle }));
+            }
+          });
+          out.push(new Paragraph({
+            indent: it.type === "sub" ? { left:300 } : { left:0 },
+            spacing:{ before: isCircle ? 120 : 0, after:80 },
+            children: runs
+          }));
+        });
+      }
+      return out;
+    }
+
+    const tagsLine = tagsToArray(rec.tags).join("   ");
+
+    const children = [
+      new Paragraph({
+        alignment:AlignmentType.CENTER,
+        spacing:{ after: tagsLine ? 120 : 300 },
+        children:[ new TextRun({ text: rec.team ? `${rec.team} Meeting Minutes` : "MEETING MINUTES", bold:true, size:40 }) ]
+      })
+    ];
+    if(tagsLine){
+      children.push(new Paragraph({
+        alignment:AlignmentType.CENTER,
+        spacing:{ after:300 },
+        children:[ new TextRun({ text:tagsLine, color:"3A6B63", bold:true, size:20 }) ]
+      }));
+    }
+    children.push(infoTable);
+    children.push(new Paragraph({ text:"", spacing:{after:120} }));
+    children.push(...sectionParagraphs("1. Progress", rec.report));
+    children.push(...sectionParagraphs("2. Key Agenda", rec.discuss));
+    children.push(...sectionParagraphs("3. Action Items", rec.action));
+
+    let writerLine = `Author   ${rec.writer||""}`;
+    if(rec.writerTitle) writerLine += `  /  ${rec.writerTitle}`;
+    children.push(new Paragraph({
+      spacing:{ before:500 },
+      alignment:AlignmentType.RIGHT,
+      children:[ new TextRun({ text:writerLine, size:20 }) ]
+    }));
+    if(rec.writerOrg){
+      children.push(new Paragraph({
+        alignment:AlignmentType.RIGHT,
+        children:[ new TextRun({ text:rec.writerOrg, size:20, color:"555555" }) ]
+      }));
+    }
+
+    return new Document({
+      styles:{ default:{ document:{ run:{ font:"Pretendard" } }, heading2:{ run:{ font:"Pretendard" } } } },
+      sections:[{ properties:{ page:{ size:{ width:11906, height:16838 }, margin:{ top:1134, bottom:1134, left:1134, right:1134 } } },
+                  children }]
+    });
+  }
+
+  function checkDocxLibsReady(){
+    if(typeof docx === "undefined" || !docx.Packer){
+      alert("The DOCX generation library is still loading. Please try again shortly (with an internet connection).");
+      return false;
+    }
+    if(typeof saveAs === "undefined"){
+      alert("The file-saving library is still loading. Please try again shortly.");
+      return false;
+    }
+    return true;
+  }
+
+  $("saveDocxBtn").addEventListener("click", async () => {
+    if(!checkDocxLibsReady()) return;
+    readFormIntoRecord();
+    try{
+      const rec = records[currentIndex];
+      const doc = buildDocxDocument(rec);
+      const blob = await docx.Packer.toBlob(doc);
+      saveAs(blob, `${sanitizeFilename(rec.team||"Minutes")}_${timestampForFile()}.docx`);
+    }catch(err){
+      console.error(err);
+      alert("An error occurred while saving the DOCX: " + (err && err.message ? err.message : err));
+    }
+  });
+
+  $("saveDocxAllBtn").addEventListener("click", async () => {
+    if(!checkDocxLibsReady()) return;
+    readFormIntoRecord();
+    if(records.length === 1){
+      $("saveDocxBtn").click();
+      return;
+    }
+    try{
+      const zip = new JSZip();
+      for(let i=0;i<records.length;i++){
+        const rec = records[i];
+        const doc = buildDocxDocument(rec);
+        const blob = await docx.Packer.toBlob(doc);
+        zip.file(`${String(i+1).padStart(2,"0")}_${sanitizeFilename(rec.team||"Minutes")}.docx`, blob);
+      }
+      const zipBlob = await zip.generateAsync({type:"blob"});
+      saveAs(zipBlob, `meeting-minutes-all_${timestampForFile()}.zip`);
+    }catch(err){
+      console.error(err);
+      alert("An error occurred while saving all DOCX files: " + (err && err.message ? err.message : err));
+    }
+  });
+
+  // ---------- init ----------
+  loadRecordIntoForm(records[currentIndex]);
+  renderPreview();
+})();
+</script>
+
+<!-- TOOLKIT:GUIDE_START · managed by build-guides.js -->
+<style>
+.tk-guide{background:#F1F5F9;color:#334155;border-top:1px solid #E2E8F0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:58px 20px 66px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:760px;margin:0 auto}
+.tk-guide h2{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0F172A;margin:46px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:15px;line-height:1.95;color:#334155;margin:15px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:15px 0 0;padding-left:21px}
+.tk-guide li{font-size:15px;line-height:1.9;color:#334155;margin-top:9px;word-break:keep-all}
+.tk-guide strong{font-weight:700;color:#1D4ED8}
+.tk-guide dl{margin:15px 0 0;border-top:1px solid #E2E8F0}
+.tk-guide dt{font-size:15px;font-weight:700;color:#0F172A;margin-top:19px;word-break:keep-all}
+.tk-guide dd{font-size:15px;line-height:1.9;color:#334155;margin:7px 0 19px;padding-bottom:19px;
+  border-bottom:1px solid #E2E8F0;word-break:keep-all}
+.tk-guide-note{margin-top:46px;padding:18px 20px;background:#fff;border:1px solid #E2E8F0;
+  border-radius:14px;font-size:13.5px;line-height:1.85;color:#64748B;word-break:keep-all}
+.tk-guide-more{margin-top:42px;padding-top:30px;border-top:1px solid #E2E8F0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:15px;display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#1D4ED8;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:30px;font-size:13.5px;font-weight:700;color:#1D4ED8}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>Redrawing a meeting-minutes table every single time</h2>
+<p>After a meeting wraps up, you open a word processor and start drawing a table. Make a date/location field, list attendees, then split things into progress, agenda, and action items. If several team members each write their own, everyone repeats this from scratch.</p>
+<p>This tool takes over that table-drawing step. Type directly into the form, or fill in multiple people's rows at once in a CSV template and drop it in — shared info like date, location, and attendees stays the same across everyone, while each person's own progress, key agenda, and action items get filled in separately, and an A4 meeting-minutes document is generated. Check it in the live preview, then print it or save as DOCX/CSV.</p>
+
+<h2>What you enter never goes anywhere</h2>
+<p>Meeting content often includes work-in-progress status or discussions that aren't finalized yet. This tool <strong>does all its processing inside your browser</strong>, and nothing you type is sent to or stored on a server. Close the page and your work disappears along with it.</p>
+
+<h2>What you can do</h2><dl>
+<dt>📝 Field-by-field entry</dt><dd>Enter date, location, project/team name, attendees, topic, hashtags, and author info, then write the body as three sections: <strong>Progress, Key Agenda, and Action Items</strong>. Start a line with "-" for a sub-item, or with a circled number like "①②③" to mark it as a top-level category.</dd>
+<dt>📋 Bulk CSV entry</dt><dd>Download the template, fill in rows for multiple people at once, and drop it in — you can then page through each record in the preview.</dd>
+<dt>🔗 Automatic link detection</dt><dd>Any http(s) address typed into the body becomes a real, clickable link in both the preview and the DOCX export.</dd>
+<dt>🖨️ Print and export</dt><dd>The A4-formatted view can be printed directly, and also exported as DOCX (single or bulk) or CSV.</dd>
+</dl>
+
+<h2>How to use it</h2><ol>
+<li>Choose <strong>Manual Entry</strong> or <strong>CSV Upload</strong> on the left.</li>
+<li>Enter the meeting overview (date, location, attendees) and author information.</li>
+<li>Write the three body sections (Progress, Key Agenda, Action Items) one item per line. Use "-" for sub-items, or start with a circled number if you need a top-level category.</li>
+<li>Check the A4-formatted result immediately in the preview on the right.</li>
+<li>For multiple records, upload a CSV and page through them to review.</li>
+<li>When it's ready, <strong>print it</strong> or <strong>export as DOCX/CSV</strong>.</li>
+</ol>
+
+<h2>Frequently Asked Questions</h2><dl>
+<dt>Is the meeting content I enter sent to a server?</dt><dd>No. Everything is processed entirely in your browser, and closing the page clears your work along with it.</dd>
+<dt>Can I create minutes for multiple people at once?</dt><dd>Yes. Fill in one row per person in the CSV template and upload it — you can page through each one, and "Save All as DOCX" downloads them all together as a zip.</dd>
+<dt>Does the formatting carry over into the DOCX export?</dt><dd>Yes — the info table, sub-item indentation, and links in the body all match the preview exactly.</dd>
+<dt>Will the table break if I upload it to Google Docs?</dt><dd>No. The table uses fixed column widths, so the layout stays intact even in Google Docs.</dd>
+<dt>What format should the date/time be in?</dt><dd>Pick it directly from the calendar widget, or use the "Now" button to fill in the current time instantly.</dd>
+</dl>
+
+<p class="tk-guide-note">All processing happens inside your own browser, and the meeting content you enter is never sent to any server. Closing or refreshing the page clears whatever you were working on, so please print or export as DOCX/CSV once you're done.</p>
+
+<a class="tk-guide-home" href="https://mnledu.com/">See all tools →</a>
+</div></section>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "meeting-minutes-generator";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "meeting-minutes-generator").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-10</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/productivity/meeting-minutes-generator_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/productivity/meeting-minutes-generator_en.html";
+  var TK_SHARE_TITLE = "Meeting Minutes Generator";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+
+</body>
+</html>

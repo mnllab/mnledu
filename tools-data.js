@@ -34,6 +34,16 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'meeting-minutes-generator',
+    title: '회의록 생성기',
+    category: 'PRODUCTIVITY',
+    desc: '일시·장소·참석자를 입력하거나 CSV를 올리면 A4 회의록을 자동으로 만들어 줍니다. 진행현황·주요안건·향후계획으로 구성되며 인쇄와 DOCX·CSV 저장을 지원합니다.',
+    url: 'https://mnledu.com/kr/productivity/meeting-minutes-generator_kr.html',
+    icon: 'clipboard-check',
+    badge: 'NEW',
+    tags: ['#회의록', '#DOCX', '#양식', '#자동화']
+  },
+  {
     id: 'document-mail-merge',
     title: '템플릿 문서 일괄 생성기',
     category: 'PRODUCTIVITY',
@@ -107,7 +117,7 @@ const TOOLS_DATA = [
     id: 'receipt-to-excel',
     title: '영수증 지출결의서 변환기',
     category: 'PRODUCTIVITY',
-    desc: '영수증 사진에서 날짜·금액·상호를 읽고 업종에 맞는 계정과목까지 자동으로 붙입니다. 품목별 일반형과 총액만 뽑는 간편형을 고를 수 있습니다.',
+    desc: '영수증 사진에서 날짜·금액·상호를 읽고 업종에 맞는 계정과목까지 자동으로 붙입니다. 공급가액·부가세 열과 자동 채우기를 지원하며, 품목별 일반형과 총액만 뽑는 간편형을 고를 수 있습니다.',
     url: 'https://mnledu.com/kr/productivity/receipt-to-excel_kr.html',
     icon: 'receipt',
     badge: 'NEW',
@@ -498,6 +508,16 @@ const TOOLS_DATA = [
   // ---------------------------------------------------------
   // 4. DESIGN & MEDIA (디자인 & 미디어)
   // ---------------------------------------------------------
+  {
+    id: 'draw-tool',
+    title: '온라인 그림판',
+    category: 'DESIGN & MEDIA',
+    desc: '설치 없는 무료 온라인 그림판. 펜, 채우기, 텍스트 도구와 실행취소를 지원하고 PNG·JPG 저장, 클립보드 복사까지 브라우저 안에서만 처리됩니다.',
+    url: 'https://mnledu.com/kr/design-media/draw-tool_kr.html',
+    icon: 'pencil',
+    badge: 'NEW',
+    tags: ['#그림판', '#드로잉', '#PNG', '#무료']
+  },
   {
     id: 'advanced-image-tailor',
     title: '스마트 이미지 재단기',

@@ -8,6 +8,16 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'meeting-minutes-generator',
+    title: 'Meeting Minutes Generator',
+    category: 'PRODUCTIVITY',
+    desc: 'Enter the date, location, and attendees, or upload a CSV, and get an A4 meeting-minutes document automatically. Organized into progress, key agenda, and action items, with printing and DOCX/CSV export.',
+    url: 'https://mnledu.com/en/productivity/meeting-minutes-generator_en.html',
+    icon: 'clipboard-check',
+    badge: 'NEW',
+    tags: ['#meetingminutes', '#DOCX', '#template', '#automation']
+  },
+  {
     id: 'document-mail-merge',
     title: 'Template Document Batch Generator',
     category: 'PRODUCTIVITY',
@@ -81,7 +91,7 @@ const TOOLS_DATA_EN = [
     id: 'receipt-to-excel',
     title: 'Receipt to Expense Sheet',
     category: 'PRODUCTIVITY',
-    desc: 'Reads the date, amount and merchant from a receipt photo and suggests an expense category by industry. Detailed or simple-total mode.',
+    desc: 'Reads the date, amount and merchant from a receipt photo and suggests an expense category by industry. Supports supply amount/VAT columns with auto-fill. Detailed or simple-total mode.',
     url: 'https://mnledu.com/en/productivity/receipt-to-excel_en.html',
     icon: 'receipt',
     badge: 'NEW',
@@ -463,6 +473,16 @@ const TOOLS_DATA_EN = [
   },
 
   /* ═══════════════ DESIGN & MEDIA ═══════════════ */
+  {
+    id: 'draw-tool',
+    title: 'Online Drawing Board',
+    category: 'DESIGN & MEDIA',
+    desc: 'A free online drawing board with no install required. Pen, fill, and text tools with undo/redo, plus PNG/JPG saving and clipboard copy — all processed in your browser.',
+    url: 'https://mnledu.com/en/design-media/draw-tool_en.html',
+    icon: 'pencil',
+    badge: 'NEW',
+    tags: ['#drawing', '#sketch', '#PNG', '#free']
+  },
   {
     id: 'advanced-image-tailor',
     title: 'Advanced Image Tailor',

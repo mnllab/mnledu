@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Drawing Board · Draw · Sketch | TOOLKIT</title>
+
+<!-- TOOLKIT:SEO_START · managed by patch-tool-pages.js (EN pages are not auto-regenerated — keep in sync by hand) -->
+<meta name="description" content="A free online drawing board with no install required. Pen, fill, and text tools with undo/redo, plus PNG/JPG saving and clipboard copy — all processed in your browser." />
+<meta name="author" content="Janggil Kim" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href="https://mnledu.com/en/design-media/draw-tool_en.html" />
+<link rel="alternate" hreflang="ko" href="https://mnledu.com/kr/design-media/draw-tool_kr.html" />
+<link rel="alternate" hreflang="en" href="https://mnledu.com/en/design-media/draw-tool_en.html" />
+<link rel="alternate" hreflang="x-default" href="https://mnledu.com/kr/design-media/draw-tool_kr.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TOOLKIT" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://mnledu.com/en/design-media/draw-tool_en.html" />
+<meta property="og:title" content="Online Drawing Board · Draw · Sketch | TOOLKIT" />
+<meta property="og:description" content="A free online drawing board with no install required. Pen, fill, and text tools with undo/redo, plus PNG/JPG saving and clipboard copy — all processed in your browser." />
+<meta property="og:image" content="https://mnledu.com/og-image.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Online Drawing Board · Draw · Sketch | TOOLKIT" />
+<meta name="twitter:description" content="A free online drawing board with no install required. Pen, fill, and text tools with undo/redo, plus PNG/JPG saving and clipboard copy — all processed in your browser." />
+<meta name="twitter:image" content="https://mnledu.com/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Online Drawing Board",
+  "description": "A free online drawing board with no install required. Pen, fill, and text tools with undo/redo, plus PNG/JPG saving and clipboard copy.",
+  "url": "https://mnledu.com/en/design-media/draw-tool_en.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/about.html"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Janggil Kim",
+    "url": "https://mnledu.com/about.html"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "TOOLKIT",
+    "url": "https://mnledu.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TOOLKIT",
+      "item": "https://mnledu.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "DESIGN & MEDIA",
+      "item": "https://mnledu.com/#en"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Online Drawing Board",
+      "item": "https://mnledu.com/en/design-media/draw-tool_en.html"
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:SEO_END -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --ink:#1E2A32; --ink-soft:#4B5A62; --paper:#F5F3EE; --rail:#EDEBE4;
+    --line:#D8D3C7; --accent:#3A6B63; --accent-soft:#E4EDEB; --amber:#C97F3A; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--rail);color:var(--ink);}
+  button{font-family:inherit;cursor:pointer;}
+  h1,h2{margin:0;}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:22px 18px 60px;}
+  .top{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .top h1{font-size:20px;font-weight:700;}
+  .toolbar{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;margin-bottom:14px;
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  }
+  .tool-group{display:flex;gap:6px;align-items:center;}
+  .tool-btn{
+    border:1px solid var(--line);background:#fff;border-radius:8px;
+    width:38px;height:38px;font-size:16px;display:flex;align-items:center;justify-content:center;
+    color:var(--ink-soft);
+  }
+  .tool-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .tool-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .divider{width:1px;height:26px;background:var(--line);}
+  .thickness-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft);}
+  .thickness-wrap input[type=range]{width:110px;}
+  #thicknessVal{width:26px;text-align:right;font-weight:700;color:var(--ink);}
+  .swatches{display:flex;gap:5px;}
+  .swatch{
+    width:22px;height:22px;border-radius:50%;border:2px solid #fff;
+    box-shadow:0 0 0 1px var(--line);cursor:pointer;
+  }
+  .swatch.active{box-shadow:0 0 0 2px var(--ink);}
+  #colorPicker{width:32px;height:32px;border:none;border-radius:8px;padding:0;background:none;cursor:pointer;}
+  .action-btn{
+    border:1px solid var(--line);background:#fff;border-radius:8px;
+    width:38px;height:38px;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);
+  }
+  .action-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+  .action-btn:disabled{opacity:.35;cursor:not-allowed;}
+  .save-group{display:flex;gap:6px;margin-left:auto;}
+  .save-btn{
+    border:none;border-radius:8px;padding:0 14px;height:38px;font-size:12.5px;font-weight:700;
+  }
+  .save-btn.primary{background:var(--ink);color:#fff;}
+  .save-btn.primary:hover{background:#0F171C;}
+  .save-btn.secondary{background:var(--accent-soft);color:var(--accent);}
+  .save-btn.secondary:hover{background:#D3E2DF;}
+
+  .canvas-stage{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:14px;display:flex;justify-content:center;position:relative;overflow:auto;
+  }
+  #board{
+    background:#fff;border:1px solid var(--line);border-radius:4px;
+    max-width:100%;touch-action:none;cursor:crosshair;
+  }
+  .text-input-layer{
+    position:absolute;border:1px dashed var(--accent);background:rgba(255,255,255,0.9);
+    font-family:'Pretendard',sans-serif;outline:none;padding:2px 4px;min-width:60px;
+  }
+
+  .guide{margin-top:26px;font-size:13.5px;line-height:1.8;color:var(--ink-soft);}
+  .guide h2{font-size:15px;color:var(--ink);margin-bottom:8px;}
+  .guide ul{margin:0 0 18px;padding-left:20px;}
+  .faq-item{margin-bottom:12px;}
+  .faq-item b{color:var(--ink);}
+  footer{
+    margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:11.5px;color:#9A9488;text-align:center;
+  }
+
+  @media (max-width:640px){
+    .save-group{margin-left:0;width:100%;}
+    .save-btn{flex:1;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>🎨 Online Drawing Board</h1>
+  </div>
+
+  <div class="toolbar">
+    <div class="tool-group">
+      <button class="tool-btn active" data-tool="pen" title="Pen">✏️</button>
+      <button class="tool-btn" data-tool="eraser" title="Eraser">🧽</button>
+      <button class="tool-btn" data-tool="fill" title="Fill">🪣</button>
+      <button class="tool-btn" data-tool="text" title="Text">🅣</button>
+    </div>
+    <div class="divider"></div>
+    <div class="thickness-wrap">
+      <span>Size</span>
+      <input type="range" id="thickness" min="1" max="40" value="4">
+      <span id="thicknessVal">4</span>
+    </div>
+    <div class="divider"></div>
+    <div class="swatches" id="swatches"></div>
+    <input type="color" id="colorPicker" value="#1E2A32" title="Custom color">
+    <div class="divider"></div>
+    <button class="action-btn" id="undoBtn" title="Undo">↶</button>
+    <button class="action-btn" id="redoBtn" title="Redo">↷</button>
+    <button class="action-btn" id="clearBtn" title="Clear all">🗑️</button>
+    <div class="save-group">
+      <button class="save-btn secondary" id="copyBtn">Copy to Clipboard</button>
+      <button class="save-btn secondary" id="saveJpgBtn">Save JPG</button>
+      <button class="save-btn primary" id="savePngBtn">Save PNG</button>
+    </div>
+  </div>
+
+  <div class="canvas-stage">
+    <canvas id="board" width="1000" height="620"></canvas>
+  </div>
+
+  <!-- TOOLKIT:GUIDE_START -->
+  <div class="guide">
+    <h2>How to use</h2>
+    <ul>
+      <li>Pick a tool from the toolbar: pen, eraser, fill, or text.</li>
+      <li>Click a color swatch or use the custom color button to choose any color.</li>
+      <li>Use the size slider to adjust line thickness (or font size when the text tool is active).</li>
+      <li>The fill tool fills the clicked area and any connected area of the same color.</li>
+      <li>The text tool opens an input box where you click the canvas — click elsewhere to apply the text.</li>
+      <li>Undo and redo support the most recent 25 steps.</li>
+      <li>Save your finished drawing as PNG or JPG, or copy it straight to your clipboard to paste elsewhere.</li>
+    </ul>
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><b>Q. Is my drawing sent to a server?</b><br>A. No. Everything happens in your browser and is never sent anywhere.</div>
+    <div class="faq-item"><b>Q. What file formats can I save as?</b><br>A. PNG, JPG, and clipboard copy are all supported.</div>
+    <div class="faq-item"><b>Q. What if clipboard copy doesn't work?</b><br>A. Some browsers or environments restrict clipboard access. In that case, use the Save PNG button instead.</div>
+  </div>
+  <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "draw-tool";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "draw-tool").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-10</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (DESIGN &amp; MEDIA) — 펜·지우개·채우기·텍스트 도구, 실행취소/다시실행, PNG·JPG 저장, 클립보드 복사</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
+<style>
+.tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
+  display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:999px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;
+  font-size:13px;font-weight:700;color:#1e293b;cursor:pointer;
+  background:#ffffff;border:1px solid #e2e8f0;
+  box-shadow:0 2px 4px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.10);
+  transition:transform .12s ease, box-shadow .12s ease;}
+.tk-share-fab:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(15,23,42,.08),0 12px 26px rgba(15,23,42,.13);}
+.tk-share-fab:active{transform:translateY(0);}
+.tk-share-fab svg{width:16px;height:16px;flex:none;}
+.tk-share-backdrop{position:fixed;inset:0;z-index:2147483001;background:rgba(15,23,42,.35);
+  display:none;align-items:flex-end;justify-content:center;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;}
+@media(min-width:640px){.tk-share-backdrop{align-items:center;}}
+.tk-share-backdrop.open{display:flex;}
+.tk-share-card{width:100%;max-width:420px;background:#fff;border-radius:16px 16px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(15,23,42,.18);}
+@media(min-width:640px){.tk-share-card{border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(15,23,42,.20);}}
+.tk-share-title{font-size:15px;font-weight:800;color:#0f172a;margin:0 0 12px;}
+.tk-share-row{display:flex;gap:8px;}
+.tk-share-input{flex:1;min-width:0;font-size:13px;color:#334155;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;
+  font-family:ui-monospace,monospace;}
+.tk-share-copy{flex:none;font-size:13px;font-weight:700;color:#fff;background:#0f172a;
+  border:none;border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+.tk-share-copy:active{transform:scale(.97);}
+.tk-share-close{display:block;width:100%;margin-top:12px;text-align:center;
+  font-size:12.5px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:6px;}
+</style>
+<button type="button" class="tk-share-fab" id="tkShareFab" aria-label="Share">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+Share
+</button>
+<div class="tk-share-backdrop" id="tkShareBackdrop">
+<div class="tk-share-card">
+<p class="tk-share-title">Share this tool</p>
+<div class="tk-share-row">
+<input class="tk-share-input" id="tkShareInput" type="text" readonly value="https://mnledu.com/en/design-media/draw-tool_en.html" onclick="this.select()" />
+<button type="button" class="tk-share-copy" id="tkShareCopy">Copy link</button>
+</div>
+<button type="button" class="tk-share-close" id="tkShareClose">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var TK_SHARE_URL = "https://mnledu.com/en/design-media/draw-tool_en.html";
+  var TK_SHARE_TITLE = "Online Drawing Board";
+  var fab = document.getElementById("tkShareFab");
+  var backdrop = document.getElementById("tkShareBackdrop");
+  var input = document.getElementById("tkShareInput");
+  var copyBtn = document.getElementById("tkShareCopy");
+  var closeBtn = document.getElementById("tkShareClose");
+  var copyLabel = "Copy link";
+  var copiedLabel = "Copied";
+  var blockedLabel = "Copy was blocked. Select the text instead";
+  function openPopup(){ backdrop.classList.add("open"); setTimeout(function(){ input.focus(); input.select(); }, 50); }
+  function closePopup(){ backdrop.classList.remove("open"); }
+  fab.addEventListener("click", function(){
+    if (navigator.share) {
+      navigator.share({ title: TK_SHARE_TITLE, url: TK_SHARE_URL }).catch(function(){});
+    } else {
+      openPopup();
+    }
+  });
+  closeBtn.addEventListener("click", closePopup);
+  backdrop.addEventListener("click", function(e){ if (e.target === backdrop) closePopup(); });
+  copyBtn.addEventListener("click", function(){
+    function done(ok){
+      copyBtn.textContent = ok ? copiedLabel : blockedLabel;
+      setTimeout(function(){ copyBtn.textContent = copyLabel; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TK_SHARE_URL).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      input.select();
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+})();
+</script>
+<!-- TOOLKIT:SHARE_END -->
+
+  <footer>© 2026 MNL. All rights reserved.</footer>
+</div>
+
+
+
+<script>
+(function(){
+  "use strict";
+  const canvas = document.getElementById("board");
+  const ctx = canvas.getContext("2d", { willReadFrequently:true });
+  const $ = (id) => document.getElementById(id);
+
+  const PALETTE = ["#1E2A32","#B0453A","#C97F3A","#D8B84A","#3A6B63","#2F6FA8","#7A4FA3","#FFFFFF"];
+
+  let tool = "pen";
+  let color = "#1E2A32";
+  let thickness = 4;
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+  let undoStack = [];
+  let redoStack = [];
+  const MAX_HISTORY = 25;
+
+  // ---------- init ----------
+  function initCanvas(){
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    pushHistory();
+  }
+
+  function buildSwatches(){
+    const box = $("swatches");
+    PALETTE.forEach((c, i) => {
+      const sw = document.createElement("div");
+      sw.className = "swatch" + (i===0 ? " active" : "");
+      sw.style.background = c;
+      sw.dataset.color = c;
+      sw.addEventListener("click", () => {
+        color = c;
+        document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));
+        sw.classList.add("active");
+        $("colorPicker").value = c;
+      });
+      box.appendChild(sw);
+    });
+  }
+
+  // ---------- history (undo/redo) ----------
+  function pushHistory(){
+    undoStack.push(canvas.toDataURL("image/png"));
+    if(undoStack.length > MAX_HISTORY) undoStack.shift();
+    redoStack = [];
+    updateHistoryButtons();
+  }
+  function updateHistoryButtons(){
+    $("undoBtn").disabled = undoStack.length <= 1;
+    $("redoBtn").disabled = redoStack.length === 0;
+  }
+  function restoreFrom(dataUrl){
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(img,0,0);
+    };
+    img.src = dataUrl;
+  }
+  $("undoBtn").addEventListener("click", () => {
+    if(undoStack.length <= 1) return;
+    redoStack.push(undoStack.pop());
+    restoreFrom(undoStack[undoStack.length-1]);
+    updateHistoryButtons();
+  });
+  $("redoBtn").addEventListener("click", () => {
+    if(!redoStack.length) return;
+    const state = redoStack.pop();
+    undoStack.push(state);
+    restoreFrom(state);
+    updateHistoryButtons();
+  });
+  $("clearBtn").addEventListener("click", () => {
+    if(!confirm("Clear the entire drawing? This cannot be undone (except via Undo).")) return;
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    pushHistory();
+  });
+
+  // ---------- tool selection ----------
+  document.querySelectorAll(".tool-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      tool = btn.dataset.tool;
+      document.querySelectorAll(".tool-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      cancelTextInput();
+    });
+  });
+
+  $("thickness").addEventListener("input", (e) => {
+    thickness = parseInt(e.target.value, 10);
+    $("thicknessVal").textContent = thickness;
+  });
+  $("colorPicker").addEventListener("input", (e) => {
+    color = e.target.value;
+    document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));
+  });
+
+  // ---------- coordinate mapping ----------
+  function getPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+    return { x:(cx-rect.left)*scaleX, y:(cy-rect.top)*scaleY };
+  }
+
+  // ---------- pen / eraser ----------
+  function startDraw(e){
+    if(tool === "fill"){ doFill(e); return; }
+    if(tool === "text"){ openTextInput(e); return; }
+    drawing = true;
+    const p = getPos(e);
+    lastX = p.x; lastY = p.y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(lastX+0.01, lastY+0.01);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = thickness;
+    ctx.strokeStyle = tool === "eraser" ? "#FFFFFF" : color;
+    ctx.stroke();
+  }
+  function moveDraw(e){
+    if(!drawing) return;
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+  function endDraw(){
+    if(!drawing) return;
+    drawing = false;
+    pushHistory();
+  }
+
+  canvas.addEventListener("pointerdown", startDraw);
+  canvas.addEventListener("pointermove", moveDraw);
+  window.addEventListener("pointerup", endDraw);
+
+  // ---------- fill (flood fill) ----------
+  function hexToRgba(hex){
+    const h = hex.replace("#","");
+    const bigint = parseInt(h.length===3 ? h.split("").map(c=>c+c).join("") : h, 16);
+    return [ (bigint>>16)&255, (bigint>>8)&255, bigint&255, 255 ];
+  }
+  function doFill(e){
+    const p = getPos(e);
+    const startX = Math.floor(p.x), startY = Math.floor(p.y);
+    const w = canvas.width, h = canvas.height;
+    if(startX<0||startY<0||startX>=w||startY>=h) return;
+    const imgData = ctx.getImageData(0,0,w,h);
+    const data = imgData.data;
+    const idx = (x,y) => (y*w+x)*4;
+    const target = data.slice(idx(startX,startY), idx(startX,startY)+4);
+    const fillColor = hexToRgba(color);
+    const matches = (i) => data[i]===target[0] && data[i+1]===target[1] && data[i+2]===target[2] && data[i+3]===target[3];
+    if(target[0]===fillColor[0] && target[1]===fillColor[1] && target[2]===fillColor[2]) return;
+
+    const stack = [[startX,startY]];
+    while(stack.length){
+      const [x,y] = stack.pop();
+      if(x<0||y<0||x>=w||y>=h) continue;
+      const i = idx(x,y);
+      if(!matches(i)) continue;
+      data[i]=fillColor[0]; data[i+1]=fillColor[1]; data[i+2]=fillColor[2]; data[i+3]=255;
+      stack.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]);
+    }
+    ctx.putImageData(imgData,0,0);
+    pushHistory();
+  }
+
+  // ---------- text tool ----------
+  let activeTextInput = null;
+  function openTextInput(e){
+    cancelTextInput();
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = rect.width / canvas.width;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    const p = getPos(e);
+
+    const input = document.createElement("textarea");
+    input.className = "text-input-layer";
+    input.style.left = cx + "px";
+    input.style.top = (cy - (thickness*4*scaleX)/2) + "px";
+    input.style.fontSize = Math.max(12, thickness*4*scaleX) + "px";
+    input.style.color = color;
+    input.rows = 1;
+    canvas.parentElement.style.position = "relative";
+    canvas.parentElement.appendChild(input);
+    input.focus();
+    activeTextInput = { el:input, x:p.x, y:p.y };
+
+    input.addEventListener("blur", () => commitTextInput());
+    input.addEventListener("keydown", (ev) => {
+      if(ev.key === "Enter" && !ev.shiftKey){ ev.preventDefault(); input.blur(); }
+      if(ev.key === "Escape"){ cancelTextInput(); }
+    });
+  }
+  function commitTextInput(){
+    if(!activeTextInput) return;
+    const { el, x, y } = activeTextInput;
+    const value = el.value;
+    if(value.trim()){
+      const fontSize = Math.max(12, thickness*4);
+      ctx.font = `${fontSize}px 'Pretendard', sans-serif`;
+      ctx.fillStyle = color;
+      ctx.textBaseline = "top";
+      value.split("\n").forEach((line, i) => {
+        ctx.fillText(line, x, y + i*fontSize*1.2);
+      });
+      pushHistory();
+    }
+    if(el.parentElement) el.parentElement.removeChild(el);
+    activeTextInput = null;
+  }
+  function cancelTextInput(){
+    if(activeTextInput && activeTextInput.el.parentElement){
+      activeTextInput.el.parentElement.removeChild(activeTextInput.el);
+    }
+    activeTextInput = null;
+  }
+
+  // ---------- save / copy ----------
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  }
+  function timestamp(){
+    const d = new Date();
+    const p = n => String(n).padStart(2,"0");
+    return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`;
+  }
+  $("savePngBtn").addEventListener("click", () => {
+    canvas.toBlob(blob => downloadBlob(blob, `drawing_${timestamp()}.png`), "image/png");
+  });
+  $("saveJpgBtn").addEventListener("click", () => {
+    const off = document.createElement("canvas");
+    off.width = canvas.width; off.height = canvas.height;
+    const offCtx = off.getContext("2d");
+    offCtx.fillStyle = "#FFFFFF";
+    offCtx.fillRect(0,0,off.width,off.height);
+    offCtx.drawImage(canvas,0,0);
+    off.toBlob(blob => downloadBlob(blob, `drawing_${timestamp()}.jpg`), "image/jpeg", 0.92);
+  });
+  $("copyBtn").addEventListener("click", () => {
+    canvas.toBlob(async (blob) => {
+      try{
+        await navigator.clipboard.write([ new ClipboardItem({ "image/png": blob }) ]);
+        const btn = $("copyBtn");
+        const original = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(()=>{ btn.textContent = original; }, 1500);
+      }catch(err){
+        alert("Clipboard copy isn't supported in this browser/environment. Please use Save PNG instead.");
+      }
+    }, "image/png");
+  });
+
+  // ---------- start ----------
+  buildSwatches();
+  initCanvas();
+})();
+</script>
+</body>
+</html>
