@@ -92,12 +92,13 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Nanum+Gothic:wght@400;700&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
 
 <style>
   :root{
@@ -136,6 +137,7 @@
   .btn:active{ transform:translateY(1px); }
   .btn[disabled]{ opacity:.4; cursor:not-allowed; }
   .btn.p{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .align-btn.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
   .btn.sm{ padding:7px 10px; min-height:34px; font-size:12px; border-radius:8px; }
   .sep{ width:1px; height:26px; background:var(--line); margin:0 2px; }
 
@@ -161,6 +163,10 @@
     border:1.5px dashed rgba(37,99,235,.55); background:rgba(37,99,235,.04);
   }
   .sig img{ width:100%; height:100%; display:block; pointer-events:none; user-select:none; }
+  .sig .txt{
+    width:100%; height:100%; overflow:hidden; padding:2px 4px; box-sizing:border-box;
+    pointer-events:none; user-select:none; white-space:pre-wrap; word-break:break-word;
+  }
   .sig.sel{ border-color:var(--accent); border-style:solid; }
   .sig .h{
     position:absolute; width:13px; height:13px; border-radius:3px;
@@ -453,6 +459,43 @@
       </div>
 
       <div class="sect">
+        <span class="lab">텍스트 추가</span>
+        <textarea id="textStampInput" class="fld" rows="3" placeholder="넣을 글자를 입력하세요 (여러 줄 가능)" style="width:100%; margin-bottom:8px; resize:vertical; font-family:inherit"></textarea>
+
+        <div style="display:flex; gap:6px; margin-bottom:8px">
+          <select id="textStampFont" class="fld" style="flex:1">
+            <option value="gothic">고딕 (나눔고딕)</option>
+            <option value="myeongjo">명조 (나눔명조)</option>
+          </select>
+          <button type="button" class="btn sm" id="textStampBold" title="굵게" style="flex:none; width:38px; font-weight:800">B</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px">
+          <span style="font-size:12px; color:var(--dim); white-space:nowrap; width:52px">글자 크기</span>
+          <input type="range" id="textStampSize" min="10" max="60" value="18" style="flex:1">
+          <span class="mono" id="textStampSizeVal" style="font-size:12px; width:24px; text-align:right">18</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px">
+          <span style="font-size:12px; color:var(--dim); white-space:nowrap; width:52px">줄 간격</span>
+          <input type="range" id="textStampLineHeight" min="100" max="220" value="140" style="flex:1">
+          <span class="mono" id="textStampLineHeightVal" style="font-size:12px; width:32px; text-align:right">140%</span>
+        </div>
+
+        <div style="display:flex; gap:6px; margin-bottom:9px">
+          <button type="button" class="btn sm align-btn active" id="textAlignLeft" data-align="left" style="flex:1">◀ 왼쪽</button>
+          <button type="button" class="btn sm align-btn" id="textAlignCenter" data-align="center" style="flex:1">■ 가운데</button>
+          <button type="button" class="btn sm align-btn" id="textAlignRight" data-align="right" style="flex:1">▶ 오른쪽</button>
+          <input type="color" id="textStampColor" value="#1E2A32" style="width:34px; height:34px; border:none; padding:0; background:none; cursor:pointer; flex:none">
+        </div>
+
+        <button class="btn sm p" id="addTextBtn" style="width:100%">🔤 현재 페이지에 텍스트 배치</button>
+        <p class="text-[11px]" style="color:var(--dim); line-height:1.6; margin:8px 0 0">
+          날짜·이름 같은 문구를 서명과 함께 찍을 때 씁니다. 배치 후에는 서명처럼 끌어서 옮기거나 모서리로 크기(글자 크기 포함)를 바꿀 수 있습니다. 폰트·정렬·줄 간격은 배치 전에 미리 정해 주세요.
+        </p>
+      </div>
+
+      <div class="sect">
         <span class="lab">회전 · 자르기</span>
         <div class="grid gap-2" style="grid-template-columns:1fr 1fr">
           <button class="btn sm" id="rotL">↺ 왼쪽</button>
@@ -535,6 +578,19 @@
   let sigURL = '';                         // 배경 제거를 거친 PNG dataURL
   let stamps = [];                         // { page, x, y, w, h, el }  좌표는 화면 px
   let selected = null, renderTask = null;
+
+  // ---------- 텍스트 스탬프 (한글 폰트 임베딩) ----------
+  const KO_FONTS = {
+    gothic:   { label:'고딕',  cssFamily:"'Nanum Gothic', sans-serif",
+                regular:'https://raw.githubusercontent.com/google/fonts/main/ofl/nanumgothic/NanumGothic-Regular.ttf',
+                bold:'https://raw.githubusercontent.com/google/fonts/main/ofl/nanumgothic/NanumGothic-Bold.ttf' },
+    myeongjo: { label:'명조',  cssFamily:"'Nanum Myeongjo', serif",
+                regular:'https://raw.githubusercontent.com/google/fonts/main/ofl/nanummyeongjo/NanumMyeongjo-Regular.ttf',
+                bold:'https://raw.githubusercontent.com/google/fonts/main/ofl/nanummyeongjo/NanumMyeongjo-Bold.ttf' }
+  };
+  const koFontBytesCache = {};
+  let textBold = false;
+  let textAlign = 'left';
 
   const toastEl = $('toast');
   let tt = null;
@@ -1054,18 +1110,98 @@
     toast(pageNo + '쪽 가운데에 배치했습니다');
   });
 
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function hexToRgbLib(hex) {
+    var h = String(hex || '#000000').replace('#', '');
+    var r = parseInt(h.substr(0, 2), 16) / 255;
+    var g = parseInt(h.substr(2, 2), 16) / 255;
+    var b = parseInt(h.substr(4, 2), 16) / 255;
+    return PDFLib.rgb(r, g, b);
+  }
+
+  $('textStampSize').addEventListener('input', function (e) {
+    $('textStampSizeVal').textContent = e.target.value;
+  });
+  $('textStampLineHeight').addEventListener('input', function (e) {
+    $('textStampLineHeightVal').textContent = e.target.value + '%';
+  });
+  $('textStampBold').addEventListener('click', function () {
+    textBold = !textBold;
+    $('textStampBold').classList.toggle('p', textBold);
+  });
+  ['textAlignLeft', 'textAlignCenter', 'textAlignRight'].forEach(function (id) {
+    $(id).addEventListener('click', function () {
+      textAlign = $(id).dataset.align;
+      ['textAlignLeft', 'textAlignCenter', 'textAlignRight'].forEach(function (i2) {
+        $(i2).classList.toggle('active', i2 === id);
+      });
+    });
+  });
+
+  function textDefaultSize() {
+    var pw = $('paper').clientWidth;
+    return { w: Math.min(260, pw * 0.6), h: 70 };
+  }
+
+  $('addTextBtn').addEventListener('click', function () {
+    if (!pdfDoc) { toast('먼저 PDF를 열어주세요'); return; }
+    var text = $('textStampInput').value;
+    if (!text.trim()) { toast('배치할 텍스트를 입력해주세요'); $('textStampInput').focus(); return; }
+
+    var pw = $('paper').clientWidth, ph = $('paper').clientHeight;
+    var sz = textDefaultSize();
+    var cx = pw * 0.5, cy = ph * 0.5;
+    if (isMobile()) {
+      var st = $('stage'), r = $('paper').getBoundingClientRect(), sr = st.getBoundingClientRect();
+      cx = (Math.max(sr.left, r.left) + Math.min(sr.right, r.right)) / 2 - r.left;
+      cy = (Math.max(sr.top, r.top) + Math.min(sr.bottom, r.bottom)) / 2 - r.top;
+    }
+    cx = Math.max(sz.w / 2, Math.min(pw - sz.w / 2, cx));
+    cy = Math.max(sz.h / 2, Math.min(ph - sz.h / 2, cy));
+
+    var s = {
+      type: 'text', page: pageNo,
+      x: cx - sz.w / 2, y: cy - sz.h / 2, w: sz.w, h: sz.h,
+      scale: viewScale(), el: null,
+      text: text,
+      fontFamily: $('textStampFont').value,
+      fontSize: parseInt($('textStampSize').value, 10),
+      lineHeight: parseInt($('textStampLineHeight').value, 10) / 100,
+      align: textAlign,
+      bold: textBold,
+      color: $('textStampColor').value
+    };
+    stamps.push(s);
+    showStamps();
+    select(s);
+    renderList();
+    toast(pageNo + '쪽에 텍스트를 배치했습니다');
+  });
+
   function showStamps() {
     document.querySelectorAll('.sig').forEach(function (e) { e.remove(); });
     stamps.filter(function (s) { return s.page === pageNo; }).forEach(function (s) {
       const el = document.createElement('div');
-      el.className = 'sig' + (s === selected ? ' sel' : '');
+      el.className = 'sig' + (s === selected ? ' sel' : '') + (s.type === 'text' ? ' sigText' : '');
       el.style.left = s.x + 'px';
       el.style.top = s.y + 'px';
       el.style.width = s.w + 'px';
       el.style.height = s.h + 'px';
-      el.innerHTML = '<img src="' + sigURL + '" alt="서명">' +
-                     '<span class="h br"></span>' +
-                     '<button class="del" title="삭제">×</button>';
+      if (s.type === 'text') {
+        var fam = (KO_FONTS[s.fontFamily] || KO_FONTS.gothic).cssFamily;
+        el.innerHTML = '<div class="txt" style="font-family:' + fam + ';font-size:' + s.fontSize +
+          'px;font-weight:' + (s.bold ? 700 : 400) + ';color:' + s.color + ';line-height:' + s.lineHeight +
+          ';text-align:' + s.align + ';">' + escapeHtml(s.text).replace(/\n/g, '<br>') + '</div>' +
+          '<span class="h br"></span><button class="del" title="삭제">×</button>';
+      } else {
+        el.innerHTML = '<img src="' + sigURL + '" alt="서명">' +
+                       '<span class="h br"></span>' +
+                       '<button class="del" title="삭제">×</button>';
+      }
       s.el = el;
       bindDrag(el, s);
       $('paper').appendChild(el);
@@ -1104,6 +1240,19 @@
         s.y = Math.max(0, Math.min(ph - s.h, oy + dy));
         el.style.left = s.x + 'px';
         el.style.top = s.y + 'px';
+      } else if (s.type === 'text') {
+        // 텍스트는 가로세로 비율을 고정하지 않고, 가로 변화 비율만큼 글자 크기도 같이 키운다
+        let w = Math.max(40, ow + dx);
+        w = Math.min(w, pw - s.x);
+        let h = Math.max(24, oh + dy);
+        h = Math.min(h, ph - s.y);
+        const growRatio = w / ow;
+        s.w = w; s.h = h;
+        s.fontSize = Math.max(8, Math.min(120, Math.round(s.fontSize * growRatio)));
+        el.style.width = w + 'px';
+        el.style.height = h + 'px';
+        const txt = el.querySelector('.txt');
+        if (txt) txt.style.fontSize = s.fontSize + 'px';
       } else {
         // 가로세로 비율을 지키며 키운다
         const ratio = oh / ow;
@@ -1169,37 +1318,84 @@
 
   async function save() {
     if (!pdfBytes) { toast('먼저 PDF를 열어주세요'); return; }
-    if (!stamps.length) { toast('배치된 서명이 없습니다'); return; }
+    if (!stamps.length) { toast('배치된 서명·텍스트가 없습니다'); return; }
     if (!window.PDFLib) { toast('PDF 저장 기능을 불러오지 못했습니다'); return; }
 
-    busy(true, 'PDF 만드는 중…');
+    const hasImageStamp = stamps.some(function (s) { return s.type !== 'text'; });
+    const hasTextStamp = stamps.some(function (s) { return s.type === 'text'; });
+    if (hasImageStamp && !sigURL) { toast('먼저 서명 이미지를 올려주세요'); return; }
+
+    busy(true, hasTextStamp ? '한글 글꼴을 불러오는 중…' : 'PDF 만드는 중…');
     try {
       const doc = await PDFLib.PDFDocument.load(pdfBytes.slice(0));
 
-      // dataURL 에서 바이트만 뽑아낸다
-      const b64 = sigURL.split(',')[1];
-      const bin = atob(b64);
-      const bytes = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      const png = await doc.embedPng(bytes);
+      let png = null;
+      if (hasImageStamp) {
+        // dataURL 에서 바이트만 뽑아낸다
+        const b64 = sigURL.split(',')[1];
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        png = await doc.embedPng(bytes);
+      }
+
+      if (hasTextStamp) {
+        if (!window.fontkit) throw new Error('한글 글꼴 엔진을 불러오지 못했습니다');
+        doc.registerFontkit(window.fontkit);
+      }
+
+      const embeddedFonts = {};
+      async function embedKoFont(famKey, bold) {
+        const key = famKey + (bold ? '_b' : '_r');
+        if (embeddedFonts[key]) return embeddedFonts[key];
+        let bytes = koFontBytesCache[key];
+        if (!bytes) {
+          const url = (KO_FONTS[famKey] || KO_FONTS.gothic)[bold ? 'bold' : 'regular'];
+          const resp = await fetch(url);
+          if (!resp.ok) throw new Error('한글 글꼴을 내려받지 못했습니다');
+          bytes = await resp.arrayBuffer();
+          koFontBytesCache[key] = bytes;
+        }
+        const font = await doc.embedFont(bytes, { subset: false });
+        embeddedFonts[key] = font;
+        return font;
+      }
 
       const pages = doc.getPages();
 
-      stamps.forEach(function (s) {
+      for (const s of stamps) {
         const pg = pages[s.page - 1];
-        if (!pg) return;
+        if (!pg) continue;
         const size = pg.getSize();
-        // 그 서명을 배치할 때의 배율로 되돌려야 페이지 크기가 달라도 어긋나지 않는다
+        // 그 스탬프를 배치할 때의 배율로 되돌려야 페이지 크기가 달라도 어긋나지 않는다
         const scale = s.scale || viewScale();
 
-        const w = s.w / scale;
-        const h = s.h / scale;
-        const x = s.x / scale;
-        // 화면은 위쪽이 원점, PDF 는 아래쪽이 원점이라 Y 를 뒤집는다
-        const y = size.height - (s.y / scale) - h;
-
-        pg.drawImage(png, { x: x, y: y, width: w, height: h });
-      });
+        if (s.type === 'text') {
+          busy(true, 'PDF 만드는 중…');
+          const font = await embedKoFont(s.fontFamily, s.bold);
+          const fSize = s.fontSize / scale;
+          const boxW = s.w / scale;
+          const boxX = s.x / scale;
+          const topY = size.height - (s.y / scale);
+          const lineGap = fSize * (s.lineHeight || 1.4);
+          const color = hexToRgbLib(s.color);
+          String(s.text || '').split('\n').forEach(function (line, i) {
+            const lw = font.widthOfTextAtSize(line, fSize);
+            let lx = boxX;
+            if (s.align === 'center') lx = boxX + (boxW - lw) / 2;
+            else if (s.align === 'right') lx = boxX + boxW - lw;
+            const ly = topY - (i + 1) * lineGap + (lineGap - fSize) * 0.35;
+            pg.drawText(line, { x: lx, y: ly, size: fSize, font: font, color: color });
+          });
+        } else {
+          const w = s.w / scale;
+          const h = s.h / scale;
+          const x = s.x / scale;
+          // 화면은 위쪽이 원점, PDF 는 아래쪽이 원점이라 Y 를 뒤집는다
+          const y = size.height - (s.y / scale) - h;
+          pg.drawImage(png, { x: x, y: y, width: w, height: h });
+        }
+      }
 
       const out = await doc.save();
       const blob = new Blob([out], { type: 'application/pdf' });
@@ -1214,7 +1410,8 @@
       setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
       toast('저장했습니다');
     } catch (e) {
-      toast('저장 중 문제가 발생했습니다');
+      console.error(e);
+      toast('저장 중 문제가 발생했습니다' + (e && e.message ? ' · ' + e.message : ''));
     } finally { busy(false); }
   }
 
@@ -1467,6 +1664,31 @@
 <a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
 </div></section>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">텍스트 추가 기능 신설 — 서명 이미지 외에 날짜·이름 등 한글 텍스트를 직접 입력해 배치할 수 있음. 고딕·명조 폰트, 굵게, 좌/가운데/오른쪽 정렬, 글자 크기·줄 간격 조절 지원. 서명처럼 끌어서 옮기거나 모서리로 크기(글자 크기 포함)를 바꿀 수 있음. 한글 폰트는 저장 시에만 내려받아 PDF에 실제로 내장되므로 어느 PDF 뷰어에서도 글자가 깨지지 않음</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">배경제거 감도 조절, 회전, 카메라 촬영 기능 추가. 모바일 UI 개선</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-28</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -1476,7 +1698,6 @@
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
-
 
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
@@ -1561,31 +1782,16 @@
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
-<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
-<style>
-.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
-.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
-  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
-  font-family:ui-monospace,monospace}
-.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
-.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
-.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
-.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
-  border-top:1px solid #e2e8f0}
-.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
-  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
-.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
-.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
-.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
-.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
-</style>
-<div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-08-30</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">배경제거 감도 조절, 회전, 카메라 촬영 기능 추가. 모바일 UI 개선</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-28</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
-</div>
-<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+
+
+
 
 
 
