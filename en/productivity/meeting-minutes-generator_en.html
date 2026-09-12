@@ -452,6 +452,7 @@
     </form>
 
     <div class="actions">
+      <button class="btn-secondary btn-wide" id="copyBodyBtn">📋 Copy Body (keeps formatting in Google Docs/Word)</button>
       <button class="btn-secondary btn-wide" id="saveCsvBtn">Save as CSV</button>
       <button class="btn-secondary" id="saveDocxBtn">Save DOCX (current)</button>
       <button class="btn-secondary" id="saveDocxAllBtn">Save All as DOCX</button>
@@ -564,11 +565,6 @@
       ? tags.map(t=>`<span class="tag-chip">${escapeHtml(t)}</span>`).join("")
       : "";
 
-    const renderLineHtml = (text) => splitTextForLinks(text).map(p => p.url
-      ? `<a href="${escapeHtml(p.text)}" target="_blank" rel="noopener">${escapeHtml(p.text)}</a>`
-      : escapeHtml(p.text)
-    ).join("");
-
     const sectionHtml = (title, rawText, cls) => {
       const items = parseItems(rawText);
       const body = items.length
@@ -608,6 +604,108 @@
   function escapeHtml(s){
     return String(s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   }
+  function renderLineHtml(text){
+    return splitTextForLinks(text).map(p => p.url
+      ? `<a href="${escapeHtml(p.text)}" target="_blank" rel="noopener">${escapeHtml(p.text)}</a>`
+      : escapeHtml(p.text)
+    ).join("");
+  }
+
+  // ---------- copy body (keeps formatting for Google Docs/Word) ----------
+  function sectionHtmlListForClipboard(rawText){
+    const items = parseItems(rawText);
+    if(!items.length) return `<p style="color:#999999;margin:4px 0 12px;">No content</p>`;
+    let html = "";
+    let i = 0;
+    while(i < items.length){
+      const it = items[i];
+      if(it.type === "circle"){
+        html += `<p style="font-weight:700;margin:10px 0 4px;">${renderLineHtml(it.text)}</p>`;
+        i++;
+        continue;
+      }
+      html += `<ul style="margin:0 0 4px 0;padding-left:20px;"><li>${renderLineHtml(it.text)}`;
+      i++;
+      if(i < items.length && items[i].type === "sub"){
+        html += `<ul style="margin:2px 0;padding-left:18px;">`;
+        while(i < items.length && items[i].type === "sub"){
+          html += `<li>${renderLineHtml(items[i].text)}</li>`;
+          i++;
+        }
+        html += `</ul>`;
+      }
+      html += `</li></ul>`;
+    }
+    return html;
+  }
+  function buildClipboardHtml(rec){
+    const title = escapeHtml(rec.team ? rec.team+" Meeting Minutes" : "Meeting Minutes");
+    const tagsLine = tagsToArray(rec.tags).join(" ");
+    let html = `<div style="font-family:sans-serif;font-size:14px;color:#1E2A32;">`;
+    html += `<h1 style="text-align:center;font-size:22px;margin:0 0 6px;">${title}</h1>`;
+    if(tagsLine) html += `<p style="text-align:center;color:#3A6B63;font-weight:700;margin:0 0 14px;">${escapeHtml(tagsLine)}</p>`;
+    html += `<table style="width:100%;border-collapse:collapse;margin:0 0 16px;" border="1" cellpadding="8" cellspacing="0">`;
+    html += `<tr><td style="background:#F2F0EA;font-weight:700;width:15%;">Date/Time</td><td style="width:35%;">${escapeHtml(formatDisplayDateTime(rec.datetime))}</td><td style="background:#F2F0EA;font-weight:700;width:15%;">Location</td><td style="width:35%;">${escapeHtml(rec.place)}</td></tr>`;
+    html += `<tr><td style="background:#F2F0EA;font-weight:700;">Project/Team</td><td>${escapeHtml(rec.team)}</td><td style="background:#F2F0EA;font-weight:700;">Attendees</td><td>${escapeHtml(rec.attendees)}</td></tr>`;
+    html += `<tr><td style="background:#F2F0EA;font-weight:700;">Topic</td><td colspan="3">${escapeHtml(rec.topic)}</td></tr>`;
+    html += `</table>`;
+    html += `<h2 style="font-size:16px;border-bottom:2px solid #1E2A32;padding-bottom:4px;">1. Progress</h2>${sectionHtmlListForClipboard(rec.report)}`;
+    html += `<h2 style="font-size:16px;border-bottom:2px solid #1E2A32;padding-bottom:4px;">2. Key Agenda</h2>${sectionHtmlListForClipboard(rec.discuss)}`;
+    html += `<h2 style="font-size:16px;border-bottom:2px solid #C97F3A;padding-bottom:4px;">3. Action Items</h2>${sectionHtmlListForClipboard(rec.action)}`;
+    html += `<p style="text-align:right;margin-top:24px;">Author&nbsp; <b>${escapeHtml(rec.writer)}</b>${rec.writerTitle ? "  /  "+escapeHtml(rec.writerTitle) : ""}${rec.writerOrg ? "<br>"+escapeHtml(rec.writerOrg) : ""}</p>`;
+    html += `</div>`;
+    return html;
+  }
+  function buildClipboardPlainText(rec){
+    const lines = [];
+    lines.push(rec.team ? rec.team+" Meeting Minutes" : "Meeting Minutes");
+    const tagsLine = tagsToArray(rec.tags).join(" ");
+    if(tagsLine) lines.push(tagsLine);
+    lines.push("");
+    lines.push("Date/Time: "+formatDisplayDateTime(rec.datetime));
+    lines.push("Location: "+(rec.place||""));
+    lines.push("Project/Team: "+(rec.team||""));
+    lines.push("Attendees: "+(rec.attendees||""));
+    lines.push("Topic: "+(rec.topic||""));
+    lines.push("");
+    lines.push("1. Progress");
+    lines.push(rec.report||"");
+    lines.push("");
+    lines.push("2. Key Agenda");
+    lines.push(rec.discuss||"");
+    lines.push("");
+    lines.push("3. Action Items");
+    lines.push(rec.action||"");
+    lines.push("");
+    let writerLine = "Author "+(rec.writer||"");
+    if(rec.writerTitle) writerLine += " / "+rec.writerTitle;
+    lines.push(writerLine);
+    if(rec.writerOrg) lines.push(rec.writerOrg);
+    return lines.join("\n");
+  }
+  $("copyBodyBtn").addEventListener("click", async () => {
+    readFormIntoRecord();
+    const rec = records[currentIndex];
+    const html = buildClipboardHtml(rec);
+    const text = buildClipboardPlainText(rec);
+    const btn = $("copyBodyBtn");
+    const original = btn.textContent;
+    try{
+      if(navigator.clipboard && window.ClipboardItem){
+        const blobHtml = new Blob([html], { type:"text/html" });
+        const blobText = new Blob([text], { type:"text/plain" });
+        await navigator.clipboard.write([ new ClipboardItem({ "text/html": blobHtml, "text/plain": blobText }) ]);
+      } else if(navigator.clipboard && navigator.clipboard.writeText){
+        await navigator.clipboard.writeText(text);
+      } else {
+        throw new Error("clipboard API unavailable");
+      }
+      btn.textContent = "✅ Copied! Paste into Google Docs or Word";
+      setTimeout(()=>{ btn.textContent = original; }, 2000);
+    }catch(err){
+      alert("Clipboard copy failed. Please check your browser permissions.");
+    }
+  });
 
   function updatePagerUI(){
     const multi = records.length > 1;
@@ -961,15 +1059,6 @@
 <a class="tk-guide-home" href="https://mnledu.com/">See all tools →</a>
 </div></section>
 <!-- TOOLKIT:GUIDE_END -->
-<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
-<script>
-(function(){
-  var flagKey = "mnledu_visited_" + "meeting-minutes-generator";
-  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
-  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "meeting-minutes-generator").catch(function(){});
-})();
-</script>
-<!-- TOOLKIT:VIEWCOUNT_END -->
 <!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
 <style>
 .tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
@@ -991,10 +1080,20 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-10</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-09-11</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">본문 복사 버튼 추가 — 구글독스·워드에 붙여넣으면 표·글머리·굵게 서식이 그대로 유지되는 리치 텍스트(HTML) 클립보드 복사를 지원</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "meeting-minutes-generator";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "meeting-minutes-generator").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;

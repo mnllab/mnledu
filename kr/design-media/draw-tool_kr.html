@@ -111,7 +111,7 @@
     padding:12px 14px;margin-bottom:14px;
     display:flex;flex-wrap:wrap;gap:10px;align-items:center;
   }
-  .tool-group{display:flex;gap:6px;align-items:center;}
+  .tool-group{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
   .tool-btn{
     border:1px solid var(--line);background:#fff;border-radius:8px;
     width:38px;height:38px;font-size:16px;display:flex;align-items:center;justify-content:center;
@@ -123,6 +123,17 @@
   .thickness-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft);}
   .thickness-wrap input[type=range]{width:110px;}
   #thicknessVal{width:26px;text-align:right;font-weight:700;color:var(--ink);}
+  .size-preview{width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .size-preview span{display:block;border-radius:50%;background:var(--ink);}
+  .tool-options{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft);}
+  .seg-btn-group{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .seg-btn{border:none;background:#fff;padding:0 10px;height:32px;font-size:12px;color:var(--ink-soft);border-right:1px solid var(--line);}
+  .seg-btn:last-child{border-right:none;}
+  .seg-btn.active{background:var(--ink);color:#fff;}
+  .bold-btn{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:800;color:var(--ink-soft);}
+  .bold-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .fontsize-wrap{display:flex;align-items:center;gap:6px;}
+  .fontsize-wrap input[type=number]{width:52px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12px;}
   .swatches{display:flex;gap:5px;}
   .swatch{
     width:22px;height:22px;border-radius:50%;border:2px solid #fff;
@@ -149,13 +160,22 @@
     background:#fff;border:1px solid var(--line);border-radius:12px;
     padding:14px;display:flex;justify-content:center;position:relative;overflow:auto;
   }
+  .canvas-wrap{position:relative;display:inline-block;line-height:0;max-width:100%;}
   #board{
     background:#fff;border:1px solid var(--line);border-radius:4px;
-    max-width:100%;touch-action:none;cursor:crosshair;
+    max-width:100%;touch-action:none;cursor:crosshair;display:block;
+  }
+  .brush-cursor{
+    position:absolute;top:0;left:0;pointer-events:none;
+    border:1.5px solid var(--ink);border-radius:50%;
+    background:rgba(30,42,50,0.08);
+    transform:translate(-50%,-50%);
+    display:none;z-index:5;
   }
   .text-input-layer{
     position:absolute;border:1px dashed var(--accent);background:rgba(255,255,255,0.9);
-    font-family:'Pretendard',sans-serif;outline:none;padding:2px 4px;min-width:60px;
+    font-family:'Pretendard',sans-serif;outline:none;padding:2px 4px;min-width:60px;z-index:6;
+    line-height:1.25;resize:none;overflow:hidden;
   }
 
   .guide{margin-top:26px;font-size:13.5px;line-height:1.8;color:var(--ink-soft);}
@@ -184,14 +204,32 @@
     <div class="tool-group">
       <button class="tool-btn active" data-tool="pen" title="펜">✏️</button>
       <button class="tool-btn" data-tool="eraser" title="지우개">🧽</button>
+      <button class="tool-btn" data-tool="line" title="직선">📏</button>
+      <button class="tool-btn" data-tool="rect" title="사각형">▭</button>
+      <button class="tool-btn" data-tool="ellipse" title="원·타원">◯</button>
       <button class="tool-btn" data-tool="fill" title="채우기">🪣</button>
       <button class="tool-btn" data-tool="text" title="텍스트">🅣</button>
+      <button class="tool-btn" data-tool="eyedropper" title="색상 추출">💧</button>
     </div>
     <div class="divider"></div>
-    <div class="thickness-wrap">
+    <div class="thickness-wrap" id="thicknessWrap">
       <span>굵기</span>
       <input type="range" id="thickness" min="1" max="40" value="4">
       <span id="thicknessVal">4</span>
+      <span class="size-preview"><span id="sizeDot"></span></span>
+    </div>
+    <div class="tool-options" id="shapeOptions" style="display:none;">
+      <div class="seg-btn-group">
+        <button type="button" class="seg-btn active" id="shapeOutlineBtn">윤곽선</button>
+        <button type="button" class="seg-btn" id="shapeFillBtn">채우기</button>
+      </div>
+    </div>
+    <div class="tool-options" id="textOptions" style="display:none;">
+      <div class="fontsize-wrap">
+        <span>글자크기</span>
+        <input type="number" id="fontSize" min="10" max="160" value="28">
+      </div>
+      <button type="button" class="bold-btn" id="boldBtn" title="굵게">B</button>
     </div>
     <div class="divider"></div>
     <div class="swatches" id="swatches"></div>
@@ -208,18 +246,23 @@
   </div>
 
   <div class="canvas-stage">
-    <canvas id="board" width="1000" height="620"></canvas>
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="board" width="1000" height="620"></canvas>
+      <div class="brush-cursor" id="brushCursor"></div>
+    </div>
   </div>
 
   <!-- TOOLKIT:GUIDE_START -->
   <div class="guide">
     <h2>사용 방법</h2>
     <ul>
-      <li>왼쪽 도구 모음에서 펜·지우개·채우기·텍스트 중 원하는 도구를 선택하세요.</li>
+      <li>왼쪽 도구 모음에서 펜·지우개·직선·사각형·원·채우기·텍스트·색상 추출 중 원하는 도구를 선택하세요.</li>
       <li>색상 팔레트를 클릭하거나 사용자 지정 색상 버튼으로 원하는 색을 고를 수 있습니다.</li>
-      <li>굵기 슬라이더로 선 두께(텍스트 도구 사용 시에는 글자 크기)를 조절합니다.</li>
+      <li>굵기 슬라이더로 선 두께를 조절하며, 옆의 원형 표시로 실제 크기를 미리 확인할 수 있습니다. 캔버스 위에서도 브러시 크기만큼 원형 커서가 따라다닙니다.</li>
+      <li>사각형·원 도구는 클릭한 채로 드래그해 그리며, 윤곽선·채우기 중 채우는 방식을 고를 수 있습니다.</li>
       <li>채우기 도구는 클릭한 영역과 이어진 같은 색 영역을 한 번에 채웁니다.</li>
-      <li>텍스트 도구는 캔버스를 클릭하면 입력창이 나타나며, 입력 후 다른 곳을 클릭하면 그림에 적용됩니다.</li>
+      <li>텍스트 도구는 캔버스를 클릭하면 입력창이 나타나며, 글자 크기와 굵게 여부를 미리 정한 뒤 입력하고 다른 곳을 클릭하면 그림에 적용됩니다.</li>
+      <li>색상 추출(스포이드) 도구로 캔버스 위 색을 클릭하면 그 색이 바로 현재 색상으로 지정됩니다.</li>
       <li>실행취소·다시실행은 최근 25단계까지 지원합니다.</li>
       <li>완성한 그림은 PNG·JPG로 저장하거나, 클립보드 복사 버튼으로 바로 다른 프로그램에 붙여넣을 수 있습니다.</li>
     </ul>
@@ -229,15 +272,6 @@
     <div class="faq-item"><b>Q. 클립보드 복사가 안 될 때는 어떻게 하나요?</b><br>A. 브라우저나 환경 제약으로 복사가 막힐 수 있습니다. 이 경우 PNG 저장 버튼을 이용해주세요.</div>
   </div>
   <!-- TOOLKIT:GUIDE_END -->
-<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
-<script>
-(function(){
-  var flagKey = "mnledu_visited_" + "draw-tool";
-  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
-  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "draw-tool").catch(function(){});
-})();
-</script>
-<!-- TOOLKIT:VIEWCOUNT_END -->
 <!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
 <style>
 .tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
@@ -259,10 +293,21 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-10</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (DESIGN &amp; MEDIA) — 펜·지우개·채우기·텍스트 도구, 실행취소/다시실행, PNG·JPG 저장, 클립보드 복사</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-11</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">텍스트 도구가 입력해도 글자가 안 보이던 버그 수정(캔버스 래퍼의 line-height 상속 문제). 텍스트 입력창이 여러 줄 입력 시 자동으로 높이가 늘어나도록 개선</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">직선·사각형·원(윤곽선/채우기) 도형 도구와 색상 추출(스포이드) 추가. 텍스트 도구가 동작하지 않던 버그 수정, 글자 크기·굵게 옵션 추가. 브러시 크기를 캔버스 위 원형 커서로 표시하도록 개선</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (DESIGN &amp; MEDIA) — 펜·지우개·채우기·텍스트 도구, 실행취소/다시실행, PNG·JPG 저장, 클립보드 복사</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "draw-tool";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "draw-tool").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
@@ -358,14 +403,25 @@
   const canvas = document.getElementById("board");
   const ctx = canvas.getContext("2d", { willReadFrequently:true });
   const $ = (id) => document.getElementById(id);
+  const canvasWrap = $("canvasWrap");
+  const brushCursor = $("brushCursor");
 
   const PALETTE = ["#1E2A32","#B0453A","#C97F3A","#D8B84A","#3A6B63","#2F6FA8","#7A4FA3","#FFFFFF"];
+  const STROKE_TOOLS = ["pen","eraser","line","rect","ellipse"];
 
   let tool = "pen";
   let color = "#1E2A32";
   let thickness = 4;
+  let fontSize = 28;
+  let fontBold = false;
+  let shapeFilled = false;
+
   let drawing = false;
+  let shapeDragging = false;
+  let dragStart = null;
+  let dragSnapshot = null;
   let lastX = 0, lastY = 0;
+
   let undoStack = [];
   let redoStack = [];
   const MAX_HISTORY = 25;
@@ -433,23 +489,60 @@
     pushHistory();
   });
 
+  // ---------- 도구 옵션 UI 갱신 ----------
+  function updateToolOptionsUI(){
+    const showThickness = STROKE_TOOLS.indexOf(tool) !== -1;
+    $("thicknessWrap").style.display = showThickness ? "flex" : "none";
+    $("shapeOptions").style.display = (tool==="rect"||tool==="ellipse") ? "flex" : "none";
+    $("textOptions").style.display = (tool==="text") ? "flex" : "none";
+    canvas.style.cursor = (tool==="text") ? "text" : (tool==="eyedropper" ? "copy" : "crosshair");
+    cancelTextInput();
+  }
+  function updateSizeDot(){
+    const dot = $("sizeDot");
+    const d = Math.min(24, Math.max(2, thickness));
+    dot.style.width = d+"px";
+    dot.style.height = d+"px";
+  }
+
   // ---------- 도구 선택 ----------
   document.querySelectorAll(".tool-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       tool = btn.dataset.tool;
       document.querySelectorAll(".tool-btn").forEach(b=>b.classList.remove("active"));
       btn.classList.add("active");
-      cancelTextInput();
+      updateToolOptionsUI();
     });
   });
 
   $("thickness").addEventListener("input", (e) => {
     thickness = parseInt(e.target.value, 10);
     $("thicknessVal").textContent = thickness;
+    updateSizeDot();
   });
   $("colorPicker").addEventListener("input", (e) => {
     color = e.target.value;
     document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));
+  });
+
+  $("shapeOutlineBtn").addEventListener("click", () => {
+    shapeFilled = false;
+    $("shapeOutlineBtn").classList.add("active");
+    $("shapeFillBtn").classList.remove("active");
+  });
+  $("shapeFillBtn").addEventListener("click", () => {
+    shapeFilled = true;
+    $("shapeFillBtn").classList.add("active");
+    $("shapeOutlineBtn").classList.remove("active");
+  });
+
+  $("fontSize").addEventListener("input", (e) => {
+    const v = parseInt(e.target.value, 10);
+    fontSize = isNaN(v) ? 28 : Math.max(10, Math.min(160, v));
+  });
+  $("boldBtn").addEventListener("click", () => {
+    fontBold = !fontBold;
+    $("boldBtn").classList.toggle("active", fontBold);
   });
 
   // ---------- 좌표 변환 ----------
@@ -462,12 +555,36 @@
     return { x:(cx-rect.left)*scaleX, y:(cy-rect.top)*scaleY };
   }
 
-  // ---------- 펜 / 지우개 ----------
+  // ---------- 브러시 크기 커서 ----------
+  function updateBrushCursor(e){
+    if(STROKE_TOOLS.indexOf(tool) === -1){ brushCursor.style.display = "none"; return; }
+    const wrapRect = canvasWrap.getBoundingClientRect();
+    const scaleX = wrapRect.width / canvas.width;
+    const size = Math.max(2, thickness) * scaleX;
+    brushCursor.style.width = size + "px";
+    brushCursor.style.height = size + "px";
+    brushCursor.style.left = (e.clientX - wrapRect.left) + "px";
+    brushCursor.style.top = (e.clientY - wrapRect.top) + "px";
+    brushCursor.style.display = "block";
+  }
+  canvasWrap.addEventListener("pointerleave", () => { brushCursor.style.display = "none"; });
+
+  // ---------- 펜 / 지우개 / 도형 시작 ----------
   function startDraw(e){
     if(tool === "fill"){ doFill(e); return; }
     if(tool === "text"){ openTextInput(e); return; }
-    drawing = true;
+    if(tool === "eyedropper"){ pickColor(e); return; }
+
     const p = getPos(e);
+
+    if(tool === "line" || tool === "rect" || tool === "ellipse"){
+      shapeDragging = true;
+      dragStart = p;
+      dragSnapshot = ctx.getImageData(0,0,canvas.width,canvas.height);
+      return;
+    }
+
+    drawing = true;
     lastX = p.x; lastY = p.y;
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
@@ -478,21 +595,66 @@
     ctx.strokeStyle = tool === "eraser" ? "#FFFFFF" : color;
     ctx.stroke();
   }
+
+  function handleMove(e){
+    updateBrushCursor(e);
+    if(drawing) moveDraw(e);
+    else if(shapeDragging) moveShape(e);
+  }
+
   function moveDraw(e){
-    if(!drawing) return;
     const p = getPos(e);
     ctx.lineTo(p.x, p.y);
     ctx.stroke();
     lastX = p.x; lastY = p.y;
   }
+
+  function drawShapePreview(a, b){
+    ctx.lineWidth = thickness;
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    if(tool === "line"){
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    } else if(tool === "rect"){
+      const x = Math.min(a.x,b.x), y = Math.min(a.y,b.y);
+      const w = Math.abs(b.x-a.x), h = Math.abs(b.y-a.y);
+      if(shapeFilled) ctx.fillRect(x,y,w,h); else ctx.strokeRect(x,y,w,h);
+    } else if(tool === "ellipse"){
+      const cx = (a.x+b.x)/2, cy = (a.y+b.y)/2;
+      const rx = Math.max(Math.abs(b.x-a.x)/2, 0.01), ry = Math.max(Math.abs(b.y-a.y)/2, 0.01);
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2);
+      if(shapeFilled) ctx.fill(); else ctx.stroke();
+    }
+  }
+
+  function moveShape(e){
+    const p = getPos(e);
+    ctx.putImageData(dragSnapshot, 0, 0);
+    drawShapePreview(dragStart, p);
+  }
+
   function endDraw(){
-    if(!drawing) return;
-    drawing = false;
-    pushHistory();
+    if(drawing){
+      drawing = false;
+      pushHistory();
+      return;
+    }
+    if(shapeDragging){
+      shapeDragging = false;
+      dragSnapshot = null;
+      dragStart = null;
+      pushHistory();
+    }
   }
 
   canvas.addEventListener("pointerdown", startDraw);
-  canvas.addEventListener("pointermove", moveDraw);
+  canvas.addEventListener("pointermove", handleMove);
   window.addEventListener("pointerup", endDraw);
 
   // ---------- 채우기(flood fill) ----------
@@ -527,29 +689,45 @@
     pushHistory();
   }
 
+  // ---------- 색상 추출(스포이드) ----------
+  function pickColor(e){
+    const p = getPos(e);
+    const x = Math.floor(p.x), y = Math.floor(p.y);
+    if(x<0||y<0||x>=canvas.width||y>=canvas.height) return;
+    const d = ctx.getImageData(x,y,1,1).data;
+    const hex = "#" + [d[0],d[1],d[2]].map(v=>v.toString(16).padStart(2,"0")).join("");
+    color = hex;
+    $("colorPicker").value = hex;
+    document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));
+  }
+
   // ---------- 텍스트 도구 ----------
   let activeTextInput = null;
   function openTextInput(e){
     cancelTextInput();
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = rect.width / canvas.width;
-    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    const wrapRect = canvasWrap.getBoundingClientRect();
+    const scaleX = wrapRect.width / canvas.width;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - wrapRect.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - wrapRect.top;
     const p = getPos(e);
 
     const input = document.createElement("textarea");
     input.className = "text-input-layer";
     input.style.left = cx + "px";
-    input.style.top = (cy - (thickness*4*scaleX)/2) + "px";
-    input.style.fontSize = Math.max(12, thickness*4*scaleX) + "px";
+    input.style.top = (cy - (fontSize*scaleX)/2) + "px";
+    input.style.fontSize = Math.max(10, fontSize*scaleX) + "px";
+    input.style.fontWeight = fontBold ? "700" : "400";
     input.style.color = color;
     input.rows = 1;
-    canvas.parentElement.style.position = "relative";
-    canvas.parentElement.appendChild(input);
+    canvasWrap.appendChild(input);
     input.focus();
     activeTextInput = { el:input, x:p.x, y:p.y };
 
     input.addEventListener("blur", () => commitTextInput());
+    input.addEventListener("input", () => {
+      input.style.height = "auto";
+      input.style.height = input.scrollHeight + "px";
+    });
     input.addEventListener("keydown", (ev) => {
       if(ev.key === "Enter" && !ev.shiftKey){ ev.preventDefault(); input.blur(); }
       if(ev.key === "Escape"){ cancelTextInput(); }
@@ -560,8 +738,7 @@
     const { el, x, y } = activeTextInput;
     const value = el.value;
     if(value.trim()){
-      const fontSize = Math.max(12, thickness*4);
-      ctx.font = `${fontSize}px 'Pretendard', sans-serif`;
+      ctx.font = (fontBold ? "700 " : "400 ") + fontSize + "px 'Pretendard', sans-serif";
       ctx.fillStyle = color;
       ctx.textBaseline = "top";
       value.split("\n").forEach((line, i) => {
@@ -621,6 +798,8 @@
   // ---------- init ----------
   buildSwatches();
   initCanvas();
+  updateToolOptionsUI();
+  updateSizeDot();
 })();
 </script>
 </body>
