@@ -387,12 +387,12 @@ Jamie	34	Engineering"></textarea>
         } else field += c;
       } else {
         if (c === '"') inQuotes = true;
-        else if (c === delimiter) { row.push(field); field = ''; }
-        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+        else if (c === delimiter) { row.push(field.trim()); field = ''; }
+        else if (c === '\n') { row.push(field.trim()); rows.push(row); row = []; field = ''; }
         else field += c;
       }
     }
-    if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+    if (field.length > 0 || row.length > 0) { row.push(field.trim()); rows.push(row); }
     return rows.filter(r => !(r.length === 1 && r[0].trim() === ''));
   }
   function detectAndParse(text) {
@@ -1126,10 +1126,11 @@ async function buildHwpxBlob(state) {
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">한글 최적화 클립보드 복사가 일부 환경에서 한글(HWP)에 표 없이 텍스트로만 붙여지는 문제 개선 — 복사되는 HTML을 완전한 문서 구조(html/body)로 감싸 인식률을 높임. 단, 클립보드 방식은 프로그램별 붙여넣기 해석 차이가 있어 완벽히 보장되지 않으며, 표 서식을 확실히 유지하려면 HWPX 다운로드 버튼 사용을 권장</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">'글자처럼 취급' 옵션 아래 안내문 추가 — 큰 표에서 한글(HWP)이 느려지거나 멈출 때 체크 해제하면 더 가볍게 저장되는 트레이드오프를 설명</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.3 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">TSV·CSV 붙여넣기 파싱 시 각 셀 끝에 불필요한 공백이 그대로 남아 HWPX·DOCX·XLSX 저장 결과에 공백이 들어가던 문제 수정 — 마크다운 표 파싱과 동일하게 셀 값을 trim 처리</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">한글 최적화 클립보드 복사가 일부 환경에서 한글(HWP)에 표 없이 텍스트로만 붙여지는 문제 개선 — 복사되는 HTML을 완전한 문서 구조(html/body)로 감싸 인식률을 높임. 단, 클립보드 방식은 프로그램별 붙여넣기 해석 차이가 있어 완벽히 보장되지 않으며, 표 서식을 확실히 유지하려면 HWPX 다운로드 버튼 사용을 권장</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">'글자처럼 취급' 옵션 아래 안내문 추가 — 큰 표에서 한글(HWP)이 느려지거나 멈출 때 체크 해제하면 더 가볍게 저장되는 트레이드오프를 설명</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
