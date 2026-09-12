@@ -172,11 +172,12 @@
     transform:translate(-50%,-50%);
     display:none;z-index:5;
   }
-  .text-input-layer{
-    position:absolute;border:1px dashed var(--accent);background:rgba(255,255,255,0.9);
-    font-family:'Pretendard',sans-serif;outline:none;padding:2px 4px;min-width:60px;z-index:6;
-    line-height:1.25;resize:none;overflow:hidden;
+  #textInputBox{
+    border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-size:13px;
+    font-family:'Pretendard',sans-serif;min-width:160px;max-width:260px;resize:vertical;
+    line-height:1.35;
   }
+  #textInputBox:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
 
   .guide{margin-top:26px;font-size:13.5px;line-height:1.8;color:var(--ink-soft);}
   .guide h2{font-size:15px;color:var(--ink);margin-bottom:8px;}
@@ -225,6 +226,7 @@
       </div>
     </div>
     <div class="tool-options" id="textOptions" style="display:none;">
+      <textarea id="textInputBox" placeholder="입력할 텍스트 (여러 줄 가능)" rows="1"></textarea>
       <div class="fontsize-wrap">
         <span>글자크기</span>
         <input type="number" id="fontSize" min="10" max="160" value="28">
@@ -261,7 +263,7 @@
       <li>굵기 슬라이더로 선 두께를 조절하며, 옆의 원형 표시로 실제 크기를 미리 확인할 수 있습니다. 캔버스 위에서도 브러시 크기만큼 원형 커서가 따라다닙니다.</li>
       <li>사각형·원 도구는 클릭한 채로 드래그해 그리며, 윤곽선·채우기 중 채우는 방식을 고를 수 있습니다.</li>
       <li>채우기 도구는 클릭한 영역과 이어진 같은 색 영역을 한 번에 채웁니다.</li>
-      <li>텍스트 도구는 캔버스를 클릭하면 입력창이 나타나며, 글자 크기와 굵게 여부를 미리 정한 뒤 입력하고 다른 곳을 클릭하면 그림에 적용됩니다.</li>
+      <li>텍스트 도구는 툴바의 입력창에 글자를 먼저 적고, 캔버스에서 원하는 위치를 클릭하면 그 자리에 찍힙니다. 글자 크기·굵게는 찍기 전에 미리 정해 주세요.</li>
       <li>색상 추출(스포이드) 도구로 캔버스 위 색을 클릭하면 그 색이 바로 현재 색상으로 지정됩니다.</li>
       <li>실행취소·다시실행은 최근 25단계까지 지원합니다.</li>
       <li>완성한 그림은 PNG·JPG로 저장하거나, 클립보드 복사 버튼으로 바로 다른 프로그램에 붙여넣을 수 있습니다.</li>
@@ -293,10 +295,11 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-11</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">텍스트 도구가 입력해도 글자가 안 보이던 버그 수정(캔버스 래퍼의 line-height 상속 문제). 텍스트 입력창이 여러 줄 입력 시 자동으로 높이가 늘어나도록 개선</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">직선·사각형·원(윤곽선/채우기) 도형 도구와 색상 추출(스포이드) 추가. 텍스트 도구가 동작하지 않던 버그 수정, 글자 크기·굵게 옵션 추가. 브러시 크기를 캔버스 위 원형 커서로 표시하도록 개선</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (DESIGN &amp; MEDIA) — 펜·지우개·채우기·텍스트 도구, 실행취소/다시실행, PNG·JPG 저장, 클립보드 복사</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.3 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">텍스트 도구 구조 전면 변경 — 캔버스 위 오버레이 입력창 방식이 특정 환경에서 재현되지 않는 문제가 반복되어, 툴바에 텍스트 입력창을 두고 입력 후 캔버스를 클릭해 찍는 방식으로 교체. 자동 높이조절 등 오버레이 특유의 복잡성 제거</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">텍스트 도구가 입력해도 글자가 안 보이던 버그 수정(캔버스 래퍼의 line-height 상속 문제). 텍스트 입력창이 여러 줄 입력 시 자동으로 높이가 늘어나도록 개선</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">직선·사각형·원(윤곽선/채우기) 도형 도구와 색상 추출(스포이드) 추가. 텍스트 도구가 동작하지 않던 버그 수정, 글자 크기·굵게 옵션 추가. 브러시 크기를 캔버스 위 원형 커서로 표시하도록 개선</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (DESIGN &amp; MEDIA) — 펜·지우개·채우기·텍스트 도구, 실행취소/다시실행, PNG·JPG 저장, 클립보드 복사</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
@@ -496,7 +499,6 @@
     $("shapeOptions").style.display = (tool==="rect"||tool==="ellipse") ? "flex" : "none";
     $("textOptions").style.display = (tool==="text") ? "flex" : "none";
     canvas.style.cursor = (tool==="text") ? "text" : (tool==="eyedropper" ? "copy" : "crosshair");
-    cancelTextInput();
   }
   function updateSizeDot(){
     const dot = $("sizeDot");
@@ -572,7 +574,7 @@
   // ---------- 펜 / 지우개 / 도형 시작 ----------
   function startDraw(e){
     if(tool === "fill"){ doFill(e); return; }
-    if(tool === "text"){ openTextInput(e); return; }
+    if(tool === "text"){ stampText(e); return; }
     if(tool === "eyedropper"){ pickColor(e); return; }
 
     const p = getPos(e);
@@ -702,58 +704,18 @@
   }
 
   // ---------- 텍스트 도구 ----------
-  let activeTextInput = null;
-  function openTextInput(e){
-    cancelTextInput();
-    const wrapRect = canvasWrap.getBoundingClientRect();
-    const scaleX = wrapRect.width / canvas.width;
-    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - wrapRect.left;
-    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - wrapRect.top;
+  function stampText(e){
+    const box = $("textInputBox");
+    const value = box.value;
+    if(!value.trim()){ box.focus(); return; }
     const p = getPos(e);
-
-    const input = document.createElement("textarea");
-    input.className = "text-input-layer";
-    input.style.left = cx + "px";
-    input.style.top = (cy - (fontSize*scaleX)/2) + "px";
-    input.style.fontSize = Math.max(10, fontSize*scaleX) + "px";
-    input.style.fontWeight = fontBold ? "700" : "400";
-    input.style.color = color;
-    input.rows = 1;
-    canvasWrap.appendChild(input);
-    input.focus();
-    activeTextInput = { el:input, x:p.x, y:p.y };
-
-    input.addEventListener("blur", () => commitTextInput());
-    input.addEventListener("input", () => {
-      input.style.height = "auto";
-      input.style.height = input.scrollHeight + "px";
+    ctx.font = (fontBold ? "700 " : "400 ") + fontSize + "px 'Pretendard', sans-serif";
+    ctx.fillStyle = color;
+    ctx.textBaseline = "top";
+    value.split("\n").forEach((line, i) => {
+      ctx.fillText(line, p.x, p.y + i*fontSize*1.2);
     });
-    input.addEventListener("keydown", (ev) => {
-      if(ev.key === "Enter" && !ev.shiftKey){ ev.preventDefault(); input.blur(); }
-      if(ev.key === "Escape"){ cancelTextInput(); }
-    });
-  }
-  function commitTextInput(){
-    if(!activeTextInput) return;
-    const { el, x, y } = activeTextInput;
-    const value = el.value;
-    if(value.trim()){
-      ctx.font = (fontBold ? "700 " : "400 ") + fontSize + "px 'Pretendard', sans-serif";
-      ctx.fillStyle = color;
-      ctx.textBaseline = "top";
-      value.split("\n").forEach((line, i) => {
-        ctx.fillText(line, x, y + i*fontSize*1.2);
-      });
-      pushHistory();
-    }
-    if(el.parentElement) el.parentElement.removeChild(el);
-    activeTextInput = null;
-  }
-  function cancelTextInput(){
-    if(activeTextInput && activeTextInput.el.parentElement){
-      activeTextInput.el.parentElement.removeChild(activeTextInput.el);
-    }
-    activeTextInput = null;
+    pushHistory();
   }
 
   // ---------- 저장 / 복사 ----------
