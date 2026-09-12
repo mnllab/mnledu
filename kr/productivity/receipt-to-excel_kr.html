@@ -488,6 +488,10 @@
       <button class="btn p" id="tsvBtn">📋 엑셀로 복사</button>
       <button class="btn" id="csvBtn">💾 CSV 내려받기</button>
     </div>
+    <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;color:var(--muted);">
+      <input type="checkbox" id="tsvIncludeHtml" checked>
+      표 서식 포함해서 복사 (해제하면 순수 텍스트만 복사 — 한글(HWP)에서 표가 크면 더 가볍게 동작합니다)
+    </label>
     <p class="hint">엑셀로 복사를 누른 뒤 엑셀에서 붙여넣기 하시면 칸이 그대로 나뉘어 들어갑니다.</p>
   </div>
 
@@ -2935,9 +2939,16 @@ if ($('vatClearBtn')) $('vatClearBtn').addEventListener('click', function(){
 });
 $('tsvBtn').addEventListener('click', function(){
   if (!rows.length){ toast('내보낼 내역이 없습니다'); return; }
-  copyTable(tsvText(), tsvHtml(), function(ok){
-    toast(ok ? '복사했습니다 · 엑셀·한글(HWP)·워드 어디든 붙여넣기 하세요' : '복사가 막혔습니다');
-  });
+  var includeHtml = !$('tsvIncludeHtml') || $('tsvIncludeHtml').checked;
+  if (includeHtml){
+    copyTable(tsvText(), tsvHtml(), function(ok){
+      toast(ok ? '복사했습니다 · 엑셀·한글(HWP)·워드 어디든 붙여넣기 하세요' : '복사가 막혔습니다');
+    });
+  } else {
+    copyText(tsvText(), function(ok){
+      toast(ok ? '순수 텍스트로 복사했습니다 · 한글(HWP)에서 표로 변환해 붙여넣으세요' : '복사가 막혔습니다');
+    });
+  }
 });
 $('csvBtn').addEventListener('click', function(){
   if (!rows.length){ toast('내보낼 내역이 없습니다'); return; }
@@ -3051,10 +3062,11 @@ render();
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.8 &middot; 2026-09-11</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.8</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">엑셀로 복사 버튼이 일반 텍스트만 복사해 한글(HWP)·워드 등에서는 표로 인식되지 않던 문제 수정 — 실제 HTML 표와 탭 구분 텍스트를 함께 복사해 엑셀·구글시트·한글·워드 어디에 붙여넣어도 표로 인식되도록 개선</span></li><li><span class="tk-version-num">v2.7</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">지출결의서용 공급가액·부가세 열 추가. 영수증에 찍혀 있으면 그대로 읽어오고, 비어있는 줄은 부가세 10% 자동 채우기 버튼으로 금액에서 역산해 일괄 입력(면세 품목은 비우기 버튼으로 되돌림). 엑셀 복사·CSV 내려받기와 하단 합계 줄에도 두 열이 함께 나감</span></li><li><span class="tk-version-num">v2.6</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">슬라이더 조작 중 실시간 미리보기 추가(원근·그림자·명암 보정을 축소본에 즉시 반영). 소수점 수량 인식 개선(56.383L 같은 값이 정수로 뭉개지던 문제 수정). 자간이 벌어진 OCR 라벨 인식 개선(부 가 세 → 부가세로 인식)</span></li><li><span class="tk-version-num">v2.5</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">그림자·조명 편차 보정(shadowNormalize) 옵션 추가 — 적용 시 원본 조명 결과와 교차 확인해 더 나은 쪽을 채택. 한 줄짜리 간이 영수증(바코드·상세행 없는 경우)을 위한 산술 기반 행 복구 로직 추가. 합계 라벨이 명확할 때 공급가액·부가세로 잘못 대체되지 않도록 최종 금액 판단 로직 개선</span></li><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.9 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.9</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">엑셀로 복사에 '표 서식 포함' 체크박스 추가 — 해제하면 순수 텍스트(탭 구분)만 복사되어 한글(HWP)에 큰 표를 붙여넣을 때 더 가볍게 동작. 기본값은 표 서식 포함(HTML 표 + 텍스트 동시 복사)</span></li><li><span class="tk-version-num">v2.8</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">엑셀로 복사 버튼이 일반 텍스트만 복사해 한글(HWP)·워드 등에서는 표로 인식되지 않던 문제 수정 — 실제 HTML 표와 탭 구분 텍스트를 함께 복사해 엑셀·구글시트·한글·워드 어디에 붙여넣어도 표로 인식되도록 개선</span></li><li><span class="tk-version-num">v2.7</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">지출결의서용 공급가액·부가세 열 추가. 영수증에 찍혀 있으면 그대로 읽어오고, 비어있는 줄은 부가세 10% 자동 채우기 버튼으로 금액에서 역산해 일괄 입력(면세 품목은 비우기 버튼으로 되돌림). 엑셀 복사·CSV 내려받기와 하단 합계 줄에도 두 열이 함께 나감</span></li><li><span class="tk-version-num">v2.6</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">슬라이더 조작 중 실시간 미리보기 추가(원근·그림자·명암 보정을 축소본에 즉시 반영). 소수점 수량 인식 개선(56.383L 같은 값이 정수로 뭉개지던 문제 수정). 자간이 벌어진 OCR 라벨 인식 개선(부 가 세 → 부가세로 인식)</span></li><li><span class="tk-version-num">v2.5</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">그림자·조명 편차 보정(shadowNormalize) 옵션 추가 — 적용 시 원본 조명 결과와 교차 확인해 더 나은 쪽을 채택. 한 줄짜리 간이 영수증(바코드·상세행 없는 경우)을 위한 산술 기반 행 복구 로직 추가. 합계 라벨이 명확할 때 공급가액·부가세로 잘못 대체되지 않도록 최종 금액 판단 로직 개선</span></li><li><span class="tk-version-num">v2.4</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">안정성·정확도 소폭 개선</span></li><li><span class="tk-version-num">v2.3</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">경량 온디바이스 AI(임베딩 모델)로 애매한 OCR 행을 의미 기반 재분류하는 보강 레이어 추가. 정규식만으로 판단하기 어려운 상호명·품목·합계 구분 정확도 개선</span></li><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">자동 계정과목 분류 추가 — 업종별 키워드 사전으로 의료비·숙박비·차량유지비·소프트웨어 구독료 등 자동 추정. 날짜 다중 형식 인식과 금액·상호 오탐 방지 로직 개선</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">일반형·간편형 두 가지 인식 모드로 개편, 품목 자동 묶음 처리(사진당 최대 10개), OCR 정확도 개선</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-08-30</span><span class="tk-version-note">v12 대폭 개편 — 기능 확장 (기존 대비 파일 크기 2배 이상 증가)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-29</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
