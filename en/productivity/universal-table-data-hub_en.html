@@ -204,6 +204,7 @@ Jamie	34	Engineering"></textarea>
         <input id="treatAsChar" type="checkbox" checked class="w-4 h-4 accent-brand rounded">
         <span class="text-xs font-medium text-slate-700">Inline with text (HWP)</span>
       </label>
+      <p class="text-[11px] text-slate-400 leading-relaxed -mt-1">Keeps the table flowing with the surrounding text so it doesn't get pushed around. For very large tables (many rows/columns), this can make Hangul (HWP) slow or freeze on open — if that happens, uncheck this before saving for a lighter file (the table will float as a separate object instead, so it may shift if paragraphs above it grow).</p>
 
       <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
         <label class="flex items-center gap-2 cursor-pointer select-none">
@@ -840,7 +841,7 @@ Jamie	34	Engineering"></textarea>
       html += '</tr>';
     });
     html += '</table>';
-    return html;
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>${html}</body></html>`;
   }
   function escapeHtml(s) {
     return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1125,10 +1126,11 @@ async function buildHwpxBlob(state) {
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-08-31</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">한글 최적화 클립보드 복사가 일부 환경에서 한글(HWP)에 표 없이 텍스트로만 붙여지는 문제 개선 — 복사되는 HTML을 완전한 문서 구조(html/body)로 감싸 인식률을 높임. 단, 클립보드 방식은 프로그램별 붙여넣기 해석 차이가 있어 완벽히 보장되지 않으며, 표 서식을 확실히 유지하려면 HWPX 다운로드 버튼 사용을 권장</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">'글자처럼 취급' 옵션 아래 안내문 추가 — 큰 표에서 한글(HWP)이 느려지거나 멈출 때 체크 해제하면 더 가볍게 저장되는 트레이드오프를 설명</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -1138,6 +1140,7 @@ async function buildHwpxBlob(state) {
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
+
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
@@ -1221,5 +1224,13 @@ Share
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
+
+
+
+
+
+
+
+
 </body>
 </html>
