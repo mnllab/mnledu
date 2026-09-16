@@ -1105,9 +1105,26 @@
     const d = (rec.datetime || "").slice(0, 10).replace(/-/g, "") ||
               (function(){ const t = new Date();
                 return `${t.getFullYear()}${pad(t.getMonth()+1)}${pad(t.getDate())}`; })();
-    const who = [rec.team, rec.writer].filter(Boolean).join("_");
-    const raw = who ? `${d}_${who}_Minutes` : `${d}_Minutes`;
-    return raw.replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_").slice(0, 80);
+
+    // 쉼표로 여러 명이 적혀 있으면 첫 사람만 쓰고 나머지는 숫자로 줄인다
+    function pickName(s){
+      const list = String(s || "").split(/[,;·、]/).map(x => x.trim()).filter(Boolean);
+      if(!list.length) return "";
+      return list.length > 1 ? `${list[0]}+${list.length-1}` : list[0];
+    }
+
+    const parts = [d].concat([rec.team, rec.writer].map(pickName).filter(Boolean));
+    parts.push("Minutes");
+
+    return parts.join("_")
+      .replace(/[\\/:*?"<>|]/g, "")   // 파일명에 쓸 수 없는 글자
+      .replace(/[()\[\]{}]/g, "")      // 괄호는 지우고
+      .replace(/\s+/g, "_")            // 공백은 밑줄로
+      .replace(/_+/g, "_")             // 밑줄이 겹치면 하나로
+      .replace(/\.+(?=_|$)/g, "")      // 토막 끝의 마침표 제거
+      .replace(/^_+|_+$/g, "")         // 앞뒤 밑줄 제거
+      .slice(0, 80)
+      .replace(/_+$/, "");
   }
 
   $("printBtn").addEventListener("click", () => {
@@ -1416,10 +1433,11 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-16</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">사진 첨부(최대 3장) 추가 — 끌어다 놓기·Ctrl+V 붙여넣기·파일 선택 모두 지원하며, 한 장씩 세로로 쌓아 본문 뒤 별도 면에 배치. 긴 변 1400px로 자동 축소해 파일 용량 관리. AI 정리 프롬프트 복사 버튼 추가(두 계층·명사형 종결·마침표 없음·항목당 80~100자 규칙과 현재 개요 정보 자동 포함). 미리보기가 A4 높이에 눌려 사진이 밖으로 삐져나오던 문제 수정 — 화면에서는 내용만큼 늘어나고 인쇄할 때만 A4 면 분리. 인쇄하기를 PDF로 저장으로 바꾸고 날짜_팀명_작성자 형식 파일명 자동 지정</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">본문 복사 버튼 추가 — 구글독스·워드에 붙여넣으면 표·글머리·굵게 서식이 그대로 유지되는 리치 텍스트(HTML) 클립보드 복사를 지원</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.3 &middot; 2026-09-16</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">PDF 저장 파일명 정리 — 작성자가 여러 명이면 첫 사람만 쓰고 '외N명'으로 줄이며, 쉼표·괄호·중복 공백을 정리해 깔끔한 파일명이 나오도록 수정</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">사진 첨부(최대 3장) 추가 — 끌어다 놓기·Ctrl+V 붙여넣기·파일 선택 모두 지원하며, 한 장씩 세로로 쌓아 본문 뒤 별도 면에 배치. 긴 변 1400px로 자동 축소해 파일 용량 관리. AI 정리 프롬프트 복사 버튼 추가(두 계층·명사형 종결·마침표 없음·항목당 80~100자 규칙과 현재 개요 정보 자동 포함). 미리보기가 A4 높이에 눌려 사진이 밖으로 삐져나오던 문제 수정 — 화면에서는 내용만큼 늘어나고 인쇄할 때만 A4 면 분리. 인쇄하기를 PDF로 저장으로 바꾸고 날짜_팀명_작성자 형식 파일명 자동 지정</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">본문 복사 버튼 추가 — 구글독스·워드에 붙여넣으면 표·글머리·굵게 서식이 그대로 유지되는 리치 텍스트(HTML) 클립보드 복사를 지원</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
