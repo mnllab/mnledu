@@ -34,6 +34,16 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'counseling-log-generator',
+    title: '상담일지 생성기',
+    category: 'PRODUCTIVITY',
+    desc: '일시·내담자명·상담자를 입력하거나 CSV를 올리면 A4 상담일지를 자동으로 만들어 줍니다. 상담내용·향후계획으로 구성되며 인쇄와 DOCX·CSV 저장을 지원합니다.',
+    url: 'https://mnledu.com/kr/productivity/counseling-log-generator_kr.html',
+    icon: 'clipboard-list',
+    badge: 'NEW',
+    tags: ['#상담일지', '#DOCX', '#양식', '#자동화']
+  },
+  {
     id: 'meeting-minutes-generator',
     title: '회의록 생성기',
     category: 'PRODUCTIVITY',

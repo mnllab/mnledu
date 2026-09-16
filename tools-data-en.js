@@ -8,6 +8,16 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'counseling-log-generator',
+    title: 'Counseling Log Generator',
+    category: 'PRODUCTIVITY',
+    desc: 'Enter the date, client name, and counselor, or upload a CSV, and get an A4 counseling log automatically. Organized into session notes and next steps, with printing and DOCX/CSV export.',
+    url: 'https://mnledu.com/en/productivity/counseling-log-generator_en.html',
+    icon: 'clipboard-list',
+    badge: 'NEW',
+    tags: ['#counselinglog', '#DOCX', '#template', '#automation']
+  },
+  {
     id: 'meeting-minutes-generator',
     title: 'Meeting Minutes Generator',
     category: 'PRODUCTIVITY',
