@@ -293,7 +293,12 @@
 
   .a4-page{
     width:210mm;
+    max-width:100%;
     min-height:297mm;
+    height:auto;              /* 화면에서는 내용만큼 늘어나게 둔다 */
+    flex:0 0 auto;            /* 세로 플렉스 안에서 눌려 찌그러지지 않게 */
+    overflow:visible;
+    box-sizing:border-box;
     background:#fff;
     box-shadow:0 4px 24px rgba(30,42,50,0.14), 0 1px 2px rgba(30,42,50,0.08);
     padding:20mm 18mm;
@@ -350,6 +355,35 @@
   .doc-footer .writer-box{text-align:right;line-height:1.6;}
   .doc-footer .writer-box b{color:var(--ink);}
 
+  /* 본문 뒤에 붙는 사진 면 · 화면에서는 새 인쇄면 시작 표시를 겸한다 */
+  .doc-photos{
+    position:relative;
+    margin-top:44px;padding-top:30px;
+    border-top:2px dashed var(--line);
+  }
+  .doc-photos::before{
+    content:"\2702 New page when printed";
+    position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+    background:#fff;padding:0 10px;
+    font-family:'Pretendard',sans-serif;font-size:10.5px;color:var(--ink-soft);
+    letter-spacing:.02em;white-space:nowrap;
+  }
+  .doc-photos h2{
+    font-family:'Pretendard',sans-serif;font-size:14px;font-weight:700;color:var(--ink);
+    margin:0 0 12px;padding-bottom:5px;border-bottom:2px solid var(--ink);
+  }
+  /* 한 장씩 세로로 쌓는다. 최대 3장이 A4 한 면에 들어가도록 높이를 제한한다 */
+  .doc-photos .photo-grid{display:flex;flex-direction:column;gap:14px;align-items:center;}
+  .doc-photos .photo-item{width:100%;text-align:center;}
+  .doc-photos img{
+    width:auto;max-width:100%;height:auto;object-fit:contain;
+    margin:0 auto;border:1px solid var(--line);border-radius:3px;display:block;
+  }
+  .doc-photos .photo-cap{
+    font-family:'Pretendard',sans-serif;font-size:11px;color:var(--ink-soft);
+    margin-top:6px;line-height:1.5;
+  }
+
   @media print{
     body{background:#fff;overflow:visible;height:auto;}
     .app{display:block;height:auto;}
@@ -357,7 +391,7 @@
     .stage{padding:0;overflow:visible;display:block;}
     .tk-guide, .tk-version, .tk-share-fab, .tk-share-backdrop{display:none !important;}
     .a4-page{
-      box-shadow:none;margin:0;width:auto;min-height:auto;
+      box-shadow:none;margin:0;width:auto;min-height:auto;height:auto;
       padding:0; /* page margin handled uniformly via @page (applies the same on every page) */
     }
     .doc-title, .doc-tags, table.info-table, .doc-footer{
@@ -368,6 +402,17 @@
       break-inside:avoid; page-break-inside:avoid;
     }
     table.info-table tr{ break-inside:avoid; page-break-inside:avoid; }
+    /* 사진은 항상 새 면에서 시작하고, 사진 면 안에서는 쪼개지지 않는다 */
+    .doc-photos{
+      break-before:page; page-break-before:always;
+      break-inside:avoid; page-break-inside:avoid;
+      margin-top:0; padding-top:0; border-top:none;
+    }
+    .doc-photos::before{ display:none; }
+    /* 장수에 따라 한 면에 담기도록 인쇄할 때만 높이를 제한한다 */
+    .doc-photos .n1 img{ max-height:210mm; }
+    .doc-photos .n2 img{ max-height:112mm; }
+    .doc-photos .n3 img{ max-height:72mm; }
     @page{ size:A4; margin:20mm 18mm; }
   }
 </style>
@@ -445,14 +490,32 @@
           <textarea id="f_action" class="tall" placeholder="Keep a mood journal until next session&#10;-Schedule 2nd session in 2 weeks"></textarea>
         </div>
       </fieldset>
+      <fieldset>
+        <legend>Photo attachments <span class="hint">(optional · up to 3 · added on a final page)</span></legend>
+        <div class="field">
+          <div class="dropzone" id="photoDrop">
+            <div class="dropzone-icon">🖼</div>
+            <div class="dropzone-text">Drop photos here<br><span class="link">or click to choose</span> · <b>Ctrl+V</b> to paste</div>
+          </div>
+          <input type="file" id="f_photos" accept="image/*" multiple style="display:none">
+          <div class="hint" id="photoStatus">Photos are added on a separate page after the body, stacked one per row — up to 3 fit on a single page.</div>
+        </div>
+        <div class="field">
+          <label for="f_photoCaption">Photo caption <span class="hint">(optional)</span></label>
+          <input type="text" id="f_photoCaption" placeholder="Counseling session photo">
+        </div>
+        <div id="photoThumbs" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+        <button type="button" class="btn-secondary" id="clearPhotosBtn" style="margin-top:8px; display:none">Clear photos</button>
+      </fieldset>
     </form>
 
     <div class="actions">
+      <button class="btn-secondary btn-wide" id="copyPromptBtn">🤖 Copy AI Formatting Prompt</button>
       <button class="btn-secondary btn-wide" id="copyBodyBtn">📋 Copy Body (keeps formatting in Google Docs/Word)</button>
       <button class="btn-secondary btn-wide" id="saveCsvBtn">Save as CSV</button>
       <button class="btn-secondary" id="saveDocxBtn">Save DOCX (current)</button>
       <button class="btn-secondary" id="saveDocxAllBtn">Save All as DOCX</button>
-      <button class="btn-print btn-wide" id="printBtn">Print</button>
+      <button class="btn-print btn-wide" id="printBtn">📄 Save as PDF</button>
     </div>
   </div>
 
@@ -475,7 +538,8 @@
 
   function blankRecord(){
     return { datetime:"", place:"", team:"", attendees:"", topic:"", tags:"",
-             writer:"", writerOrg:"", writerTitle:"", report:"", action:"" };
+             writer:"", writerOrg:"", writerTitle:"", report:"", action:"",
+             photos:[], photoCaption:"" };
   }
 
   let records = [blankRecord()];
@@ -487,8 +551,125 @@
   const fieldMap = {
     f_datetime:"datetime", f_place:"place", f_team:"team", f_attendees:"attendees",
     f_topic:"topic", f_tags:"tags", f_writer:"writer", f_writerOrg:"writerOrg",
-    f_writerTitle:"writerTitle", f_report:"report", f_action:"action"
+    f_writerTitle:"writerTitle", f_report:"report", f_action:"action",
+    f_photoCaption:"photoCaption"
   };
+  const MAX_PHOTOS = 3;
+  const PHOTO_MAX_EDGE = 1400;   // 저장 용량을 줄이기 위해 긴 변 기준으로 축소한다
+
+  // 사진을 캔버스로 한 번 줄여서 JPEG dataURL 로 보관한다.
+  function readPhotoFile(file){
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.naturalWidth, h = img.naturalHeight;
+          const longEdge = Math.max(w, h);
+          if(longEdge > PHOTO_MAX_EDGE){
+            const r = PHOTO_MAX_EDGE / longEdge;
+            w = Math.round(w * r); h = Math.round(h * r);
+          }
+          const cv = document.createElement("canvas");
+          cv.width = w; cv.height = h;
+          const cx = cv.getContext("2d");
+          cx.fillStyle = "#FFFFFF";
+          cx.fillRect(0, 0, w, h);
+          cx.drawImage(img, 0, 0, w, h);
+          resolve({ dataUrl: cv.toDataURL("image/jpeg", 0.85), width: w, height: h });
+        };
+        img.onerror = () => reject(new Error("Could not read the image"));
+        img.src = fr.result;
+      };
+      fr.onerror = () => reject(new Error("Could not read the file"));
+      fr.readAsDataURL(file);
+    });
+  }
+
+  function renderPhotoThumbs(){
+    const rec = records[currentIndex];
+    const box = $("photoThumbs");
+    const photos = rec.photos || [];
+    box.innerHTML = photos.map((p, i) =>
+      `<div style="position:relative">
+         <img src="${p.dataUrl}" alt="Attached photo ${i+1}" style="width:72px;height:72px;object-fit:cover;border:1px solid var(--line);border-radius:4px;display:block">
+       </div>`
+    ).join("");
+    $("clearPhotosBtn").style.display = photos.length ? "block" : "none";
+    $("photoStatus").textContent = photos.length
+      ? `${photos.length} photo(s) attached · added on a separate page after the body`
+      : "Photos are added on a separate page after the body, stacked one per row — up to 3 fit on a single page.";
+  }
+
+  // 파일 선택 · 끌어다 놓기 · 붙여넣기가 모두 이 함수로 모인다
+  async function addPhotoFiles(fileList){
+    const files = Array.from(fileList || []).filter(f => f && f.type && f.type.startsWith("image/"));
+    if(!files.length) return;
+    const rec = records[currentIndex];
+    rec.photos = rec.photos || [];
+    const room = MAX_PHOTOS - rec.photos.length;
+    if(room <= 0){
+      alert(`You can attach up to ${MAX_PHOTOS} photos. Clear them first to add different ones.`);
+      return;
+    }
+    const take = files.slice(0, room);
+    const skipped = files.length - take.length;
+    try{
+      for(const f of take){
+        const photo = await readPhotoFile(f);
+        rec.photos.push(photo);
+      }
+      renderPhotoThumbs();
+      renderPreview();
+      if(skipped > 0) alert(`Only ${MAX_PHOTOS} photos fit, so ${skipped} were left out.`);
+    }catch(err){
+      alert("Could not load the photo: " + (err && err.message ? err.message : err));
+    }
+  }
+
+  $("f_photos").addEventListener("change", async (e) => {
+    await addPhotoFiles(e.target.files);
+    e.target.value = "";
+  });
+
+  const photoDrop = $("photoDrop");
+  photoDrop.addEventListener("click", () => $("f_photos").click());
+  ["dragenter","dragover"].forEach(evt => photoDrop.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation(); photoDrop.classList.add("dragover");
+  }));
+  ["dragleave","drop"].forEach(evt => photoDrop.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation(); photoDrop.classList.remove("dragover");
+  }));
+  photoDrop.addEventListener("drop", (e) => {
+    addPhotoFiles(e.dataTransfer && e.dataTransfer.files);
+  });
+
+  // 붙여넣기는 글자를 치는 중이 아닐 때만 받는다
+  document.addEventListener("paste", (e) => {
+    const t = e.target;
+    const typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+    if(typing) return;
+    const items = (e.clipboardData && e.clipboardData.items) || [];
+    const files = [];
+    for(const it of items){
+      if(it.kind === "file" && it.type.startsWith("image/")){
+        const f = it.getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(files.length){
+      e.preventDefault();
+      addPhotoFiles(files);
+    }
+  });
+
+  $("clearPhotosBtn").addEventListener("click", () => {
+    const rec = records[currentIndex];
+    rec.photos = [];
+    renderPhotoThumbs();
+    renderPreview();
+  });
+
 
   function pad(n){ return String(n).padStart(2,"0"); }
   function nowLocalValue(){
@@ -511,6 +692,14 @@
   }
   function sanitizeFilename(s){
     return (s||"Minutes").replace(/[\\/:*?"<>|]/g,"_").trim().slice(0,60) || "Minutes";
+  }
+  // DOCX 의 ImageRun 은 dataURL 이 아니라 바이트 배열을 받는다
+  function dataUrlToUint8(dataUrl){
+    const b64 = String(dataUrl).split(",")[1] || "";
+    const bin = atob(b64);
+    const out = new Uint8Array(bin.length);
+    for(let i=0; i<bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
   }
   function linesToArray(text){
     return (text||"").split("\n").map(s=>s.trim()).filter(Boolean);
@@ -548,6 +737,7 @@
   // ---------- Form <-> record binding ----------
   function loadRecordIntoForm(rec){
     Object.keys(fieldMap).forEach(id => { $(id).value = rec[fieldMap[id]] || ""; });
+  renderPhotoThumbs();
   }
   function readFormIntoRecord(){
     const rec = records[currentIndex];
@@ -575,6 +765,20 @@
       return `<div class="doc-section ${cls||""}"><h2>${title}</h2>${body}</div>`;
     };
 
+    const photos = rec.photos || [];
+    const photosHtml = photos.length ? `
+      <div class="doc-photos">
+        <h2>Attached Photos</h2>
+        <div class="photo-grid n${photos.length}">
+          ${photos.map((p, i) => `
+            <div class="photo-item">
+              <img src="${p.dataUrl}" alt="Attached photo ${i+1}">
+              ${rec.photoCaption ? `<div class="photo-cap">${escapeHtml(rec.photoCaption)}${photos.length > 1 ? ` (${i+1})` : ""}</div>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      </div>` : "";
+
     $("previewPage").innerHTML = `
       <div class="doc-title">${escapeHtml(rec.team ? rec.team+" Counseling Log" : "COUNSELING LOG")}</div>
       <div class="doc-tags">${tagsHtml}</div>
@@ -592,6 +796,7 @@
           ${rec.writerOrg ? "<br>"+escapeHtml(rec.writerOrg) : ""}
         </div>
       </div>
+      ${photosHtml}
     `;
     updatePagerUI();
   }
@@ -674,6 +879,75 @@
     if(rec.writerOrg) lines.push(rec.writerOrg);
     return lines.join("\n");
   }
+  function buildAiPrompt(){
+    readFormIntoRecord();
+    const rec = records[currentIndex];
+    const ov = [];
+    if(rec.datetime) ov.push("Date/Time: " + formatDisplayDateTime(rec.datetime));
+    if(rec.place) ov.push("Location: " + rec.place);
+    if(rec.team) ov.push("Client: " + rec.team);
+    if(rec.attendees) ov.push("Counselor: " + rec.attendees);
+    if(rec.topic) ov.push("Topic: " + rec.topic);
+    const overview = ov.length ? ov.join("\n") + "\n\n" : "";
+
+    return [
+      "Reformat the transcript/notes below into the counseling log body format.",
+      "",
+      "[Sections to output]",
+      "- 1. Session Notes",
+      "- 2. Next Steps",
+      "",
+      "[What goes in each section]",
+      "1. Session Notes — what was actually discussed, what the client reported, observed state",
+      "2. Next Steps — tasks before the next session, follow-up actions, scheduled dates",
+      "",
+      "[Formatting rules \u2014 follow strictly]",
+      "- Use exactly two levels",
+      "  \u00b7 Top level: start with circled numbers \u2460\u2461\u2462 (in order, no skipping)",
+      "  \u00b7 Sub-item: start with a hyphen (-)",
+      "- End each line as a noun phrase, not a full sentence",
+      "- Do not put a period at the end of a line",
+      "- Keep each item around 80\u2013100 characters, with enough context to stand alone",
+      "- No markdown (**, ##, * etc). Only \u2460 and - are allowed",
+      "- Do not invent anything not in the source. Mark unclear points as 'not recorded'",
+      "",
+      "[Output example]",
+      "①Presenting concerns",
+      "- Reported ongoing career-related anxiety and sleep difficulty over the past three months, with a strong sense of helplessness around job preparation",
+      "- Aware that communication with family has broken down, leaving limited emotional support",
+      "②Observations during session",
+      "- Guarded at first, but spoke more spontaneously in the latter half, indicating progress in rapport",
+      "",
+      "[Output format]",
+      "Plain text only. Put the section heading (1. / 2. etc) on its own line, then the items below it.",
+      "",
+      "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+      overview + "[Source to reformat]",
+      "(paste your transcript or notes here)"
+    ].join("\n");
+  }
+
+  $("copyPromptBtn").addEventListener("click", async () => {
+    const text = buildAiPrompt();
+    const btn = $("copyPromptBtn");
+    const original = btn.textContent;
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.top = "-1000px";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      btn.textContent = "\u2705 Copied! Paste into your AI, then add the source";
+      setTimeout(()=>{ btn.textContent = original; }, 2400);
+    }catch(err){
+      alert("Clipboard copy failed. Please check your browser permissions.");
+    }
+  });
+
   $("copyBodyBtn").addEventListener("click", async () => {
     readFormIntoRecord();
     const rec = records[currentIndex];
@@ -814,7 +1088,27 @@
   }
 
   // ---------- Print ----------
-  $("printBtn").addEventListener("click", () => { readFormIntoRecord(); renderPreview(); window.print(); });
+  // PDF 저장 : 브라우저는 인쇄 대화상자의 기본 파일명으로 document.title 을 쓴다.
+  function pdfFileName(){
+    const rec = records[currentIndex];
+    const d = (rec.datetime || "").slice(0, 10).replace(/-/g, "") ||
+              (function(){ const t = new Date();
+                return `${t.getFullYear()}${pad(t.getMonth()+1)}${pad(t.getDate())}`; })();
+    const who = [rec.team, rec.attendees].filter(Boolean).join("_");
+    const raw = who ? `${d}_${who}_CounselingLog` : `${d}_CounselingLog`;
+    return raw.replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_").slice(0, 80);
+  }
+
+  $("printBtn").addEventListener("click", () => {
+    readFormIntoRecord();
+    renderPreview();
+    const prevTitle = document.title;
+    document.title = pdfFileName();
+    const restore = () => { document.title = prevTitle; };
+    window.addEventListener("afterprint", restore, { once: true });
+    setTimeout(restore, 8000);
+    window.print();
+  });
 
   // ---------- DOCX generation ----------
   function buildDocxDocument(rec){
@@ -921,6 +1215,46 @@
         alignment:AlignmentType.RIGHT,
         children:[ new TextRun({ text:rec.writerOrg, size:20, color:"555555" }) ]
       }));
+    }
+
+    // 첨부 사진은 항상 새 면에서 시작하고, 한 장씩 세로로 쌓아 한 면에 담는다
+    const photos = (rec.photos || []).slice(0, MAX_PHOTOS);
+    if(photos.length){
+      const { ImageRun, PageBreak } = docx;
+      // A4 본문 폭·높이(twip) → pt
+      const contentWpt = (11906 - 2268) / 20;
+      const contentHpt = (16838 - 2268) / 20;
+      const cellW = contentWpt;
+      const reserved = 40 + (rec.photoCaption ? photos.length * 16 : 0) + (photos.length - 1) * 10;
+      const maxH = Math.max(80, (contentHpt - reserved) / photos.length);
+
+      children.push(new Paragraph({ children:[ new PageBreak() ] }));
+      children.push(new Paragraph({
+        heading: HeadingLevel.HEADING_2,
+        spacing:{ after:160 },
+        border:{ bottom:{ style:BorderStyle.SINGLE, size:6, color:"1E2A32", space:4 } },
+        children:[ new TextRun({ text:"Attached Photos", bold:true, size:24 }) ]
+      }));
+
+      photos.forEach((p, i) => {
+        const ratio = Math.min(cellW / p.width, maxH / p.height, 1);
+        const w = Math.round(p.width * ratio), h = Math.round(p.height * ratio);
+        children.push(new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing:{ before: i === 0 ? 0 : 160 },
+          children:[ new ImageRun({ data: dataUrlToUint8(p.dataUrl), transformation:{ width:w, height:h } }) ]
+        }));
+        if(rec.photoCaption){
+          children.push(new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing:{ before:60 },
+            children:[ new TextRun({
+              text: rec.photoCaption + (photos.length > 1 ? ` (${i+1})` : ""),
+              size:18, color:"555555"
+            }) ]
+          }));
+        }
+      });
     }
 
     return new Document({
@@ -1049,15 +1383,6 @@
 <a class="tk-guide-home" href="https://mnledu.com/">See all tools →</a>
 </div></section>
 <!-- TOOLKIT:GUIDE_END -->
-<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
-<script>
-(function(){
-  var flagKey = "mnledu_visited_" + "counseling-log-generator";
-  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
-  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "counseling-log-generator").catch(function(){});
-})();
-</script>
-<!-- TOOLKIT:VIEWCOUNT_END -->
 <!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
 <style>
 .tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
@@ -1079,10 +1404,20 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 2026-09-16</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식, 상담내용·향후계획 2단 구성</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-09-16</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">사진 첨부(최대 3장) 추가 — 끌어다 놓기·Ctrl+V 붙여넣기·파일 선택 모두 지원하며, 한 장씩 세로로 쌓아 본문 뒤 별도 면에 배치. 긴 변 1400px로 자동 축소해 파일 용량 관리. AI 정리 프롬프트 복사 버튼 추가(두 계층·명사형 종결·마침표 없음·항목당 80~100자 규칙과 현재 개요 정보 자동 포함). 미리보기가 A4 높이에 눌려 사진이 밖으로 삐져나오던 문제 수정 — 화면에서는 내용만큼 늘어나고 인쇄할 때만 A4 면 분리. 인쇄하기를 PDF로 저장으로 바꾸고 날짜_내담자_상담자 형식 파일명 자동 지정</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식, 상담내용·향후계획 2단 구성</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+<!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
+<script>
+(function(){
+  var flagKey = "mnledu_visited_" + "counseling-log-generator";
+  try { if (localStorage.getItem(flagKey)) return; localStorage.setItem(flagKey, "1"); } catch (e) { return; }
+  fetch("https://toolkit-counter.mnl-laboratoire.workers.dev" + "/hit/" + "counseling-log-generator").catch(function(){});
+})();
+</script>
+<!-- TOOLKIT:VIEWCOUNT_END -->
+
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
