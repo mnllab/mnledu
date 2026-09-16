@@ -27,6 +27,7 @@
 <meta name="twitter:description" content="Enter the date, location, and attendees, or upload a CSV, and get an A4 meeting-minutes document automatically. Organized into progress, key agenda, and action items, with printing and DOCX/CSV export." />
 <meta name="twitter:image" content="https://mnledu.com/og-image.png" />
 
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.14.0/dist/html2pdf.bundle.min.js"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -384,35 +385,43 @@
     margin-top:6px;line-height:1.5;
   }
 
+  /* 아래 break 규칙들은 화면에는 아무 영향이 없고(눈에 보이는 스타일이 아님),
+     html2pdf 가 PDF로 내보낼 때 어디서 페이지를 나눌지 판단하는 힌트로만 쓰인다.
+     그래서 미디어쿼리 없이 항상 적용해 둔다 */
+  .doc-title, .doc-tags, table.info-table, .doc-footer{
+    break-inside:avoid;
+  }
+  .doc-section h2{ break-after:avoid; }
+  .doc-list .main-item, .doc-list .sub-item, .doc-list .circle-item, .doc-empty{
+    break-inside:avoid;
+  }
+  table.info-table tr{ break-inside:avoid; }
+  /* 사진은 항상 새 면에서 시작하고, 사진 면 안에서는 쪼개지지 않는다 */
+  .doc-photos{
+    break-before:page;
+    break-inside:avoid;
+  }
+
+  /* PDF로 내보낼 때만 잠깐 붙는 클래스 (html2canvas 의 onclone 에서 복제본에만 적용) */
+  .pdf-mode{ box-shadow:none !important; }
+  .pdf-mode .doc-photos{ margin-top:0; padding-top:0; border-top:none; }
+  .pdf-mode .doc-photos::before{ display:none; }
+  /* 사진이 한 면을 넘지 않도록 내보낼 때만 장수별로 높이를 제한한다 */
+  .pdf-mode .doc-photos .n1 img{ max-height:210mm; }
+  .pdf-mode .doc-photos .n2 img{ max-height:112mm; }
+  .pdf-mode .doc-photos .n3 img{ max-height:72mm; }
+
   @media print{
     body{background:#fff;overflow:visible;height:auto;}
     .app{display:block;height:auto;}
     .rail, .stage-toolbar, .pager{display:none !important;}
     .stage{padding:0;overflow:visible;display:block;}
     .tk-guide, .tk-version, .tk-share-fab, .tk-share-backdrop{display:none !important;}
-    .a4-page{
-      box-shadow:none;margin:0;width:auto;min-height:auto;height:auto;
-      padding:0; /* page margin handled uniformly via @page (applies the same on every page) */
-    }
-    .doc-title, .doc-tags, table.info-table, .doc-footer{
-      break-inside:avoid; page-break-inside:avoid;
-    }
-    .doc-section h2{ break-after:avoid; page-break-after:avoid; }
-    .doc-list .main-item, .doc-list .sub-item, .doc-list .circle-item, .doc-empty{
-      break-inside:avoid; page-break-inside:avoid;
-    }
-    table.info-table tr{ break-inside:avoid; page-break-inside:avoid; }
-    /* 사진은 항상 새 면에서 시작하고, 사진 면 안에서는 쪼개지지 않는다 */
-    .doc-photos{
-      break-before:page; page-break-before:always;
-      break-inside:avoid; page-break-inside:avoid;
-      margin-top:0; padding-top:0; border-top:none;
-    }
-    .doc-photos::before{ display:none; }
-    /* 장수에 따라 한 면에 담기도록 인쇄할 때만 높이를 제한한다 */
+    .a4-page{ box-shadow:none;margin:0;width:auto;min-height:auto;height:auto; }
     .doc-photos .n1 img{ max-height:210mm; }
     .doc-photos .n2 img{ max-height:112mm; }
     .doc-photos .n3 img{ max-height:72mm; }
+    .doc-photos::before{ display:none; }
     @page{ size:A4; margin:20mm 18mm; }
   }
 </style>
@@ -1127,15 +1136,51 @@
       .replace(/_+$/, "");
   }
 
-  $("printBtn").addEventListener("click", () => {
+  $("printBtn").addEventListener("click", async () => {
     readFormIntoRecord();
     renderPreview();
-    const prevTitle = document.title;
-    document.title = pdfFileName();
-    const restore = () => { document.title = prevTitle; };
-    window.addEventListener("afterprint", restore, { once: true });
-    setTimeout(restore, 8000);
-    window.print();
+    const btn = $("printBtn");
+    const original = btn.textContent;
+
+    if(typeof html2pdf === "undefined"){
+      // 라이브러리를 못 불러온 경우에 대비한 대비책 — 인쇄 대화상자로라도 저장할 수 있게 한다
+      const prevTitle = document.title;
+      document.title = pdfFileName();
+      window.addEventListener("afterprint", () => { document.title = prevTitle; }, { once:true });
+      setTimeout(() => { document.title = prevTitle; }, 8000);
+      window.print();
+      return;
+    }
+
+    btn.textContent = "Building PDF…";
+    btn.disabled = true;
+    try{
+      const el = $("previewPage");
+      await html2pdf().set({
+        margin: 0,
+        filename: pdfFileName() + ".pdf",
+        image: { type: "jpeg", quality: 0.95 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          onclone: (clonedDoc) => {
+            const page = clonedDoc.getElementById("previewPage");
+            if(page) page.classList.add("pdf-mode");
+          }
+        },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["css"] }
+      }).from(el).save();
+      btn.textContent = "✅ Saved!";
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    }catch(err){
+      console.error(err);
+      alert("Something went wrong while creating the PDF" + (err && err.message ? " (" + err.message + ")" : ""));
+      btn.textContent = original;
+    }finally{
+      btn.disabled = false;
+    }
   });
 
   // ---------- DOCX generation ----------
@@ -1433,10 +1478,11 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.3 &middot; 2026-09-16</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">PDF 저장 파일명 정리 — 작성자가 여러 명이면 첫 사람만 쓰고 '외N명'으로 줄이며, 쉼표·괄호·중복 공백을 정리해 깔끔한 파일명이 나오도록 수정</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">사진 첨부(최대 3장) 추가 — 끌어다 놓기·Ctrl+V 붙여넣기·파일 선택 모두 지원하며, 한 장씩 세로로 쌓아 본문 뒤 별도 면에 배치. 긴 변 1400px로 자동 축소해 파일 용량 관리. AI 정리 프롬프트 복사 버튼 추가(두 계층·명사형 종결·마침표 없음·항목당 80~100자 규칙과 현재 개요 정보 자동 포함). 미리보기가 A4 높이에 눌려 사진이 밖으로 삐져나오던 문제 수정 — 화면에서는 내용만큼 늘어나고 인쇄할 때만 A4 면 분리. 인쇄하기를 PDF로 저장으로 바꾸고 날짜_팀명_작성자 형식 파일명 자동 지정</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">본문 복사 버튼 추가 — 구글독스·워드에 붙여넣으면 표·글머리·굵게 서식이 그대로 유지되는 리치 텍스트(HTML) 클립보드 복사를 지원</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.4 &middot; 2026-09-16</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.4</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">PDF 저장 방식을 브라우저 인쇄 대화상자 경유에서 html2pdf.js를 이용한 직접 다운로드로 변경 — 인쇄 화면을 거치지 않고 바로 파일이 저장되며, 파일명이 100% 그대로 적용됨</span></li><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">PDF 저장 파일명 정리 — 작성자가 여러 명이면 첫 사람만 쓰고 '외N명'으로 줄이며, 쉼표·괄호·중복 공백을 정리해 깔끔한 파일명이 나오도록 수정</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-16</span><span class="tk-version-note">사진 첨부(최대 3장) 추가 — 끌어다 놓기·Ctrl+V 붙여넣기·파일 선택 모두 지원하며, 한 장씩 세로로 쌓아 본문 뒤 별도 면에 배치. 긴 변 1400px로 자동 축소해 파일 용량 관리. AI 정리 프롬프트 복사 버튼 추가(두 계층·명사형 종결·마침표 없음·항목당 80~100자 규칙과 현재 개요 정보 자동 포함). 미리보기가 A4 높이에 눌려 사진이 밖으로 삐져나오던 문제 수정 — 화면에서는 내용만큼 늘어나고 인쇄할 때만 A4 면 분리. 인쇄하기를 PDF로 저장으로 바꾸고 날짜_팀명_작성자 형식 파일명 자동 지정</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-11</span><span class="tk-version-note">본문 복사 버튼 추가 — 구글독스·워드에 붙여넣으면 표·글머리·굵게 서식이 그대로 유지되는 리치 텍스트(HTML) 클립보드 복사를 지원</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-10</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 직접입력·CSV 업로드, A4 미리보기, 인쇄, DOCX·CSV 저장, 본문 링크 자동 인식</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
