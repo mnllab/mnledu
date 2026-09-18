@@ -168,13 +168,6 @@
   .answerBox{ margin-top:8px; }
   .answerBox.hide{ display:none; }
 
-  /* 완료 체크박스 (요청사항과 동일한 패턴) */
-  .doneChk{
-    display:flex; align-items:center; gap:6px; font-size:12.5px; cursor:pointer; flex:none;
-    padding:5px 9px; border:1px solid var(--line); border-radius:8px; background:#fff;
-  }
-  .doneChk input{ width:16px; height:16px; accent-color:var(--a); }
-
   /* 미리보기 */
   #preview{
     background:#fff; border:1px solid var(--line); border-radius:12px;
@@ -441,17 +434,14 @@
       return;
     }
     data.qa.forEach(function (it, i) {
-      const done = it.status !== 'pending';
-      const hasAnswer = !!(it.answer && it.answer.trim());
+      const done = !!(it.answer && it.answer.trim());
+      it.status = done ? 'done' : 'pending';
+      const hasAnswer = done;
       const el = document.createElement('div');
       el.className = 'item' + (!done ? ' pending' : '') + (done ? ' qa-done' : '');
       el.innerHTML =
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px">' +
           '<span class="badge q">Q' + (i + 1) + '</span>' +
-          '<label class="doneChk">' +
-            '<input type="checkbox" data-f="statusDone"' + (done ? ' checked' : '') + '>' +
-            'Answered' +
-          '</label>' +
           '<button class="btn sm danger del" style="min-height:28px; padding:4px 8px">Delete</button>' +
         '</div>' +
         '<textarea class="fld f q-text" data-f="question" placeholder="Question">' + esc(it.question) + '</textarea>' +
@@ -466,11 +456,13 @@
 
       bindItem(el, it, renderQa);
 
-      // 체크박스는 실제로는 status 문자열에 매핑한다 (다른 서식 내보내기 로직이 status 문자열을 그대로 씀)
-      const chk = el.querySelector('[data-f="statusDone"]');
-      chk.addEventListener('change', function () {
-        it.status = chk.checked ? 'done' : 'pending';
-        save(); renderPreview(); renderQa();
+      // 답변 칸에 글자가 있으면 자동으로 "답변 완료"로 본다 — 따로 체크할 필요 없음
+      const answerField = el.querySelector('[data-f="answer"]');
+      answerField.addEventListener('input', function () {
+        const nowDone = !!answerField.value.trim();
+        it.status = nowDone ? 'done' : 'pending';
+        el.classList.toggle('qa-done', nowDone);
+        el.classList.toggle('pending', !nowDone);
       });
 
       const toggleBtn = el.querySelector('[data-role="answerToggle"]');
@@ -1093,10 +1085,11 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">디자인 개선 — 미리보기·내보내기 패널을 오른쪽에서 슬라이드되어 나오는 드로어로 변경해 입력창을 항상 전체 폭으로 씀. 질의응답 상태를 3단계 드롭다운에서 '답변 완료' 체크박스로 단순화(체크 시 카드 배경이 옅어짐). 답변란은 기본적으로 접혀 있고 '+ 답변 추가'를 눌러야 나타나는 아코디언 방식으로 변경</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-28</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.3 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">'답변 완료' 체크박스를 없애고, 답변란에 글자를 적으면 자동으로 완료 상태로 인식하도록 단순화</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">디자인 개선 — 미리보기·내보내기 패널을 오른쪽에서 슬라이드되어 나오는 드로어로 변경해 입력창을 항상 전체 폭으로 씀. 질의응답 상태를 3단계 드롭다운에서 '답변 완료' 체크박스로 단순화(체크 시 카드 배경이 옅어짐). 답변란은 기본적으로 접혀 있고 '+ 답변 추가'를 눌러야 나타나는 아코디언 방식으로 변경</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-28</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
