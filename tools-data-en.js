@@ -8,6 +8,16 @@ const TOOLS_DATA_EN = [
 
   /* ═══════════════ PRODUCTIVITY ═══════════════ */
   {
+    id: 'md2hwpx',
+    title: 'Markdown → Hangul (HWPX) Converter',
+    category: 'PRODUCTIVITY',
+    desc: 'Reads the styles from a Hangul (HWP) hwpx template and matches them to Markdown headings, body text, lists, and tables, exporting a real hwpx file. Tables convert with the template formatting too.',
+    url: 'https://mnledu.com/en/productivity/md2hwpx_en.html',
+    icon: 'file-output',
+    badge: 'NEW',
+    tags: ['#markdown', '#hangul', '#HWPX', '#templatematching']
+  },
+  {
     id: 'counseling-log-generator',
     title: 'Counseling Log Generator',
     category: 'PRODUCTIVITY',

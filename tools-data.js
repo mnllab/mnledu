@@ -34,6 +34,16 @@ const TOOLS_DATA = [
   // 1. PRODUCTIVITY (업무 생산성)
   // ---------------------------------------------------------
   {
+    id: 'md2hwpx',
+    title: '마크다운 → 한글(HWPX) 변환기',
+    category: 'PRODUCTIVITY',
+    desc: '한글 hwpx 템플릿의 스타일을 읽어 마크다운 제목·본문·목록·표에 그대로 매칭해 hwpx 파일로 내보냅니다. 표까지 템플릿 서식 그대로 변환됩니다.',
+    url: 'https://mnledu.com/kr/productivity/md2hwpx_kr.html',
+    icon: 'file-output',
+    badge: 'NEW',
+    tags: ['#마크다운', '#한글', '#HWPX', '#서식매칭']
+  },
+  {
     id: 'counseling-log-generator',
     title: '상담일지 생성기',
     category: 'PRODUCTIVITY',
