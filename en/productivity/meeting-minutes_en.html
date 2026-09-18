@@ -155,6 +155,25 @@
   .badge.review{ color:#7326B0; background:#F5F1FA; }
 
   .item.pending{ border-color:#FDE68A; background:var(--warnBg); }
+  .item.qa-done{ background:#F8FAF9; border-color:var(--line); }
+  .item.qa-done .q-text{ color:var(--dim); }
+
+  /* 답변 아코디언 */
+  .answerToggle{
+    display:inline-flex; align-items:center; gap:4px; margin-top:8px;
+    font-size:12px; color:var(--accent); font-weight:600; cursor:pointer;
+    background:none; border:none; padding:4px 0;
+  }
+  .answerToggle:hover{ text-decoration:underline; }
+  .answerBox{ margin-top:8px; }
+  .answerBox.hide{ display:none; }
+
+  /* 완료 체크박스 (요청사항과 동일한 패턴) */
+  .doneChk{
+    display:flex; align-items:center; gap:6px; font-size:12.5px; cursor:pointer; flex:none;
+    padding:5px 9px; border:1px solid var(--line); border-radius:8px; background:#fff;
+  }
+  .doneChk input{ width:16px; height:16px; accent-color:var(--a); }
 
   /* 미리보기 */
   #preview{
@@ -172,17 +191,32 @@
   #preview ul{ margin:6px 0; padding-left:20px; }
   #preview li{ margin:4px 0; }
 
-  /* 탭 (모바일) */
-  #tabs{ display:none; gap:6px; margin-bottom:12px; }
-  #tabs button{
-    flex:1; padding:11px; border-radius:10px; border:1px solid var(--line);
-    background:#fff; color:var(--dim); font-size:13px; font-weight:600; cursor:pointer; min-height:44px;
+  /* 미리보기 · 내보내기 버튼 (헤더) */
+  #previewBtn{ position:relative; }
+  #previewBtn .dot{
+    position:absolute; top:-3px; right:-3px; width:9px; height:9px; border-radius:50%;
+    background:var(--accent); display:none;
   }
-  #tabs button.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  /* 우측 패널을 오버레이 드로어로 */
+  #rightBackdrop{
+    position:fixed; inset:0; background:rgba(15,23,42,.35); z-index:70;
+    opacity:0; pointer-events:none; transition:opacity .18s;
+  }
+  #rightBackdrop.show{ opacity:1; pointer-events:auto; }
+  #right{
+    position:fixed; top:0; right:0; height:100%; width:min(420px, 100vw);
+    background:var(--bg); z-index:71; box-shadow:-8px 0 30px rgba(15,23,42,.18);
+    transform:translateX(100%); transition:transform .22s ease; overflow-y:auto;
+    padding:16px;
+  }
+  #right.show{ transform:translateX(0); }
+  #rightClose{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;
+  }
+  #rightClose .btn{ padding:7px 10px; min-height:32px; font-size:12px; }
 
   @media(max-width:900px){
-    #tabs{ display:flex; }
-    #left.hide, #right.hide{ display:none; }
     #preview{ max-height:none; }
   }
 
@@ -208,17 +242,13 @@
       </p>
     </div>
     <div class="flex gap-2">
+      <button class="btn sm p" id="previewBtn">📄 Preview &amp; Export<span class="dot"></span></button>
       <button class="btn sm" id="jsonInBtn">📂 Load</button>
       <button class="btn sm" id="jsonOutBtn">💾 Backup</button>
       <button class="btn sm danger" id="resetBtn">Reset</button>
       <input type="file" id="jsonFile" accept=".json,application/json" class="hidden">
     </div>
   </header>
-
-  <div id="tabs">
-    <button data-tab="left" class="on">✍️ Write</button>
-    <button data-tab="right">📄 Preview</button>
-  </div>
 
   <div class="grid gap-4" id="split" style="grid-template-columns:1fr">
 
@@ -291,7 +321,13 @@
     </div>
 
     <!-- 우측 : 미리보기 · 내보내기 -->
-    <div id="right" class="hide">
+    <!-- 우측 : 미리보기 · 내보내기 (드로어) -->
+    <div id="rightBackdrop"></div>
+    <div id="right">
+      <div id="rightClose">
+        <p class="sectTitle" style="margin:0">📄 Preview &amp; Export</p>
+        <button class="btn" id="rightCloseBtn">Close ✕</button>
+      </div>
       <div class="card" style="padding:15px; margin-bottom:12px">
         <p class="sectTitle" style="margin-bottom:9px">
           <span>Copy in format</span>
@@ -405,27 +441,46 @@
       return;
     }
     data.qa.forEach(function (it, i) {
+      const done = it.status !== 'pending';
+      const hasAnswer = !!(it.answer && it.answer.trim());
       const el = document.createElement('div');
-      el.className = 'item' + (it.status === 'pending' ? ' pending' : '');
+      el.className = 'item' + (!done ? ' pending' : '') + (done ? ' qa-done' : '');
       el.innerHTML =
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px">' +
           '<span class="badge q">Q' + (i + 1) + '</span>' +
-          '<select class="fld f" data-f="status" style="flex:1; max-width:160px; min-height:34px; padding:5px 8px; font-size:12px">' +
-            Object.keys(STATUS).map(function (k) {
-              return '<option value="' + k + '"' + (it.status === k ? ' selected' : '') + '>' +
-                STATUS[k].emoji + ' ' + STATUS[k].label + '</option>';
-            }).join('') +
-          '</select>' +
+          '<label class="doneChk">' +
+            '<input type="checkbox" data-f="statusDone"' + (done ? ' checked' : '') + '>' +
+            'Answered' +
+          '</label>' +
           '<button class="btn sm danger del" style="min-height:28px; padding:4px 8px">Delete</button>' +
         '</div>' +
-        '<textarea class="fld f" data-f="question" placeholder="Question">' + esc(it.question) + '</textarea>' +
-        '<div style="display:flex; align-items:center; gap:6px; margin-top:9px">' +
-          '<span class="badge a">A</span>' +
-          '<span class="text-[11.5px]" style="color:var(--dim)">Answer</span>' +
-        '</div>' +
-        '<textarea class="fld f" data-f="answer" placeholder="Answer" style="margin-top:6px">' + esc(it.answer) + '</textarea>';
+        '<textarea class="fld f q-text" data-f="question" placeholder="Question">' + esc(it.question) + '</textarea>' +
+        '<button type="button" class="answerToggle" data-role="answerToggle" style="' + (hasAnswer ? 'display:none' : '') + '">+ Add answer</button>' +
+        '<div class="answerBox' + (hasAnswer ? '' : ' hide') + '" data-role="answerBox">' +
+          '<div style="display:flex; align-items:center; gap:6px; margin-bottom:6px">' +
+            '<span class="badge a">A</span>' +
+            '<span class="text-[11.5px]" style="color:var(--dim)">Answer</span>' +
+          '</div>' +
+          '<textarea class="fld f" data-f="answer" placeholder="Answer">' + esc(it.answer) + '</textarea>' +
+        '</div>';
 
       bindItem(el, it, renderQa);
+
+      // 체크박스는 실제로는 status 문자열에 매핑한다 (다른 서식 내보내기 로직이 status 문자열을 그대로 씀)
+      const chk = el.querySelector('[data-f="statusDone"]');
+      chk.addEventListener('change', function () {
+        it.status = chk.checked ? 'done' : 'pending';
+        save(); renderPreview(); renderQa();
+      });
+
+      const toggleBtn = el.querySelector('[data-role="answerToggle"]');
+      const answerBox = el.querySelector('[data-role="answerBox"]');
+      toggleBtn.addEventListener('click', function () {
+        answerBox.classList.remove('hide');
+        toggleBtn.style.display = 'none';
+        answerBox.querySelector('textarea').focus();
+      });
+
       el.querySelector('.del').addEventListener('click', function () {
         data.qa.splice(i, 1); save(); renderQa(); renderPreview();
       });
@@ -928,33 +983,26 @@
     toast('Cleared');
   });
 
-  /* ---------- 탭 · 레이아웃 ---------- */
-  document.querySelectorAll('#tabs button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
-      $('left').classList.toggle('hide', b.dataset.tab !== 'left');
-      $('right').classList.toggle('hide', b.dataset.tab !== 'right');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
-
-  function layout() {
-    const wide = window.innerWidth >= 900;
-    $('split').style.gridTemplateColumns = wide ? '1fr 1fr' : '1fr';
-    if (wide) { $('left').classList.remove('hide'); $('right').classList.remove('hide'); }
-    else {
-      const on = document.querySelector('#tabs button.on');
-      const t = on ? on.dataset.tab : 'left';
-      $('left').classList.toggle('hide', t !== 'left');
-      $('right').classList.toggle('hide', t !== 'right');
-    }
+  /* ---------- 미리보기 드로어 ---------- */
+  function openRight() {
+    $('right').classList.add('show');
+    $('rightBackdrop').classList.add('show');
+    renderPreview();
   }
-  window.addEventListener('resize', layout);
+  function closeRight() {
+    $('right').classList.remove('show');
+    $('rightBackdrop').classList.remove('show');
+  }
+  $('previewBtn').addEventListener('click', openRight);
+  $('rightCloseBtn').addEventListener('click', closeRight);
+  $('rightBackdrop').addEventListener('click', closeRight);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeRight();
+  });
 
   /* ---------- 시작 ---------- */
   load();
   renderAll();
-  layout();
 })();
 </script>
 
@@ -1045,8 +1093,8 @@
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-28</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.2 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">디자인 개선 — 미리보기·내보내기 패널을 오른쪽에서 슬라이드되어 나오는 드로어로 변경해 입력창을 항상 전체 폭으로 씀. 질의응답 상태를 3단계 드롭다운에서 '답변 완료' 체크박스로 단순화(체크 시 카드 배경이 옅어짐). 답변란은 기본적으로 접혀 있고 '+ 답변 추가'를 눌러야 나타나는 아코디언 방식으로 변경</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-28</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY)</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
@@ -1142,6 +1190,12 @@ Share
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
+
+
+
+
+
+
 
 
 
