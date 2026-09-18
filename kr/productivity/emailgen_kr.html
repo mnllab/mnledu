@@ -299,7 +299,7 @@
             첫 줄에 변수명, 그 아래에 값을 넣습니다. 엑셀에서 복사해 붙여넣으면 그대로 인식됩니다(탭 구분). 쉼표 구분도 됩니다.
           </p>
           <textarea id="bulkData" spellcheck="false"
-            placeholder="회사명&#9;수신인&#9;직함&#9;안건&#10;㈜에임랩&#9;홍길동&#9;대표&#9;2단계 컨설팅&#10;유진엠에스&#9;이다은&#9;팀장&#9;착수보고"></textarea>
+            placeholder="회사명&#9;수신인&#9;직함&#9;안건&#10;㈜테크노벤처&#9;홍길동&#9;대표&#9;2단계 컨설팅&#10;유진엠에스&#9;이다은&#9;팀장&#9;착수보고"></textarea>
           <div class="mt-2 flex flex-wrap items-center gap-2">
             <button id="bulkSample" class="btn px-2.5 py-1.5 text-[12px]">예시 데이터</button>
             <span id="bulkInfo" class="num text-[11.5px] text-muted"></span>
@@ -846,8 +846,8 @@
       '문의사항은 회신 주시면 됩니다.\n감사합니다.\n\n' +
       '{발신인} 드림';
     values = {
-      회사명: '㈜에임랩', 수신인: '홍길동', 직함: '대표',
-      발신회사: '서울대학교 공학연구원', 발신인: '김장길',
+      회사명: '㈜테크노벤처', 수신인: '홍길동', 직함: '대표',
+      발신회사: '한빛공과대학교 산학협력단', 발신인: '김민준',
       안건: '2단계 컨설팅', 일시: '2026. 9. 3.(목) 14:00',
       장소: '본사 회의실', 준비물: '', 추가메모: ''
     };
@@ -859,9 +859,9 @@
   document.getElementById('bulkSample').addEventListener('click', function () {
     bulkData.value =
       '회사명\t수신인\t직함\t안건\t일시\t장소\t발신회사\t발신인\t준비물\t추가메모\n' +
-      '㈜에임랩\t홍길동\t대표\t2단계 컨설팅\t2026. 9. 3.(목) 14:00\t본사 회의실\t서울대학교 공학연구원\t김장길\t\t\n' +
-      '유진엠에스\t이다은\t팀장\t착수보고\t2026. 9. 5.(토) 10:00\t온라인\t서울대학교 공학연구원\t김장길\t사업계획서\t\n' +
-      '\t박신혜\t\t중간점검\t2026. 9. 10.(목) 15:00\t창조경제혁신센터\t서울대학교 공학연구원\t김장길\t\t자료는 사전 공유 예정';
+      '㈜테크노벤처\t홍길동\t대표\t2단계 컨설팅\t2026. 9. 3.(목) 14:00\t본사 회의실\t한빛공과대학교 산학협력단\t김민준\t\t\n' +
+      '유진엠에스\t이다은\t팀장\t착수보고\t2026. 9. 5.(토) 10:00\t온라인\t한빛공과대학교 산학협력단\t김민준\t사업계획서\t\n' +
+      '\t박신혜\t\t중간점검\t2026. 9. 10.(목) 15:00\t지역혁신센터\t한빛공과대학교 산학협력단\t김민준\t\t자료는 사전 공유 예정';
     update();
     toast('예시 데이터를 넣었습니다');
   });
@@ -905,6 +905,173 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
+
+<style>
+.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
+.tk-guide *{box-sizing:border-box}
+.tk-guide-inner{max-width:720px;margin:0 auto}
+.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
+  margin:44px 0 0;word-break:keep-all}
+.tk-guide h2:first-of-type{margin-top:0}
+.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
+.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
+.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
+.tk-guide strong{font-weight:600;color:#1e293b}
+.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
+.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
+.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
+  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
+.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
+.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
+.tk-guide-more h2{margin-top:0}
+.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
+  display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
+.tk-guide a{color:#2c6ba0;text-decoration:none}
+.tk-guide a:hover{text-decoration:underline}
+.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
+</style>
+<section class="tk-guide"><div class="tk-guide-inner">
+<h2>같은 메일을 스무 통 보내야 할 때</h2>
+<p>참가자 스무 명에게 안내 메일을 보내야 하는데, 각자 이름과 소속이 다릅니다. 메일 머지를 쓰자니 프로그램을 설치하고 데이터 원본을 연결해야 하고, 손으로 고치자니 스무 번을 반복해야 합니다.</p>
+<p>한글에는 또 하나의 문제가 있습니다. 조사입니다. "홍길동님이"와 "이다은님이"는 괜찮지만, "착수보고가 확정"과 "2단계 컨설팅이 확정"처럼 받침에 따라 조사가 달라집니다. 이 도구는 <strong>(이/가) (은/는) (을/를)</strong> 형태로 적어두면 받침을 판단해 자동으로 골라 넣습니다.</p>
+<h2>이럴 때 씁니다</h2><dl>
+<dt>행사·모임 안내</dt><dd>참가자 명단을 엑셀에서 그대로 복사해 붙이면 이름과 소속이 들어간 메일이 한 번에 만들어집니다.</dd>
+<dt>심사·평가 결과 통보</dt><dd>평가 대상 기업마다 회사명과 담당자가 다른 통보 메일. 문구는 같고 이름만 바뀌는 전형적인 경우입니다.</dd>
+<dt>멘토링·상담 일정 안내</dt><dd>대상자별로 일시와 장소가 다른 안내. 변수 칸을 늘려 일정까지 함께 넣을 수 있습니다.</dd>
+<dt>거래처 정기 안내</dt><dd>단가 변경, 휴무 안내처럼 매번 비슷한 내용을 여러 곳에 보낼 때. 템플릿을 저장해 두면 다음에 그대로 씁니다.</dd>
+</dl>
+<h2>사용 방법</h2><ol>
+<li><strong>템플릿 편집</strong>에서 제목과 본문을 작성합니다. 바뀌는 부분은 <strong>{회사명}</strong>처럼 중괄호로 적습니다.</li>
+<li>조사가 필요한 자리에는 <strong>{안건}(이/가)</strong> 형태로 적어둡니다.</li>
+<li><strong>예시 데이터</strong> 칸에 명단을 넣습니다. 엑셀에서 복사해 붙이면 탭으로 구분된 채로 그대로 들어갑니다.</li>
+<li>생성된 메일을 확인하고 <strong>이메일 복사</strong>로 하나씩 가져가거나, <strong>대량 연속</strong>으로 전체를 받습니다.</li>
+</ol>
+<h2>옵션 설명</h2><dl>
+<dt>대량 연속</dt><dd>만들어진 메일 전체를 이어서 표시합니다. 한 번에 확인하거나 문서로 저장할 때 씁니다.</dd>
+<dt>서식 · 마크다운 · 일반 텍스트</dt><dd>복사 형식을 고릅니다. 아웃룩이나 지메일에 붙일 때는 서식, 슬랙이나 노션에는 마크다운, 입력 폼에는 일반 텍스트가 맞습니다.</dd>
+<dt>양식 저장</dt><dd>자주 쓰는 템플릿에 이름을 붙여 저장합니다. 저장 정보는 브라우저 안에 남으므로 같은 기기에서 다시 열면 그대로 있습니다.</dd>
+</dl>
+<h2>자주 묻는 질문</h2><dl>
+<dt>엑셀에서 바로 붙여넣을 수 있나요</dt><dd>가능합니다. 엑셀에서 범위를 복사하면 탭으로 구분된 텍스트가 되는데, 그대로 붙여넣으면 열이 자동으로 나뉩니다.</dd>
+<dt>조사 처리가 항상 정확한가요</dt><dd>받침 유무로 판단하므로 대부분 맞습니다. 다만 숫자나 영문이 섞인 경우(예: 3M이/가)는 읽는 방식에 따라 달라질 수 있으니 결과를 한번 확인하시는 편이 좋습니다.</dd>
+<dt>메일이 자동으로 발송되나요</dt><dd>아닙니다. 이 도구는 본문을 만들어 줄 뿐입니다. 발송은 사용하시는 메일 프로그램에서 직접 하셔야 합니다.</dd>
+</dl>
+<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
+<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
+<li><a href="https://mnledu.com/kr/productivity/md2hwpx_kr.html">마크다운 → 한글(HWPX) 변환기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/counseling-log-generator_kr.html">상담일지 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/meeting-minutes-generator_kr.html">회의록 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/document-mail-merge_kr.html">템플릿 문서 일괄 생성기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/pdf-to-text_kr.html">PDF 문서 변환기</a></li>
+<li><a href="https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html">부동산 대출 스트레스 테스트기</a></li>
+</ul></div>
+<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
+</div></section>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "엑셀에서 바로 붙여넣을 수 있나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "가능합니다. 엑셀에서 범위를 복사하면 탭으로 구분된 텍스트가 되는데, 그대로 붙여넣으면 열이 자동으로 나뉩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "조사 처리가 항상 정확한가요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "받침 유무로 판단하므로 대부분 맞습니다. 다만 숫자나 영문이 섞인 경우(예: 3M이/가)는 읽는 방식에 따라 달라질 수 있으니 결과를 한번 확인하시는 편이 좋습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "메일이 자동으로 발송되나요",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아닙니다. 이 도구는 본문을 만들어 줄 뿐입니다. 발송은 사용하시는 메일 프로그램에서 직접 하셔야 합니다."
+      }
+    }
+  ]
+}
+</script>
+<!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -914,7 +1081,6 @@
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
-
 
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
@@ -999,31 +1165,6 @@
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
-<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
-<style>
-.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
-.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
-  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
-  font-family:ui-monospace,monospace}
-.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
-.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
-.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
-.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
-  border-top:1px solid #e2e8f0}
-.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
-  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
-.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
-.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
-.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
-.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
-</style>
-<div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
-</div>
-<!-- TOOLKIT:VERSION_END -->
 
 
 
@@ -1032,112 +1173,5 @@
 
 
 
-
-
-
-
-
-
-
-<!-- TOOLKIT:GUIDE_START · build-guides.js 가 관리합니다 -->
-
-<style>
-.tk-guide{background:#f8fafc;color:#0f172a;border-top:1px solid #e2e8f0;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
-  padding:56px 20px 64px;margin-top:48px;line-height:1.5;text-align:left}
-.tk-guide *{box-sizing:border-box}
-.tk-guide-inner{max-width:720px;margin:0 auto}
-.tk-guide h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#0f172a;
-  margin:44px 0 0;word-break:keep-all}
-.tk-guide h2:first-of-type{margin-top:0}
-.tk-guide p{font-size:14.5px;line-height:1.85;color:#475569;margin:14px 0 0;word-break:keep-all}
-.tk-guide ul,.tk-guide ol{margin:14px 0 0;padding-left:20px}
-.tk-guide li{font-size:14.5px;line-height:1.8;color:#475569;margin-top:8px;word-break:keep-all}
-.tk-guide strong{font-weight:600;color:#1e293b}
-.tk-guide dl{margin:14px 0 0;border-top:1px solid #e2e8f0}
-.tk-guide dt{font-size:14.5px;font-weight:700;color:#0f172a;margin-top:18px;word-break:keep-all}
-.tk-guide dd{font-size:14.5px;line-height:1.8;color:#475569;margin:6px 0 18px;
-  padding-bottom:18px;border-bottom:1px solid #e2e8f0;word-break:keep-all}
-.tk-guide-note{margin-top:44px;padding:16px 18px;background:#fff;border:1px solid #e2e8f0;
-  border-radius:12px;font-size:13px;line-height:1.75;color:#64748b;word-break:keep-all}
-.tk-guide-more{margin-top:40px;padding-top:28px;border-top:1px solid #e2e8f0}
-.tk-guide-more h2{margin-top:0}
-.tk-guide-more ul{list-style:none;padding:0;margin-top:14px;
-  display:grid;grid-template-columns:1fr;gap:8px}
-@media(min-width:640px){.tk-guide-more ul{grid-template-columns:1fr 1fr}}
-.tk-guide a{color:#2c6ba0;text-decoration:none}
-.tk-guide a:hover{text-decoration:underline}
-.tk-guide-home{display:inline-block;margin-top:28px;font-size:13px;font-weight:700;color:#2c6ba0}
-</style>
-<section class="tk-guide"><div class="tk-guide-inner">
-<h2>같은 메일을 스무 통 보내야 할 때</h2>
-<p>참가자 스무 명에게 안내 메일을 보내야 하는데, 각자 이름과 소속이 다릅니다. 메일 머지를 쓰자니 프로그램을 설치하고 데이터 원본을 연결해야 하고, 손으로 고치자니 스무 번을 반복해야 합니다.</p>
-<p>한글에는 또 하나의 문제가 있습니다. 조사입니다. "홍길동님이"와 "이다은님이"는 괜찮지만, "착수보고가 확정"과 "2단계 컨설팅이 확정"처럼 받침에 따라 조사가 달라집니다. 이 도구는 <strong>(이/가) (은/는) (을/를)</strong> 형태로 적어두면 받침을 판단해 자동으로 골라 넣습니다.</p>
-<h2>이럴 때 씁니다</h2><dl>
-<dt>행사·모임 안내</dt><dd>참가자 명단을 엑셀에서 그대로 복사해 붙이면 이름과 소속이 들어간 메일이 한 번에 만들어집니다.</dd>
-<dt>심사·평가 결과 통보</dt><dd>평가 대상 기업마다 회사명과 담당자가 다른 통보 메일. 문구는 같고 이름만 바뀌는 전형적인 경우입니다.</dd>
-<dt>멘토링·상담 일정 안내</dt><dd>대상자별로 일시와 장소가 다른 안내. 변수 칸을 늘려 일정까지 함께 넣을 수 있습니다.</dd>
-<dt>거래처 정기 안내</dt><dd>단가 변경, 휴무 안내처럼 매번 비슷한 내용을 여러 곳에 보낼 때. 템플릿을 저장해 두면 다음에 그대로 씁니다.</dd>
-</dl>
-<h2>사용 방법</h2><ol>
-<li><strong>템플릿 편집</strong>에서 제목과 본문을 작성합니다. 바뀌는 부분은 <strong>{회사명}</strong>처럼 중괄호로 적습니다.</li>
-<li>조사가 필요한 자리에는 <strong>{안건}(이/가)</strong> 형태로 적어둡니다.</li>
-<li><strong>예시 데이터</strong> 칸에 명단을 넣습니다. 엑셀에서 복사해 붙이면 탭으로 구분된 채로 그대로 들어갑니다.</li>
-<li>생성된 메일을 확인하고 <strong>이메일 복사</strong>로 하나씩 가져가거나, <strong>대량 연속</strong>으로 전체를 받습니다.</li>
-</ol>
-<h2>옵션 설명</h2><dl>
-<dt>대량 연속</dt><dd>만들어진 메일 전체를 이어서 표시합니다. 한 번에 확인하거나 문서로 저장할 때 씁니다.</dd>
-<dt>서식 · 마크다운 · 일반 텍스트</dt><dd>복사 형식을 고릅니다. 아웃룩이나 지메일에 붙일 때는 서식, 슬랙이나 노션에는 마크다운, 입력 폼에는 일반 텍스트가 맞습니다.</dd>
-<dt>양식 저장</dt><dd>자주 쓰는 템플릿에 이름을 붙여 저장합니다. 저장 정보는 브라우저 안에 남으므로 같은 기기에서 다시 열면 그대로 있습니다.</dd>
-</dl>
-<h2>자주 묻는 질문</h2><dl>
-<dt>엑셀에서 바로 붙여넣을 수 있나요</dt><dd>가능합니다. 엑셀에서 범위를 복사하면 탭으로 구분된 텍스트가 되는데, 그대로 붙여넣으면 열이 자동으로 나뉩니다.</dd>
-<dt>조사 처리가 항상 정확한가요</dt><dd>받침 유무로 판단하므로 대부분 맞습니다. 다만 숫자나 영문이 섞인 경우(예: 3M이/가)는 읽는 방식에 따라 달라질 수 있으니 결과를 한번 확인하시는 편이 좋습니다.</dd>
-<dt>메일이 자동으로 발송되나요</dt><dd>아닙니다. 이 도구는 본문을 만들어 줄 뿐입니다. 발송은 사용하시는 메일 프로그램에서 직접 하셔야 합니다.</dd>
-</dl>
-<p class="tk-guide-note">이 도구는 사용자의 브라우저 안에서만 동작합니다. 입력한 내용은 서버로 전송되지 않으며 어디에도 저장되지 않습니다. 페이지를 닫으면 처리 중이던 내용도 함께 사라집니다.</p>
-<div class="tk-guide-more"><h2>같은 분류의 다른 도구</h2><ul>
-<li><a href="https://mnledu.com/kr/productivity/document-mail-merge_kr.html">템플릿 문서 일괄 생성기</a></li>
-<li><a href="https://mnledu.com/kr/productivity/pdf-to-text_kr.html">PDF 문서 변환기</a></li>
-<li><a href="https://mnledu.com/kr/productivity/mortgage-stress-tester_kr.html">부동산 대출 스트레스 테스트기</a></li>
-<li><a href="https://mnledu.com/kr/productivity/universal-table-data-hub_kr.html">만능 표 데이터 허브</a></li>
-<li><a href="https://mnledu.com/kr/productivity/text-batch-factory_kr.html">스마트 텍스트 가공 공장</a></li>
-<li><a href="https://mnledu.com/kr/productivity/data-slicer_kr.html">엑셀·CSV 원클릭 분할 압축기</a></li>
-</ul></div>
-<a class="tk-guide-home" href="https://mnledu.com/">전체 도구 목록 보기 →</a>
-</div></section>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "엑셀에서 바로 붙여넣을 수 있나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "가능합니다. 엑셀에서 범위를 복사하면 탭으로 구분된 텍스트가 되는데, 그대로 붙여넣으면 열이 자동으로 나뉩니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "조사 처리가 항상 정확한가요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "받침 유무로 판단하므로 대부분 맞습니다. 다만 숫자나 영문이 섞인 경우(예: 3M이/가)는 읽는 방식에 따라 달라질 수 있으니 결과를 한번 확인하시는 편이 좋습니다."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "메일이 자동으로 발송되나요",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "아닙니다. 이 도구는 본문을 만들어 줄 뿐입니다. 발송은 사용하시는 메일 프로그램에서 직접 하셔야 합니다."
-      }
-    }
-  ]
-}
-</script>
-<!-- TOOLKIT:GUIDE_END -->
 </body>
 </html>

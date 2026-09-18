@@ -6,9 +6,15 @@
     "history": []
   },
   "emailgen": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "untracked-baseline",
-    "history": []
+    "history": [
+      {
+        "version": "1.1",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
+      }
+    ]
   },
   "templatemerger": {
     "version": "1.0",
@@ -31,9 +37,15 @@
     "history": []
   },
   "anonymizer": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "untracked-baseline",
-    "history": []
+    "history": [
+      {
+        "version": "1.1",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
+      }
+    ]
   },
   "pdftxt": {
     "version": "1.0",
@@ -178,13 +190,18 @@
     "history": []
   },
   "presentation-timer": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "2026-08-28",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-28",
         "note": "최초 등록 (PRODUCTIVITY)"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
       }
     ]
   },
@@ -242,24 +259,34 @@
     ]
   },
   "meeting-minutes": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "2026-08-28",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-28",
         "note": "최초 등록 (PRODUCTIVITY)"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
       }
     ]
   },
   "slot-coordinator": {
-    "version": "1.0",
+    "version": "1.1",
     "addedDate": "2026-08-28",
     "history": [
       {
         "version": "1.0",
         "date": "2026-08-28",
         "note": "최초 등록 (PRODUCTIVITY)"
+      },
+      {
+        "version": "1.1",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
       }
     ]
   },
@@ -651,7 +678,7 @@
     ]
   },
   "document-mail-merge": {
-    "version": "2.1",
+    "version": "2.2",
     "addedDate": "2026-09-01",
     "history": [
       {
@@ -678,6 +705,11 @@
         "version": "2.1",
         "date": "2026-09-01",
         "note": "한국어 조사(은/는, 이/가, 을/를 등) 자동 처리 추가 — {{이름}}은 처럼 템플릿에 조사를 붙여 둬도 실제 값의 받침 유무에 맞춰 자동으로 골라줌. 판단 애매한 경우만 확인 요청"
+      },
+      {
+        "version": "2.2",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
       }
     ]
   },
@@ -708,7 +740,7 @@
     ]
   },
   "meeting-minutes-generator": {
-    "version": "1.4",
+    "version": "1.5",
     "addedDate": "2026-09-10",
     "history": [
       {
@@ -735,11 +767,16 @@
         "version": "1.4",
         "date": "2026-09-16",
         "note": "PDF 저장 방식을 브라우저 인쇄 대화상자 경유에서 html2pdf.js를 이용한 직접 다운로드로 변경 — 인쇄 화면을 거치지 않고 바로 파일이 저장되며, 파일명이 100% 그대로 적용됨"
+      },
+      {
+        "version": "1.5",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
       }
     ]
   },
   "counseling-log-generator": {
-    "version": "1.3",
+    "version": "1.4",
     "addedDate": "2026-09-16",
     "history": [
       {
@@ -761,6 +798,22 @@
         "version": "1.3",
         "date": "2026-09-16",
         "note": "PDF 저장 방식을 브라우저 인쇄 대화상자 경유에서 html2pdf.js를 이용한 직접 다운로드로 변경 — 인쇄 화면을 거치지 않고 바로 파일이 저장되며, 파일명이 100% 그대로 적용됨"
+      },
+      {
+        "version": "1.4",
+        "date": "2026-09-18",
+        "note": "예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체"
+      }
+    ]
+  },
+  "md2hwpx": {
+    "version": "1.0",
+    "addedDate": "2026-09-17",
+    "history": [
+      {
+        "version": "1.0",
+        "date": "2026-09-17",
+        "note": "최초 등록 (PRODUCTIVITY) — 한글(HWP) hwpx 템플릿 스타일 자동 인식, 마크다운 레벨별 스타일 매핑, 표 변환, 줄 좌표 자동 계산, 매핑 프리셋 저장"
       }
     ]
   }

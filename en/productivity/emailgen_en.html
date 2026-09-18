@@ -270,7 +270,7 @@
             Put the field names on the first line and the values below. Pasting straight from a spreadsheet works, and commas are accepted too.
           </p>
           <textarea id="bulkData" spellcheck="false"
-            placeholder="Company&#9;Name&#9;Title&#9;Subject&#10;Aimlab Inc.&#9;Jordan Reyes&#9;CEO&#9;phase 2 review&#10;Eugene MS&#9;Priya Raman&#9;Team Lead&#9;kickoff report"></textarea>
+            placeholder="Company&#9;Name&#9;Title&#9;Subject&#10;Technoventure Inc.&#9;Jordan Reyes&#9;CEO&#9;phase 2 review&#10;Eugene MS&#9;Priya Raman&#9;Team Lead&#9;kickoff report"></textarea>
           <div class="mt-2 flex flex-wrap items-center gap-2">
             <button id="bulkSample" class="btn px-2.5 py-1.5 text-[12px]">Sample data</button>
             <span id="bulkInfo" class="num text-[11.5px] text-muted"></span>
@@ -817,8 +817,8 @@
       'Do reply to this message if anything needs changing.\n\n' +
       'Best regards,\n{Sender}';
     values = {
-      Company: 'Aimlab Inc.', Name: 'Jordan Reyes', Title: 'CEO',
-      SenderCompany: 'SNU Engineering Research Institute', Sender: 'Janggil Kim',
+      Company: 'Technoventure Inc.', Name: 'Jordan Reyes', Title: 'CEO',
+      SenderCompany: 'Lakeside Institute of Technology', Sender: 'Alex Kim',
       Subject: 'the phase 2 review', Date: 'Thu 3 Sep 2026, 2:00 pm',
       Location: 'Head office meeting room', Bring: '', Notes: ''
     };
@@ -830,9 +830,9 @@
   document.getElementById('bulkSample').addEventListener('click', function () {
     bulkData.value =
       'Company\tName\tTitle\tSubject\tDate\tLocation\tSenderCompany\tSender\tBring\tNotes\n' +
-      'Aimlab Inc.\tJordan Reyes\tCEO\tthe phase 2 review\tThu 3 Sep, 2:00 pm\tHead office\tSNU ERI\tJanggil Kim\t\t\n' +
-      'Eugene MS\tPriya Raman\tTeam Lead\tthe kickoff report\tSat 5 Sep, 10:00 am\tOnline\tSNU ERI\tJanggil Kim\tBusiness plan\t\n' +
-      '\tSam Okafor\t\tthe interim check\tThu 10 Sep, 3:00 pm\tInnovation Centre\tSNU ERI\tJanggil Kim\t\tMaterials shared in advance';
+      'Technoventure Inc.\tJordan Reyes\tCEO\tthe phase 2 review\tThu 3 Sep, 2:00 pm\tHead office\tLakeside Institute of Technology\tAlex Kim\t\t\n' +
+      'Eugene MS\tPriya Raman\tTeam Lead\tthe kickoff report\tSat 5 Sep, 10:00 am\tOnline\tLakeside Institute of Technology\tAlex Kim\tBusiness plan\t\n' +
+      '\tSam Okafor\t\tthe interim check\tThu 10 Sep, 3:00 pm\tInnovation Centre\tLakeside Institute of Technology\tAlex Kim\t\tMaterials shared in advance';
     update();
     toast('Sample data loaded');
   });
@@ -960,6 +960,31 @@
 }
 </script>
 <!-- TOOLKIT:GUIDE_END -->
+<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
+<style>
+.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
+.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
+  font-family:ui-monospace,monospace}
+.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
+.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
+.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
+.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
+  border-top:1px solid #e2e8f0}
+.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
+.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
+.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
+.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
+.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
+</style>
+<div class="tk-version">
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.1 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li></ul>
+</div>
+<!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
 <script>
 (function(){
@@ -969,7 +994,6 @@
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
-
 
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
@@ -1054,31 +1078,33 @@ Share
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
-<!-- TOOLKIT:VERSION_START · inject-version.js 가 관리합니다 -->
-<style>
-.tk-version{margin:22px auto 0;max-width:720px;padding:0 20px;
-  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;text-align:left}
-.tk-version-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
-  border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background .15s ease;
-  font-family:ui-monospace,monospace}
-.tk-version-toggle:hover{background:#f1f5f9;color:#334155}
-.tk-version-toggle .tk-v-arrow{font-size:9px;transition:transform .15s ease;font-family:inherit}
-.tk-version-toggle[aria-expanded="true"] .tk-v-arrow{transform:rotate(180deg)}
-.tk-version-history{list-style:none;margin:10px 0 0;padding:0;max-width:520px;
-  border-top:1px solid #e2e8f0}
-.tk-version-history li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
-  padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;color:#64748b}
-.tk-version-num{font-family:ui-monospace,monospace;font-weight:700;color:#334155;min-width:36px}
-.tk-version-date{font-family:ui-monospace,monospace;color:#94a3b8}
-.tk-version-note{flex-basis:100%;color:#64748b;line-height:1.55}
-.tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
-</style>
-<div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.0 &middot; 버전 기록 시작 전</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li class="tk-version-empty">이 도구는 아직 버전 기록이 없습니다.</li></ul>
-</div>
-<!-- TOOLKIT:VERSION_END -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

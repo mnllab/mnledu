@@ -141,7 +141,7 @@ body{font-family:'Pretendard',ui-sans-serif,system-ui,sans-serif}.mono{font-fami
       </div>
       <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
         <div class="flex flex-wrap items-start justify-between gap-2"><div><h3 class="text-sm font-semibold text-ink-900">Find field candidates from notes</h3><p class="mt-1 text-xs leading-relaxed text-ink-500">Paste meeting notes, an email, or source text. AI reads the template context and the sentences around each <code>{{field}}</code>, then suggests relevant source lines. Nothing is overwritten until you click <b>Apply</b>.</p></div><button id="aiSuggestBtn" type="button" class="rounded-lg bg-violet-100 border border-violet-200 px-3 py-2 text-xs font-semibold text-violet-900 hover:bg-violet-200">Find candidates</button></div>
-        <textarea id="aiSourceText" class="mt-3 w-full min-h-[110px] resize-y rounded-lg border border-slate-200 bg-white p-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-violet-300" placeholder="Example: The TC2 Ideation meeting will be held on September 14 at 2 PM in Room 204, Building 301. The contact is Alex Kim."></textarea>
+        <textarea id="aiSourceText" class="mt-3 w-full min-h-[110px] resize-y rounded-lg border border-slate-200 bg-white p-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-violet-300" placeholder="Example: The H2 workshop will be held on September 14 at 2 PM in the 3rd floor conference room. The contact is Alex Kim."></textarea>
         <div id="aiSuggestionResult" class="mt-3 hidden"></div>
       </div>
       <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs"><span id="aiStatus" class="text-ink-500">The AI model has not been loaded yet.</span><button id="aiClearMappingBtn" type="button" class="hidden text-violet-700 hover:underline">Clear AI mappings</button></div>
@@ -750,8 +750,8 @@ window.__MAILMERGE_TEST__={detectFields,mergeTemplate,normalizeKey,parseDelimite
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.1 &middot; 2026-09-01</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">한국어 조사(은/는, 이/가, 을/를 등) 자동 처리 추가 — {{이름}}은 처럼 템플릿에 조사를 붙여 둬도 실제 값의 받침 유무에 맞춰 자동으로 골라줌. 판단 애매한 경우만 확인 요청</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">대폭 업데이트 — 기업 전용 템플릿 라이브러리(사전 등록 목록에서 바로 불러오기), 경량 AI 도우미(Excel 열 이름이 달라도 의미로 자동 매칭 + 빈 필드·형식 오류 최종 점검), 서식 포함 클립보드 복사, DOCX/HWPX 실제 서식(굵기·색상 등)을 반영하는 정밀 미리보기 추가. 입력 방식도 인라인·표·붙여넣기·파일 4가지로 확장</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">여러 건을 한 파일로 결합해서 내보내는 옵션 추가(DOCX·HWPX 한정) — 기존엔 건별 파일이 ZIP으로만 나왔는데, 이제 페이지로 이어진 문서 하나로도 받을 수 있음. 미리보기 이전/다음 넘기기 UI 추가</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">디자인 개편 — 히어로 섹션·기능 배지 추가, 레이아웃 정리. 도구명을 '문서 메일머지 생성기'에서 '템플릿 문서 일괄 생성기'로 변경(기능 동일)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v2.2 &middot; 2026-09-18</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v2.2</span><span class="tk-version-date">2026-09-18</span><span class="tk-version-note">예시 데이터 정리 — 개발 과정에서 남아있던 실제 인명·소속·기관명을 전부 가상 인물·가상 기관으로 교체</span></li><li><span class="tk-version-num">v2.1</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">한국어 조사(은/는, 이/가, 을/를 등) 자동 처리 추가 — {{이름}}은 처럼 템플릿에 조사를 붙여 둬도 실제 값의 받침 유무에 맞춰 자동으로 골라줌. 판단 애매한 경우만 확인 요청</span></li><li><span class="tk-version-num">v2.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">대폭 업데이트 — 기업 전용 템플릿 라이브러리(사전 등록 목록에서 바로 불러오기), 경량 AI 도우미(Excel 열 이름이 달라도 의미로 자동 매칭 + 빈 필드·형식 오류 최종 점검), 서식 포함 클립보드 복사, DOCX/HWPX 실제 서식(굵기·색상 등)을 반영하는 정밀 미리보기 추가. 입력 방식도 인라인·표·붙여넣기·파일 4가지로 확장</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">여러 건을 한 파일로 결합해서 내보내는 옵션 추가(DOCX·HWPX 한정) — 기존엔 건별 파일이 ZIP으로만 나왔는데, 이제 페이지로 이어진 문서 하나로도 받을 수 있음. 미리보기 이전/다음 넘기기 UI 추가</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">디자인 개편 — 히어로 섹션·기능 배지 추가, 레이아웃 정리. 도구명을 '문서 메일머지 생성기'에서 '템플릿 문서 일괄 생성기'로 변경(기능 동일)</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-09-01</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — {{항목}} 자동 감지 메일머지, Excel/CSV 일괄 생성, DOCX·HWPX 원본 서식 유지 내보내기</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
@@ -763,6 +763,7 @@ window.__MAILMERGE_TEST__={detectFields,mergeTemplate,normalizeKey,parseDelimite
 })();
 </script>
 <!-- TOOLKIT:VIEWCOUNT_END -->
+
 <!-- TOOLKIT:SHARE_START · inject-share.js 가 관리합니다 -->
 <style>
 .tk-share-fab{position:fixed;right:18px;bottom:18px;z-index:2147483000;
@@ -846,5 +847,30 @@ Share
 })();
 </script>
 <!-- TOOLKIT:SHARE_END -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
