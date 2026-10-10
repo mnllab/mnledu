@@ -59,7 +59,7 @@
     { "@type": "Question", "name": "If I upload an Excel file, is the original file stored on a server?", "acceptedAnswer": { "@type": "Answer", "text": "No. The SheetJS library reads the file only in your browser's memory, and the data disappears when you close the tab." } },
     { "@type": "Question", "name": "Do I have to choose the table delimiter myself?", "acceptedAnswer": { "@type": "Answer", "text": "No. Tabs (TSV), commas (CSV), and Markdown table syntax are all detected automatically. If detection is ambiguous, you can still set the delimiter manually at the top." } },
     { "@type": "Question", "name": "Will a file exported as HWPX actually open in real Hangul (Hancom Office)?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — it's generated following the HWPX OWPML standard and designed to open in Hancom Office 2020 or later. Very complex formatting (nested tables, special objects, etc.) isn't supported, though." } },
-    { "@type": "Question", "name": "What does the 'Inline with text' option do?", "acceptedAnswer": { "@type": "Answer", "text": "In Hangul (HWP), it decides whether a table flows inline with the surrounding text or floats as a freely-positioned object. Turning it on is recommended so the table doesn't drift while you keep editing the document." } },
+    { "@type": "Question", "name": "What does the 'Inline with text' option do?", "acceptedAnswer": { "@type": "Answer", "text": "In Hangul (HWP), it decides whether a table flows inline with the surrounding text or floats as a freely-positioned object. It's off by default — turn it on before exporting if you want the table to stay put while you keep editing the document." } },
     { "@type": "Question", "name": "How many rows and columns can it handle?", "acceptedAnswer": { "@type": "Answer", "text": "We've confirmed real-time processing up to several thousand rows within typical browser memory limits. For very large datasets, only part of the data is shown in the live preview." } }
   ]
 }
@@ -106,6 +106,12 @@
   .tk-sub-btn { padding:.5rem 0; border-radius:.5rem; border:1px solid #E2E8F0; background:#fff; color:#334155; font-size:.75rem; font-weight:600; }
   .tk-sub-btn:hover:not(:disabled) { background:#F8FAFC; }
   .tk-sub-btn:disabled { opacity:.4; cursor:not-allowed; }
+  #previewDetails > summary { list-style:none; cursor:pointer; }
+  #previewDetails > summary::-webkit-details-marker { display:none; }
+  #previewDetails .tk-pv-arrow { transition:transform .15s ease; }
+  #previewDetails[open] .tk-pv-arrow { transform:rotate(180deg); }
+  #previewDetails .tk-pv-open { display:inline; } #previewDetails .tk-pv-close { display:none; }
+  #previewDetails[open] .tk-pv-open { display:none; } #previewDetails[open] .tk-pv-close { display:inline; }
 </style>
 </head>
 <body class="min-h-screen text-slate-800">
@@ -130,7 +136,7 @@
     <p class="text-sm text-slate-500 mt-1">Paste from Notepad or drop in an Excel file — format it once, then export straight to Word.</p>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px_1fr] gap-5">
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px_300px] gap-5">
 
     <!-- Left: input -->
     <section class="tk-card p-4 flex flex-col gap-3 min-h-[560px]">
@@ -180,28 +186,40 @@ Jamie	34	Engineering"></textarea>
       </div>
 
       <div>
+        <label for="fontFace" class="text-xs font-semibold text-slate-600 mb-1.5 block">Font</label>
+        <select id="fontFace" class="w-full rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/40"><option value="malgun" selected>Malgun Gothic</option><option value="hcr-dotum">HCR Dotum</option><option value="hcr-batang">HCR Batang</option></select>
+      </div>
+
+      <div>
         <label for="fontSize" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
-          <span>Font size</span><span id="fontSizeVal" class="text-brand">10pt</span>
+          <span>Font size</span><span id="fontSizeVal" class="text-brand">9pt</span>
         </label>
-        <input id="fontSize" type="range" min="6" max="72" value="10" class="w-full accent-brand">
+        <input id="fontSize" type="range" min="6" max="72" value="9" class="w-full accent-brand">
       </div>
 
       <div>
         <label for="lineHeight" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
-          <span>Line spacing</span><span id="lineHeightVal" class="text-brand">160%</span>
+          <span>Line spacing</span><span id="lineHeightVal" class="text-brand">120%</span>
         </label>
-        <input id="lineHeight" type="range" min="80" max="300" step="5" value="160" class="w-full accent-brand">
+        <input id="lineHeight" type="range" min="80" max="300" step="5" value="120" class="w-full accent-brand">
       </div>
 
       <div>
         <label for="tableWidth" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
-          <span>Table width</span><span id="tableWidthVal" class="text-brand">160mm</span>
+          <span>Table width</span><span id="tableWidthVal" class="text-brand">155mm</span>
         </label>
-        <input id="tableWidth" type="range" min="40" max="210" value="160" class="w-full accent-brand">
+        <input id="tableWidth" type="range" min="40" max="210" value="155" class="w-full accent-brand">
+      </div>
+
+      <div>
+        <label for="cellMargin" class="text-xs font-semibold text-slate-600 mb-1.5 flex justify-between">
+          <span>Cell padding</span><span id="cellMarginVal" class="text-brand">0mm</span>
+        </label>
+        <input id="cellMargin" type="range" min="0" max="5" step="0.5" value="0" class="w-full accent-brand">
       </div>
 
       <label class="flex items-center gap-2 cursor-pointer select-none">
-        <input id="treatAsChar" type="checkbox" checked class="w-4 h-4 accent-brand rounded">
+        <input id="treatAsChar" type="checkbox" class="w-4 h-4 accent-brand rounded">
         <span class="text-xs font-medium text-slate-700">Inline with text (HWP)</span>
       </label>
       <p class="text-[11px] text-slate-400 leading-relaxed -mt-1">Keeps the table flowing with the surrounding text so it doesn't get pushed around. For very large tables (many rows/columns), this can make Hangul (HWP) slow or freeze on open — if that happens, uncheck this before saving for a lighter file (the table will float as a separate object instead, so it may shift if paragraphs above it grow).</p>
@@ -228,19 +246,10 @@ Jamie	34	Engineering"></textarea>
       <button id="clearBtn" type="button" class="mt-auto text-xs font-semibold text-slate-400 hover:text-red-500 self-start">🗑 Clear all</button>
     </section>
 
-    <!-- Right: preview & export -->
-    <section class="tk-card p-4 flex flex-col gap-3">
-      <h2 class="text-sm font-bold text-slate-700 flex items-center gap-1.5">👁️ Live Preview</h2>
-
-      <div id="previewTableWrap" class="flex-1 min-h-[320px] overflow-auto rounded-xl border border-slate-200 bg-white p-3 tk-scroll">
-        <div id="emptyState" class="h-full flex flex-col items-center justify-center text-center py-16 text-slate-400">
-          <p class="text-3xl mb-2">🗂️</p>
-          <p class="text-sm font-medium">No table data yet</p>
-          <p class="text-xs mt-1">Paste text on the left or upload an Excel file to get started.</p>
-        </div>
-      </div>
-
-      <div class="pt-2 border-t border-slate-100 flex flex-col gap-2">
+    <!-- Right: export -->
+    <section class="tk-card p-4 flex flex-col gap-3 self-start">
+      <h2 class="text-sm font-bold text-slate-700 flex items-center gap-1.5">🔄 Export</h2>
+      <div class="flex flex-col gap-2">
         <button id="exportDocxBtn" type="button"
           class="w-full py-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-bold shadow-sm shadow-sky-200 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
           🔵 Download Word (.docx)
@@ -256,8 +265,26 @@ Jamie	34	Engineering"></textarea>
           📋 Copy formatted table (paste into Word/HWP)
         </button>
       </div>
+      <p class="text-[11px] text-slate-400 leading-relaxed">Expand the preview below to check how the table looks.</p>
     </section>
   </div>
+
+  <!-- Bottom: preview (accordion, collapsed by default) -->
+  <details id="previewDetails" class="tk-card mt-5">
+    <summary class="flex items-center justify-between gap-3 px-4 py-3 select-none">
+      <span class="text-sm font-bold text-slate-700 flex items-center gap-1.5">👁️ Live Preview <span id="previewSummaryInfo" class="text-[11px] font-normal text-slate-400">No data</span></span>
+      <span class="text-xs font-semibold text-slate-500 flex items-center gap-1"><span class="tk-pv-open">Show</span><span class="tk-pv-close">Hide</span><span class="tk-pv-arrow">&#9662;</span></span>
+    </summary>
+    <div class="px-4 pb-4">
+      <div id="previewTableWrap" class="min-h-[160px] max-h-[640px] overflow-auto rounded-xl border border-slate-200 bg-white p-3 tk-scroll">
+        <div id="emptyState" class="h-full flex flex-col items-center justify-center text-center py-12 text-slate-400">
+          <p class="text-3xl mb-2">🗂️</p>
+          <p class="text-sm font-medium">No table data yet</p>
+          <p class="text-xs mt-1">Paste text on the left or upload an Excel file to get started.</p>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <!-- Guide -->
   <section class="tk-guide max-w-3xl mx-auto mt-16 mb-10">
@@ -287,8 +314,8 @@ Jamie	34	Engineering"></textarea>
     <h2>Why 'inline with text' and table width are separate options</h2>
     <p>
       In Hangul (HWP), a table placed as a floating object tends to drift out of position and overlap content as paragraphs grow.
-      That's why 'Inline with text' defaults to on, keeping the table anchored to the surrounding text flow — and why table width is
-      set directly in millimeters, making it easy to match the usable width on an A4 page after margins (around 160mm).
+      Turning on 'Inline with text' keeps the table anchored to the surrounding text flow. It's off by default because large inline tables can make Hangul sluggish,
+      and table width is set directly in millimeters so it's easy to match your document's text width (155mm by default).
     </p>
 
     <h2>How the export formats were chosen</h2>
@@ -312,7 +339,7 @@ Jamie	34	Engineering"></textarea>
       <dd>Yes — it's generated following the HWPX OWPML standard and designed to open in Hancom Office 2020 or later. Very complex formatting (nested tables, special objects, etc.) isn't supported, though.</dd>
 
       <dt>What does the 'Inline with text' option do?</dt>
-      <dd>In Hangul (HWP), it decides whether a table flows inline with the surrounding text or floats as a freely-positioned object. Turning it on is recommended so the table doesn't drift while you keep editing the document.</dd>
+      <dd>In Hangul (HWP), it decides whether a table flows inline with the surrounding text or floats as a freely-positioned object. It's off by default — turn it on before exporting if you want the table to stay put while you keep editing the document.</dd>
 
       <dt>How many rows and columns can it handle?</dt>
       <dd>We've confirmed real-time processing up to several thousand rows within typical browser memory limits. For very large datasets, only part of the data is shown in the live preview.</dd>
@@ -340,6 +367,15 @@ Jamie	34	Engineering"></textarea>
 
 <div id="toastRoot" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center"></div>
 
+<script>
+// 글꼴 목록: hwp = 한글/HWPX 글꼴 이름, latin = 워드 영문 글꼴 이름, css = 미리보기·클립보드용
+const TDH_FONTS = {
+  'malgun':     { hwp: '맑은 고딕', latin: 'Malgun Gothic', css: "'맑은 고딕','Malgun Gothic',sans-serif" },
+  'hcr-dotum':  { hwp: '함초롬돋움', latin: 'HCR Dotum',     css: "'함초롬돋움','HCR Dotum',sans-serif" },
+  'hcr-batang': { hwp: '함초롬바탕', latin: 'HCR Batang',    css: "'함초롬바탕','HCR Batang',serif" },
+};
+function tdhFont(key) { return TDH_FONTS[key] || TDH_FONTS['malgun']; }
+</script>
 <script>
 /* global XLSX, JSZip, saveAs, docx */
 (function () {
@@ -455,11 +491,13 @@ Jamie	34	Engineering"></textarea>
   // ===================== 2. 상태 =====================
   const state = {
     data: [],
-    align: 'left',
-    fontSize: 10,
-    lineHeight: 160,
-    widthMm: 160,
-    treatAsChar: true,
+    align: 'center',
+    fontSize: 9,
+    lineHeight: 120,
+    widthMm: 155,
+    treatAsChar: false,
+    cellMarginMm: 0,
+    fontFace: 'malgun',
     hasHeader: true,
     equalColWidth: true,
     equalRowHeight: true,
@@ -526,6 +564,7 @@ Jamie	34	Engineering"></textarea>
       rowCountInput.disabled = true;
       colCountInput.disabled = true;
       setExportEnabled(false);
+      $('previewSummaryInfo').textContent = 'No data';
       const existingTable = previewWrap.querySelector('table');
       if (existingTable) existingTable.remove();
       const existingNotice = previewWrap.querySelector('#previewCapNotice');
@@ -538,6 +577,7 @@ Jamie	34	Engineering"></textarea>
     rowCountInput.disabled = false;
     colCountInput.disabled = false;
     setExportEnabled(true);
+    $('previewSummaryInfo').textContent = '' + state.data.length.toLocaleString() + ' rows × ' + state.data[0].length + ' cols';
     renderPreview();
     if (sourceLabel) parseStatus.textContent = sourceLabel;
     if (!skipMemoSync) { /* 메모장은 원본 입력 형태를 유지하고, 행/열 수동 조절 시에만 별도로 동기화함 */ }
@@ -596,6 +636,7 @@ Jamie	34	Engineering"></textarea>
     table.style.fontSize = state.fontSize + 'pt';
     table.style.lineHeight = (state.lineHeight / 100).toString();
     table.style.textAlign = state.align;
+    table.style.fontFamily = tdhFont(state.fontFace).css;
 
     const colRatios = computeColWidthRatios();
     if (colRatios.length) {
@@ -619,6 +660,7 @@ Jamie	34	Engineering"></textarea>
         const cellEl = document.createElement(useTh ? 'th' : 'td');
         cellEl.textContent = cell;
         cellEl.style.wordBreak = 'break-word';
+        cellEl.style.padding = state.cellMarginMm + 'mm';
         if (useTh) { cellEl.style.background = '#F1F5F9'; cellEl.style.fontWeight = '700'; }
         tr.appendChild(cellEl);
       });
@@ -722,6 +764,12 @@ Jamie	34	Engineering"></textarea>
     $('tableWidthVal').textContent = state.widthMm + 'mm';
   });
   $('treatAsChar').addEventListener('change', (e) => { state.treatAsChar = e.target.checked; });
+  $('fontFace').addEventListener('change', (e) => { state.fontFace = e.target.value; renderPreview(); });
+  $('cellMargin').addEventListener('input', (e) => {
+    state.cellMarginMm = Number(e.target.value);
+    $('cellMarginVal').textContent = state.cellMarginMm + 'mm';
+    renderPreview();
+  });
   $('equalColWidth').addEventListener('change', (e) => { state.equalColWidth = e.target.checked; renderPreview(); });
   $('equalRowHeight').addEventListener('change', (e) => { state.equalRowHeight = e.target.checked; renderPreview(); });
   $('hasHeaderRow').addEventListener('change', (e) => {
@@ -778,6 +826,10 @@ Jamie	34	Engineering"></textarea>
       const alignMap = { left: AlignmentType.LEFT, center: AlignmentType.CENTER, right: AlignmentType.RIGHT };
       const tableWidthDxa = Math.round(state.widthMm * 56.7);
       const colRatios = computeColWidthRatios();
+      const cellMarginDxa = Math.round(state.cellMarginMm * 56.7);
+      const f = tdhFont(state.fontFace);
+      const runFont = { ascii: f.latin, hAnsi: f.latin, cs: f.latin, eastAsia: f.hwp };
+      const lineTwip = Math.round(240 * state.lineHeight / 100);
       const rows = state.data.map((row, ri) => new TableRow({
         height: state.equalRowHeight ? undefined : {
           value: Math.round((240 + Math.floor(row.reduce((m, c) => Math.max(m, String(c ?? '').length), 0) / 20) * 200)),
@@ -785,9 +837,11 @@ Jamie	34	Engineering"></textarea>
         },
         children: row.map((cellText, ci) => new TableCell({
           width: { size: Math.round(tableWidthDxa * (colRatios[ci] || (1 / row.length))), type: WidthType.DXA },
+          margins: { top: cellMarginDxa, bottom: cellMarginDxa, left: cellMarginDxa, right: cellMarginDxa },
           children: [new Paragraph({
             alignment: alignMap[state.align] || AlignmentType.LEFT,
-            children: [new TextRun({ text: String(cellText), bold: state.hasHeader && ri === 0, size: state.fontSize * 2 })],
+            spacing: { line: lineTwip, before: 0, after: 0 },
+            children: [new TextRun({ text: String(cellText), bold: state.hasHeader && ri === 0, size: Math.round(state.fontSize * 2), font: runFont })],
           })],
         })),
       }));
@@ -826,7 +880,7 @@ Jamie	34	Engineering"></textarea>
   function buildInlineStyledHTMLTable() {
     const cols = state.data[0] ? state.data[0].length : 0;
     const colRatios = computeColWidthRatios();
-    let html = `<table style="border-collapse:collapse;table-layout:fixed;width:${state.widthMm}mm;font-size:${state.fontSize}pt;line-height:${state.lineHeight}%;text-align:${state.align};">`;
+    let html = `<table style="border-collapse:collapse;table-layout:fixed;width:${state.widthMm}mm;font-size:${state.fontSize}pt;line-height:${state.lineHeight}%;text-align:${state.align};font-family:${tdhFont(state.fontFace).css.replace(/"/g, "'")};">`;
     if (colRatios.length) {
       html += '<colgroup>' + colRatios.map(r => `<col style="width:${(r * 100).toFixed(2)}%;">`).join('') + '</colgroup>';
     }
@@ -836,7 +890,7 @@ Jamie	34	Engineering"></textarea>
       row.forEach((cell) => {
         const tag = (state.hasHeader && ri === 0) ? 'th' : 'td';
         const extra = tag === 'th' ? 'background:#F1F5F9;font-weight:700;' : '';
-        html += `<${tag} style="border:1px solid #94A3B8;padding:4px 8px;word-break:break-word;${extra}">${escapeHtml(cell)}</${tag}>`;
+        html += `<${tag} style="border:1px solid #94A3B8;padding:${state.cellMarginMm}mm;word-break:break-word;${extra}">${escapeHtml(cell)}</${tag}>`;
       });
       html += '</tr>';
     });
@@ -904,7 +958,13 @@ function hwpxBumpItemCnt(xml, tagName, delta) {
 function hwpxBuildHeaderXml(state) {
   let xml = HWPX_TPL_HEADER;
 
-  const newCharPr = `<hh:charPr id="${HWPX_NEW_CHARPR_ID}" height="${Math.round(state.fontSize * 100)}" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr>`;
+  // 선택한 글꼴을 모든 언어 fontface 에 id=2 로 추가하고, 새 글자 모양이 이를 참조하게 한다
+  const faceName = hwpxXmlEscape(tdhFont(state.fontFace).hwp);
+  const newFont = `<hh:font id="2" face="${faceName}" type="TTF" isEmbedded="0"><hh:typeInfo familyType="FCAT_GOTHIC" weight="6" proportion="4" contrast="0" strokeVariation="1" armStyle="1" letterform="1" midline="1" xHeight="1"/></hh:font>`;
+  xml = xml.replace(/(<hh:fontface lang="[A-Z]+" )fontCnt="2">/g, '$1fontCnt="3">');
+  xml = xml.split('</hh:fontface>').join(newFont + '</hh:fontface>');
+
+  const newCharPr = `<hh:charPr id="${HWPX_NEW_CHARPR_ID}" height="${Math.round(state.fontSize * 100)}" textColor="#000000" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="2"><hh:fontRef hangul="2" latin="2" hanja="2" japanese="2" other="2" symbol="2" user="2"/><hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:spacing hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:relSz hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/><hh:offset hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/><hh:underline type="NONE" shape="SOLID" color="#000000"/><hh:strikeout shape="NONE" color="#000000"/><hh:outline type="NONE"/><hh:shadow type="NONE" color="#B2B2B2" offsetX="10" offsetY="10"/></hh:charPr>`;
   xml = xml.replace('</hh:charProperties>', newCharPr + '</hh:charProperties>');
   xml = hwpxBumpItemCnt(xml, 'charProperties', 1);
 
@@ -979,7 +1039,8 @@ function hwpxBuildSectionXml(state) {
   const rowHeights = hwpxComputeRowHeights(state);
   const totalHeight = rowHeights.reduce((a, b) => a + b, 0);
   const treatAsChar = state.treatAsChar ? '1' : '0';
-  const cellMarginAttr = 'left="510" right="510" top="141" bottom="141"';
+  const cm = hwpxMmToUnit(state.cellMarginMm || 0);
+  const cellMarginAttr = `left="${cm}" right="${cm}" top="${cm}" bottom="${cm}"`;
 
   let rowsXml = '';
   state.data.forEach((row, ri) => {
@@ -992,7 +1053,7 @@ function hwpxBuildSectionXml(state) {
   });
 
   const tableId = 1000000000 + Math.floor(Math.random() * 900000000);
-  const tblXml = `<hp:p id="0" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="0"><hp:tbl id="${tableId}" zOrder="0" numberingType="TABLE" textWrap="TOP_AND_BOTTOM" textFlow="BOTH_SIDES" lock="0" dropcapstyle="None" pageBreak="CELL" repeatHeader="1" rowCnt="${rows}" colCnt="${cols}" cellSpacing="0" borderFillIDRef="${HWPX_NEW_BORDERFILL_ID}" noAdjust="0"><hp:sz width="${tableWidthUnit}" widthRelTo="ABSOLUTE" height="${totalHeight}" heightRelTo="ABSOLUTE" protect="0"/><hp:pos treatAsChar="${treatAsChar}" affectLSpacing="0" flowWithText="1" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="PARA" horzRelTo="COLUMN" vertAlign="TOP" horzAlign="${horzAlign}" vertOffset="0" horzOffset="0"/><hp:outMargin left="0" right="0" top="0" bottom="283"/><hp:inMargin left="510" right="510" top="141" bottom="141"/>${rowsXml}</hp:tbl><hp:t/></hp:run><hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="1000" textheight="1000" baseline="850" spacing="600" horzpos="0" horzsize="42520" flags="393216"/></hp:linesegarray></hp:p>`;
+  const tblXml = `<hp:p id="0" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="0"><hp:tbl id="${tableId}" zOrder="0" numberingType="TABLE" textWrap="TOP_AND_BOTTOM" textFlow="BOTH_SIDES" lock="0" dropcapstyle="None" pageBreak="CELL" repeatHeader="1" rowCnt="${rows}" colCnt="${cols}" cellSpacing="0" borderFillIDRef="${HWPX_NEW_BORDERFILL_ID}" noAdjust="0"><hp:sz width="${tableWidthUnit}" widthRelTo="ABSOLUTE" height="${totalHeight}" heightRelTo="ABSOLUTE" protect="0"/><hp:pos treatAsChar="${treatAsChar}" affectLSpacing="0" flowWithText="1" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="PARA" horzRelTo="COLUMN" vertAlign="TOP" horzAlign="${horzAlign}" vertOffset="0" horzOffset="0"/><hp:outMargin left="0" right="0" top="0" bottom="283"/><hp:inMargin ${cellMarginAttr}/>${rowsXml}</hp:tbl><hp:t/></hp:run><hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="1000" textheight="1000" baseline="850" spacing="600" horzpos="0" horzsize="42520" flags="393216"/></hp:linesegarray></hp:p>`;
 
   return HWPX_TPL_SECTION0BASE.replace('</hs:sec>', tblXml + '</hs:sec>');
 }
@@ -1055,8 +1116,8 @@ async function buildHwpxBlob(state) {
 </dl>
 <h2>How to use it</h2><ol>
 <li>Paste a table from a text editor, or drop in an Excel file (.xlsx, .csv).</li>
-<li>Set alignment, font size, line spacing and width in the panel on the left.</li>
-<li>Check the live preview on the right, then export in the format you need.</li>
+<li>Set font, alignment, font size, line spacing, width and cell padding in the center panel.</li>
+<li>Export with the buttons on the right. Expand the preview below to check how the table looks.</li>
 </ol>
 <h2>Settings</h2><dl>
 <dt>Treat as text (Korean HWP)</dt><dd>Keeps the table flowing with the surrounding text in Korean word processors, especially useful for HWPX exports.</dd>
@@ -1126,10 +1187,11 @@ async function buildHwpxBlob(state) {
 .tk-version-empty{padding:9px 0;font-size:12.5px;color:#94a3b8}
 </style>
 <div class="tk-version">
-<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.3 &middot; 2026-09-12</span><span class="tk-v-arrow">&#9662;</span></button>
-<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">TSV·CSV 붙여넣기 파싱 시 각 셀 끝에 불필요한 공백이 그대로 남아 HWPX·DOCX·XLSX 저장 결과에 공백이 들어가던 문제 수정 — 마크다운 표 파싱과 동일하게 셀 값을 trim 처리</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">한글 최적화 클립보드 복사가 일부 환경에서 한글(HWP)에 표 없이 텍스트로만 붙여지는 문제 개선 — 복사되는 HTML을 완전한 문서 구조(html/body)로 감싸 인식률을 높임. 단, 클립보드 방식은 프로그램별 붙여넣기 해석 차이가 있어 완벽히 보장되지 않으며, 표 서식을 확실히 유지하려면 HWPX 다운로드 버튼 사용을 권장</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">'글자처럼 취급' 옵션 아래 안내문 추가 — 큰 표에서 한글(HWP)이 느려지거나 멈출 때 체크 해제하면 더 가볍게 저장되는 트레이드오프를 설명</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
+<button type="button" class="tk-version-toggle" aria-expanded="false" onclick="var h=this.nextElementSibling,o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));h.hidden=o;"><span>v1.4 &middot; 2026-10-10</span><span class="tk-v-arrow">&#9662;</span></button>
+<ul class="tk-version-history" hidden><li><span class="tk-version-num">v1.4</span><span class="tk-version-date">2026-10-10</span><span class="tk-version-note">레이아웃 변경 — 변환 버튼을 오른쪽 위로 올리고 미리보기는 하단 접이식(기본 접힘)으로 이동. 기본 서식 변경 — 글꼴 맑은 고딕(글꼴 선택 추가), 글자 9pt, 줄 간격 120%, 문단 가운데 정렬, 전체 너비 155mm, 셀 여백 0mm(셀 여백 조절 추가), 글자처럼 취급 해제. HWPX·DOCX·클립보드 복사에 글꼴·셀 여백 반영, DOCX에 줄 간격 반영</span></li><li><span class="tk-version-num">v1.3</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">TSV·CSV 붙여넣기 파싱 시 각 셀 끝에 불필요한 공백이 그대로 남아 HWPX·DOCX·XLSX 저장 결과에 공백이 들어가던 문제 수정 — 마크다운 표 파싱과 동일하게 셀 값을 trim 처리</span></li><li><span class="tk-version-num">v1.2</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">한글 최적화 클립보드 복사가 일부 환경에서 한글(HWP)에 표 없이 텍스트로만 붙여지는 문제 개선 — 복사되는 HTML을 완전한 문서 구조(html/body)로 감싸 인식률을 높임. 단, 클립보드 방식은 프로그램별 붙여넣기 해석 차이가 있어 완벽히 보장되지 않으며, 표 서식을 확실히 유지하려면 HWPX 다운로드 버튼 사용을 권장</span></li><li><span class="tk-version-num">v1.1</span><span class="tk-version-date">2026-09-12</span><span class="tk-version-note">'글자처럼 취급' 옵션 아래 안내문 추가 — 큰 표에서 한글(HWP)이 느려지거나 멈출 때 체크 해제하면 더 가볍게 저장되는 트레이드오프를 설명</span></li><li><span class="tk-version-num">v1.0</span><span class="tk-version-date">2026-08-31</span><span class="tk-version-note">최초 등록 (PRODUCTIVITY) — 메모장·엑셀 표를 HWPX·DOCX·XLSX로 변환, 한글 최적화 옵션 포함</span></li></ul>
 </div>
 <!-- TOOLKIT:VERSION_END -->
+
 
 
 <!-- TOOLKIT:VIEWCOUNT_START · inject-viewcount.js 가 관리합니다 -->
